@@ -5,7 +5,9 @@ import Ethjs from 'ethjs'
 //   host: 'HTTP://127.0.0.1:7545'
 // })
 // console.log('ethereumProvider', ethereumProvider)
-const net = 'ganache'
+
+// const net = 'ganache'
+const net = 'production'
 
 export const getProvider = () => {
   if (net === 'ganache') {
