@@ -19,7 +19,7 @@ const Container = styled.div`
   grid-gap: 10px;
   /* border: 2px solid ; */
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
-  padding: 2em;
+  padding: 1em;
 `
 const Item = styled.div`
   display: flex;

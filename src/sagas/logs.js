@@ -14,8 +14,7 @@ function* getFreshLogs() {
   const registry = yield select(selectRegistry)
   const eth = yield select(selectEthjs)
   try {
-    const logs = yield call(buildAndDecodeLogs, eth, registry)
-    console.log('logs', logs)
+    const logs = yield call(buildAndDecodeLogs, eth, registry, '_Application')
     // const challenged = logs.filter(log => log.challengeID)
     // console.log('challenged', challenged)
 
