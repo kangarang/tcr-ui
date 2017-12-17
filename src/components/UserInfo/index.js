@@ -13,7 +13,7 @@ import {
   trimDecimalsThree,
 } from '../../libs/units'
 
-import guccIcon from '../../assets/icons/gucci.jpg'
+import catIcon from '../../assets/icons/favicon.ico'
 
 const Container = styled.div`
   display: grid;
@@ -64,11 +64,11 @@ function UserInfo({
   return (
     <Container>
       <FlexCenteredItem gR={1} gC={1}>
-        <Img src={guccIcon} alt="" />
+        <Img src={catIcon} alt="" />
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{'Gucci Gang Tryouts'}</BigBoldInlineText>
+        <BigBoldInlineText>{'ConsenSys Ad Tech Registry'}</BigBoldInlineText>
       </Item>
 
       <Item gR={1} gC={3}>
@@ -80,7 +80,7 @@ function UserInfo({
 
       <Item gR={1} gC={4}>
         <BoldInlineText>
-          {'GUCC Balance: '}
+          {'CATT Balance: '}
           {withCommas(tokenBalance)}
         </BoldInlineText>
       </Item>
@@ -112,7 +112,7 @@ function UserInfo({
           <Button onClick={onApprove}>{'Approve(1,000,000)'}</Button>
         ) : (
           <BoldInlineText>
-            {'GUC Allowed: '}
+            {'CATT Allowed: '}
             {withCommas(tokensAllowed)}
           </BoldInlineText>
         )}

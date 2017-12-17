@@ -111,7 +111,7 @@ class App extends Component {
           />
         </Section>
 
-        <H2>{'Gucci Gang Candidates'}</H2>
+        <H2>{'CAT Candidates'}</H2>
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
@@ -136,7 +136,7 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        {/* <H2>{'Gucci Gang Challenges'}</H2>
+        {/* <H2>{'CAT Challenges'}</H2>
         <FlexContainer>
           {voting_items.size > 0 &&
             voting_items.map(log => (
@@ -161,7 +161,7 @@ class App extends Component {
             ))}
         </FlexContainer> */}
 
-        <H2>{'Gucci Gang Members'}</H2>
+        <H2>{'CAT Members'}</H2>
         <FlexContainer>
           {members.size > 0 &&
             members.map(log => (
