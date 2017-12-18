@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 const Section = styled.section`
-  margin: 3em auto;
+  margin: 1em auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 1;
 
   &:first-child {
     margin-top: 0;

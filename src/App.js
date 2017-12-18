@@ -13,6 +13,7 @@ import FlexContainer from './components/FlexContainer'
 import Section from './components/Section'
 
 import './App.css'
+import './global-styles'
 
 import {
   setupEthereum,
@@ -28,7 +29,7 @@ import {
   selectDomain,
   makeSelectUserInfo,
   selectRegistryItems,
-  // selectVotingItems,
+  selectVotingItems,
   makeSelectCandidates,
   makeSelectWhitelistItems,
 } from './selectors'
@@ -84,7 +85,7 @@ class App extends Component {
     const {
       domain,
       candidates,
-      // voting_items,
+      voting_items,
       members,
       userInfo,
       onChangeUsername,
@@ -101,17 +102,15 @@ class App extends Component {
           onApprove={this.handleApprove}
         />
 
-        <Section>
           <Form
             onSubmit={this.handleApply}
             value={domain}
             onChange={onChangeUsername}
             id={domain}
-            placeholder={'Lil Pump'}
+            placeholder={'Applicant Name'}
           />
-        </Section>
 
-        <H2>{'CAT Candidates'}</H2>
+        <H2>{'Applicants'}</H2>
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
@@ -130,13 +129,13 @@ class App extends Component {
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
                   buttonClick={this.handleUpdateStatus}
-                  buttonText={'Update Gucc Status'}
+                  buttonText={'Update Status'}
                 />
               </Section>
             ))}
         </FlexContainer>
 
-        {/* <H2>{'CAT Challenges'}</H2>
+        <H2>{'Challenges'}</H2>
         <FlexContainer>
           {voting_items.size > 0 &&
             voting_items.map(log => (
@@ -155,13 +154,13 @@ class App extends Component {
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
                   buttonClick={this.handleCommitVote}
-                  buttonText={'Vote for this Gucc'}
+                  buttonText={'Vote for'}
                 />
               </Section>
             ))}
-        </FlexContainer> */}
+        </FlexContainer>
 
-        <H2>{'CAT Members'}</H2>
+        <H2>{'Members'}</H2>
         <FlexContainer>
           {members.size > 0 &&
             members.map(log => (
@@ -180,7 +179,7 @@ class App extends Component {
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
                   buttonClick={this.handleChallenge}
-                  buttonText={'Challenge The Gucc'}
+                  buttonText={'Challenge'}
                 />
               </Section>
             ))}
@@ -206,7 +205,7 @@ const mapStateToProps = createStructuredSelector({
   userInfo: makeSelectUserInfo(),
   domain: selectDomain,
   registry_items: selectRegistryItems,
-  // voting_items: selectVotingItems,
+  voting_items: selectVotingItems,
   members: makeSelectWhitelistItems(),
   candidates: makeSelectCandidates(),
 })

@@ -9,17 +9,15 @@ import Button from './Button'
 import Img from './Img'
 import A from './A'
 
-import guccIcon from '../assets/icons/gucci.jpg'
+import catIcon from '../assets/icons/favicon.ico'
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 5fr 8fr 6fr;
+  grid-template-columns: 1.5fr 6fr 10fr 6fr;
   grid-template-rows: 1fr 1fr;
-  /* grid-auto-rows: minmax(100px, auto); */
-  grid-gap: 10px;
-  /* border: 2px solid ; */
+  grid-gap: 5px;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
-  padding: 1em;
+  padding: 2em;
 `
 const Item = styled.div`
   display: flex;
@@ -29,14 +27,13 @@ const Item = styled.div`
   grid-row: ${props => props.gR};
   grid-column: ${props => props.gC};
   overflow: hidden;
+  padding: .5em;
 `
 const FlexCenteredItem = styled(Item)`
   justify-content: center;
 `
 const Text = styled.div`
-  height: 30px;
   display: block;
-  margin: 1em;
 `
 const InlineText = styled(Text)`
   display: inline;
@@ -68,7 +65,7 @@ export default ({
 
     {buttonText.includes('Challenge') && (
       <FlexCenteredItem gR={2} gC={1}>
-        <Img src={guccIcon} alt="" />
+        <Img src={catIcon} alt="" />
       </FlexCenteredItem>
     )}
 
@@ -84,7 +81,7 @@ export default ({
         <BoldInlineText>
           {'Deposit: '}
           {value.toString(10)}
-          {' GUCC'}
+          {' CATT'}
         </BoldInlineText>
       </Item>
     )}
@@ -117,7 +114,7 @@ export default ({
       </BoldInlineText>
     </Item>
 
-    {status === 'whitelistable' ? (
+    {status === 'whitelistable' || status === 'challengeable' ? (
       <Button onClick={e => buttonClick(e, domain)}>{buttonText}</Button>
     ) : (
       false

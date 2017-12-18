@@ -6,6 +6,7 @@ import Identicon from '../Identicon'
 import Button from '../Button'
 
 import Img from '../Img'
+import { colors } from '../Colors'
 
 import {
   toEther,
@@ -17,31 +18,26 @@ import catIcon from '../../assets/icons/favicon.ico'
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 7fr 8fr 6fr;
+  grid-template-columns: 1fr 12fr 6fr 6fr;
   grid-template-rows: 1fr 1fr;
-  /* grid-auto-rows: minmax(100px, auto); */
-  grid-gap: 10px;
-  /* border: 1px solid black; */
+  grid-gap: 5px;
   padding: 1em;
-  /* overflow: hidden; */
   background-color: rgba(0, 0, 0, 0.2);
-  color: #222;
+  color: ${colors.offBlack};
 `
 const Item = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start
-  /* border: 1px solid red; */
+  justify-content: flex-start;
   grid-row: ${(props) => props.gR};
   grid-column: ${(props) => props.gC};
+  padding: .5em;
 `
 const FlexCenteredItem = styled(Item)`
   justify-content: center;
 `
 const Text = styled.div`
-  height: 24px;
   display: block;
-  margin: 1em;
 `
 const InlineText = styled(Text)`
   display: inline;

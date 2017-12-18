@@ -5,6 +5,7 @@ import { combineReducers } from 'redux-immutable';
 
 import homeReducer from './reducer';
 
+// home -> state.get('home')
 // export default function createReducer(injectedReducers) {
 export default function createReducer() {
   return combineReducers({

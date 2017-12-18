@@ -7,6 +7,7 @@ export default styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 4em;
+  padding: 1em;
+  /* background-color: rgba(0, 0, 0, 0.2); */
 `;
 

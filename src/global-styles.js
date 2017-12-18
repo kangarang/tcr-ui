@@ -10,22 +10,17 @@ injectGlobal`
   }
 
   body {
-    font-family: 'Calibre', Helvetica, Arial, sans-serif;
-  }
-
-  body.fontLoaded {
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
-  #app {
+  /* #app {
     background-color: #fafafa;
     min-height: 100%;
     min-width: 100%;
-  }
+  } */
 
   p,
   label {
-    font-family: Georgia, Times, 'Times New Roman', serif;
     line-height: 1.5em;
   }
 

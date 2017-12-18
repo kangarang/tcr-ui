@@ -3,12 +3,16 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import Button from '../Button'
+import { colors } from '../Colors'
+
 const FormComponent = styled.form`
-  margin-bottom: 1em;
+  /* margin-bottom: 1em; */
 `
 const Input = styled.input`
-  /* background-color: rgba(0, 0, 0, 0.1); */
-  border-bottom: 1px solid #52427c;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  border-bottom: 1px solid ${colors.magenta};
+  padding: 1em;
 `
 
 function Form(props) {
@@ -25,7 +29,7 @@ function Form(props) {
           />
         </label>
         <Button onClick={props.onSubmit}>
-          <h4>{'apply(domain, deposit)'}</h4>
+          <h4>{'Submit'}</h4>
         </Button>
       </FormComponent>
     </div>
