@@ -21,9 +21,10 @@ const Container = styled.div`
   grid-template-columns: 1fr 12fr 6fr 6fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 5px;
-  padding: 1em;
+  padding: .7em;
   background-color: rgba(0, 0, 0, 0.2);
   color: ${colors.offBlack};
+  border: 1px solid ${colors.offBlack};
 `
 const Item = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ function UserInfo({
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{'ConsenSys Ad Tech Registry'}</BigBoldInlineText>
+        <BigBoldInlineText>{'ConsenSys Ad Tech Membership Registry'}</BigBoldInlineText>
       </Item>
 
       <Item gR={1} gC={3}>

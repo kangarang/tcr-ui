@@ -102,13 +102,13 @@ class App extends Component {
           onApprove={this.handleApprove}
         />
 
-          <Form
-            onSubmit={this.handleApply}
-            value={domain}
-            onChange={onChangeUsername}
-            id={domain}
-            placeholder={'Applicant Name'}
-          />
+        <Form
+          onSubmit={this.handleApply}
+          value={domain}
+          onChange={onChangeUsername}
+          id={domain}
+          placeholder={'Applicant Name'}
+        />
 
         <H2>{'Applicants'}</H2>
         <FlexContainer>
@@ -128,8 +128,8 @@ class App extends Component {
                   status={log.get('status')}
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
-                  buttonClick={this.handleUpdateStatus}
-                  buttonText={'Update Status'}
+                  handleClickUpdateStatus={this.handleUpdateStatus}
+                  handleClickChallenge={this.handleChallenge}
                 />
               </Section>
             ))}
@@ -153,8 +153,7 @@ class App extends Component {
                   status={log.get('status')}
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
-                  buttonClick={this.handleCommitVote}
-                  buttonText={'Vote for'}
+                  handleClickCommitVote={this.handleCommitVote}
                 />
               </Section>
             ))}
@@ -178,8 +177,7 @@ class App extends Component {
                   status={log.get('status')}
                   account={log.get('from')}
                   whitelisted={log.get('whitelisted')}
-                  buttonClick={this.handleChallenge}
-                  buttonText={'Challenge'}
+                  handleClickChallenge={this.handleChallenge}
                 />
               </Section>
             ))}

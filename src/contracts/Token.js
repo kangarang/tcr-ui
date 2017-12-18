@@ -18,8 +18,8 @@ export default class Token {
       TokenContract.currentProvider.sendAsync = function() {
         return TokenContract.currentProvider.send.apply(
           TokenContract.currentProvider, arguments
-        );
-      };
+        )
+      }
     }
     this.address = await registry.token.call()
     this.contract = await TokenContract.at(this.address)

@@ -6,8 +6,8 @@ import Ethjs from 'ethjs'
 // })
 // console.log('ethereumProvider', ethereumProvider)
 
-const net = 'ganache'
-// const net = 'production'
+// const net = 'ganache'
+const net = 'production'
 
 export const getProvider = () => {
   if (net === 'ganache') {

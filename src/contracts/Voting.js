@@ -17,8 +17,8 @@ export default class Voting {
       PLCRVoting.currentProvider.sendAsync = function() {
         return PLCRVoting.currentProvider.send.apply(
           PLCRVoting.currentProvider, arguments
-        );
-      };
+        )
+      }
     }
     this.address = await registry.voting.call()
     this.contract = await PLCRVoting.at(this.address)

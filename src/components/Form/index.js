@@ -7,18 +7,23 @@ import { colors } from '../Colors'
 
 const FormComponent = styled.form`
   /* margin-bottom: 1em; */
+  padding: 2em;
 `
 const Input = styled.input`
   background-color: rgba(0, 0, 0, 0.2);
   border: none;
-  border-bottom: 1px solid ${colors.magenta};
-  padding: 1em;
+  border-bottom: 2px solid ${colors.purple};
+  font-size: 1em;
+  padding: .75em;
 `
 
 function Form(props) {
   return (
     <div>
       <FormComponent onSubmit={props.onSubmit}>
+        {'ConsenSys Ad Tech membership requires a minimum deposit of 50,000 Cat Token (CATT).'}
+        <br />
+        {'Please use this form to apply for CAT membership: '}
         <label htmlFor="domain">
           <Input
             id={props.id}

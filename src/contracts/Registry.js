@@ -21,8 +21,8 @@ export default class Registry {
       RegistryContract.currentProvider.sendAsync = function() {
         return RegistryContract.currentProvider.send.apply(
           RegistryContract.currentProvider, arguments
-        );
-      };
+        )
+      }
     }
     this.contract = await RegistryContract.deployed()
     this.address = this.contract.address

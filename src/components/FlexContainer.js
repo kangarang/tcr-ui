@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export default styled.div`
   text-align: center;
@@ -9,5 +9,4 @@ export default styled.div`
   align-items: center;
   padding: 1em;
   /* background-color: rgba(0, 0, 0, 0.2); */
-`;
-
+`

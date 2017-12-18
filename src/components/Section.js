@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const Section = styled.section`
   margin: 1em auto;
@@ -8,6 +8,6 @@ const Section = styled.section`
   &:first-child {
     margin-top: 0;
   }
-`;
+`
 
-export default Section;
+export default Section
