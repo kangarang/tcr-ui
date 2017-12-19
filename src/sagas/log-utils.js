@@ -65,12 +65,15 @@ const decodeLogs = async (eth, rawLogs, contract) => {
       const txDetails = await eth.getTransactionByHash(
         rawLogs[ind].transactionHash
       )
-      return buildRegistryItem(rawLogs, contract, ev, ind, txDetails)
+      const block = await eth.getBlockByHash(
+        rawLogs[ind].blockHash, false
+      )
+      return buildRegistryItem(rawLogs, contract, ev, ind, txDetails, block)
     })
   )
 }
 
-const buildRegistryItem = async (rawLogs, contract, log, i, txDetails) => {
+const buildRegistryItem = async (rawLogs, contract, log, i, txDetails, block) => {
   let unstakedDeposit = '0'
   if (log.deposit) {
     unstakedDeposit = toNineToken(log.deposit)
@@ -86,6 +89,7 @@ const buildRegistryItem = async (rawLogs, contract, log, i, txDetails) => {
     }
   }
 
+  console.log('block.timestamp.toString(10)', block.timestamp.toString(10))
   return {
     contractAddress: rawLogs[i].address,
     domain: log.domain,
@@ -100,6 +104,7 @@ const buildRegistryItem = async (rawLogs, contract, log, i, txDetails) => {
     logIndex: rawLogs[i].logIndex.toString(10),
     from: txDetails.from,
     to: txDetails.to,
+    timestamp: new Date(block.timestamp.toNumber(10)),
     status,
   }
 }

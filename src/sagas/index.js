@@ -51,7 +51,6 @@ export default function* rootSaga() {
   yield takeEvery(TX_APPROVE, approvalSaga)
   yield takeEvery(TX_APPLY, applicationSaga)
   yield takeEvery(TX_CHALLENGE, challengeSaga)
-  yield takeEvery(TX_APPROVE, approvalSaga)
   yield takeEvery(TX_UPDATE_STATUS, updateStatusSaga)
 }
 

@@ -41,9 +41,10 @@ export default class Token {
     this.decimalPower = toDecimalPower(this.decimals)
   }
 
-  approve = (address, amount) => {
+  approve = async (address, amount) => {
     const tokens = toToken(amount, this.decimalPower).toString(10)
-    this.contract.approve(address, tokens)
+    const approval = await this.contract.approve(address, tokens)
+    return approval
   }
 
   allowance = async (owner, spender) => {

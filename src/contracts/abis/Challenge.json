@@ -132,8 +132,3023 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b61081c8061001e6000396000f300606060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630e2edf6e1461007d578063456bb3dc146100ad57806382fb3e55146100dd57806396093a2714610131578063c0d4efb81461015d578063dc0e069b146101b1575b600080fd5b61009360048080359060200190919050506101e1565b604051808215151515815260200191505060405180910390f35b6100c360048080359060200190919050506102c5565b604051808215151515815260200191505060405180910390f35b61011b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506102e0565b6040518082815260200191505060405180910390f35b61014760048080359060200190919050506105dd565b6040518082815260200191505060405180910390f35b61019b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506106c5565b6040518082815260200191505060405180910390f35b6101c760048080359060200190919050506107e0565b604051808215151515815260200191505060405180910390f35b60008160010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ee68483083600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561028257600080fd5b6102c65a03f1151561029357600080fd5b5050506040518051905080156102be5750600015158260040160149054906101000a900460ff161515145b9050919050565b60008160040160149054906101000a900460ff169050919050565b60008060008015158660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16151514151561034557600080fd5b61034e866102c5565b151561035957600080fd5b8560010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069868860030154876000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b151561043457600080fd5b6102c65a03f1151561044557600080fd5b50505060405180519050915061045c8686866106c5565b90508186600601600082825403925050819055508086600001600082825403925050819055508560020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb86836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b151561055157600080fd5b6102c65a03f1151561056257600080fd5b50505060405180519050151561057757600080fd5b60018660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff02191690831515021790555080925050509392505050565b6000808260010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663053e71a684600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561067f57600080fd5b6102c65a03f1151561069057600080fd5b5050506040518051905014156106af57816005015460020290506106c0565b816000015482600501546002020390505b919050565b6000808460010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069858760030154866000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b15156107a357600080fd5b6102c65a03f115156107b457600080fd5b5050506040518051905090508460060154856000015482028115156107d557fe5b049150509392505050565b60008082600301541190509190505600a165627a7a72305820ee4eca04e67b1b7435ce048cfdc4e0e49776e24895c4a582a94b3743c31574270029",
-  "deployedBytecode": "0x606060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630e2edf6e1461007d578063456bb3dc146100ad57806382fb3e55146100dd57806396093a2714610131578063c0d4efb81461015d578063dc0e069b146101b1575b600080fd5b61009360048080359060200190919050506101e1565b604051808215151515815260200191505060405180910390f35b6100c360048080359060200190919050506102c5565b604051808215151515815260200191505060405180910390f35b61011b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506102e0565b6040518082815260200191505060405180910390f35b61014760048080359060200190919050506105dd565b6040518082815260200191505060405180910390f35b61019b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506106c5565b6040518082815260200191505060405180910390f35b6101c760048080359060200190919050506107e0565b604051808215151515815260200191505060405180910390f35b60008160010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ee68483083600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561028257600080fd5b6102c65a03f1151561029357600080fd5b5050506040518051905080156102be5750600015158260040160149054906101000a900460ff161515145b9050919050565b60008160040160149054906101000a900460ff169050919050565b60008060008015158660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16151514151561034557600080fd5b61034e866102c5565b151561035957600080fd5b8560010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069868860030154876000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b151561043457600080fd5b6102c65a03f1151561044557600080fd5b50505060405180519050915061045c8686866106c5565b90508186600601600082825403925050819055508086600001600082825403925050819055508560020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb86836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b151561055157600080fd5b6102c65a03f1151561056257600080fd5b50505060405180519050151561057757600080fd5b60018660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff02191690831515021790555080925050509392505050565b6000808260010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663053e71a684600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561067f57600080fd5b6102c65a03f1151561069057600080fd5b5050506040518051905014156106af57816005015460020290506106c0565b816000015482600501546002020390505b919050565b6000808460010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069858760030154866000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b15156107a357600080fd5b6102c65a03f115156107b457600080fd5b5050506040518051905090508460060154856000015482028115156107d557fe5b049150509392505050565b60008082600301541190509190505600a165627a7a72305820ee4eca04e67b1b7435ce048cfdc4e0e49776e24895c4a582a94b3743c31574270029",
+  "bytecode": "0x6060604052341561000f57600080fd5b61081c8061001e6000396000f300606060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630e2edf6e1461007d578063456bb3dc146100ad57806382fb3e55146100dd57806396093a2714610131578063c0d4efb81461015d578063dc0e069b146101b1575b600080fd5b61009360048080359060200190919050506101e1565b604051808215151515815260200191505060405180910390f35b6100c360048080359060200190919050506102c5565b604051808215151515815260200191505060405180910390f35b61011b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506102e0565b6040518082815260200191505060405180910390f35b61014760048080359060200190919050506105dd565b6040518082815260200191505060405180910390f35b61019b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506106c5565b6040518082815260200191505060405180910390f35b6101c760048080359060200190919050506107e0565b604051808215151515815260200191505060405180910390f35b60008160010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ee68483083600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561028257600080fd5b6102c65a03f1151561029357600080fd5b5050506040518051905080156102be5750600015158260040160149054906101000a900460ff161515145b9050919050565b60008160040160149054906101000a900460ff169050919050565b60008060008015158660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16151514151561034557600080fd5b61034e866102c5565b151561035957600080fd5b8560010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069868860030154876000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b151561043457600080fd5b6102c65a03f1151561044557600080fd5b50505060405180519050915061045c8686866106c5565b90508186600601600082825403925050819055508086600001600082825403925050819055508560020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb86836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b151561055157600080fd5b6102c65a03f1151561056257600080fd5b50505060405180519050151561057757600080fd5b60018660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff02191690831515021790555080925050509392505050565b6000808260010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663053e71a684600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561067f57600080fd5b6102c65a03f1151561069057600080fd5b5050506040518051905014156106af57816005015460020290506106c0565b816000015482600501546002020390505b919050565b6000808460010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069858760030154866000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b15156107a357600080fd5b6102c65a03f115156107b457600080fd5b5050506040518051905090508460060154856000015482028115156107d557fe5b049150509392505050565b60008082600301541190509190505600a165627a7a72305820f3c3f8f3ec73acd40cb698266724dfb3cd1239352210a9a3c5aa3e9e09f467bb0029",
+  "deployedBytecode": "0x606060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630e2edf6e1461007d578063456bb3dc146100ad57806382fb3e55146100dd57806396093a2714610131578063c0d4efb81461015d578063dc0e069b146101b1575b600080fd5b61009360048080359060200190919050506101e1565b604051808215151515815260200191505060405180910390f35b6100c360048080359060200190919050506102c5565b604051808215151515815260200191505060405180910390f35b61011b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506102e0565b6040518082815260200191505060405180910390f35b61014760048080359060200190919050506105dd565b6040518082815260200191505060405180910390f35b61019b600480803590602001909190803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506106c5565b6040518082815260200191505060405180910390f35b6101c760048080359060200190919050506107e0565b604051808215151515815260200191505060405180910390f35b60008160010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ee68483083600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561028257600080fd5b6102c65a03f1151561029357600080fd5b5050506040518051905080156102be5750600015158260040160149054906101000a900460ff161515145b9050919050565b60008160040160149054906101000a900460ff169050919050565b60008060008015158660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900460ff16151514151561034557600080fd5b61034e866102c5565b151561035957600080fd5b8560010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069868860030154876000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b151561043457600080fd5b6102c65a03f1151561044557600080fd5b50505060405180519050915061045c8686866106c5565b90508186600601600082825403925050819055508086600001600082825403925050819055508560020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663a9059cbb86836000604051602001526040518363ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200192505050602060405180830381600087803b151561055157600080fd5b6102c65a03f1151561056257600080fd5b50505060405180519050151561057757600080fd5b60018660070160008773ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548160ff02191690831515021790555080925050509392505050565b6000808260010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663053e71a684600301546000604051602001526040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180828152602001915050602060405180830381600087803b151561067f57600080fd5b6102c65a03f1151561069057600080fd5b5050506040518051905014156106af57816005015460020290506106c0565b816000015482600501546002020390505b919050565b6000808460010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663b43bd069858760030154866000604051602001526040518463ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018281526020019350505050602060405180830381600087803b15156107a357600080fd5b6102c65a03f115156107b457600080fd5b5050506040518051905090508460060154856000015482028115156107d557fe5b049150509392505050565b60008082600301541190509190505600a165627a7a72305820f3c3f8f3ec73acd40cb698266724dfb3cd1239352210a9a3c5aa3e9e09f467bb0029",
+  "sourceMap": "92:3589:1:-;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "92:3589:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1431:160;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1207:103;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2879:800;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1683:327;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2336:265;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1014:113;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1431:160;1499:4;1518:5;:12;;;;;;;;;;;;:22;;;1541:5;:17;;;1518:41;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:68;;;;;1581:5;1563:23;;:5;:14;;;;;;;;;;;;:23;;;1518:68;1511:75;;1431:160;;;:::o;1207:103::-;1272:4;1291:5;:14;;;;;;;;;;;;1284:21;;1207:103;;;:::o;2879:800::-;2964:4;3156:16;3247:11;3111:5;3082:34;;:5;:17;;:25;3100:6;3082:25;;;;;;;;;;;;;;;;;;;;;;;;;:34;;;3074:43;;;;;;;;3131:17;3142:5;3131:10;:17::i;:::-;3123:26;;;;;;;;3175:5;:12;;;;;;;;;;;;:32;;;3208:6;3216:5;:17;;;3235:5;3175:66;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3156:85;;3261:33;3273:5;3280:6;3288:5;3261:11;:33::i;:::-;3247:47;;3467:11;3444:5;:19;;;:34;;;;;;;;;;;3504:6;3484:5;:16;;;:26;;;;;;;;;;;3525:5;:11;;;;;;;;;;;;:20;;;3546:6;3554;3525:36;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;3517:45;;;;;;;;3646:4;3618:5;:17;;:25;3636:6;3618:25;;;;;;;;;;;;;;;;:32;;;;;;;;;;;;;;;;;;3668:6;3661:13;;2879:800;;;;;;;:::o;1683:327::-;1759:4;1916:1;1842:5;:12;;;;;;;;;;;;:51;;;1894:5;:17;;;1842:70;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:75;1838:118;;;1938:5;:11;;;1934:1;:15;1927:22;;;;1838:118;1989:5;:16;;;1974:5;:11;;;1970:1;:15;1969:36;1962:43;;1683:327;;;;:::o;2336:265::-;2432:4;2444:16;2463:5;:12;;;;;;;;;;;;:32;;;2496:6;2504:5;:17;;;2523:5;2463:66;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2444:85;;2577:5;:19;;;2557:5;:16;;;2543:11;:30;2542:54;;;;;;;;2535:61;;2336:265;;;;;;:::o;1014:113::-;1082:4;1121:1;1101:5;:17;;;:21;1094:28;;1014:113;;;:::o",
+  "source": "pragma solidity^0.4.11;\n\nimport \"./PLCRVoting.sol\";\nimport \"./optional/StandardToken.sol\";\n\nlibrary Challenge {\n\n  // ------\n  // DATA STRUCTURES\n  // ------\n\n  struct Data {\n    uint rewardPool;        // (remaining) Pool of tokens distributed amongst winning voters\n    PLCRVoting voting;      // Address of a PLCRVoting contract\n    StandardToken token;    // Address of an ERC20 token contract\n    uint challengeID;       // An ID corresponding to a pollID in the PLCR contract\n    address challenger;     // Owner of Challenge\n    bool resolved;          // Indication of if challenge is resolved\n    uint stake;             // Number of tokens at risk for either party during challenge\n    uint winningTokens;     // (remaining) Amount of tokens used for voting by the winning side\n    mapping(address =>\n            bool) tokenClaims; // maps addresses to token claim data for this challenge\n  }\n\n  // --------\n  // GETTERS\n  // --------\n\n  /// @dev returns true if the application/listing is initialized\n  function isInitialized(Data storage _self) constant public returns (bool) {\n    return _self.challengeID > 0;\n  }\n\n  /// @dev returns true if the application/listing has a resolved challenge\n  function isResolved(Data storage _self) constant public returns (bool) {\n    return _self.resolved;\n  }\n\n  /// @dev determines whether voting has concluded in a challenge for a given domain. Throws if no challenge exists.\n  function canBeResolved(Data storage _self) constant public returns (bool) {\n    return _self.voting.pollEnded(_self.challengeID) && _self.resolved == false;\n  }\n\n  /// @dev determines the number of tokens awarded to the winning party in a challenge.\n  function challengeWinnerReward(Data storage _self) public constant returns (uint) {\n    // Edge case, nobody voted, give all tokens to the challenger.\n    if (_self.voting.getTotalNumberOfTokensForWinningOption(_self.challengeID) == 0) {\n      return 2 * _self.stake;\n    }\n\n    return (2 * _self.stake) - _self.rewardPool;\n  }\n\n  /**\n  @dev                Calculates the provided voter's token reward for the given poll.\n  @param _voter       The address of the voter whose reward balance is to be returned\n  @param _salt        The salt of the voter's commit hash in the given poll\n  @return             The uint indicating the voter's reward \n  */\n  function voterReward(Data storage _self, address _voter, uint _salt)\n  public constant returns (uint) {\n    uint voterTokens = _self.voting.getNumPassingTokens(_voter, _self.challengeID, _salt);\n    return (voterTokens * _self.rewardPool) / _self.winningTokens;\n  }\n\n  // --------\n  // STATE-CHANGING FUNCTIONS\n  // --------\n\n  /**\n  @dev called by a voter to claim his/her reward for each completed vote.\n  @param _voter the address of the voter to claim a reward for\n  @param _salt the salt of a voter's commit hash in the given poll\n  */\n  function claimReward(Data storage _self, address _voter, uint _salt) public returns (uint) {\n    // Ensures the voter has not already claimed tokens and challenge results have been processed\n    require(_self.tokenClaims[_voter] == false);\n    require(isResolved(_self));\n\n    uint voterTokens = _self.voting.getNumPassingTokens(_voter, _self.challengeID, _salt);\n    uint reward = voterReward(_self, _voter, _salt);\n\n    // Subtracts the voter's information to preserve the participation ratios\n    // of other voters compared to the remaining pool of rewards\n    _self.winningTokens -= voterTokens;\n    _self.rewardPool -= reward;\n\n    require(_self.token.transfer(_voter, reward));\n\n    // Ensures a voter cannot claim tokens again\n    _self.tokenClaims[_voter] = true;\n    \n    return reward;\n  }\n}\n\n",
+  "sourcePath": "/home/isaac/Desktop/Projects/tcr/contracts/Challenge.sol",
+  "ast": {
+    "attributes": {
+      "absolutePath": "/home/isaac/Desktop/Projects/tcr/contracts/Challenge.sol",
+      "exportedSymbols": {
+        "Challenge": [
+          269
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".11"
+          ]
+        },
+        "id": 60,
+        "name": "PragmaDirective",
+        "src": "0:23:1"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 1436,
+          "absolutePath": "/home/isaac/Desktop/Projects/tcr/contracts/PLCRVoting.sol",
+          "file": "./PLCRVoting.sol",
+          "scope": 270,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 61,
+        "name": "ImportDirective",
+        "src": "25:26:1"
+      },
+      {
+        "attributes": {
+          "SourceUnit": 4289,
+          "absolutePath": "/home/isaac/Desktop/Projects/tcr/contracts/optional/StandardToken.sol",
+          "file": "./optional/StandardToken.sol",
+          "scope": 270,
+          "symbolAliases": [
+            null
+          ],
+          "unitAlias": ""
+        },
+        "id": 62,
+        "name": "ImportDirective",
+        "src": "52:38:1"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "library",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            269
+          ],
+          "name": "Challenge",
+          "scope": 270
+        },
+        "children": [
+          {
+            "attributes": {
+              "canonicalName": "Challenge.Data",
+              "name": "Data",
+              "scope": 269,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "rewardPool",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 63,
+                    "name": "ElementaryTypeName",
+                    "src": "179:4:1"
+                  }
+                ],
+                "id": 64,
+                "name": "VariableDeclaration",
+                "src": "179:15:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "voting",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "contract PLCRVoting",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "PLCRVoting",
+                      "referencedDeclaration": 1435,
+                      "type": "contract PLCRVoting"
+                    },
+                    "id": 65,
+                    "name": "UserDefinedTypeName",
+                    "src": "272:10:1"
+                  }
+                ],
+                "id": 66,
+                "name": "VariableDeclaration",
+                "src": "272:17:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "token",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "contract StandardToken",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "contractScope": null,
+                      "name": "StandardToken",
+                      "referencedDeclaration": 4288,
+                      "type": "contract StandardToken"
+                    },
+                    "id": 67,
+                    "name": "UserDefinedTypeName",
+                    "src": "336:13:1"
+                  }
+                ],
+                "id": 68,
+                "name": "VariableDeclaration",
+                "src": "336:19:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "challengeID",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 69,
+                    "name": "ElementaryTypeName",
+                    "src": "402:4:1"
+                  }
+                ],
+                "id": 70,
+                "name": "VariableDeclaration",
+                "src": "402:16:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "challenger",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "type": "address"
+                    },
+                    "id": 71,
+                    "name": "ElementaryTypeName",
+                    "src": "486:7:1"
+                  }
+                ],
+                "id": 72,
+                "name": "VariableDeclaration",
+                "src": "486:18:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "resolved",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "bool",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "bool",
+                      "type": "bool"
+                    },
+                    "id": 73,
+                    "name": "ElementaryTypeName",
+                    "src": "536:4:1"
+                  }
+                ],
+                "id": 74,
+                "name": "VariableDeclaration",
+                "src": "536:13:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "stake",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 75,
+                    "name": "ElementaryTypeName",
+                    "src": "606:4:1"
+                  }
+                ],
+                "id": 76,
+                "name": "VariableDeclaration",
+                "src": "606:10:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "winningTokens",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint",
+                      "type": "uint256"
+                    },
+                    "id": 77,
+                    "name": "ElementaryTypeName",
+                    "src": "696:4:1"
+                  }
+                ],
+                "id": 78,
+                "name": "VariableDeclaration",
+                "src": "696:18:1"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "tokenClaims",
+                  "scope": 83,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "mapping(address => bool)",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "type": "mapping(address => bool)"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 79,
+                        "name": "ElementaryTypeName",
+                        "src": "800:7:1"
+                      },
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 80,
+                        "name": "ElementaryTypeName",
+                        "src": "823:4:1"
+                      }
+                    ],
+                    "id": 81,
+                    "name": "Mapping",
+                    "src": "792:36:1"
+                  }
+                ],
+                "id": 82,
+                "name": "VariableDeclaration",
+                "src": "792:48:1"
+              }
+            ],
+            "id": 83,
+            "name": "StructDefinition",
+            "src": "161:741:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "isInitialized",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 96,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 84,
+                        "name": "UserDefinedTypeName",
+                        "src": "1037:4:1"
+                      }
+                    ],
+                    "id": 85,
+                    "name": "VariableDeclaration",
+                    "src": "1037:18:1"
+                  }
+                ],
+                "id": 86,
+                "name": "ParameterList",
+                "src": "1036:20:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 96,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 87,
+                        "name": "ElementaryTypeName",
+                        "src": "1082:4:1"
+                      }
+                    ],
+                    "id": 88,
+                    "name": "VariableDeclaration",
+                    "src": "1082:4:1"
+                  }
+                ],
+                "id": 89,
+                "name": "ParameterList",
+                "src": "1081:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 89
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": ">",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "challengeID",
+                              "referencedDeclaration": 70,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 85,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 90,
+                                "name": "Identifier",
+                                "src": "1101:5:1"
+                              }
+                            ],
+                            "id": 91,
+                            "name": "MemberAccess",
+                            "src": "1101:17:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "30",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "number",
+                              "type": "int_const 0",
+                              "value": "0"
+                            },
+                            "id": 92,
+                            "name": "Literal",
+                            "src": "1121:1:1"
+                          }
+                        ],
+                        "id": 93,
+                        "name": "BinaryOperation",
+                        "src": "1101:21:1"
+                      }
+                    ],
+                    "id": 94,
+                    "name": "Return",
+                    "src": "1094:28:1"
+                  }
+                ],
+                "id": 95,
+                "name": "Block",
+                "src": "1088:39:1"
+              }
+            ],
+            "id": 96,
+            "name": "FunctionDefinition",
+            "src": "1014:113:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "isResolved",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 107,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 97,
+                        "name": "UserDefinedTypeName",
+                        "src": "1227:4:1"
+                      }
+                    ],
+                    "id": 98,
+                    "name": "VariableDeclaration",
+                    "src": "1227:18:1"
+                  }
+                ],
+                "id": 99,
+                "name": "ParameterList",
+                "src": "1226:20:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 107,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 100,
+                        "name": "ElementaryTypeName",
+                        "src": "1272:4:1"
+                      }
+                    ],
+                    "id": 101,
+                    "name": "VariableDeclaration",
+                    "src": "1272:4:1"
+                  }
+                ],
+                "id": 102,
+                "name": "ParameterList",
+                "src": "1271:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 102
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "member_name": "resolved",
+                          "referencedDeclaration": 74,
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 98,
+                              "type": "struct Challenge.Data storage pointer",
+                              "value": "_self"
+                            },
+                            "id": 103,
+                            "name": "Identifier",
+                            "src": "1291:5:1"
+                          }
+                        ],
+                        "id": 104,
+                        "name": "MemberAccess",
+                        "src": "1291:14:1"
+                      }
+                    ],
+                    "id": 105,
+                    "name": "Return",
+                    "src": "1284:21:1"
+                  }
+                ],
+                "id": 106,
+                "name": "Block",
+                "src": "1278:32:1"
+              }
+            ],
+            "id": 107,
+            "name": "FunctionDefinition",
+            "src": "1207:103:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "canBeResolved",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 127,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 108,
+                        "name": "UserDefinedTypeName",
+                        "src": "1454:4:1"
+                      }
+                    ],
+                    "id": 109,
+                    "name": "VariableDeclaration",
+                    "src": "1454:18:1"
+                  }
+                ],
+                "id": 110,
+                "name": "ParameterList",
+                "src": "1453:20:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 127,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool",
+                          "type": "bool"
+                        },
+                        "id": 111,
+                        "name": "ElementaryTypeName",
+                        "src": "1499:4:1"
+                      }
+                    ],
+                    "id": 112,
+                    "name": "VariableDeclaration",
+                    "src": "1499:4:1"
+                  }
+                ],
+                "id": 113,
+                "name": "ParameterList",
+                "src": "1498:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 113
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "&&",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  ],
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "pollEnded",
+                                  "referencedDeclaration": 1130,
+                                  "type": "function (uint256) view external returns (bool)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "voting",
+                                      "referencedDeclaration": 66,
+                                      "type": "contract PLCRVoting"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 109,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 114,
+                                        "name": "Identifier",
+                                        "src": "1518:5:1"
+                                      }
+                                    ],
+                                    "id": 115,
+                                    "name": "MemberAccess",
+                                    "src": "1518:12:1"
+                                  }
+                                ],
+                                "id": 116,
+                                "name": "MemberAccess",
+                                "src": "1518:22:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "challengeID",
+                                  "referencedDeclaration": 70,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 109,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 117,
+                                    "name": "Identifier",
+                                    "src": "1541:5:1"
+                                  }
+                                ],
+                                "id": 118,
+                                "name": "MemberAccess",
+                                "src": "1541:17:1"
+                              }
+                            ],
+                            "id": 119,
+                            "name": "FunctionCall",
+                            "src": "1518:41:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "==",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "resolved",
+                                  "referencedDeclaration": 74,
+                                  "type": "bool"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 109,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 120,
+                                    "name": "Identifier",
+                                    "src": "1563:5:1"
+                                  }
+                                ],
+                                "id": 121,
+                                "name": "MemberAccess",
+                                "src": "1563:14:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "66616c7365",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "bool",
+                                  "type": "bool",
+                                  "value": "false"
+                                },
+                                "id": 122,
+                                "name": "Literal",
+                                "src": "1581:5:1"
+                              }
+                            ],
+                            "id": 123,
+                            "name": "BinaryOperation",
+                            "src": "1563:23:1"
+                          }
+                        ],
+                        "id": 124,
+                        "name": "BinaryOperation",
+                        "src": "1518:68:1"
+                      }
+                    ],
+                    "id": 125,
+                    "name": "Return",
+                    "src": "1511:75:1"
+                  }
+                ],
+                "id": 126,
+                "name": "Block",
+                "src": "1505:86:1"
+              }
+            ],
+            "id": 127,
+            "name": "FunctionDefinition",
+            "src": "1431:160:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "challengeWinnerReward",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 159,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 128,
+                        "name": "UserDefinedTypeName",
+                        "src": "1714:4:1"
+                      }
+                    ],
+                    "id": 129,
+                    "name": "VariableDeclaration",
+                    "src": "1714:18:1"
+                  }
+                ],
+                "id": 130,
+                "name": "ParameterList",
+                "src": "1713:20:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 159,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 131,
+                        "name": "ElementaryTypeName",
+                        "src": "1759:4:1"
+                      }
+                    ],
+                    "id": 132,
+                    "name": "VariableDeclaration",
+                    "src": "1759:4:1"
+                  }
+                ],
+                "id": 133,
+                "name": "ParameterList",
+                "src": "1758:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "falseBody": null
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "==",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "uint256",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  ],
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "getTotalNumberOfTokensForWinningOption",
+                                  "referencedDeclaration": 1109,
+                                  "type": "function (uint256) view external returns (uint256)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "voting",
+                                      "referencedDeclaration": 66,
+                                      "type": "contract PLCRVoting"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 129,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 134,
+                                        "name": "Identifier",
+                                        "src": "1842:5:1"
+                                      }
+                                    ],
+                                    "id": 135,
+                                    "name": "MemberAccess",
+                                    "src": "1842:12:1"
+                                  }
+                                ],
+                                "id": 136,
+                                "name": "MemberAccess",
+                                "src": "1842:51:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "challengeID",
+                                  "referencedDeclaration": 70,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 129,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 137,
+                                    "name": "Identifier",
+                                    "src": "1894:5:1"
+                                  }
+                                ],
+                                "id": 138,
+                                "name": "MemberAccess",
+                                "src": "1894:17:1"
+                              }
+                            ],
+                            "id": 139,
+                            "name": "FunctionCall",
+                            "src": "1842:70:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "30",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "number",
+                              "type": "int_const 0",
+                              "value": "0"
+                            },
+                            "id": 140,
+                            "name": "Literal",
+                            "src": "1916:1:1"
+                          }
+                        ],
+                        "id": 141,
+                        "name": "BinaryOperation",
+                        "src": "1842:75:1"
+                      },
+                      {
+                        "children": [
+                          {
+                            "attributes": {
+                              "functionReturnParameters": 133
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "commonType": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "operator": "*",
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "32",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 2",
+                                      "value": "2"
+                                    },
+                                    "id": 142,
+                                    "name": "Literal",
+                                    "src": "1934:1:1"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "stake",
+                                      "referencedDeclaration": 76,
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 129,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 143,
+                                        "name": "Identifier",
+                                        "src": "1938:5:1"
+                                      }
+                                    ],
+                                    "id": 144,
+                                    "name": "MemberAccess",
+                                    "src": "1938:11:1"
+                                  }
+                                ],
+                                "id": 145,
+                                "name": "BinaryOperation",
+                                "src": "1934:15:1"
+                              }
+                            ],
+                            "id": 146,
+                            "name": "Return",
+                            "src": "1927:22:1"
+                          }
+                        ],
+                        "id": 147,
+                        "name": "Block",
+                        "src": "1919:37:1"
+                      }
+                    ],
+                    "id": 148,
+                    "name": "IfStatement",
+                    "src": "1838:118:1"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 133
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "-",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isInlineArray": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "commonType": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "operator": "*",
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "32",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 2",
+                                      "value": "2"
+                                    },
+                                    "id": 149,
+                                    "name": "Literal",
+                                    "src": "1970:1:1"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "stake",
+                                      "referencedDeclaration": 76,
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 129,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 150,
+                                        "name": "Identifier",
+                                        "src": "1974:5:1"
+                                      }
+                                    ],
+                                    "id": 151,
+                                    "name": "MemberAccess",
+                                    "src": "1974:11:1"
+                                  }
+                                ],
+                                "id": 152,
+                                "name": "BinaryOperation",
+                                "src": "1970:15:1"
+                              }
+                            ],
+                            "id": 153,
+                            "name": "TupleExpression",
+                            "src": "1969:17:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "rewardPool",
+                              "referencedDeclaration": 64,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 129,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 154,
+                                "name": "Identifier",
+                                "src": "1989:5:1"
+                              }
+                            ],
+                            "id": 155,
+                            "name": "MemberAccess",
+                            "src": "1989:16:1"
+                          }
+                        ],
+                        "id": 156,
+                        "name": "BinaryOperation",
+                        "src": "1969:36:1"
+                      }
+                    ],
+                    "id": 157,
+                    "name": "Return",
+                    "src": "1962:43:1"
+                  }
+                ],
+                "id": 158,
+                "name": "Block",
+                "src": "1765:245:1"
+              }
+            ],
+            "id": 159,
+            "name": "FunctionDefinition",
+            "src": "1683:327:1"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "voterReward",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 191,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 160,
+                        "name": "UserDefinedTypeName",
+                        "src": "2357:4:1"
+                      }
+                    ],
+                    "id": 161,
+                    "name": "VariableDeclaration",
+                    "src": "2357:18:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_voter",
+                      "scope": 191,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 162,
+                        "name": "ElementaryTypeName",
+                        "src": "2377:7:1"
+                      }
+                    ],
+                    "id": 163,
+                    "name": "VariableDeclaration",
+                    "src": "2377:14:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_salt",
+                      "scope": 191,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 164,
+                        "name": "ElementaryTypeName",
+                        "src": "2393:4:1"
+                      }
+                    ],
+                    "id": 165,
+                    "name": "VariableDeclaration",
+                    "src": "2393:10:1"
+                  }
+                ],
+                "id": 166,
+                "name": "ParameterList",
+                "src": "2356:48:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 191,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 167,
+                        "name": "ElementaryTypeName",
+                        "src": "2432:4:1"
+                      }
+                    ],
+                    "id": 168,
+                    "name": "VariableDeclaration",
+                    "src": "2432:4:1"
+                  }
+                ],
+                "id": 169,
+                "name": "ParameterList",
+                "src": "2431:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "assignments": [
+                        171
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "voterTokens",
+                          "scope": 191,
+                          "stateVariable": false,
+                          "storageLocation": "default",
+                          "type": "uint256",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "uint",
+                              "type": "uint256"
+                            },
+                            "id": 170,
+                            "name": "ElementaryTypeName",
+                            "src": "2444:4:1"
+                          }
+                        ],
+                        "id": 171,
+                        "name": "VariableDeclaration",
+                        "src": "2444:16:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "uint256",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "getNumPassingTokens",
+                              "referencedDeclaration": 997,
+                              "type": "function (address,uint256,uint256) view external returns (uint256)"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "voting",
+                                  "referencedDeclaration": 66,
+                                  "type": "contract PLCRVoting"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 161,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 172,
+                                    "name": "Identifier",
+                                    "src": "2463:5:1"
+                                  }
+                                ],
+                                "id": 173,
+                                "name": "MemberAccess",
+                                "src": "2463:12:1"
+                              }
+                            ],
+                            "id": 174,
+                            "name": "MemberAccess",
+                            "src": "2463:32:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 163,
+                              "type": "address",
+                              "value": "_voter"
+                            },
+                            "id": 175,
+                            "name": "Identifier",
+                            "src": "2496:6:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "challengeID",
+                              "referencedDeclaration": 70,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 161,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 176,
+                                "name": "Identifier",
+                                "src": "2504:5:1"
+                              }
+                            ],
+                            "id": 177,
+                            "name": "MemberAccess",
+                            "src": "2504:17:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 165,
+                              "type": "uint256",
+                              "value": "_salt"
+                            },
+                            "id": 178,
+                            "name": "Identifier",
+                            "src": "2523:5:1"
+                          }
+                        ],
+                        "id": 179,
+                        "name": "FunctionCall",
+                        "src": "2463:66:1"
+                      }
+                    ],
+                    "id": 180,
+                    "name": "VariableDeclarationStatement",
+                    "src": "2444:85:1"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 169
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "/",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isInlineArray": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "commonType": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "operator": "*",
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 171,
+                                      "type": "uint256",
+                                      "value": "voterTokens"
+                                    },
+                                    "id": 181,
+                                    "name": "Identifier",
+                                    "src": "2543:11:1"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "rewardPool",
+                                      "referencedDeclaration": 64,
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 161,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 182,
+                                        "name": "Identifier",
+                                        "src": "2557:5:1"
+                                      }
+                                    ],
+                                    "id": 183,
+                                    "name": "MemberAccess",
+                                    "src": "2557:16:1"
+                                  }
+                                ],
+                                "id": 184,
+                                "name": "BinaryOperation",
+                                "src": "2543:30:1"
+                              }
+                            ],
+                            "id": 185,
+                            "name": "TupleExpression",
+                            "src": "2542:32:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "winningTokens",
+                              "referencedDeclaration": 78,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 161,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 186,
+                                "name": "Identifier",
+                                "src": "2577:5:1"
+                              }
+                            ],
+                            "id": 187,
+                            "name": "MemberAccess",
+                            "src": "2577:19:1"
+                          }
+                        ],
+                        "id": 188,
+                        "name": "BinaryOperation",
+                        "src": "2542:54:1"
+                      }
+                    ],
+                    "id": 189,
+                    "name": "Return",
+                    "src": "2535:61:1"
+                  }
+                ],
+                "id": 190,
+                "name": "Block",
+                "src": "2438:163:1"
+              }
+            ],
+            "id": 191,
+            "name": "FunctionDefinition",
+            "src": "2336:265:1"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "implemented": true,
+              "isConstructor": false,
+              "modifiers": [
+                null
+              ],
+              "name": "claimReward",
+              "payable": false,
+              "scope": 269,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_self",
+                      "scope": 268,
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "type": "struct Challenge.Data storage pointer",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "contractScope": null,
+                          "name": "Data",
+                          "referencedDeclaration": 83,
+                          "type": "struct Challenge.Data storage pointer"
+                        },
+                        "id": 192,
+                        "name": "UserDefinedTypeName",
+                        "src": "2900:4:1"
+                      }
+                    ],
+                    "id": 193,
+                    "name": "VariableDeclaration",
+                    "src": "2900:18:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_voter",
+                      "scope": 268,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "type": "address"
+                        },
+                        "id": 194,
+                        "name": "ElementaryTypeName",
+                        "src": "2920:7:1"
+                      }
+                    ],
+                    "id": 195,
+                    "name": "VariableDeclaration",
+                    "src": "2920:14:1"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "_salt",
+                      "scope": 268,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 196,
+                        "name": "ElementaryTypeName",
+                        "src": "2936:4:1"
+                      }
+                    ],
+                    "id": 197,
+                    "name": "VariableDeclaration",
+                    "src": "2936:10:1"
+                  }
+                ],
+                "id": 198,
+                "name": "ParameterList",
+                "src": "2899:48:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 268,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 199,
+                        "name": "ElementaryTypeName",
+                        "src": "2964:4:1"
+                      }
+                    ],
+                    "id": 200,
+                    "name": "VariableDeclaration",
+                    "src": "2964:4:1"
+                  }
+                ],
+                "id": 201,
+                "name": "ParameterList",
+                "src": "2963:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 4369,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 202,
+                            "name": "Identifier",
+                            "src": "3074:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "==",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "type": "bool"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "tokenClaims",
+                                      "referencedDeclaration": 82,
+                                      "type": "mapping(address => bool)"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 193,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 203,
+                                        "name": "Identifier",
+                                        "src": "3082:5:1"
+                                      }
+                                    ],
+                                    "id": 204,
+                                    "name": "MemberAccess",
+                                    "src": "3082:17:1"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 195,
+                                      "type": "address",
+                                      "value": "_voter"
+                                    },
+                                    "id": 205,
+                                    "name": "Identifier",
+                                    "src": "3100:6:1"
+                                  }
+                                ],
+                                "id": 206,
+                                "name": "IndexAccess",
+                                "src": "3082:25:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "66616c7365",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "bool",
+                                  "type": "bool",
+                                  "value": "false"
+                                },
+                                "id": 207,
+                                "name": "Literal",
+                                "src": "3111:5:1"
+                              }
+                            ],
+                            "id": 208,
+                            "name": "BinaryOperation",
+                            "src": "3082:34:1"
+                          }
+                        ],
+                        "id": 209,
+                        "name": "FunctionCall",
+                        "src": "3074:43:1"
+                      }
+                    ],
+                    "id": 210,
+                    "name": "ExpressionStatement",
+                    "src": "3074:43:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 4369,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 211,
+                            "name": "Identifier",
+                            "src": "3123:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_struct$_Data_$83_storage_ptr",
+                                      "typeString": "struct Challenge.Data storage pointer"
+                                    }
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 107,
+                                  "type": "function (struct Challenge.Data storage pointer) view returns (bool)",
+                                  "value": "isResolved"
+                                },
+                                "id": 212,
+                                "name": "Identifier",
+                                "src": "3131:10:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 193,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 213,
+                                "name": "Identifier",
+                                "src": "3142:5:1"
+                              }
+                            ],
+                            "id": 214,
+                            "name": "FunctionCall",
+                            "src": "3131:17:1"
+                          }
+                        ],
+                        "id": 215,
+                        "name": "FunctionCall",
+                        "src": "3123:26:1"
+                      }
+                    ],
+                    "id": 216,
+                    "name": "ExpressionStatement",
+                    "src": "3123:26:1"
+                  },
+                  {
+                    "attributes": {
+                      "assignments": [
+                        218
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "voterTokens",
+                          "scope": 268,
+                          "stateVariable": false,
+                          "storageLocation": "default",
+                          "type": "uint256",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "uint",
+                              "type": "uint256"
+                            },
+                            "id": 217,
+                            "name": "ElementaryTypeName",
+                            "src": "3156:4:1"
+                          }
+                        ],
+                        "id": 218,
+                        "name": "VariableDeclaration",
+                        "src": "3156:16:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "uint256",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "getNumPassingTokens",
+                              "referencedDeclaration": 997,
+                              "type": "function (address,uint256,uint256) view external returns (uint256)"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "voting",
+                                  "referencedDeclaration": 66,
+                                  "type": "contract PLCRVoting"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 193,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 219,
+                                    "name": "Identifier",
+                                    "src": "3175:5:1"
+                                  }
+                                ],
+                                "id": 220,
+                                "name": "MemberAccess",
+                                "src": "3175:12:1"
+                              }
+                            ],
+                            "id": 221,
+                            "name": "MemberAccess",
+                            "src": "3175:32:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 195,
+                              "type": "address",
+                              "value": "_voter"
+                            },
+                            "id": 222,
+                            "name": "Identifier",
+                            "src": "3208:6:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "member_name": "challengeID",
+                              "referencedDeclaration": 70,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 193,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 223,
+                                "name": "Identifier",
+                                "src": "3216:5:1"
+                              }
+                            ],
+                            "id": 224,
+                            "name": "MemberAccess",
+                            "src": "3216:17:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 197,
+                              "type": "uint256",
+                              "value": "_salt"
+                            },
+                            "id": 225,
+                            "name": "Identifier",
+                            "src": "3235:5:1"
+                          }
+                        ],
+                        "id": 226,
+                        "name": "FunctionCall",
+                        "src": "3175:66:1"
+                      }
+                    ],
+                    "id": 227,
+                    "name": "VariableDeclarationStatement",
+                    "src": "3156:85:1"
+                  },
+                  {
+                    "attributes": {
+                      "assignments": [
+                        229
+                      ]
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "constant": false,
+                          "name": "reward",
+                          "scope": 268,
+                          "stateVariable": false,
+                          "storageLocation": "default",
+                          "type": "uint256",
+                          "value": null,
+                          "visibility": "internal"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "uint",
+                              "type": "uint256"
+                            },
+                            "id": 228,
+                            "name": "ElementaryTypeName",
+                            "src": "3247:4:1"
+                          }
+                        ],
+                        "id": 229,
+                        "name": "VariableDeclaration",
+                        "src": "3247:11:1"
+                      },
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "uint256",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_struct$_Data_$83_storage_ptr",
+                                  "typeString": "struct Challenge.Data storage pointer"
+                                },
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                },
+                                {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 191,
+                              "type": "function (struct Challenge.Data storage pointer,address,uint256) view returns (uint256)",
+                              "value": "voterReward"
+                            },
+                            "id": 230,
+                            "name": "Identifier",
+                            "src": "3261:11:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 193,
+                              "type": "struct Challenge.Data storage pointer",
+                              "value": "_self"
+                            },
+                            "id": 231,
+                            "name": "Identifier",
+                            "src": "3273:5:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 195,
+                              "type": "address",
+                              "value": "_voter"
+                            },
+                            "id": 232,
+                            "name": "Identifier",
+                            "src": "3280:6:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 197,
+                              "type": "uint256",
+                              "value": "_salt"
+                            },
+                            "id": 233,
+                            "name": "Identifier",
+                            "src": "3288:5:1"
+                          }
+                        ],
+                        "id": 234,
+                        "name": "FunctionCall",
+                        "src": "3261:33:1"
+                      }
+                    ],
+                    "id": 235,
+                    "name": "VariableDeclarationStatement",
+                    "src": "3247:47:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "-=",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "member_name": "winningTokens",
+                              "referencedDeclaration": 78,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 193,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 236,
+                                "name": "Identifier",
+                                "src": "3444:5:1"
+                              }
+                            ],
+                            "id": 238,
+                            "name": "MemberAccess",
+                            "src": "3444:19:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 218,
+                              "type": "uint256",
+                              "value": "voterTokens"
+                            },
+                            "id": 239,
+                            "name": "Identifier",
+                            "src": "3467:11:1"
+                          }
+                        ],
+                        "id": 240,
+                        "name": "Assignment",
+                        "src": "3444:34:1"
+                      }
+                    ],
+                    "id": 241,
+                    "name": "ExpressionStatement",
+                    "src": "3444:34:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "-=",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "member_name": "rewardPool",
+                              "referencedDeclaration": 64,
+                              "type": "uint256"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 193,
+                                  "type": "struct Challenge.Data storage pointer",
+                                  "value": "_self"
+                                },
+                                "id": 242,
+                                "name": "Identifier",
+                                "src": "3484:5:1"
+                              }
+                            ],
+                            "id": 244,
+                            "name": "MemberAccess",
+                            "src": "3484:16:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 229,
+                              "type": "uint256",
+                              "value": "reward"
+                            },
+                            "id": 245,
+                            "name": "Identifier",
+                            "src": "3504:6:1"
+                          }
+                        ],
+                        "id": 246,
+                        "name": "Assignment",
+                        "src": "3484:26:1"
+                      }
+                    ],
+                    "id": 247,
+                    "name": "ExpressionStatement",
+                    "src": "3484:26:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 4369,
+                              "type": "function (bool) pure",
+                              "value": "require"
+                            },
+                            "id": 248,
+                            "name": "Identifier",
+                            "src": "3517:7:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "isStructConstructorCall": false,
+                              "lValueRequested": false,
+                              "names": [
+                                null
+                              ],
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": [
+                                    {
+                                      "typeIdentifier": "t_address",
+                                      "typeString": "address"
+                                    },
+                                    {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  ],
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "transfer",
+                                  "referencedDeclaration": 4157,
+                                  "type": "function (address,uint256) external returns (bool)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": true,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "member_name": "token",
+                                      "referencedDeclaration": 68,
+                                      "type": "contract StandardToken"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+                                          "referencedDeclaration": 193,
+                                          "type": "struct Challenge.Data storage pointer",
+                                          "value": "_self"
+                                        },
+                                        "id": 249,
+                                        "name": "Identifier",
+                                        "src": "3525:5:1"
+                                      }
+                                    ],
+                                    "id": 250,
+                                    "name": "MemberAccess",
+                                    "src": "3525:11:1"
+                                  }
+                                ],
+                                "id": 251,
+                                "name": "MemberAccess",
+                                "src": "3525:20:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 195,
+                                  "type": "address",
+                                  "value": "_voter"
+                                },
+                                "id": 252,
+                                "name": "Identifier",
+                                "src": "3546:6:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 229,
+                                  "type": "uint256",
+                                  "value": "reward"
+                                },
+                                "id": 253,
+                                "name": "Identifier",
+                                "src": "3554:6:1"
+                              }
+                            ],
+                            "id": 254,
+                            "name": "FunctionCall",
+                            "src": "3525:36:1"
+                          }
+                        ],
+                        "id": 255,
+                        "name": "FunctionCall",
+                        "src": "3517:45:1"
+                      }
+                    ],
+                    "id": 256,
+                    "name": "ExpressionStatement",
+                    "src": "3517:45:1"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "=",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "isConstant": false,
+                              "isLValue": true,
+                              "isPure": false,
+                              "lValueRequested": true,
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isLValue": true,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "member_name": "tokenClaims",
+                                  "referencedDeclaration": 82,
+                                  "type": "mapping(address => bool)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+                                      "referencedDeclaration": 193,
+                                      "type": "struct Challenge.Data storage pointer",
+                                      "value": "_self"
+                                    },
+                                    "id": 257,
+                                    "name": "Identifier",
+                                    "src": "3618:5:1"
+                                  }
+                                ],
+                                "id": 260,
+                                "name": "MemberAccess",
+                                "src": "3618:17:1"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 195,
+                                  "type": "address",
+                                  "value": "_voter"
+                                },
+                                "id": 259,
+                                "name": "Identifier",
+                                "src": "3636:6:1"
+                              }
+                            ],
+                            "id": 261,
+                            "name": "IndexAccess",
+                            "src": "3618:25:1"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "74727565",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "bool",
+                              "type": "bool",
+                              "value": "true"
+                            },
+                            "id": 262,
+                            "name": "Literal",
+                            "src": "3646:4:1"
+                          }
+                        ],
+                        "id": 263,
+                        "name": "Assignment",
+                        "src": "3618:32:1"
+                      }
+                    ],
+                    "id": 264,
+                    "name": "ExpressionStatement",
+                    "src": "3618:32:1"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 201
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "overloadedDeclarations": [
+                            null
+                          ],
+                          "referencedDeclaration": 229,
+                          "type": "uint256",
+                          "value": "reward"
+                        },
+                        "id": 265,
+                        "name": "Identifier",
+                        "src": "3668:6:1"
+                      }
+                    ],
+                    "id": 266,
+                    "name": "Return",
+                    "src": "3661:13:1"
+                  }
+                ],
+                "id": 267,
+                "name": "Block",
+                "src": "2970:709:1"
+              }
+            ],
+            "id": 268,
+            "name": "FunctionDefinition",
+            "src": "2879:800:1"
+          }
+        ],
+        "id": 269,
+        "name": "ContractDefinition",
+        "src": "92:3589:1"
+      }
+    ],
+    "id": 270,
+    "name": "SourceUnit",
+    "src": "0:3683:1"
+  },
   "compiler": {
     "name": "solc",
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
@@ -142,14 +3157,9 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0xffa8ba8735365461f709852b66fd33c4a4246238"
-    },
-    "5777": {
-      "events": {},
-      "links": {},
-      "address": "0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6"
+      "address": "0x149de663029baec2e6e8ae4c2fe35d36fec37f36"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-12-01T23:16:35.434Z"
+  "updatedAt": "2017-12-19T21:00:11.746Z"
 }
