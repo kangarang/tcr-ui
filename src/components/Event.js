@@ -60,7 +60,7 @@ export default ({
       </FlexCenteredItem>
 
       {whitelisted && (
-        <FlexCenteredItem gR={2} gC={1}>
+        <FlexCenteredItem gR={1} gC={1}>
           <Img src={catIcon} alt="" />
         </FlexCenteredItem>
       )}
