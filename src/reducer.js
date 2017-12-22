@@ -2,6 +2,7 @@ import { fromJS } from 'immutable'
 
 import {
   CHANGE_DOMAIN,
+  CHANGE_AMOUNT,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
@@ -20,6 +21,7 @@ const initialState = fromJS({
   error: false,
   loading: false,
   domain: '',
+  amount: '',
   contracts: {},
   canonicalMinDeposit: '',
   ethjs: {},
@@ -40,10 +42,14 @@ function homeReducer(state = initialState, action) {
   switch (action.type) {
     case GET_ETHEREUM:
       return state.set('loading', true).set('error', false)
+    case CHANGE_AMOUNT:
+      return state.set('amount', action.amount.replace(/@/gi, ''))
     case CHANGE_DOMAIN:
       return state.set('domain', action.domain.replace(/@/gi, ''))
     case CONTRACT_ERROR:
-      return state.set('error', true)
+      return state
+        .set('error', true)
+        .setIn(['userInfo', 'account'], fromJS('You need MetaMask!'))
     case LOGS_ERROR:
       return state.set('error', true)
     case SET_ETHJS:

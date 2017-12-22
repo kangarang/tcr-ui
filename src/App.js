@@ -20,6 +20,7 @@ import {
   requestApproval,
   getTokensAllowed,
   changeDomain,
+  changeAmount,
   applyDomain,
   challengeDomain,
   updateStatus,
@@ -27,6 +28,7 @@ import {
 
 import {
   selectDomain,
+  selectAmount,
   makeSelectUserInfo,
   selectRegistryItems,
   selectVotingItems,
@@ -62,7 +64,7 @@ class App extends Component {
 
   handleApply = e => {
     e.preventDefault()
-    this.props.onApply(this.props.domain, '50000')
+    this.props.onApply(this.props.domain, this.props.amount)
   }
 
   handleApprove = e => {
@@ -89,6 +91,9 @@ class App extends Component {
       members,
       userInfo,
       onChangeUsername,
+      idAmount,
+      amount,
+      onChangeAmount,
     } = this.props
 
     return (
@@ -108,6 +113,9 @@ class App extends Component {
           onChange={onChangeUsername}
           id={domain}
           placeholder={'Applicant Name'}
+          idAmount={idAmount}
+          amountValue={amount}
+          onChangeAmount={onChangeAmount}
         />
 
         <H2>{'Applicants'}</H2>
@@ -191,6 +199,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: () => dispatch(setupEthereum()),
     onChangeUsername: evt => dispatch(changeDomain(evt.target.value)),
+    onChangeAmount: evt => dispatch(changeAmount(evt.target.value)),
     onApprove: amount => dispatch(requestApproval(amount)),
     onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
     onChallenge: domain => dispatch(challengeDomain(domain)),
@@ -202,6 +211,7 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   userInfo: makeSelectUserInfo(),
   domain: selectDomain,
+  amount: selectAmount,
   registry_items: selectRegistryItems,
   voting_items: selectVotingItems,
   members: makeSelectWhitelistItems(),

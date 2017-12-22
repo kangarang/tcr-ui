@@ -44,6 +44,12 @@ export const setupEventSignatures = (contractABI) => {
 export const buildAndDecodeLogs = async (eth, contract, topic) => {
   const rawLogs = await buildRawLogs(eth, contract, topic)
   const decodedLogs = await decodeLogs(eth, rawLogs, contract.contract)
+  console.log('decodedLogs', decodedLogs[0])
+  console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleDateString())
+  console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleTimeString())
+  console.log('decodedLogs', decodedLogs[1].timestamp.toLocaleTimeString())
+  console.log('decodedLogs', decodedLogs[0].timestamp.getFullYear())
+  console.log('decodedLogs', decodedLogs[0].timestamp.toGMTString())
   return decodedLogs
 }
 

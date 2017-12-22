@@ -4,6 +4,7 @@ import {
   GET_ETHEREUM,
   CHECK_PROVIDER,
   CHANGE_DOMAIN,
+  CHANGE_AMOUNT,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
   SET_DECODED_LOGS,
@@ -28,7 +29,7 @@ import {
   GET_ACCOUNTS_REQUEST,
   GET_ACCOUNTS_SUCCESS,
   GET_ACCOUNTS_ERROR,
-} from './constants'
+} from '../constants'
 
 // Ethereum
 export function checkProvider() {
@@ -79,6 +80,12 @@ export function setContracts(contracts) {
 }
 
 // User interactions
+export function changeAmount(amount) {
+  return {
+    type: CHANGE_AMOUNT,
+    amount,
+  }
+}
 export function changeDomain(domain) {
   return {
     type: CHANGE_DOMAIN,

@@ -1,6 +1,7 @@
 export const GET_ETHEREUM = 'GET_ETHEREUM--|--Home'
 export const CHECK_PROVIDER = 'CHECK_PROVIDER--|--Home'
 export const CHANGE_DOMAIN = 'CHANGE_DOMAIN--|--Home'
+export const CHANGE_AMOUNT = 'CHANGE_AMOUNT--|--Home'
 export const CONTRACT_ERROR = 'CONTRACT_ERROR--|--Home'
 export const LOGS_ERROR = 'LOGS_ERROR--|--Home'
 export const GET_ACCOUNTS_ERROR = 'GET_ACCOUNTS_ERROR--|--Home'

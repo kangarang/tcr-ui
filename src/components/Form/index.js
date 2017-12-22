@@ -26,6 +26,13 @@ function Form(props) {
         {'Please use this form to apply for CAT membership: '}
         <label htmlFor="domain">
           <Input
+            id={props.idAmount}
+            type="number"
+            placeholder={'Enter amount'}
+            value={props.amountValue}
+            onChange={props.onChangeAmount}
+          />
+          <Input
             id={props.id}
             type="text"
             placeholder={props.placeholder}

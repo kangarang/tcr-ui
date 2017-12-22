@@ -12,6 +12,9 @@ export const makeSelectAccount = () =>
   createSelector(makeSelectUserInfo(), userInfo => userInfo.get('account'))
 
 // UI selectors
+export const selectAmount = createSelector(selectHome, homeState =>
+  homeState.get('amount')
+)
 export const selectDomain = createSelector(selectHome, homeState =>
   homeState.get('domain')
 )
