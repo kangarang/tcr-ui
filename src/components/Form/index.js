@@ -10,41 +10,42 @@ const FormComponent = styled.form`
   padding: 2em;
 `
 const Input = styled.input`
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.7);
   border: none;
   border-bottom: 2px solid ${colors.purple};
   font-size: 1em;
   padding: .75em;
+  color: white;
 `
 
 function Form(props) {
   return (
-    <div>
-      <FormComponent onSubmit={props.onSubmit}>
-        {'ConsenSys Ad Tech membership requires a minimum deposit of 50,000 Cat Token (CATT).'}
-        <br />
-        {'Please use this form to apply for CAT membership: '}
-        <label htmlFor="domain">
-          <Input
-            id={props.idAmount}
-            type="number"
-            placeholder={'Enter amount'}
-            value={props.amountValue}
-            onChange={props.onChangeAmount}
-          />
-          <Input
-            id={props.id}
-            type="text"
-            placeholder={props.placeholder}
-            value={props.value}
-            onChange={props.onChange}
-          />
-        </label>
+    <FormComponent onSubmit={props.onSubmit}>
+      {'ConsenSys Ad Tech membership requires a minimum deposit of 50,000 Cat Token (CATT).'}
+      <br />
+      {'Please use this form to apply for CAT membership: '}
+      <div>
+        <Input
+          id={props.idAmount}
+          type="number"
+          placeholder={'Enter amount'}
+          value={props.amountValue}
+          onChange={props.onChangeAmount}
+        />
+      </div>
+      <div>
+        <Input
+          id={props.id}
+          type="text"
+          placeholder={props.placeholder}
+          value={props.value}
+          onChange={props.onChange}
+        />
         <Button onClick={props.onSubmit}>
           <h4>{'Submit'}</h4>
         </Button>
-      </FormComponent>
-    </div>
+      </div>
+    </FormComponent>
   )
 }
 

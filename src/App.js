@@ -118,7 +118,7 @@ class App extends Component {
           onChangeAmount={onChangeAmount}
         />
 
-        <H2>{'Applicants'}</H2>
+        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
@@ -143,7 +143,7 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Challenges'}</H2>
+        <H2>{'Challenges ('}{voting_items.size}{')'}</H2>
         <FlexContainer>
           {voting_items.size > 0 &&
             voting_items.map(log => (
@@ -167,7 +167,7 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Members'}</H2>
+        <H2>{'Members ('}{members.size}{')'}</H2>
         <FlexContainer>
           {members.size > 0 &&
             members.map(log => (
