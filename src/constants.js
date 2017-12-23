@@ -20,6 +20,7 @@ export const SET_TOKENS_ALLOWED = 'SET_TOKENS_ALLOWED--|--Home'
 export const TX_APPLY = 'TX_APPLY--|--Home'
 export const TX_CHALLENGE = 'TX_CHALLENGE--|--Home'
 export const TX_APPROVE = 'TX_APPROVE--|--Home'
+export const TX_COMMIT_VOTE = 'TX_COMMIT_VOTE--|--Home'
 
 export const EV_APPLICATION = 'EV_APPLICATION--|--Home'
 export const EVENT_FROM_REGISTRY = 'EVENT_FROM_REGISTRY--|--Home'

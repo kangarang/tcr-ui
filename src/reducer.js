@@ -130,7 +130,9 @@ function handleEvent(state, payload) {
     return state
   }
   // New registry item
-  return state.update('registry_items', list => list.push(fromJS(payload)))
+  // return state.update('registry_items', list => list.push(fromJS(payload)))
+  return state
+    .update('voting_items', list => list.push(fromJS(payload)))
 }
 
 // Object input

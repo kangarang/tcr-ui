@@ -1,4 +1,5 @@
 import contract from 'truffle-contract'
+import abi from 'ethereumjs-abi'
 
 import abis from './abis'
 import { getDefaults } from './defaults'
@@ -13,31 +14,25 @@ export default class Voting {
     PLCRVoting.setProvider(eth.currentProvider)
     PLCRVoting.defaults(getDefaults(account))
 
-    if (typeof PLCRVoting.currentProvider.sendAsync !== "function") {
-      PLCRVoting.currentProvider.sendAsync = function() {
-        return PLCRVoting.currentProvider.send.apply(
-          PLCRVoting.currentProvider, arguments
-        )
-      }
-    }
     this.address = await registry.voting.call()
     this.contract = await PLCRVoting.at(this.address)
 
     return this
   }
 
-  approveVoting = async () => {
-    this.votingApproved = await this.token.approve(
-      this.address,
-      this.minDeposit
-    )
+  createIndexHash = (account, pollID, atr) => {
+    const hash = `0x${abi.soliditySHA3(['address', 'uint', 'string'],
+      [account, pollID, atr]).toString('hex')}`;
+    return hash;
   }
 
-  commit = async () => this.contract.approve(this.address, this.minDeposit)
+  commitVote = async (pollID, account, amount) => {
+    const numTokens = amount
+    const prevPollID = '0'
+    const secretHash = this.createIndexHash(account, pollID, numTokens)
+    console.log('secretHash', secretHash)
 
-  reveal = async () => {}
-
-  challengeDomain = async (domain) => {
-    this.registry.challenge(domain, this.minDeposit)
+    const receipt = await this.contract.commitVote(pollID, secretHash, numTokens, prevPollID)
+    return receipt
   }
 }

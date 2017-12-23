@@ -14,18 +14,29 @@ function* getFreshLogs() {
   const registry = yield select(selectRegistry)
   const eth = yield select(selectEthjs)
   try {
-    const logs = yield call(buildAndDecodeLogs, eth, registry, '_Application')
-    // const challenged = logs.filter(log => log.challengeID)
-    // console.log('challenged', challenged)
+    const allEvents = yield call(buildAndDecodeLogs, eth, registry)
+    const applications = yield call(buildAndDecodeLogs, eth, registry, '_Application')
+    const apps = allEvents.filter(app => !app.challengeID && !app.whitelisted)
+    const whitelist = applications.filter(app => app.whitelisted)
+    const challenged = allEvents.filter(app => app.challengeID)
+
+    console.log('allEvents', allEvents)
+    console.log('applications', applications)
+
+    console.log('apps', apps)
+    console.log('whitelist', whitelist)
+    console.log('challenged', challenged)
 
     const canBeWhitelistedLogs = yield call(
       registry.filterDomainAndCall,
-      logs,
+      applications,
       'canBeWhitelisted'
     )
     console.log('canBeWhitelistedLogs', canBeWhitelistedLogs)
 
-    yield put(setDecodedLogs(logs))
+    yield put(setDecodedLogs(apps))
+    yield put(setDecodedLogs(whitelist))
+    // yield put()
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))

@@ -9,13 +9,14 @@ import {
   takeEvery,
 } from 'redux-saga/effects'
 import {
+  GET_ETHEREUM,
+  GET_TOKENS_ALLOWED,
+  SET_CONTRACTS,
+  TX_APPROVE,
   TX_APPLY,
   TX_CHALLENGE,
-  SET_CONTRACTS,
+  TX_COMMIT_VOTE,
   TX_UPDATE_STATUS,
-  TX_APPROVE,
-  GET_TOKENS_ALLOWED,
-  GET_ETHEREUM,
 } from '../constants'
 
 import { setupRegistry, setupContracts } from '../contracts'
@@ -51,6 +52,7 @@ export default function* rootSaga() {
   yield takeEvery(TX_APPROVE, approvalSaga)
   yield takeEvery(TX_APPLY, applicationSaga)
   yield takeEvery(TX_CHALLENGE, challengeSaga)
+  yield takeEvery(TX_COMMIT_VOTE, commitSaga)
   yield takeEvery(TX_UPDATE_STATUS, updateStatusSaga)
 }
 
@@ -132,6 +134,27 @@ function* challengeSaga(payload) {
     yield call(tokensAllowedSaga)
   } catch (err) {
     console.log('Challenge error:', err)
+    yield put(contractError(err))
+  }
+}
+
+// Commit vote
+function* commitSaga(payload) {
+  const token = yield select(makeSelectContract('token'))
+  const voting = yield select(makeSelectContract('voting'))
+  const account = yield select(makeSelectAccount())
+  console.log('payload', payload)
+
+  try {
+    const approved = yield call(token.approve, voting.address, payload.amount)
+    console.log('approved', approved)
+
+    yield call(tokensAllowedSaga)
+
+    const receipt = yield call(voting.commitVote, payload.pollID, account, payload.amount)
+    console.log('receipt', receipt)
+  } catch (err) {
+    console.log('Commit vote error:', err)
     yield put(contractError(err))
   }
 }

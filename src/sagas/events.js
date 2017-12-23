@@ -1,6 +1,5 @@
 import { eventChannel, END } from 'redux-saga'
 import { call, put, fork, take, select, cancelled } from 'redux-saga/effects'
-import { toNineToken } from '../libs/units'
 
 import {
   contractError,
@@ -85,11 +84,12 @@ const shapeShift = async (eth, registry, thing) => {
       status = 'whitelistable'
     }
   }
-
+  console.log('thing', thing)
+  console.log('status', status)
   return {
     contractAddress: thing.address,
     domain: thing.args.domain,
-    unstakedDeposit: thing.args.deposit ? toNineToken(thing.args.deposit).toString(10) : false,
+    unstakedDeposit: thing.args.deposit ? thing.args.deposit.toString(10) : false,
     challengeID: thing.args.pollID ? thing.args.pollID.toString(10) : false,
     whitelisted: isWhitelisted,
     event: thing.event,

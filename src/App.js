@@ -22,6 +22,7 @@ import {
   changeDomain,
   changeAmount,
   applyDomain,
+  commitVote,
   challengeDomain,
   updateStatus,
 } from './actions'
@@ -71,6 +72,11 @@ class App extends Component {
     e.preventDefault()
     const deposit = '1000000'
     this.props.onApprove(deposit)
+  }
+
+  handleCommitVote = (e, domain, pollID) => {
+    e.preventDefault()
+    this.props.onCommitVote(domain, pollID, this.props.amount)
   }
 
   handleUpdateStatus = (e, domain) => {
@@ -203,6 +209,7 @@ function mapDispatchToProps(dispatch) {
     onApprove: amount => dispatch(requestApproval(amount)),
     onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
     onChallenge: domain => dispatch(challengeDomain(domain)),
+    onCommitVote: (domain, pollID, amount) => dispatch(commitVote(domain, pollID, amount)),
     onGetTokensAllowed: () => dispatch(getTokensAllowed()),
     onUpdateStatus: domain => dispatch(updateStatus(domain)),
   }

@@ -14,6 +14,7 @@ import {
   TX_APPLY,
   TX_CHALLENGE,
   TX_APPROVE,
+  TX_COMMIT_VOTE,
   SET_VISIBILITY_FILTER,
   SET_STATUS_UPDATE,
   SET_NEW_BUILT_FILTER,
@@ -90,6 +91,14 @@ export function changeDomain(domain) {
   return {
     type: CHANGE_DOMAIN,
     domain,
+  }
+}
+export function commitVote(domain, pollID, amount) {
+  return {
+    type: TX_COMMIT_VOTE,
+    domain,
+    pollID,
+    amount,
   }
 }
 export function applyDomain(domain, deposit) {

@@ -51,6 +51,7 @@ export default ({
   challengeID,
   status,
   handleClickChallenge,
+  handleClickCommitVote,
   handleClickUpdateStatus,
   whitelisted,
 }) => (
@@ -85,6 +86,9 @@ export default ({
       <Item gR={1} gC={4} >
         {(status === 'challengeable' || status === 'whitelistable') && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
+        )}
+        {(status === 'voteable' && !whitelisted) && (
+          <Button onClick={e => handleClickCommitVote(e, domain, challengeID)}>{'Commit Vote'}</Button>
         )}
         {(status === 'whitelistable' && !whitelisted) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>

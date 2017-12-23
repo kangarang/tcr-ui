@@ -25,6 +25,9 @@ const topics = {
   _ChallengeSucceeded: [
     '0xf340a3b60cc69f7c29601c3a7343999504e72a3c96b1ce820aded7352e03feb6',
   ],
+  VoteCommitted: [
+    '0x1d1ce8842c4b2d0eaed42eb6d7732092ca85f0992cae9c760d181efcb0aedf4e',
+  ],
   _ApplicationRemoved: [
     '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
     '0x00000000000000000000000075c35c980c0d37ef46df04d31a140b65503c0eed',
@@ -44,12 +47,12 @@ export const setupEventSignatures = (contractABI) => {
 export const buildAndDecodeLogs = async (eth, contract, topic) => {
   const rawLogs = await buildRawLogs(eth, contract, topic)
   const decodedLogs = await decodeLogs(eth, rawLogs, contract.contract)
-  console.log('decodedLogs', decodedLogs[0])
-  console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleDateString())
-  console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleTimeString())
-  console.log('decodedLogs', decodedLogs[1].timestamp.toLocaleTimeString())
-  console.log('decodedLogs', decodedLogs[0].timestamp.getFullYear())
-  console.log('decodedLogs', decodedLogs[0].timestamp.toGMTString())
+  // console.log('decodedLogs', decodedLogs[0])
+  // console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleDateString())
+  // console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleTimeString())
+  // console.log('decodedLogs', decodedLogs[1].timestamp.toLocaleTimeString())
+  // console.log('decodedLogs', decodedLogs[0].timestamp.getFullYear())
+  // console.log('decodedLogs', decodedLogs[0].timestamp.toGMTString())
   return decodedLogs
 }
 
@@ -95,7 +98,7 @@ const buildRegistryItem = async (rawLogs, contract, log, i, txDetails, block) =>
     }
   }
 
-  console.log('block.timestamp.toString(10)', block.timestamp.toString(10))
+  // console.log('block.timestamp.toString(10)', block.timestamp.toString(10))
   return {
     contractAddress: rawLogs[i].address,
     domain: log.domain,

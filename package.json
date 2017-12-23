@@ -6,6 +6,7 @@
     "blockies": "0.0.2",
     "bluebird": "^3.5.1",
     "bn.js": "^4.11.8",
+    "ethereumjs-abi": "^0.6.5",
     "ethjs": "^0.3.1",
     "ethjs-abi": "^0.2.1",
     "ethjs-query": "^0.3.2",

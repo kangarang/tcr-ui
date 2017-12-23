@@ -14,13 +14,6 @@ export default class Token {
     TokenContract.setProvider(eth.currentProvider);
     TokenContract.defaults(getDefaults(account))
 
-    if (typeof TokenContract.currentProvider.sendAsync !== "function") {
-      TokenContract.currentProvider.sendAsync = function() {
-        return TokenContract.currentProvider.send.apply(
-          TokenContract.currentProvider, arguments
-        )
-      }
-    }
     this.address = await registry.token.call()
     this.contract = await TokenContract.at(this.address)
 
