@@ -65,7 +65,8 @@ class App extends Component {
 
   handleApply = e => {
     e.preventDefault()
-    this.props.onApply(this.props.domain, this.props.amount)
+    this.props.onApply(this.props.domain, '50000')
+    // this.props.onApply(this.props.domain, this.props.amount)
   }
 
   handleApprove = e => {

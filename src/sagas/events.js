@@ -9,6 +9,7 @@ import {
   // eventVotingItem,
 } from '../actions'
 import { selectEthjs, selectRegistry } from '../selectors'
+import { shapeShift } from './log-utils'
 
 export function* setupEventChannels() {
   try {
@@ -54,7 +55,9 @@ const createRegistryChannel = (registry) =>
 function* dispatchEvent(result) {
   const eth = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
+
   const golem = yield call(shapeShift, eth, registry, result)
+  console.log('events.js golem:', golem)
 
   // Dispatches the event details
   if (golem.whitelisted) {
@@ -64,53 +67,4 @@ function* dispatchEvent(result) {
   }
   // Updates the token-registry allowance
   yield put(getTokensAllowed())
-}
-
-const shapeShift = async (eth, registry, thing) => {
-  const txDetails = await eth.getTransactionByHash(thing.transactionHash)
-  console.log('txDetails', txDetails)
-
-  let status
-  if (thing.event === '_Challenge') {
-    status = 'voteable'
-  } else if (thing.event === '_Application') {
-    status = 'challengeable'
-  }
-
-  const isWhitelisted = checkForWhitelist(thing)
-  if (!isWhitelisted) {
-    const canBeWhitelisted = await registry.contract.canBeWhitelisted.call(thing.args.domain)
-    if (canBeWhitelisted) {
-      status = 'whitelistable'
-    }
-  }
-  console.log('thing', thing)
-  console.log('status', status)
-  return {
-    contractAddress: thing.address,
-    domain: thing.args.domain,
-    unstakedDeposit: thing.args.deposit ? thing.args.deposit.toString(10) : false,
-    challengeID: thing.args.pollID ? thing.args.pollID.toString(10) : false,
-    whitelisted: isWhitelisted,
-    event: thing.event,
-    blockNumber: thing.blockNumber.toString(10),
-    blockHash: thing.blockHash,
-    txHash: thing.transactionHash.toString(10),
-    txIndex: thing.transactionIndex.toString(10),
-    logIndex: thing.logIndex.toString(10),
-    from: txDetails.from,
-    to: txDetails.to,
-    status,
-  }
-}
-
-const checkForWhitelist = (item) => {
-  switch (item.event) {
-    case '_NewDomainWhitelisted' || '_ChallengeFailed':
-      return true
-    case '_Application' || '_Challenge' || '_ChallengeSucceeded':
-      return false
-    default:
-      return false
-  }
 }

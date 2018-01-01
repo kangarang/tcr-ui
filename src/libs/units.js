@@ -1,7 +1,6 @@
-import BN from 'bn.js'
 import Eth from 'ethjs'
 
-const bigTen = (number) => new BN(number.toString(10), 10)
+const bigTen = (number) => new Eth.BN(number.toString(10), 10)
 
 const toDecimalPower = (decimals) => bigTen(10).pow(bigTen(decimals))
 

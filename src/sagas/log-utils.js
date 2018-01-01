@@ -35,6 +35,7 @@ const topics = {
   ],
 }
 
+// Utils
 export const setupEventSignatures = (contractABI) => {
   const events = {}
   contractABI.filter((method) => method.type === 'event').map((event) => {
@@ -44,16 +45,17 @@ export const setupEventSignatures = (contractABI) => {
   return events
 }
 
-export const buildAndDecodeLogs = async (eth, contract, topic) => {
-  const rawLogs = await buildRawLogs(eth, contract, topic)
-  const decodedLogs = await decodeLogs(eth, rawLogs, contract.contract)
-  // console.log('decodedLogs', decodedLogs[0])
-  // console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleDateString())
-  // console.log('decodedLogs', decodedLogs[0].timestamp.toLocaleTimeString())
-  // console.log('decodedLogs', decodedLogs[1].timestamp.toLocaleTimeString())
-  // console.log('decodedLogs', decodedLogs[0].timestamp.getFullYear())
-  // console.log('decodedLogs', decodedLogs[0].timestamp.toGMTString())
-  return decodedLogs
+export const shapeShift = async (eth, contract, golem) => {
+  let result
+  if (typeof golem === 'object') {
+    // event
+    result = await shiftEvent(eth, contract, golem)
+  } else if (typeof golem === 'string') {
+    // log
+    result = await buildAndDecodeLogs(eth, contract, golem)
+  }
+  console.log('built, decoded logs:', result)
+  return result
 }
 
 const buildRawLogs = async (eth, contract, topic) =>
@@ -66,37 +68,128 @@ const buildFilter = (contract, topic) => ({
   topics: topics[topic] || null,
 })
 
-const decodeLogs = async (eth, rawLogs, contract) => {
+const decodeLogs = async (eth, contract, rawLogs) => {
   const decoder = EthAbi.logDecoder(contract.abi)
-  const logs = decoder(rawLogs)
+  return decoder(rawLogs)
+}
+
+
+// Ethjs helpers
+const getBlock = async (eth, hash) => eth.getBlockByHash(hash, false)
+const getTransaction = async (eth, hash) => eth.getTransactionByHash(hash)
+
+
+export const buildAndDecodeLogs = async (eth, contract, topic) => {
+  const rawLogs = await buildRawLogs(eth, contract, topic)
+  const decodedLogs = await decodeLogs(eth, contract.contract, rawLogs)
+  // console.log('decodedLogs', decodedLogs[0])
+
   return Promise.all(
-    logs.map(async (ev, ind) => {
-      const txDetails = await eth.getTransactionByHash(
-        rawLogs[ind].transactionHash
-      )
-      const block = await eth.getBlockByHash(
-        rawLogs[ind].blockHash, false
-      )
+    decodedLogs.map(async (ev, ind) => {
+      // shapeShift(eth, contract, rawLogs, ev, ind)
+      const txDetails = await getTransaction(eth, rawLogs[ind].transactionHash)
+      const block = await getBlock(eth, rawLogs[ind].blockHash)
+
       return buildRegistryItem(rawLogs, contract, ev, ind, txDetails, block)
     })
   )
 }
 
-const buildRegistryItem = async (rawLogs, contract, log, i, txDetails, block) => {
+
+const checkForWhitelist = (item) => {
+  switch (item.event) {
+    case '_NewDomainWhitelisted' || '_ChallengeFailed':
+      return true
+    case '_Application' || '_Challenge' || '_ChallengeSucceeded':
+      return false
+    default:
+      return false
+  }
+}
+
+async function shiftEvent(eth, registry, event) {
+  console.log('its an event', event)
+  const txDetails = await eth.getTransactionByHash(event.transactionHash)
+  console.log('txDetails', txDetails)
+
+  let status
+  if (event.event === '_Challenge') {
+    status = 'voteable'
+  } else if (event.event === '_Application') {
+    status = 'challengeable'
+  } else {
+    status = 'poop'
+  }
+
+  const isWhitelisted = checkForWhitelist(event)
+  if (!isWhitelisted) {
+    const canBeWhitelisted = await registry.contract.canBeWhitelisted.call(event.args.domain)
+    if (canBeWhitelisted) {
+      status = 'whitelistable'
+    } else {
+      status = false
+    }
+  }
+
+  console.log('status', status)
+
+  return shapeObject(event, txDetails, isWhitelisted, status)
+}
+
+const shapeObject = (event, details, isWhitelisted, status) => ({
+  // block: {
+  //   number,
+  //   hash,
+  // },
+  // transaction: {
+  //   hash,
+  //   index,
+  //   to,
+  //   from,
+  // },
+  // log: {
+  //   index,
+  //   unstakedDeposit,
+  //   domain,
+  //   challengeID,
+  // },
+  // event: {
+  //   name,
+  //   status,
+  //   whitelisted,
+  // },
+  contractAddress: event.address,
+  domain: event.args.domain,
+  unstakedDeposit: event.args.deposit ? event.args.deposit.toString(10) : false,
+  challengeID: event.args.pollID ? event.args.pollID.toString(10) : false,
+  whitelisted: isWhitelisted,
+  event: event.event,
+  blockNumber: event.blockNumber.toString(10),
+  blockHash: event.blockHash,
+  txHash: event.transactionHash.toString(10),
+  txIndex: event.transactionIndex.toString(10),
+  logIndex: event.logIndex.toString(10),
+  from: details.from,
+  to: details.to,
+  status,
+})
+
+const buildRegistryItem = async (rawLogs, registry, log, i, txDetails, block) => {
   let unstakedDeposit = '0'
   if (log.deposit) {
     unstakedDeposit = toNineToken(log.deposit)
   }
 
-  const isWhitelisted = await contract.isWhitelisted.call(log.domain)
+  const isWhitelisted = await registry.contract.isWhitelisted.call(log.domain)
   let status = 'challengeable'
 
   if (!isWhitelisted) {
-    const canBeWhitelisted = await contract.canBeWhitelisted.call(log.domain)
+    const canBeWhitelisted = await registry.contract.canBeWhitelisted.call(log.domain)
     if (canBeWhitelisted) {
       status = 'whitelistable'
     }
   }
+  // return shapeObject(rawLogs[i], txDetails, isWhitelisted, status)
 
   // console.log('block.timestamp.toString(10)', block.timestamp.toString(10))
   return {
