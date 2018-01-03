@@ -17,13 +17,6 @@ export default class Registry {
     RegistryContract.setProvider(eth.currentProvider)
     RegistryContract.defaults(getDefaults(account))
 
-    if (typeof RegistryContract.currentProvider.sendAsync !== "function") {
-      RegistryContract.currentProvider.sendAsync = function() {
-        return RegistryContract.currentProvider.send.apply(
-          RegistryContract.currentProvider, arguments
-        )
-      }
-    }
     this.contract = await RegistryContract.deployed()
     this.address = this.contract.address
 
@@ -38,23 +31,22 @@ export default class Registry {
 
   challengeDomain = async (domain) => {
     const { logs, receipt } = await this.contract.challenge(domain)
-    const result = {
-      blockHash: receipt.blockHash,
-      blockNumber: receipt.blockNumber,
-      txHash: receipt.transactionHash,
-      txIndex: receipt.transactionIndex,
-      event: logs[0].event,
-      type: logs[0].type,
-      contractAddress: logs[0].address,
-      domain: logs[0].args.domain,
-      deposit: logs[0].args.deposit.toString(10),
-      pollID: logs[0].args.pollID.toString(10),
-    }
-    console.log('challenge receipt', result)
+
+    console.log('logs', logs)
+    console.log('challenge receipt', receipt)
+
+    return receipt
+  }
+
+  checkCall = async (fn, ...args) => {
+    const result = await this.contract[fn].call(...args)
+    console.log(fn, result)
+    return result
   }
 
   updateStatus = async (domain) => {
     const receipt = await this.contract.updateStatus(domain)
+    console.log('updateStatus receipt:', receipt)
     return receipt
   }
 

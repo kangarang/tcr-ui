@@ -12,6 +12,7 @@ import {
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
   TX_APPLY,
+  TX_CHECK_TEST,
   TX_CHALLENGE,
   TX_APPROVE,
   TX_COMMIT_VOTE,
@@ -210,6 +211,12 @@ export function getAccountsSuccess(payload) {
   return {
     type: GET_ACCOUNTS_SUCCESS,
     payload,
+  }
+}
+export function checkTest(domain) {
+  return {
+    type: TX_CHECK_TEST,
+    domain,
   }
 }
 export function updateStatus(domain) {

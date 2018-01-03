@@ -2,12 +2,17 @@ import Eth from 'ethjs'
 
 const bigTen = (number) => new Eth.BN(number.toString(10), 10)
 
-const toDecimalPower = (decimals) => bigTen(10).pow(bigTen(decimals))
+const decimalConversion = (decimals) => bigTen(10).pow(bigTen(decimals))
 
 const toToken = (gToken, decimalPower) => bigTen(gToken).mul(decimalPower)
-const fromToken = (gToken, decimalPower) => bigTen(gToken).div(decimalPower)
+const fromToken = (wToken, decimalPower) => bigTen(wToken).div(decimalPower)
 
-const toNineToken = (gToken) => bigTen(gToken).div(toDecimalPower(9))
+// sending txns convert TO natural unit
+// 1,000,000 -> 1,000,000,000,000,000
+const toNineToken = (smallToken) => bigTen(smallToken).mul(decimalConversion(9))
+// convert FROM natural unit
+// (reading logs)
+const fromNaturalUnit = (naturalUnit) => bigTen(naturalUnit).div(decimalConversion(9))
 
 const withCommas = (number) =>
   number.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -22,12 +27,18 @@ const trimDecimalsThree = (n) =>
 
 export {
   bigTen,
-  toDecimalPower,
+  decimalConversion,
+
   toToken,
   fromToken,
+
+  toNineToken,
+  fromNaturalUnit,
+
   withCommas,
+
   toWei,
   toEther,
+
   trimDecimalsThree,
-  toNineToken,
 }

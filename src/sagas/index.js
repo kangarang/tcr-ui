@@ -17,6 +17,7 @@ import {
   TX_CHALLENGE,
   TX_COMMIT_VOTE,
   TX_UPDATE_STATUS,
+  TX_CHECK_TEST,
 } from '../constants'
 
 import { setupRegistry, setupContracts } from '../contracts'
@@ -26,16 +27,16 @@ import {
   contractError,
   setContracts,
   setMinDeposit,
-  changeDomain,
   setTokensAllowed,
   statusUpdate,
 } from '../actions'
-
 import {
   selectEthjs,
   makeSelectAccount,
   makeSelectContract,
+  selectRegistry,
 } from '../selectors'
+
 import { setupEventChannels } from './events'
 import logsSaga from './logs'
 
@@ -54,6 +55,7 @@ export default function* rootSaga() {
   yield takeEvery(TX_CHALLENGE, challengeSaga)
   yield takeEvery(TX_COMMIT_VOTE, commitSaga)
   yield takeEvery(TX_UPDATE_STATUS, updateStatusSaga)
+  yield takeEvery(TX_CHECK_TEST, checkTestSaga)
 }
 
 function* genesis() {
@@ -159,13 +161,16 @@ function* commitSaga(payload) {
   }
 }
 
-// Changes input data for domain (apply/challenge)
-export function* domainSaga(action) {
-  yield put(changeDomain(action.domain))
+function* checkTestSaga(payload) {
+  const registry = yield select(selectRegistry)
+  // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.domain)
+  const receipt = yield call([registry, 'checkCall'], 'challengeExists', payload.domain)
+  console.log('receipt', receipt)
+  // yield put(statusUpdate(payload.domain, receipt))
 }
 
 function* updateStatusSaga(payload) {
-  const registry = yield select(makeSelectContract('registry'))
+  const registry = yield select(selectRegistry)
   const receipt = yield call(registry.updateStatus, payload.domain)
   yield put(statusUpdate(payload.domain, receipt))
 }

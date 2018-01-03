@@ -18,6 +18,7 @@ export const GET_ACCOUNTS_SUCCESS = 'GET_ACCOUNTS_SUCCESS--|--Home'
 export const SET_TOKENS_ALLOWED = 'SET_TOKENS_ALLOWED--|--Home'
 
 export const TX_APPLY = 'TX_APPLY--|--Home'
+export const TX_CHECK_TEST= 'TX_CHECK_TEST--|--Home'
 export const TX_CHALLENGE = 'TX_CHALLENGE--|--Home'
 export const TX_APPROVE = 'TX_APPROVE--|--Home'
 export const TX_COMMIT_VOTE = 'TX_COMMIT_VOTE--|--Home'

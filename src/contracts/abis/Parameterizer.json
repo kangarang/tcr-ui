@@ -10013,14 +10013,14 @@
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
   "networks": {
-    "4": {
+    "1514972290825": {
       "events": {},
       "links": {
-        "Challenge": "0x149de663029baec2e6e8ae4c2fe35d36fec37f36"
+        "Challenge": "0xfb88de099e13c3ed21f80a7a1e49f8caecf10df6"
       },
-      "address": "0xaac0118fc65442b60573d1b1742b175af86eb04e"
+      "address": "0xf204a4ef082f5c04bb89f7d5e6568b796096735a"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-12-19T21:00:11.770Z"
+  "updatedAt": "2018-01-03T09:38:53.873Z"
 }

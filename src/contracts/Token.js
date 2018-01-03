@@ -1,6 +1,19 @@
 import contract from 'truffle-contract'
 
-import { toDecimalPower, fromToken, toToken } from '../libs/units'
+import {
+  // bigTen,
+  decimalConversion,
+
+  toToken,
+  fromToken,
+
+  // withCommas,
+
+  // toWei,
+  // toEther,
+
+  // trimDecimalsThree,
+} from '../libs/units'
 import abis from './abis'
 import { getDefaults } from './defaults'
 
@@ -28,10 +41,10 @@ export default class Token {
 
   params = async () => {
     this.name = await this.contract.name.call()
-    this.decimals = (await this.contract.decimals.call()).toString(10)
+    this.decimals = await this.contract.decimals.call()
     this.symbol = await this.contract.symbol.call()
     this.version = await this.contract.version.call()
-    this.decimalPower = toDecimalPower(this.decimals)
+    this.decimalPower = decimalConversion(this.decimals)
   }
 
   approve = async (address, amount) => {

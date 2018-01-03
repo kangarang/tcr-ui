@@ -119,20 +119,23 @@ function handleEvent(state, payload) {
   const index = state
     .get('registry_items')
     .findIndex(ri => ri.get('domain') === payload.domain)
-  if (index !== -1 && payload.challengeID) {
+  // Challenge exists
+  if (index !== -1 && payload.pollID) {
     // Delete existing registry item
     // Create new voting item
     return state
-      .deleteIn(['registry_items', index])
-      .update('voting_items', list => list.push(fromJS(payload)))
-  } else if (index !== -1 && !payload.challengeID) {
+      // .deleteIn(['registry_items', index])
+      // .update('voting_items', list => list.push(fromJS(payload)))
+    // Challenge doesn't exist
+  } else if (index !== -1 && !payload.pollID) {
     // Duplicate registry item
+    console.log('payload', payload)
     return state
   }
   // New registry item
-  // return state.update('registry_items', list => list.push(fromJS(payload)))
-  return state
-    .update('voting_items', list => list.push(fromJS(payload)))
+  return state.update('registry_items', list => list.push(fromJS(payload)))
+  // return state
+  //   .update('voting_items', list => list.push(fromJS(payload)))
 }
 
 // Object input

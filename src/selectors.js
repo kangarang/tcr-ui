@@ -37,7 +37,8 @@ export const selectRegistryItems = createSelector(selectHome, homeState =>
   homeState.get('registry_items')
 )
 export const selectVotingItems = createSelector(selectHome, homeState =>
-  homeState.get('voting_items')
+  // homeState.get('voting_items')
+  homeState.get('registry_items').filter(ri => ri.get('pollID'))
 )
 
 // Filter selectors

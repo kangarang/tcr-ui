@@ -6,8 +6,11 @@ import Ethjs from 'ethjs'
 // })
 // console.log('ethereumProvider', ethereumProvider)
 
+const net = 'development'
+
 export const getProvider = () => {
-  if (process.env.NODE_ENV === 'development') {
+  // if (process.env.NODE_ENV === 'development') {
+  if (net === 'development') {
     // Dev: Ganache
     return new Ethjs.HttpProvider(getProviderUrl())
   } else if (
@@ -20,7 +23,8 @@ export const getProvider = () => {
 }
 
 export const getProviderUrl = () => {
-  if (process.env.NODE_ENV === 'development') {
+  // if (process.env.NODE_ENV === 'development') {
+  if (net === 'development') {
     // Dev: Ganache
     return 'http://localhost:7545'
   } else if (typeof window.web3.currentProvider !== 'undefined') {

@@ -23,6 +23,7 @@ import {
   changeAmount,
   applyDomain,
   commitVote,
+  checkTest,
   challengeDomain,
   updateStatus,
 } from './actions'
@@ -83,6 +84,11 @@ class App extends Component {
   handleUpdateStatus = (e, domain) => {
     e.preventDefault()
     this.props.onUpdateStatus(domain)
+  }
+
+  handleTest = (e, domain) => {
+    e.preventDefault()
+    this.props.onTest(domain)
   }
 
   handleSetVisibility = (e, vFilter) => {
@@ -149,6 +155,7 @@ class App extends Component {
                   whitelisted={log.get('whitelisted')}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickChallenge={this.handleChallenge}
+                  handleClickTest={this.handleTest}
                 />
               </Section>
             ))}
@@ -177,6 +184,8 @@ class App extends Component {
                   status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
                   handleClickCommitVote={this.handleCommitVote}
+                  handleClickUpdateStatus={this.handleUpdateStatus}
+                  handleClickTest={this.handleTest}
                 />
               </Section>
             ))}
@@ -204,6 +213,7 @@ class App extends Component {
                   event={log.get('event')}
                   status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
+                  handleClickTest={this.handleTest}
                   handleClickChallenge={this.handleChallenge}
                 />
               </Section>
@@ -225,6 +235,7 @@ function mapDispatchToProps(dispatch) {
     onCommitVote: (domain, pollID, amount) => dispatch(commitVote(domain, pollID, amount)),
     onGetTokensAllowed: () => dispatch(getTokensAllowed()),
     onUpdateStatus: domain => dispatch(updateStatus(domain)),
+    onTest: domain => dispatch(checkTest(domain)),
   }
 }
 

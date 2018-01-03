@@ -14,14 +14,6 @@ export default class Parameterizer {
     ParameterizerContract.setProvider(eth.currentProvider)
     ParameterizerContract.defaults(getDefaults(account))
 
-    if (typeof ParameterizerContract.currentProvider.sendAsync !== "function") {
-      ParameterizerContract.currentProvider.sendAsync = function() {
-        return ParameterizerContract.currentProvider.send.apply(
-          ParameterizerContract.currentProvider, arguments
-        )
-      }
-    }
-
     this.address = await registry.parameterizer.call()
     this.contract = await ParameterizerContract.at(this.address)
 

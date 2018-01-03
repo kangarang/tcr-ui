@@ -1,5 +1,5 @@
 import { all, takeLatest, call, put, select } from 'redux-saga/effects'
-import { fromJS } from 'immutable'
+// import { fromJS } from 'immutable'
 
 import { setDecodedLogs, logsError } from '../actions'
 import { SET_CONTRACTS } from '../constants'
@@ -10,7 +10,9 @@ import {
   commonUtils,
 } from './utils'
 
-import { toNineToken } from '../libs/units'
+import {
+  fromNaturalUnit,
+} from '../libs/units'
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
@@ -24,29 +26,32 @@ function* getFreshLogs() {
     const applications = yield call(handleLogs, eth, registry, '_Application')
     console.log('applications', applications)
 
-    const ndwl = yield call(handleLogs, eth, registry, '_NewDomainWhitelisted')
-    console.log('ndwl', ndwl)
+    const challenges = yield call(handleLogs, eth, registry, '_Challenge')
 
-    const ar = yield call(handleLogs, eth, registry, '_Application')
-    console.log('ar', ar)
+    // const ndwl = yield call(handleLogs, eth, registry, '_NewDomainWhitelisted')
+    // console.log('ndwl', ndwl)
 
-    const trueWhitelist = fromJS(ndwl)
-    const wlll = trueWhitelist.filter(wl => !ar.filter(a => a.domain === wl.get('domain')))
-    console.log('trueWhitelist', wlll.toJS())
+    // const ar = yield call(handleLogs, eth, registry, '_ApplicationRemoved')
+    // console.log('ar', ar)
 
-    const apps = applications.filter(app => !app.challengeID && !app.whitelisted)
-    console.log('apps', apps)
+    // const trueWhitelist = fromJS(ndwl)
+    // const wlll = trueWhitelist.filter(wl => !ar.filter(a => a.domain === wl.get('domain')))
+    // console.log('trueWhitelist', wlll.toJS())
 
-    const whitelist = applications.filter(app => app.whitelisted)
-    console.log('whitelist', whitelist)
+    // const apps = applications.filter(app => !app.challengeID && !app.whitelisted)
+    // console.log('apps', apps)
 
-    const challenged = apps.filter(app => app.challengeID)
-    console.log('challenged', challenged)
+    // const whitelist = applications.filter(app => app.whitelisted)
+    // console.log('whitelist', whitelist)
 
-    const canBeWhitelistedLogs = yield call(logUtils.canBeWhitelisted, registry, applications)
-    console.log('canBeWhitelistedLogs', canBeWhitelistedLogs)
+    // const challenged = apps.filter(app => app.challengeID)
+    // console.log('challenged', challenged)
+
+    // const canBeWhitelistedLogs = yield call(logUtils.canBeWhitelisted, registry, applications)
+    // console.log('canBeWhitelistedLogs', canBeWhitelistedLogs)
 
     yield put(setDecodedLogs(applications))
+    yield put(setDecodedLogs(challenges))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
@@ -55,27 +60,24 @@ function* getFreshLogs() {
 
 
 function* handleLogs(eth, registry, topic) {
-  const filter = logUtils.buildFilter(registry, topic)
-  const rawLogs = yield call([eth, 'getLogs'], filter)
-  const decodedLogs = yield call([logUtils, 'decodeLogs'], eth, registry.contract, rawLogs)
-  console.log('decodedLogs', decodedLogs)
+  const filter = yield call(logUtils.buildFilter, registry.address, topic)
+  const rawLogs = yield call(eth.getLogs, filter)
+  const decodedLogs = yield call(logUtils.decodeLogs, eth, registry.contract, rawLogs)
 
   return yield all(
-    yield decodedLogs.map(async (dLog, ind) => {
-      // const block = await call(commonUtils.getBlock, eth, rawLogs[ind].blockHash)
-      // const txDetails = await call(commonUtils.getTransaction, eth, rawLogs[ind].transactionHash)
+    yield all(decodedLogs.map(async (dLog, ind) => {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
 
-      return call(buildRegistryItem, rawLogs, registry, dLog, ind, txDetails, block)
-    })
+      return call(buildRegistryItem, rawLogs, registry, block, dLog, ind, txDetails)
+    }))
   )
 }
 
-function* buildRegistryItem(rawLogs, registry, log, i, txDetails, block) {
+function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
   let unstakedDeposit = '0'
   if (log.deposit) {
-    unstakedDeposit = toNineToken(log.deposit)
+    unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
   }
 
   const isWhitelisted = yield call(commonUtils.isWhitelisted, registry, log.domain)
@@ -87,6 +89,9 @@ function* buildRegistryItem(rawLogs, registry, log, i, txDetails, block) {
       status = 'whitelistable'
     }
   }
+  // console.log('log', log)
+  // console.log('rawLogs', rawLogs)
+  // console.log('txDetails', txDetails)
 
   const tx = {
     hash: rawLogs[i].transactionHash,

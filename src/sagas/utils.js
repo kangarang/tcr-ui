@@ -5,11 +5,11 @@ import topics from '../libs/topics'
 
 // Logs helpers
 export const logUtils = {
-  buildFilter: (contract, topic) => ({
+  buildFilter: (address, topic) => ({
     fromBlock: new Eth.BN('1'),
     toBlock: 'latest',
-    address: contract.address,
-    topics: topics[topic] || null,
+    address,
+    topics: topics[topic],
   }),
 
   decodeLogs: async (eth, contract, rawLogs) => {

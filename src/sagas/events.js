@@ -68,7 +68,7 @@ function* handleEvent(result) {
   } else if (result.event === '_Application') {
     status = 'challengeable'
   } else {
-    status = 'poop'
+    status = 'challengeable'
   }
 
   // This is faster than registry.isWhitelisted
@@ -79,7 +79,7 @@ function* handleEvent(result) {
     if (canBeWhitelisted) {
       status = 'whitelistable'
     } else {
-      status = false
+      // status = false
     }
   }
 

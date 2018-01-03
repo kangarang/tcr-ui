@@ -12,9 +12,8 @@ import Img from './Img'
 import {
   Item,
   FlexCenteredItem,
-  Text,
-  InlineText,
   BoldInlineText,
+  BigBoldInlineText,
 } from './Item'
 
 const Container = styled.div`
@@ -46,6 +45,7 @@ export default ({
   handleClickChallenge,
   handleClickCommitVote,
   handleClickUpdateStatus,
+  handleClickTest,
 }) => (
     <Container txHash={txHash}>
       <FlexCenteredItem gR={1} gC={1}>
@@ -59,10 +59,10 @@ export default ({
       )}
 
       <Item pad={0.5} gR={1} gC={2}>
-        <BoldInlineText>
+        <BigBoldInlineText>
           {whitelisted ? 'Member: ' : 'Candidate: '}
           {domain}
-        </BoldInlineText>
+        </BigBoldInlineText>
       </Item>
 
       {unstakedDeposit && (
@@ -85,6 +85,7 @@ export default ({
         {(status === 'whitelistable' && !whitelisted) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
         )}
+        <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>
       </Item>
 
       <Item pad={0.5} gR={2} gC={2}>
