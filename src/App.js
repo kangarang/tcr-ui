@@ -131,17 +131,21 @@ class App extends Component {
             candidates.map(log => (
               <Section key={log.get('blockNumber') + log.get('domain')}>
                 <Event
-                  domain={log.get('domain')}
-                  value={log.get('unstakedDeposit')}
                   blockHash={log.get('blockHash')}
                   blockNumber={log.get('blockNumber')}
+                  timestamp={log.get('timestamp')}
+
                   txHash={log.get('txHash')}
                   txIndex={log.get('txIndex')}
-                  logIndex={log.get('logIndex')}
-                  event={log.get('event')}
-                  challengeID={log.get('challengeID')}
-                  status={log.get('status')}
                   account={log.get('from')}
+
+                  domain={log.get('domain')}
+                  unstakedDeposit={log.get('unstakedDeposit')}
+                  pollID={log.get('pollID')}
+                  logIndex={log.get('logIndex')}
+
+                  event={log.get('event')}
+                  status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickChallenge={this.handleChallenge}
@@ -156,17 +160,21 @@ class App extends Component {
             voting_items.map(log => (
               <Section key={log.get('blockNumber') + log.get('domain')}>
                 <Event
-                  domain={log.get('domain')}
-                  value={log.get('unstakedDeposit')}
                   blockHash={log.get('blockHash')}
                   blockNumber={log.get('blockNumber')}
+                  timestamp={log.get('timestamp')}
+
                   txHash={log.get('txHash')}
                   txIndex={log.get('txIndex')}
-                  logIndex={log.get('logIndex')}
-                  event={log.get('event')}
-                  challengeID={log.get('challengeID')}
-                  status={log.get('status')}
                   account={log.get('from')}
+
+                  domain={log.get('domain')}
+                  unstakedDeposit={log.get('unstakedDeposit')}
+                  pollID={log.get('pollID')}
+                  logIndex={log.get('logIndex')}
+
+                  event={log.get('event')}
+                  status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
                   handleClickCommitVote={this.handleCommitVote}
                 />
@@ -180,17 +188,21 @@ class App extends Component {
             members.map(log => (
               <Section key={log.get('blockNumber') + log.get('domain')}>
                 <Event
-                  domain={log.get('domain')}
-                  value={log.get('unstakedDeposit')}
                   blockHash={log.get('blockHash')}
                   blockNumber={log.get('blockNumber')}
+                  timestamp={log.get('timestamp')}
+
                   txHash={log.get('txHash')}
                   txIndex={log.get('txIndex')}
-                  logIndex={log.get('logIndex')}
-                  event={log.get('event')}
-                  challengeID={log.get('challengeID')}
-                  status={log.get('status')}
                   account={log.get('from')}
+
+                  domain={log.get('domain')}
+                  unstakedDeposit={log.get('unstakedDeposit')}
+                  pollID={log.get('pollID')}
+                  logIndex={log.get('logIndex')}
+
+                  event={log.get('event')}
+                  status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
                   handleClickChallenge={this.handleChallenge}
                 />

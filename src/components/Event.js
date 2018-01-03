@@ -9,51 +9,43 @@ import Button from './Button'
 import Identicon from './Identicon'
 import Img from './Img'
 
+import {
+  Item,
+  FlexCenteredItem,
+  Text,
+  InlineText,
+  BoldInlineText,
+} from './Item'
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1.5fr 4fr 8fr 6fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 5px;
-  border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
   padding: .7em;
-`
-const Item = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  grid-row: ${props => props.gR};
-  grid-column: ${props => props.gC};
-  overflow: hidden;
-`
-const FlexCenteredItem = styled(Item) `
-  justify-content: center;
-`
-const Text = styled.div`
-  display: block;
-`
-const InlineText = styled(Text) `
-  display: inline;
-`
-const BoldInlineText = styled(InlineText) `
-  font-weight: bold;
-  text-align: left;
+  border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
 `
 
 export default ({
-  domain,
-  value,
   blockHash,
   blockNumber,
+
   txHash,
+  txIndex,
   account,
+
+  domain,
+  unstakedDeposit,
+  pollID,
   logIndex,
+
   event,
-  challengeID,
   status,
+  whitelisted,
+
   handleClickChallenge,
   handleClickCommitVote,
   handleClickUpdateStatus,
-  whitelisted,
 }) => (
     <Container txHash={txHash}>
       <FlexCenteredItem gR={1} gC={1}>
@@ -66,43 +58,43 @@ export default ({
         </FlexCenteredItem>
       )}
 
-      <Item gR={1} gC={2}>
+      <Item pad={0.5} gR={1} gC={2}>
         <BoldInlineText>
           {whitelisted ? 'Member: ' : 'Candidate: '}
           {domain}
         </BoldInlineText>
       </Item>
 
-      {value && (
-        <Item gR={1} gC={3}>
+      {unstakedDeposit && (
+        <Item pad={0.5} gR={1} gC={3}>
           <BoldInlineText>
             {'Deposit: '}
-            {value.toString(10)}
+            {unstakedDeposit.toString(10)}
             {' CATT'}
           </BoldInlineText>
         </Item>
       )}
 
-      <Item gR={1} gC={4} >
+      <Item pad={0.5} gR={1} gC={4} >
         {(status === 'challengeable' || status === 'whitelistable') && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
         {(status === 'voteable' && !whitelisted) && (
-          <Button onClick={e => handleClickCommitVote(e, domain, challengeID)}>{'Commit Vote'}</Button>
+          <Button onClick={e => handleClickCommitVote(e, domain, pollID)}>{'Commit Vote'}</Button>
         )}
         {(status === 'whitelistable' && !whitelisted) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
         )}
       </Item>
 
-      <Item gR={2} gC={2}>
+      <Item pad={0.5} gR={2} gC={2}>
         <BoldInlineText>
           {'Block number: '}
           {blockNumber}
         </BoldInlineText>
       </Item>
 
-      <Item gR={2} gC={3}>
+      <Item pad={0.5} gR={2} gC={3}>
         <BoldInlineText>
           {'Address: '}
           <A
@@ -114,7 +106,7 @@ export default ({
         </BoldInlineText>
       </Item>
 
-      <Item gR={2} gC={4}>
+      <Item pad={0.5} gR={2} gC={4}>
         <BoldInlineText>
           {'Tx hash: '}
           <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${txHash}`}>

@@ -5,11 +5,13 @@ import {
   contractError,
   eventFromRegistry,
   getTokensAllowed,
-  eventWhitelist,
-  // eventVotingItem,
 } from '../actions'
 import { selectEthjs, selectRegistry } from '../selectors'
-import { shapeShift } from './log-utils'
+
+import {
+  eventUtils,
+  commonUtils,
+} from './utils'
 
 export function* setupEventChannels() {
   try {
@@ -26,7 +28,7 @@ function* handleRegistryChannel(registry) {
   try {
     while (true) {
       const channelEvent = yield take(registryChannel)
-      yield fork(dispatchEvent, channelEvent)
+      yield fork(handleEvent, channelEvent)
     }
   } finally {
     if (yield cancelled()) {
@@ -52,19 +54,59 @@ const createRegistryChannel = (registry) =>
     return () => events.stopWatching()
   })
 
-function* dispatchEvent(result) {
+
+function* handleEvent(result) {
   const eth = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
 
-  const golem = yield call(shapeShift, eth, registry, result)
-  console.log('events.js golem:', golem)
+  const txDetails = yield call(commonUtils.getTransaction, eth, result.transactionHash)
 
-  // Dispatches the event details
-  if (golem.whitelisted) {
-    yield put(eventWhitelist(golem))
+
+  let status
+  if (result.event === '_Challenge') {
+    status = 'voteable'
+  } else if (result.event === '_Application') {
+    status = 'challengeable'
   } else {
-    yield put(eventFromRegistry(golem))
+    status = 'poop'
   }
+
+  // This is faster than registry.isWhitelisted
+  const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
+
+  if (!isWhitelisted) {
+    const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.domain)
+    if (canBeWhitelisted) {
+      status = 'whitelistable'
+    } else {
+      status = false
+    }
+  }
+
+  const block = {
+    number: result.blockNumber,
+    hash: result.blockHash,
+  }
+  const tx = {
+    hash: txDetails.hash,
+    index: txDetails.transactionIndex,
+    to: txDetails.to,
+    from: txDetails.from
+  }
+  const details = {
+    domain: result.args.domain,
+    unstakedDeposit: result.args.deposit ? result.args.deposit : '?',
+    pollID: result.args.pollID && result.args.pollID,
+    index: result.logIndex,
+    eventName: result.event,
+    contractAddress: result.address,
+    isWhitelisted,
+    status,
+  }
+
+  const golem = yield call(commonUtils.shapeShift, block, tx, details)
+  yield put(eventFromRegistry(golem))
+
   // Updates the token-registry allowance
   yield put(getTokensAllowed())
 }
