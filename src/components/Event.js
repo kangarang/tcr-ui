@@ -77,7 +77,7 @@ export default ({
       )}
 
       <Item pad={0.5} gR={1} gC={4} >
-        {!(!whitelisted && pollID) && (
+        {(pollID === false) && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
         {(!whitelisted && pollID) && (

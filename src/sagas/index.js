@@ -41,6 +41,7 @@ import { setupEventChannels } from './events'
 import logsSaga from './logs'
 
 import { getEthjs } from '../libs/provider'
+import { toNineToken } from '../libs/units';
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -145,13 +146,11 @@ function* commitSaga(payload) {
   const token = yield select(makeSelectContract('token'))
   const voting = yield select(makeSelectContract('voting'))
   const account = yield select(makeSelectAccount())
-  console.log('payload', payload)
+
 
   try {
-    const approved = yield call(token.approve, voting.address, payload.amount)
-    console.log('approved', approved)
-
-    yield call(tokensAllowedSaga)
+    yield call(token.approve, voting.address, payload.amount)
+    yield call(voting.requestVotingRights, payload.amount)
 
     const receipt = yield call(voting.commitVote, payload.pollID, account, payload.amount)
     console.log('receipt', receipt)
@@ -159,6 +158,7 @@ function* commitSaga(payload) {
     console.log('Commit vote error:', err)
     yield put(contractError(err))
   }
+  yield call(tokensAllowedSaga)
 }
 
 function* checkTestSaga(payload) {

@@ -15,7 +15,7 @@ import {
   GET_ETHEREUM,
   SET_DECODED_LOGS,
   SET_METHOD_SIGNATURES,
-} from './constants'
+} from '../constants'
 
 const initialState = fromJS({
   error: false,
@@ -113,21 +113,25 @@ function setNewItems(state, payload) {
   return state.set('registry_items', twoArrays)
 }
 
+// TODO: check blockNumber to make sure updating is ok
 function changeItems(state, payload) {
   const newItems = payload.reduce((acc, val) => {
     const index = acc
       .findIndex(ri => ri.get('domain') === val.domain)
-    if (val._eventName === '_Challenge') {
+    if (val.event === '_Challenge') {
       // Change application -> challenge
-      return acc.setIn([index, 'pollID'], val.pollID.toString(10))
-    } else if (val._eventName === '_NewDomainWhitelisted' || val._eventName === '_ChallengeFailed') {
+      return acc.setIn([index, 'pollID'], val.pollID)
+        .setIn([index, 'whitelisted'], false)
+    } else if (val.event === '_NewDomainWhitelisted' || val.event === '_ChallengeFailed') {
       // Change thing -> whitelisted
       return acc.setIn([index, 'whitelisted'], true)
+      .setIn([index, 'pollID'], false)
     } else {
       return acc
     }
   }, state.get('registry_items'))
-  return state.set('registry_items', fromJS(newItems))
+
+  return state.set('registry_items', newItems)
 }
 
 function changeItem(state, payload) {
@@ -136,11 +140,19 @@ function changeItem(state, payload) {
     .findIndex(ri => ri.get('domain') === payload.args.domain)
   if (index !== -1) {
     if (payload.event === '_Challenge') {
-      // Change application -> challenge
-      return state.setIn(['registry_items', index, 'pollID'], payload.args.pollID.toString(10))
+      // Change registryItem -> challenge
+      return state
+        .setIn(
+          ['registry_items', index, 'pollID'],
+          payload.args.pollID.toString(10)
+        )
+        // .setIn(
+        //   ['registry_items', index, 'whitelisted'], false
+        // )
     } else if (payload.event === '_NewDomainWhitelisted' || payload.event === '_ChallengeFailed') {
       // Change thing -> whitelisted
       return state.setIn(['registry_items', index, 'whitelisted'], true)
+      .setIn(['registry_items', index, 'pollID'], false)
     }
   }
   return state

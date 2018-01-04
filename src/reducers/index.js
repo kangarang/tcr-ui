@@ -3,7 +3,7 @@
 // Redux expects the state tree to be a plain JS object. Nope.
 import { combineReducers } from 'redux-immutable';
 
-import homeReducer from './reducer';
+import homeReducer from './home';
 
 // home -> state.get('home')
 // export default function createReducer(injectedReducers) {

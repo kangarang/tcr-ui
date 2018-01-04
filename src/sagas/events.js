@@ -1,5 +1,5 @@
 import { eventChannel, END } from 'redux-saga'
-import { call, put, fork, take, select, cancelled } from 'redux-saga/effects'
+import { call, all, put, fork, take, select, cancelled } from 'redux-saga/effects'
 
 import {
   contractError,
@@ -7,7 +7,7 @@ import {
   updateItem,
   newItem,
 } from '../actions'
-import { selectEthjs, selectRegistry, selectRegistryItems } from '../selectors'
+import { selectEthjs, selectRegistry, makeSelectContract } from '../selectors'
 
 import {
   eventUtils,
@@ -18,33 +18,37 @@ import { fromNaturalUnit } from '../libs/units';
 export function* setupEventChannels() {
   try {
     const registry = yield select(selectRegistry)
-    yield call(handleRegistryChannel, registry.contract)
+    const voting = yield select(makeSelectContract('voting'))
+    yield all([
+      call(handleContractChannel, registry.contract),
+      call(handleContractChannel, voting.contract),
+    ])
   } catch (err) {
     console.log('err', err)
     yield put(contractError(err))
   }
 }
 
-function* handleRegistryChannel(registry) {
-  const registryChannel = yield call(createRegistryChannel, registry)
+function* handleContractChannel(contract) {
+  const channel = yield call(createChannel, contract)
   try {
     while (true) {
-      const channelEvent = yield take(registryChannel)
+      const channelEvent = yield take(channel)
       yield fork(handleEvent, channelEvent)
     }
   } finally {
     if (yield cancelled()) {
       console.log('LISTENING CANCELLED')
-      registryChannel.close()
+      channel.close()
     }
   }
 }
 
 // eventChannel is a factory function that creates a Channel
 // for events from sources other than the Redux store
-const createRegistryChannel = (registry) =>
+const createChannel = (contract) =>
   eventChannel((emitter) => {
-    const events = registry.allEvents().watch((err, result) => {
+    const events = contract.allEvents().watch((err, result) => {
       if (err) {
         console.log('EMIT ERROR:', err)
         emitter(END)
@@ -60,7 +64,9 @@ const createRegistryChannel = (registry) =>
 function* handleEvent(result) {
   const eth = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
-  const registryItems = yield select(selectRegistryItems)
+  if (result.event === 'PollCreated' || result.event === 'VotingRightsGranted' || result.event === 'VoteCommitted') {
+    return
+  }
 
   const txDetails = yield call(commonUtils.getTransaction, eth, result.transactionHash)
 

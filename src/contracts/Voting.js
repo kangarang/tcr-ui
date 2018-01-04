@@ -3,6 +3,7 @@ import abi from 'ethereumjs-abi'
 
 import abis from './abis'
 import { getDefaults } from './defaults'
+import { toNineToken } from '../libs/units';
 
 export default class Voting {
   constructor(eth, account, registry) {
@@ -26,13 +27,18 @@ export default class Voting {
     return hash;
   }
 
-  commitVote = async (pollID, account, amount) => {
-    const numTokens = amount
-    const prevPollID = '0'
+  requestVotingRights = (votingRights) =>
+    this.contract.requestVotingRights(toNineToken(votingRights).toString(10))
+
+  commitVote = async (pollID, account, numTokens) => {
+    const prevPollID = await this.contract.getInsertPointForNumTokens.call(account, numTokens)
     const secretHash = this.createIndexHash(account, pollID, numTokens)
     console.log('secretHash', secretHash)
+    console.log('pollID', pollID)
+    console.log('numTokens', numTokens)
 
     const receipt = await this.contract.commitVote(pollID, secretHash, numTokens, prevPollID)
+    console.log('receipt', receipt)
     return receipt
   }
 }

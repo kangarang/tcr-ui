@@ -1,5 +1,5 @@
 import { all, takeLatest, call, put, select } from 'redux-saga/effects'
-import { fromJS } from 'immutable'
+// import { fromJS } from 'immutable'
 
 import {
   setDecodedLogs,
@@ -7,7 +7,7 @@ import {
   updateItems,
 } from '../actions'
 import { SET_CONTRACTS } from '../constants'
-import { selectEthjs, selectRegistryItems, selectRegistry } from '../selectors'
+import { selectEthjs, selectRegistry } from '../selectors'
 
 import {
   logUtils,
@@ -24,7 +24,6 @@ export default function* logsSaga() {
 
 // Gets fresh logs
 function* getFreshLogs() {
-  const registryItems = yield select(selectRegistryItems)
   try {
     const [
       // allEvents,
@@ -39,38 +38,11 @@ function* getFreshLogs() {
       call(handleLogs, '_NewDomainWhitelisted'),
       // call(handleLogs, '_ChallengeFailed'),
     ])
-    // console.log('allEvents', allEvents)
-    console.log('applications', applications)
-    console.log('challenges', challenges)
-
-    // const indices = challenges.map((challenge, ind) =>
-    //   fromJS(applications).findIndex(ri =>
-    //     ri.get('domain') === challenge.domain
-    //   )
-    // )
-    // const back = indices.sort((a,b) => b - a)
-
-    // console.log('back', back)
-    // const dd = newApps.map((na, i) => {
-    //   applications[na].pollID = challenges[i].pollID.toString(10)
-    //   return applications
-    // })
-    // console.log('dd', dd)
-
-    // console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
-    // console.log('failedChallenges', failedChallenges)
-
-    // const whitelist = applications.filter(app => app.whitelisted)
-    // console.log('whitelist', whitelist)
-
-    // const challenged = apps.filter(app => app.challengeID)
-    // console.log('challenged', challenged)
-
-    // const canBeWhitelistedLogs = yield call(logUtils.canBeWhitelisted, registry, applications)
-    // console.log('canBeWhitelistedLogs', canBeWhitelistedLogs)
+    console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
 
     yield put(setDecodedLogs(applications))
     yield put(updateItems(challenges))
+    // yield put(updateItems(newlyWhitelistedDomains))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
@@ -86,9 +58,9 @@ function* handleLogs(topic) {
   const rawLogs = yield call(eth.getLogs, filter)
   const decodedLogs = yield call(logUtils.decodeLogs, eth, registry.contract, rawLogs)
 
-  if (topic !== '_Application') {
-    return decodedLogs
-  }
+  // if (topic !== '_Application') {
+  //   return decodedLogs
+  // }
 
   return yield all(
     yield all(decodedLogs.map(async (dLog, ind) => {
@@ -105,10 +77,6 @@ function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
   if (log.deposit) {
     unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
   }
-
-  // console.log('log', log)
-  // console.log('rawLogs', rawLogs)
-  // console.log('txDetails', txDetails)
 
   const isWhitelisted = yield call(commonUtils.isWhitelisted, registry, log.domain)
   const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, log.domain)

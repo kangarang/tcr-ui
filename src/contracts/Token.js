@@ -34,6 +34,7 @@ export default class Token {
 
     const tokenBalance = await this.contract.balanceOf(account)
 
+    console.log('natural unit balance:', tokenBalance.toString(10))
     this.balance = fromToken(tokenBalance, this.decimalPower).toString(10)
 
     return this
