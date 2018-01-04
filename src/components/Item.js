@@ -17,7 +17,7 @@ export const Item = styled.div`
   justify-content: flex-start;
   grid-row: ${(props) => props.gR};
   grid-column: ${(props) => props.gC};
-  padding: ${(props) => props.pad && props.pad + 'em'};
+  /* padding: ${(props) => props.pad && props.pad + 'em'}; */
   overflow: hidden;
 `
 

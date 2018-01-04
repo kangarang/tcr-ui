@@ -22,10 +22,10 @@ const AppWrapper = styled.div`
   display: flex;
   min-height: 1800px;
   flex-direction: column;
-  background-image: url(${adwaitaDay});
-  background-color: rgba(0, 0, 0, 0.2);
-  background-size: auto 120vh;
-  background-repeat: repeat-y;
+  /* background-image: url(${adwaitaDay}); */
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  /* background-size: auto 120vh; */
+  /* background-repeat: repeat-y; */
   padding: 2em;
 `
 

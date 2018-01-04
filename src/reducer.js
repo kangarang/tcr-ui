@@ -7,9 +7,9 @@ import {
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
   SET_ETHJS,
-  EVENT_FROM_REGISTRY,
-  EVENT_VOTING_ITEM,
-  EVENT_WHITELIST,
+  NEW_ITEM,
+  CHANGE_ITEM,
+  CHANGE_ITEMS,
   CONTRACT_ERROR,
   LOGS_ERROR,
   GET_ETHEREUM,
@@ -34,8 +34,6 @@ const initialState = fromJS({
   },
   currentBlock: '',
   registry_items: [],
-  voting_items: [],
-  whitelist_items: [],
 })
 
 function homeReducer(state = initialState, action) {
@@ -73,14 +71,15 @@ function homeReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false)
         .setIn(['userInfo', 'tokensAllowed'], fromJS(action.allowed))
-    case EVENT_VOTING_ITEM:
-      return handleEvent(state, action.payload)
-    case EVENT_FROM_REGISTRY:
-      return handleEvent(state, action.payload)
-    case EVENT_WHITELIST:
-      return handleWhitelist(state, action.payload)
+    case CHANGE_ITEMS:
+      return changeItems(state, action.payload)
+    case CHANGE_ITEM:
+      return changeItem(state, action.payload)
+    case NEW_ITEM:
+      return state
+        .update('registry_items', list => list.push(fromJS(action.payload)))
     case SET_DECODED_LOGS:
-      return handleDecodedLogs(state, action.payload)
+      return setNewItems(state, action.payload)
     case SET_METHOD_SIGNATURES:
       return state.set('methodSignatures', fromJS(action.payload))
     default:
@@ -89,7 +88,7 @@ function homeReducer(state = initialState, action) {
 }
 
 // Array input
-function handleDecodedLogs(state, payload) {
+function setNewItems(state, payload) {
   if (!payload || payload.length < 1) {
     return state
   }
@@ -114,38 +113,35 @@ function handleDecodedLogs(state, payload) {
   return state.set('registry_items', twoArrays)
 }
 
-// Object input
-function handleEvent(state, payload) {
-  const index = state
-    .get('registry_items')
-    .findIndex(ri => ri.get('domain') === payload.domain)
-  // Challenge exists
-  if (index !== -1 && payload.pollID) {
-    // Delete existing registry item
-    // Create new voting item
-    return state
-      // .deleteIn(['registry_items', index])
-      // .update('voting_items', list => list.push(fromJS(payload)))
-    // Challenge doesn't exist
-  } else if (index !== -1 && !payload.pollID) {
-    // Duplicate registry item
-    console.log('payload', payload)
-    return state
-  }
-  // New registry item
-  return state.update('registry_items', list => list.push(fromJS(payload)))
-  // return state
-  //   .update('voting_items', list => list.push(fromJS(payload)))
+function changeItems(state, payload) {
+  const newItems = payload.reduce((acc, val) => {
+    const index = acc
+      .findIndex(ri => ri.get('domain') === val.domain)
+    if (val._eventName === '_Challenge') {
+      // Change application -> challenge
+      return acc.setIn([index, 'pollID'], val.pollID.toString(10))
+    } else if (val._eventName === '_NewDomainWhitelisted' || val._eventName === '_ChallengeFailed') {
+      // Change thing -> whitelisted
+      return acc.setIn([index, 'whitelisted'], true)
+    } else {
+      return acc
+    }
+  }, state.get('registry_items'))
+  return state.set('registry_items', fromJS(newItems))
 }
 
-// Object input
-function handleWhitelist(state, payload) {
+function changeItem(state, payload) {
   const index = state
     .get('registry_items')
-    .findIndex(ri => ri.get('domain') === payload.domain)
+    .findIndex(ri => ri.get('domain') === payload.args.domain)
   if (index !== -1) {
-    // Change application -> listing
-    return state.setIn(['registry_items', index, 'whitelisted'], true)
+    if (payload.event === '_Challenge') {
+      // Change application -> challenge
+      return state.setIn(['registry_items', index, 'pollID'], payload.args.pollID.toString(10))
+    } else if (payload.event === '_NewDomainWhitelisted' || payload.event === '_ChallengeFailed') {
+      // Change thing -> whitelisted
+      return state.setIn(['registry_items', index, 'whitelisted'], true)
+    }
   }
   return state
 }

@@ -5,12 +5,15 @@ import {
   CHECK_PROVIDER,
   CHANGE_DOMAIN,
   CHANGE_AMOUNT,
+  CHANGE_ITEM,
+  CHANGE_ITEMS,
+  GET_TOKENS_ALLOWED,
+  SET_TOKENS_ALLOWED,
+  NEW_ITEM,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
   SET_DECODED_LOGS,
   SET_ETHJS,
-  GET_TOKENS_ALLOWED,
-  SET_TOKENS_ALLOWED,
   TX_APPLY,
   TX_CHECK_TEST,
   TX_CHALLENGE,
@@ -144,6 +147,24 @@ export function getNewLogs(request) {
   return {
     type: GET_NEW_LOGS,
     request,
+  }
+}
+export function newItem(payload) {
+  return {
+    type: NEW_ITEM,
+    payload,
+  }
+}
+export function updateItems(payload) {
+  return {
+    type: CHANGE_ITEMS,
+    payload,
+  }
+}
+export function updateItem(payload) {
+  return {
+    type: CHANGE_ITEM,
+    payload,
   }
 }
 

@@ -3,10 +3,11 @@ import { call, put, fork, take, select, cancelled } from 'redux-saga/effects'
 
 import {
   contractError,
-  eventFromRegistry,
   getTokensAllowed,
+  updateItem,
+  newItem,
 } from '../actions'
-import { selectEthjs, selectRegistry } from '../selectors'
+import { selectEthjs, selectRegistry, selectRegistryItems } from '../selectors'
 
 import {
   eventUtils,
@@ -58,54 +59,41 @@ const createRegistryChannel = (registry) =>
 function* handleEvent(result) {
   const eth = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
+  const registryItems = yield select(selectRegistryItems)
 
   const txDetails = yield call(commonUtils.getTransaction, eth, result.transactionHash)
-
-
-  let status
-  if (result.event === '_Challenge') {
-    status = 'voteable'
-  } else if (result.event === '_Application') {
-    status = 'challengeable'
-  } else {
-    status = 'challengeable'
-  }
 
   // This is faster than registry.isWhitelisted
   const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
 
-  if (!isWhitelisted) {
-    const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.domain)
-    if (canBeWhitelisted) {
-      status = 'whitelistable'
-    } else {
-      // status = false
+  if (result.event === '_Challenge') {
+    // Send the event with the domain and pollID
+    // Reducer takes care of the rest
+    yield put(updateItem(result))
+  } else if (result.event === '_Application') {
+    const block = {
+      number: result.blockNumber,
+      hash: result.blockHash,
     }
-  }
+    const tx = {
+      hash: txDetails.hash,
+      index: txDetails.transactionIndex,
+      to: txDetails.to,
+      from: txDetails.from
+    }
+    const details = {
+      domain: result.args.domain,
+      unstakedDeposit: result.args.deposit ? result.args.deposit.toString(10) : '?',
+      pollID: result.args.pollID && result.args.pollID,
+      index: result.logIndex,
+      eventName: result.event,
+      contractAddress: result.address,
+      isWhitelisted,
+    }
 
-  const block = {
-    number: result.blockNumber,
-    hash: result.blockHash,
+    const item = yield call(commonUtils.shapeShift, block, tx, details)
+    yield put(newItem(item))
   }
-  const tx = {
-    hash: txDetails.hash,
-    index: txDetails.transactionIndex,
-    to: txDetails.to,
-    from: txDetails.from
-  }
-  const details = {
-    domain: result.args.domain,
-    unstakedDeposit: result.args.deposit ? result.args.deposit : '?',
-    pollID: result.args.pollID && result.args.pollID,
-    index: result.logIndex,
-    eventName: result.event,
-    contractAddress: result.address,
-    isWhitelisted,
-    status,
-  }
-
-  const golem = yield call(commonUtils.shapeShift, block, tx, details)
-  yield put(eventFromRegistry(golem))
 
   // Updates the token-registry allowance
   yield put(getTokensAllowed())

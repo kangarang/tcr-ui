@@ -20,8 +20,8 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 1.5fr 4fr 8fr 6fr;
   grid-template-rows: 1fr 1fr;
-  grid-gap: 5px;
-  padding: .7em;
+  /* grid-gap: 5px; */
+  /* padding: .7em; */
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
 `
 
@@ -76,13 +76,13 @@ export default ({
       )}
 
       <Item pad={0.5} gR={1} gC={4} >
-        {(status === 'challengeable' || status === 'whitelistable') && (
+        {!(!whitelisted && pollID) && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
-        {(status === 'voteable' && !whitelisted) && (
+        {(!whitelisted && pollID) && (
           <Button onClick={e => handleClickCommitVote(e, domain, pollID)}>{'Commit Vote'}</Button>
         )}
-        {(status === 'whitelistable' && !whitelisted) && (
+        {(!whitelisted && !pollID) && ( // patch
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
         )}
         <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>

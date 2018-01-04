@@ -8,6 +8,9 @@ export const GET_ACCOUNTS_ERROR = 'GET_ACCOUNTS_ERROR--|--Home'
 
 export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'
 export const SET_DECODED_LOGS = 'SET_DECODED_LOGS--|--Home'
+export const NEW_ITEM = 'NEW_ITEM--|--Home'
+export const CHANGE_ITEM = 'CHANGE_ITEM--|--Home'
+export const CHANGE_ITEMS = 'CHANGE_ITEMS--|--Home'
 export const SET_MIN_DEPOSIT = 'SET_MIN_DEPOSIT--|--Home'
 export const SET_ETHJS = 'SET_ETHJS--|--Home'
 
