@@ -18,9 +18,9 @@ import {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 4fr 8fr 6fr;
+  grid-template-columns: 1.5fr 3fr 6fr 8fr;
   grid-template-rows: 1fr 1fr;
-  /* grid-gap: 5px; */
+  grid-gap: 15px;
   /* padding: .7em; */
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
 `
@@ -41,6 +41,7 @@ export default ({
   event,
   status,
   whitelisted,
+  canBeWhitelisted,
 
   handleClickChallenge,
   handleClickCommitVote,
@@ -82,7 +83,7 @@ export default ({
         {(!whitelisted && pollID) && (
           <Button onClick={e => handleClickCommitVote(e, domain, pollID)}>{'Commit Vote'}</Button>
         )}
-        {(!whitelisted && !pollID) && ( // patch
+        {(!whitelisted && canBeWhitelisted) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
         )}
         <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>

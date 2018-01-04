@@ -111,6 +111,7 @@ function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
   // console.log('txDetails', txDetails)
 
   const isWhitelisted = yield call(commonUtils.isWhitelisted, registry, log.domain)
+  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, log.domain)
 
   const tx = {
     hash: rawLogs[i].transactionHash,
@@ -126,6 +127,7 @@ function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
     eventName: log._eventName,
     contractAddress: rawLogs[i].address,
     isWhitelisted,
+    canBeWhitelisted,
   }
 
   return commonUtils.shapeShift(block, tx, details)

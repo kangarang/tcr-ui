@@ -153,6 +153,7 @@ class App extends Component {
                   event={log.get('event')}
                   status={log.get('status')}
                   whitelisted={log.get('whitelisted')}
+                  canBeWhitelisted={log.get('canBeWhitelisted')}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickChallenge={this.handleChallenge}
                   handleClickTest={this.handleTest}

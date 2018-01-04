@@ -47,6 +47,7 @@ export const commonUtils = {
     event: details.eventName,
     contractAddress: details.contractAddress,
     whitelisted: details.isWhitelisted,
+    canBeWhitelisted: details.canBeWhitelisted,
   }),
 }
 

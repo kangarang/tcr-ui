@@ -13,6 +13,7 @@ import {
   eventUtils,
   commonUtils,
 } from './utils'
+import { fromNaturalUnit } from '../libs/units';
 
 export function* setupEventChannels() {
   try {
@@ -65,8 +66,9 @@ function* handleEvent(result) {
 
   // This is faster than registry.isWhitelisted
   const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
+  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.domain)
 
-  if (result.event === '_Challenge') {
+  if (result.event === '_Challenge' || result.event === '_NewDomainWhitelisted') {
     // Send the event with the domain and pollID
     // Reducer takes care of the rest
     yield put(updateItem(result))
@@ -83,12 +85,13 @@ function* handleEvent(result) {
     }
     const details = {
       domain: result.args.domain,
-      unstakedDeposit: result.args.deposit ? result.args.deposit.toString(10) : '?',
+      unstakedDeposit: result.args.deposit ? fromNaturalUnit(result.args.deposit).toString(10) : '?',
       pollID: result.args.pollID && result.args.pollID,
       index: result.logIndex,
       eventName: result.event,
       contractAddress: result.address,
       isWhitelisted,
+      canBeWhitelisted,
     }
 
     const item = yield call(commonUtils.shapeShift, block, tx, details)

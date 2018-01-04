@@ -11,7 +11,7 @@ const fromToken = (wToken, decimalPower) => bigTen(wToken).div(decimalPower)
 // 1,000,000 -> 1,000,000,000,000,000
 const toNineToken = (smallToken) => bigTen(smallToken).mul(decimalConversion(9))
 // convert FROM natural unit
-// (reading logs)
+// (reading logs or an event)
 const fromNaturalUnit = (naturalUnit) => bigTen(naturalUnit).div(decimalConversion(9))
 
 const withCommas = (number) =>
