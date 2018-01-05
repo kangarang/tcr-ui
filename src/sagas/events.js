@@ -53,6 +53,7 @@ function* handleContractChannel(contract) {
 // for events from sources other than the Redux store
 const createChannel = (contract) =>
   eventChannel((emitter) => {
+    // TODO: specify _Event
     const events = contract.allEvents().watch((err, result) => {
       if (err) {
         console.log('EMIT ERROR:', err)

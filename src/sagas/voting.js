@@ -2,26 +2,20 @@ import {
   call,
   put,
   select,
-  all,
   takeEvery,
 } from 'redux-saga/effects'
 import {
   contractError,
-  statusUpdate,
 } from '../actions'
 import {
   TX_COMMIT_VOTE,
   TX_APPROVE,
 } from '../actions/constants'
 import {
-  selectEthjs,
   selectAccount,
   makeSelectContract,
-  selectRegistry,
 } from '../selectors'
 import { tokensAllowedSaga, approvalSaga } from "./token";
-
-import { toNineToken } from '../libs/units';
 
 export default function* votingSaga() {
   yield takeEvery(TX_APPROVE, approvalSaga)

@@ -26,17 +26,14 @@ import {
 import registrySaga from './registry'
 import tokenSaga, { tokensAllowedSaga } from './token'
 import votingSaga from './voting'
-import logsSaga from './logs'
 
 import { getEthjs } from '../libs/provider'
-import { toNineToken } from '../libs/units';
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield fork(registrySaga)
   yield fork(tokenSaga)
   yield fork(votingSaga)
-
 }
 
 function* genesis() {

@@ -29,16 +29,17 @@ function* getFreshLogs() {
       // allEvents,
       applications,
       challenges,
-      newlyWhitelistedDomains,
+      // newlyWhitelistedDomains,
       // failedChallenges,
     ] = yield all([
       // call(handleLogs),
       call(handleLogs, '_Application'),
       call(handleLogs, '_Challenge'),
-      call(handleLogs, '_NewDomainWhitelisted'),
+      // call(handleLogs, '_NewDomainWhitelisted'),
       // call(handleLogs, '_ChallengeFailed'),
     ])
-    console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
+    console.log('applications', applications)
+    // console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
 
     yield put(setDecodedLogs(applications))
     yield put(updateItems(challenges))

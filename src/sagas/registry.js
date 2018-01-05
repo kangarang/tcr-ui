@@ -2,10 +2,7 @@ import {
   call,
   put,
   select,
-  all,
-  spawn,
   fork,
-  takeLatest,
   takeEvery,
 } from 'redux-saga/effects'
 import {
@@ -13,34 +10,26 @@ import {
   TX_APPROVE,
   TX_APPLY,
   TX_CHALLENGE,
-  TX_COMMIT_VOTE,
   TX_UPDATE_STATUS,
   TX_CHECK_TEST,
 } from '../actions/constants'
 
 import {
   contractError,
-  setTokensAllowed,
   statusUpdate,
 } from '../actions'
 import {
-  selectEthjs,
-  selectAccount,
   makeSelectContract,
   selectRegistry,
 } from '../selectors'
 
-import eventsSaga from './events'
 import logsSaga from './logs'
 import { tokensAllowedSaga, approvalSaga } from './token'
 
-import { getEthjs } from '../libs/provider'
-import { toNineToken } from '../libs/units';
-
 export default function* registrySaga() {
-  yield fork(eventsSaga)
+  yield fork(logsSaga)
+  // yield fork(eventsSaga)
 
-  yield spawn(logsSaga)
 
   yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
 
