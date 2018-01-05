@@ -1,9 +1,13 @@
-TCR UI WIP
-==========
+TCR UI
+======
 
-[Quick and easy TCR to get up and running](https://github.com/kangarang/tcr)
+"Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
-Token-Curated Registries are decentrally-curated lists with intrinsic economic incentives for token-holders to curate the list judiciously
+[Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
+
+[Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
+
+[TCR](https://github.com/kangarang/tcr)
 
 ---
 
@@ -91,22 +95,22 @@ Parameterizer
 #### Registry
 event _Application(string domain, uint deposit)
 
-  - new registry_item
+  - new registry_item {}
 
 event _Challenge(string domain, uint deposit, uint pollID)
 
-  - change -> voting_item
+  - change -> registry_item.set(pollID, '1') i.e. voting_item
 
 event _ChallengeFailed(uint challengeID)
 event _NewDomainWhitelisted(string domain)
 
-  - change -> whitelisted
+  - change -> voting_item.set('whitelisted', true)
 
 event _ChallengeSucceeded(uint challengeID)
 event _ApplicationRemoved(string domain)
 event _ListingRemoved(string domain)
 
-  - delete item
+  - delete -> state.delete(item)
 
 event _RewardClaimed(address voter, uint challengeID, uint reward)
 event _Deposit(string domain, uint added, uint newTotal)
@@ -118,7 +122,7 @@ event _Withdrawal(string domain, uint withdrew, uint newTotal)
 #### PLCR Voting
 event PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)
 
-  - new voting_item
+  - new voting_item (comes with _Challenge)
 
 event VoteCommitted(address voter, uint pollID, uint numTokens)
 
