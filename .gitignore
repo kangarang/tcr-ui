@@ -21,7 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /src/contracts/sol
-/src/components/List/keys.js
+/src/*/keys.js
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

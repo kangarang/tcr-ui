@@ -5,14 +5,13 @@ import styled from 'styled-components'
 import { Provider } from 'react-redux'
 
 import App from './App'
-import './index.css'
 
 import adwaitaDay from './assets/images/adwaita-day.jpg'
 // import adwaitaNight from './assets/images/adwaita-night.jpg'
 // import adwaitaLock from './assets/images/adwaita-lock.jpg'
 // import adwaitaMorning from './assets/images/adwaita-morning.jpg'
 
-import configureStore from './configureStore'
+import configureStore from './store'
 import registerServiceWorker from './registerServiceWorker'
 
 const initialState = {}
@@ -22,11 +21,12 @@ const AppWrapper = styled.div`
   display: flex;
   min-height: 1800px;
   flex-direction: column;
-  /* background-image: url(${adwaitaDay}); */
-  /* background-color: rgba(0, 0, 0, 0.2); */
-  /* background-size: auto 120vh; */
-  /* background-repeat: repeat-y; */
+  margin: 0;
   padding: 2em;
+  /* background-image: url(${adwaitaDay});
+  background-color: rgba(0, 0, 0, 0.2);
+  background-size: auto 120vh;
+  background-repeat: repeat-y; */
 `
 
 ReactDOM.render(

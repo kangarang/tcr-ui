@@ -4,9 +4,8 @@ import { createLogger } from 'redux-logger';
 
 import { fromJS, Iterable } from 'immutable';
 
-import { CHANGE_DOMAIN, SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './constants'
+import { CHANGE_DOMAIN, SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
 import createReducer from './reducers';
-// import reducer from './reducer';
 import rootSaga from './sagas'
 
 const sagaMiddleware = createSagaMiddleware();
@@ -46,7 +45,6 @@ export default function configureStore(initialState = {}) {
   const store = createStore(
     createReducer(),
     fromJS(initialState),
-    // applyMiddleware(sagaMiddleware),
     composeEnhancers(...enhancers)
   );
 

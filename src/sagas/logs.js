@@ -6,7 +6,7 @@ import {
   logsError,
   updateItems,
 } from '../actions'
-import { SET_CONTRACTS } from '../constants'
+import { SET_CONTRACTS } from '../actions/constants'
 import { selectEthjs, selectRegistry } from '../selectors'
 
 import {

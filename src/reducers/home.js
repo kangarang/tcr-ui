@@ -15,7 +15,7 @@ import {
   GET_ETHEREUM,
   SET_DECODED_LOGS,
   SET_METHOD_SIGNATURES,
-} from '../constants'
+} from '../actions/constants'
 
 const initialState = fromJS({
   error: false,

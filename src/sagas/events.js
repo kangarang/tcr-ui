@@ -1,5 +1,5 @@
 import { eventChannel, END } from 'redux-saga'
-import { call, all, put, fork, take, select, cancelled } from 'redux-saga/effects'
+import { call, all, put, fork, take, select, takeLatest, cancelled } from 'redux-saga/effects'
 
 import {
   contractError,
@@ -7,6 +7,7 @@ import {
   updateItem,
   newItem,
 } from '../actions'
+import { SET_CONTRACTS } from "../actions/constants";
 import { selectEthjs, selectRegistry, makeSelectContract } from '../selectors'
 
 import {
@@ -15,7 +16,11 @@ import {
 } from './utils'
 import { fromNaturalUnit } from '../libs/units';
 
-export function* setupEventChannels() {
+export default function* eventsSaga() {
+  yield takeLatest(SET_CONTRACTS, setupEventChannels)
+}
+
+function* setupEventChannels() {
   try {
     const registry = yield select(selectRegistry)
     const voting = yield select(makeSelectContract('voting'))

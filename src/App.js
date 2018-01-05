@@ -12,7 +12,6 @@ import Event from './components/Event'
 import FlexContainer from './components/FlexContainer'
 import Section from './components/Section'
 
-import './App.css'
 import './global-styles'
 
 import {

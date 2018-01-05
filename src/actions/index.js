@@ -34,7 +34,7 @@ import {
   GET_ACCOUNTS_REQUEST,
   GET_ACCOUNTS_SUCCESS,
   GET_ACCOUNTS_ERROR,
-} from '../constants'
+} from './constants'
 
 // Ethereum
 export function checkProvider() {

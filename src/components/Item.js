@@ -7,9 +7,9 @@ export const Container = styled.div`
   grid-template-rows: 1fr 1fr;
   grid-gap: 5px;
   padding: .7em;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
   color: ${colors.offBlack};
-  border: 1px solid ${colors.offBlack};
+  border: 2px solid ${colors.prism};
 `
 export const Item = styled.div`
   display: flex;

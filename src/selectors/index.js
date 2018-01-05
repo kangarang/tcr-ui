@@ -6,10 +6,14 @@ export const selectHome = state => state.get('home')
 export const selectEthjs = createSelector(selectHome, homeState =>
   homeState.get('ethjs')
 )
-export const makeSelectUserInfo = () =>
-  createSelector(selectHome, homeState => homeState.get('userInfo'))
-export const makeSelectAccount = () =>
-  createSelector(makeSelectUserInfo(), userInfo => userInfo.get('account'))
+export const makeSelectUserInfo = () => createSelector(
+  selectHome, homeState => homeState.get('userInfo')
+)
+
+export const selectAccount = createSelector(
+  makeSelectUserInfo(), userInfo =>
+    userInfo.get('account')
+)
 
 // UI selectors
 export const selectAmount = createSelector(selectHome, homeState =>

@@ -7,5 +7,6 @@ export const colors = {
   magenta: '#ff387a',
   neonLime: '#a8ff37',
   orange: '#ffaf36',
-  turquoise: '#4be5ce'
+  turquoise: '#4be5ce',
+  prism: '#15afba',
 }

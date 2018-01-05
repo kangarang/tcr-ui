@@ -63,6 +63,7 @@ export const eventUtils = {
         return false
     }
   },
+
   setupEventSignatures: (contractABI) => {
     const events = {}
     contractABI.filter((method) => method.type === 'event').map((event) => {
