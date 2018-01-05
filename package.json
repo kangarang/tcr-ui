@@ -1,6 +1,6 @@
 {
   "name": "tcr-ui",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "dependencies": {
     "blockies": "0.0.2",
@@ -16,6 +16,8 @@
     "path": "^0.12.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-media": "^1.6.1",
+    "react-motion": "^0.5.2",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
     "redux": "^3.7.2",

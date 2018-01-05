@@ -111,6 +111,7 @@ class App extends Component {
 
     return (
       <div>
+
         <UserInfo
           account={userInfo.get('account')}
           network={userInfo.get('network')}
