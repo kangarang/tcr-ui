@@ -31,7 +31,7 @@ import {
   selectDomain,
   selectAmount,
   makeSelectUserInfo,
-  selectRegistryItems,
+  selectListings,
   selectVotingItems,
   makeSelectCandidates,
   makeSelectWhitelistItems,
@@ -135,25 +135,12 @@ class App extends Component {
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
-              <Section key={log.get('blockNumber') + log.get('domain')}>
+              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
                 <Event
-                  blockHash={log.get('blockHash')}
-                  blockNumber={log.get('blockNumber')}
-                  timestamp={log.get('timestamp')}
-
-                  txHash={log.get('txHash')}
-                  txIndex={log.get('txIndex')}
-                  account={log.get('from')}
-
+                  golem={log.get('golem')}
+                  owner={log.get('owner')}
                   domain={log.get('domain')}
-                  unstakedDeposit={log.get('unstakedDeposit')}
-                  pollID={log.get('pollID')}
-                  logIndex={log.get('logIndex')}
 
-                  event={log.get('event')}
-                  status={log.get('status')}
-                  whitelisted={log.get('whitelisted')}
-                  canBeWhitelisted={log.get('canBeWhitelisted')}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickChallenge={this.handleChallenge}
                   handleClickTest={this.handleTest}
@@ -166,24 +153,12 @@ class App extends Component {
         <FlexContainer>
           {voting_items.size > 0 &&
             voting_items.map(log => (
-              <Section key={log.get('blockNumber') + log.get('domain')}>
+              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
                 <Event
-                  blockHash={log.get('blockHash')}
-                  blockNumber={log.get('blockNumber')}
-                  timestamp={log.get('timestamp')}
-
-                  txHash={log.get('txHash')}
-                  txIndex={log.get('txIndex')}
-                  account={log.get('from')}
-
+                  golem={log.get('golem')}
+                  owner={log.get('owner')}
                   domain={log.get('domain')}
-                  unstakedDeposit={log.get('unstakedDeposit')}
-                  pollID={log.get('pollID')}
-                  logIndex={log.get('logIndex')}
 
-                  event={log.get('event')}
-                  status={log.get('status')}
-                  whitelisted={log.get('whitelisted')}
                   handleClickCommitVote={this.handleCommitVote}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickTest={this.handleTest}
@@ -196,26 +171,14 @@ class App extends Component {
         <FlexContainer>
           {members.size > 0 &&
             members.map(log => (
-              <Section key={log.get('blockNumber') + log.get('domain')}>
+              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
                 <Event
-                  blockHash={log.get('blockHash')}
-                  blockNumber={log.get('blockNumber')}
-                  timestamp={log.get('timestamp')}
-
-                  txHash={log.get('txHash')}
-                  txIndex={log.get('txIndex')}
-                  account={log.get('from')}
-
+                  golem={log.get('golem')}
+                  owner={log.get('owner')}
                   domain={log.get('domain')}
-                  unstakedDeposit={log.get('unstakedDeposit')}
-                  pollID={log.get('pollID')}
-                  logIndex={log.get('logIndex')}
 
-                  event={log.get('event')}
-                  status={log.get('status')}
-                  whitelisted={log.get('whitelisted')}
+                  handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickTest={this.handleTest}
-                  handleClickChallenge={this.handleChallenge}
                 />
               </Section>
             ))}
@@ -244,7 +207,7 @@ const mapStateToProps = createStructuredSelector({
   userInfo: makeSelectUserInfo(),
   domain: selectDomain,
   amount: selectAmount,
-  registry_items: selectRegistryItems,
+  listings: selectListings,
   voting_items: selectVotingItems,
   members: makeSelectWhitelistItems(),
   candidates: makeSelectCandidates(),

@@ -37,27 +37,27 @@ export const selectRegistry = createSelector(
 )
 
 // List selectors
-export const selectRegistryItems = createSelector(
+export const selectListings = createSelector(
   selectHome, homeState =>
-    homeState.get('registry_items')
+    homeState.get('listings')
 )
 
 // Filter selectors
 export const makeSelectCandidates = () =>
-  createSelector(selectRegistryItems, registry_items =>
-    registry_items.filter(ri => (
+  createSelector(selectListings, listings =>
+    listings.filter(ri => (
       ri.get('whitelisted') === false && ri.get('pollID') === false
     ))
   )
 
 export const selectVotingItems = createSelector(
   selectHome, homeState =>
-    homeState.get('registry_items').filter(ri => (
+    homeState.get('listings').filter(ri => (
       (!ri.get('whitelisted') && ri.get('pollID'))
     ))
 )
 
 export const makeSelectWhitelistItems = () =>
-  createSelector(selectRegistryItems, registry_items =>
-    registry_items.filter(ri => ri.get('whitelisted'))
+  createSelector(selectListings, listings =>
+    listings.filter(ri => ri.get('whitelisted'))
   )

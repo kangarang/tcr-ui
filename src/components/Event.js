@@ -26,34 +26,21 @@ const Container = styled.div`
 `
 
 export default ({
-  blockHash,
-  blockNumber,
-
-  txHash,
-  txIndex,
+  golem,
   account,
-
   domain,
-  unstakedDeposit,
-  pollID,
-  logIndex,
-
-  event,
-  status,
-  whitelisted,
-  canBeWhitelisted,
 
   handleClickChallenge,
   handleClickCommitVote,
   handleClickUpdateStatus,
   handleClickTest,
 }) => (
-    <Container txHash={txHash}>
+    <Container txHash={golem.get('txHash')}>
       <FlexCenteredItem gR={1} gC={1}>
-        <Identicon account={account} size={6} scale={6} />
+        <Identicon account={golem.get('account')} size={6} scale={6} />
       </FlexCenteredItem>
 
-      {whitelisted && (
+      {golem.get('whitelisted') && (
         <FlexCenteredItem gR={1} gC={1}>
           <Img src={catIcon} alt="" />
         </FlexCenteredItem>
@@ -61,29 +48,29 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={2}>
         <BigBoldInlineText>
-          {whitelisted ? 'Member: ' : 'Candidate: '}
+          {golem.get('whitelisted') ? 'Member: ' : 'Candidate: '}
           {domain}
         </BigBoldInlineText>
       </Item>
 
-      {unstakedDeposit && (
+      {golem.get('unstakedDeposit') && (
         <Item pad={0.5} gR={1} gC={3}>
           <BoldInlineText>
             {'Deposit: '}
-            {unstakedDeposit.toString(10)}
+            {golem.get('unstakedDeposit').toString(10)}
             {' CATT'}
           </BoldInlineText>
         </Item>
       )}
 
       <Item pad={0.5} gR={1} gC={4} >
-        {(pollID === false) && (
+        {!golem.get('pollID') && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
-        {(!whitelisted && pollID) && (
-          <Button onClick={e => handleClickCommitVote(e, domain, pollID)}>{'Commit Vote'}</Button>
+        {(!golem.get('whitelisted') && golem.get('pollID')) && (
+          <Button onClick={e => handleClickCommitVote(e, domain, golem.get('pollID'))}>{'Commit Vote'}</Button>
         )}
-        {(!whitelisted && canBeWhitelisted) && (
+        {(!golem.get('whitelisted') && golem.get('canBeWhitelisted')) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
         )}
         <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>
@@ -92,7 +79,7 @@ export default ({
       <Item pad={0.5} gR={2} gC={2}>
         <BoldInlineText>
           {'Block number: '}
-          {blockNumber}
+          {golem.get('blockNumber')}
         </BoldInlineText>
       </Item>
 
@@ -111,8 +98,8 @@ export default ({
       <Item pad={0.5} gR={2} gC={4}>
         <BoldInlineText>
           {'Tx hash: '}
-          <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${txHash}`}>
-            {txHash}
+          <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${golem.get('txHash')}`}>
+            {golem.get('txHash')}
           </A>
         </BoldInlineText>
       </Item>

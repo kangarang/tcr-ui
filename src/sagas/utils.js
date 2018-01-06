@@ -17,8 +17,7 @@ export const logUtils = {
     return decoder(rawLogs)
   },
 
-  canBeWhitelisted: async (registry, logs) => registry.filterDomainAndCall(logs, 'canBeWhitelisted'),
-
+  canAnyBeWhitelisted: async (registry, logs) => registry.filterDomainAndCall(logs, 'canBeWhitelisted'),
 }
 
 // Common helpers
@@ -29,27 +28,26 @@ export const commonUtils = {
   isWhitelisted: async (registry, domain) => registry.contract.isWhitelisted.call(domain),
   canBeWhitelisted: async (registry, domain) => registry.contract.canBeWhitelisted.call(domain),
 
-  // golem: () => 
-
-  shapeShift: (block, transaction, details) => ({
-    blockNumber: block.number.toString(10),
-    blockHash: block.hash,
-    timestamp: block.timestamp && new Date(block.timestamp.toNumber(10)),
-
-    txHash: transaction.hash,
-    txIndex: transaction.index.toString(10),
-    from: transaction.from,
-    to: transaction.to,
-
+  shapeShift: (b, tx, details) => ({
     domain: details.domain,
-    unstakedDeposit: details.unstakedDeposit ? details.unstakedDeposit.toString(10) : false,
-    pollID: details.pollID ? details.pollID.toString(10) : false,
-    logIndex: details.index.toString(10),
-
-    event: details.eventName,
-    contractAddress: details.contractAddress,
+    owner: details.eventName === '_Application' && tx.from,
+    challenger: details.pollID && details.challenger,
     whitelisted: details.isWhitelisted,
     canBeWhitelisted: details.canBeWhitelisted,
+    block: {
+      hash: b.hash,
+      number: b.number.toString(10),
+      timestamp: b.timestamp && new Date(b.timestamp.toNumber(10)),
+      transaction: {
+        txHash: tx.hash,
+        txIndex: tx.index.toString(10),
+        sender: tx.from,
+        numTokens: details.unstakedDeposit ? details.unstakedDeposit.toString(10) : false,
+        event: details.eventName,
+        logIndex: details.index.toString(10),
+        pollID: details.pollID ? details.pollID.toString(10) : false
+      }
+    }
   }),
 }
 
@@ -73,5 +71,5 @@ export const eventUtils = {
       return event
     })
     return events
-  }
+  },
 }

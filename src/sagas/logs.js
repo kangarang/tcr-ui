@@ -40,6 +40,7 @@ function* getFreshLogs() {
     ])
     console.log('applications', applications)
     // console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
+    console.log('challenges', challenges)
 
     yield put(setDecodedLogs(applications))
     yield put(updateItems(challenges))
@@ -69,12 +70,12 @@ function* handleLogs(topic) {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
 
-      return call(buildRegistryItem, rawLogs, registry, block, dLog, ind, txDetails)
+      return call(buildListing, rawLogs, registry, block, dLog, ind, txDetails)
     }))
   )
 }
 
-function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
+function* buildListing(rawLogs, registry, block, log, i, txDetails) {
   let unstakedDeposit = '0'
   if (log.deposit) {
     unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)

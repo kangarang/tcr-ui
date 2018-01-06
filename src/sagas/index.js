@@ -10,13 +10,12 @@ import {
   GET_ETHEREUM,
 } from '../actions/constants'
 
-import { setupRegistry, setupContracts } from '../contracts'
+import { setupRegistry, setupContract } from '../contracts'
 
 import {
   setEthjs,
   contractError,
   setContracts,
-  setMinDeposit,
 } from '../actions'
 import {
   selectEthjs,
@@ -62,14 +61,17 @@ function* contractsSaga() {
   try {
     const eth = yield select(selectEthjs)
     const account = yield select(selectAccount)
-
     const registry = yield call(setupRegistry, eth, account)
-    const { token, parameterizer, voting } = yield call(
-      setupContracts,
-      eth,
-      account,
-      registry.contract
-    )
+
+    const [ token, parameterizer, voting ] = yield all([
+      call(setupContract, eth, account, registry.contract, 'Token'),
+      call(setupContract, eth, account, registry.contract, 'Parameterizer'),
+      call(setupContract, eth, account, registry.contract, 'Voting'),
+    ])
+    // token.contract.abi = false
+    // registry.contract.abi = false
+    // parameterizer.contract.abi = false
+    // voting.contract.abi = false
 
     yield put(
       setContracts({
@@ -79,8 +81,7 @@ function* contractsSaga() {
         voting,
       })
     )
-    // Sets canonical MIN_DEPOSIT
-    yield put(setMinDeposit(parameterizer.minDeposit))
+
     // Gets tokens allowed
     yield fork(tokensAllowedSaga)
   } catch (err) {
