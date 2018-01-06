@@ -30,7 +30,6 @@ export default function* registrySaga() {
   yield fork(logsSaga)
   // yield fork(eventsSaga)
 
-
   yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
 
   yield takeEvery(TX_APPROVE, approvalSaga)
@@ -42,7 +41,7 @@ export default function* registrySaga() {
 // Registry interactions
 // Apply
 function* applicationSaga(payload) {
-  const registry = yield select(makeSelectContract('registry'))
+  const registry = yield select(selectRegistry)
   const token = yield select(makeSelectContract('token'))
 
   try {
@@ -63,7 +62,8 @@ function* applicationSaga(payload) {
 function* challengeSaga(payload) {
   const registry = yield select(makeSelectContract('registry'))
   try {
-    yield call(registry.challengeDomain, payload.domain)
+    const hash = yield call(registry.challengeDomain, payload.domain)
+    console.log('hash', hash)
     yield call(tokensAllowedSaga)
   } catch (err) {
     console.log('Challenge error:', err)

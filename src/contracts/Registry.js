@@ -1,11 +1,8 @@
-import contract from 'truffle-contract'
 import Promise from 'bluebird'
 
 import { toToken } from '../libs/units'
 
 import abis from './abis'
-
-import { getDefaults } from './defaults'
 
 export default class Registry {
   constructor(eth, account) {
@@ -13,30 +10,25 @@ export default class Registry {
   }
 
   setupRegistry = async (eth, account) => {
-    const RegistryContract = contract(abis.Registry)
-    RegistryContract.setProvider(eth.currentProvider)
-    RegistryContract.defaults(getDefaults(account))
+    const RegistryContract = eth.contract(abis.Registry.abi, abis.Registry.bytecode, {
+      from: account,
+      gas: 450000,
+      gasPrice: 25000000000,
+    })
 
-    this.contract = await RegistryContract.deployed()
+    this.contract = await RegistryContract.at(abis.Registry.networks['420'].address)
     this.address = this.contract.address
 
     return this
   }
 
   applyDomain = async (domain, amount, tokenDecimalPower) => {
-    // check to see that there's an allowance
+    // TODO: check to see that there's an allowance
     const gTokens = toToken(amount, tokenDecimalPower).toString(10)
-    await this.contract.apply(domain, gTokens)
+    return this.contract.apply(domain, gTokens)
   }
 
-  challengeDomain = async (domain) => {
-    const { logs, receipt } = await this.contract.challenge(domain)
-
-    console.log('logs', logs)
-    console.log('challenge receipt', receipt)
-
-    return receipt
-  }
+  challengeDomain = async (domain) => this.contract.challenge(domain)
 
   checkCall = async (fn, ...args) => {
     const result = await this.contract[fn].call(...args)

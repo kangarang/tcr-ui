@@ -24,7 +24,7 @@ function Form(props) {
       {'ConsenSys Ad Tech membership requires a minimum deposit of 50,000 Cat Token (CATT).'}
       <br />
       {'Please use this form to apply for CAT membership: '}
-      <div>
+      {/* <div>
         <Input
           id={props.idAmount}
           type="number"
@@ -32,7 +32,7 @@ function Form(props) {
           value={props.amountValue}
           onChange={props.onChangeAmount}
         />
-      </div>
+      </div> */}
       <div>
         <Input
           id={props.id}
@@ -40,6 +40,7 @@ function Form(props) {
           placeholder={props.placeholder}
           value={props.value}
           onChange={props.onChange}
+          onSubmit={props.onSubmit}
         />
         <Button onClick={props.onSubmit}>
           <h4>{'Submit'}</h4>

@@ -1,5 +1,4 @@
 import { all, takeLatest, call, put, select } from 'redux-saga/effects'
-// import { fromJS } from 'immutable'
 
 import {
   setDecodedLogs,
@@ -13,6 +12,7 @@ import {
   logUtils,
   commonUtils,
 } from './utils'
+import { tokensAllowedSaga } from "./token";
 
 import {
   fromNaturalUnit,
@@ -48,6 +48,7 @@ function* getFreshLogs() {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
   }
+  yield call(tokensAllowedSaga)
 }
 
 
@@ -79,8 +80,8 @@ function* buildRegistryItem(rawLogs, registry, block, log, i, txDetails) {
     unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
   }
 
-  const isWhitelisted = yield call(commonUtils.isWhitelisted, registry, log.domain)
-  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, log.domain)
+  const isWhitelisted = (yield call([registry.contract, 'isWhitelisted', 'call'], log.domain))['0']
+  const canBeWhitelisted = (yield call([registry.contract, 'canBeWhitelisted', 'call'], log.domain))['0']
 
   const tx = {
     hash: rawLogs[i].transactionHash,

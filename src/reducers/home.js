@@ -137,14 +137,14 @@ function changeItems(state, payload) {
 function changeItem(state, payload) {
   const index = state
     .get('registry_items')
-    .findIndex(ri => ri.get('domain') === payload.args.domain)
+    .findIndex(ri => ri.get('domain') === payload.domain)
   if (index !== -1) {
     if (payload.event === '_Challenge') {
       // Change registryItem -> challenge
       return state
         .setIn(
           ['registry_items', index, 'pollID'],
-          payload.args.pollID.toString(10)
+          payload.pollID.toString(10)
         )
         // .setIn(
         //   ['registry_items', index, 'whitelisted'], false
@@ -157,5 +157,30 @@ function changeItem(state, payload) {
   }
   return state
 }
+
+
+// function changeItem(state, payload) {
+//   const index = state
+//     .get('registry_items')
+//     .findIndex(ri => ri.get('domain') === payload.args.domain)
+//   if (index !== -1) {
+//     if (payload.event === '_Challenge') {
+//       // Change registryItem -> challenge
+//       return state
+//         .setIn(
+//           ['registry_items', index, 'pollID'],
+//           payload.args.pollID.toString(10)
+//         )
+//         // .setIn(
+//         //   ['registry_items', index, 'whitelisted'], false
+//         // )
+//     } else if (payload.event === '_NewDomainWhitelisted' || payload.event === '_ChallengeFailed') {
+//       // Change thing -> whitelisted
+//       return state.setIn(['registry_items', index, 'whitelisted'], true)
+//       .setIn(['registry_items', index, 'pollID'], false)
+//     }
+//   }
+//   return state
+// }
 
 export default homeReducer

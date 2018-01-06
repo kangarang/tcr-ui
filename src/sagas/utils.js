@@ -29,6 +29,8 @@ export const commonUtils = {
   isWhitelisted: async (registry, domain) => registry.contract.isWhitelisted.call(domain),
   canBeWhitelisted: async (registry, domain) => registry.contract.canBeWhitelisted.call(domain),
 
+  // golem: () => 
+
   shapeShift: (block, transaction, details) => ({
     blockNumber: block.number.toString(10),
     blockHash: block.hash,
