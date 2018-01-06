@@ -63,15 +63,11 @@ function* contractsSaga() {
     const account = yield select(selectAccount)
     const registry = yield call(setupRegistry, eth, account)
 
-    const [ token, parameterizer, voting ] = yield all([
+    const [token, parameterizer, voting] = yield all([
       call(setupContract, eth, account, registry.contract, 'Token'),
       call(setupContract, eth, account, registry.contract, 'Parameterizer'),
       call(setupContract, eth, account, registry.contract, 'Voting'),
     ])
-    // token.contract.abi = false
-    // registry.contract.abi = false
-    // parameterizer.contract.abi = false
-    // voting.contract.abi = false
 
     yield put(
       setContracts({
@@ -83,7 +79,7 @@ function* contractsSaga() {
     )
 
     // Gets tokens allowed
-    yield fork(tokensAllowedSaga)
+    yield fork(tokensAllowedSaga, registry.address)
   } catch (err) {
     yield put(contractError(err))
   }

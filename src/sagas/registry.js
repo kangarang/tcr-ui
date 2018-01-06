@@ -28,10 +28,6 @@ import { tokensAllowedSaga, approvalSaga } from './token'
 
 export default function* registrySaga() {
   yield fork(logsSaga)
-  // yield fork(eventsSaga)
-
-  yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
-
   yield takeEvery(TX_APPROVE, approvalSaga)
   yield takeEvery(TX_APPLY, applicationSaga)
   yield takeEvery(TX_CHALLENGE, challengeSaga)
@@ -51,7 +47,7 @@ function* applicationSaga(payload) {
       payload.deposit,
       token.decimalPower
     )
-    yield call(tokensAllowedSaga)
+    yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Apply error:', err)
     yield put(contractError(err))
@@ -64,7 +60,8 @@ function* challengeSaga(payload) {
   try {
     const hash = yield call(registry.challengeDomain, payload.domain)
     console.log('hash', hash)
-    yield call(tokensAllowedSaga)
+
+    yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Challenge error:', err)
     yield put(contractError(err))
@@ -76,25 +73,13 @@ function* checkTestSaga(payload) {
   // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.domain)
   const receipt = yield call([registry, 'checkCall'], 'challengeExists', payload.domain)
   console.log('receipt', receipt)
+  yield call(tokensAllowedSaga, registry.address)
   // yield put(statusUpdate(payload.domain, receipt))
 }
 
 function* updateStatusSaga(payload) {
   const registry = yield select(selectRegistry)
   const receipt = yield call(registry.updateStatus, payload.domain)
+  yield call(tokensAllowedSaga, registry.address)
   yield put(statusUpdate(payload.domain, receipt))
 }
-
-// Gets Token-Registry allowance
-// export function* tokensAllowedSaga() {
-//   const token = yield select(makeSelectContract('token'))
-//   const account = yield select(selectAccount)
-//   const registry = yield select(makeSelectContract('registry'))
-//   try {
-//     const allowed = yield call(token.allowance, account, registry.address)
-//     yield put(setTokensAllowed(allowed))
-//   } catch (err) {
-//     console.log('Allowance error:', err)
-//     yield put(contractError(err))
-//   }
-// }

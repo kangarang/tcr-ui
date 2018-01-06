@@ -6,13 +6,13 @@ export const selectHome = state => state.get('home')
 export const selectEthjs = createSelector(selectHome, homeState =>
   homeState.get('ethjs')
 )
-export const makeSelectUserInfo = () => createSelector(
-  selectHome, homeState => homeState.get('userInfo')
+export const selectAccount = createSelector(
+  makeSelectParameters(), parameters =>
+    parameters.get('account')
 )
 
-export const selectAccount = createSelector(
-  makeSelectUserInfo(), userInfo =>
-    userInfo.get('account')
+export const makeSelectParameters = () => createSelector(
+  selectHome, homeState => homeState.get('parameters')
 )
 
 // UI selectors
@@ -50,7 +50,7 @@ export const makeSelectCandidates = () =>
     ))
   )
 
-export const selectVotingItems = createSelector(
+export const selectFaceoffs = createSelector(
   selectHome, homeState =>
     homeState.get('listings').filter(ri => (
       (!ri.get('whitelisted') && ri.get('pollID'))

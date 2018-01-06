@@ -30,9 +30,9 @@ import {
 import {
   selectDomain,
   selectAmount,
-  makeSelectUserInfo,
+  makeSelectParameters,
   selectListings,
-  selectVotingItems,
+  selectFaceoffs,
   makeSelectCandidates,
   makeSelectWhitelistItems,
 } from './selectors'
@@ -99,9 +99,9 @@ class App extends Component {
     const {
       domain,
       candidates,
-      voting_items,
+      faceoffs,
       members,
-      userInfo,
+      parameters,
       onChangeUsername,
       idAmount,
       amount,
@@ -112,11 +112,11 @@ class App extends Component {
       <div>
 
         <UserInfo
-          account={userInfo.get('account')}
-          network={userInfo.get('network')}
-          ethBalance={userInfo.get('ethBalance')}
-          tokenBalance={userInfo.get('tokenBalance')}
-          tokensAllowed={userInfo.get('tokensAllowed')}
+          account={parameters.get('account')}
+          network={parameters.get('network')}
+          ethBalance={ethereum.get('balance')}
+          tokenBalance={parameters.get('tokenBalance')}
+          tokensAllowed={parameters.get('tokensAllowed')}
           onApprove={this.handleApprove}
         />
 
@@ -135,7 +135,7 @@ class App extends Component {
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
-              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
+              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
                 <Event
                   golem={log.get('golem')}
                   owner={log.get('owner')}
@@ -149,11 +149,11 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Challenges ('}{voting_items.size}{')'}</H2>
+        <H2>{'Challenges ('}{faceoffs.size}{')'}</H2>
         <FlexContainer>
-          {voting_items.size > 0 &&
-            voting_items.map(log => (
-              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
+          {faceoffs.size > 0 &&
+            faceoffs.map(log => (
+              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
                 <Event
                   golem={log.get('golem')}
                   owner={log.get('owner')}
@@ -171,7 +171,7 @@ class App extends Component {
         <FlexContainer>
           {members.size > 0 &&
             members.map(log => (
-              <Section key={log.getIn(['golem', 'blockNumber']) + log.get('domain')}>
+              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
                 <Event
                   golem={log.get('golem')}
                   owner={log.get('owner')}
@@ -204,11 +204,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  userInfo: makeSelectUserInfo(),
-  domain: selectDomain,
-  amount: selectAmount,
+  parameters: makeSelectParameters(),
   listings: selectListings,
-  voting_items: selectVotingItems,
+  faceoffs: selectFaceoffs,
   members: makeSelectWhitelistItems(),
   candidates: makeSelectCandidates(),
 })

@@ -30,7 +30,7 @@ export function* approvalSaga(payload) {
   const token = yield select(makeSelectContract('token'))
   try {
     yield call(token.approve, registry.address, payload.amount)
-    yield call(tokensAllowedSaga)
+    yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Approval error:', err)
     yield put(contractError(err))
@@ -38,13 +38,12 @@ export function* approvalSaga(payload) {
 }
 
 // Gets Token-Registry allowance
-export function* tokensAllowedSaga() {
+export function* tokensAllowedSaga(allowedContractAddress) {
   const account = yield select(selectAccount)
-  const registry = yield select(selectRegistry)
   const token = yield select(makeSelectContract('token'))
   try {
-    const allowed = yield call(token.allowance, account, registry.address)
-    yield put(setTokensAllowed(allowed))
+    const allowance = yield call(token.allowance, account, allowedContractAddress)
+    yield put(setTokensAllowed({ allowedContractAddress, allowance }))
   } catch (err) {
     console.log('Allowance error:', err)
     yield put(contractError(err))

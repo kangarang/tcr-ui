@@ -37,5 +37,5 @@ function* commitSaga(payload) {
     console.log('Commit vote error:', err)
     yield put(contractError(err))
   }
-  yield call(tokensAllowedSaga)
+  yield call(tokensAllowedSaga, voting.address)
 }

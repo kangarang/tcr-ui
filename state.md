@@ -112,7 +112,7 @@ const reduxState = {
         }
       }
     },
-    allDomains: ['adchain.com', 'consensys.net']
+    allDomains: ['adchain.com', 'kangarang', 'consensys.net']
   },
   parameters: {
     minDeposit,

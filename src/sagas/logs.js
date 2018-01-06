@@ -24,32 +24,25 @@ export default function* logsSaga() {
 
 // Gets fresh logs
 function* getFreshLogs() {
+  const registry = yield select(selectRegistry)
   try {
     const [
-      // allEvents,
       applications,
       challenges,
-      // newlyWhitelistedDomains,
-      // failedChallenges,
     ] = yield all([
-      // call(handleLogs),
       call(handleLogs, '_Application'),
       call(handleLogs, '_Challenge'),
-      // call(handleLogs, '_NewDomainWhitelisted'),
-      // call(handleLogs, '_ChallengeFailed'),
     ])
     console.log('applications', applications)
-    // console.log('newlyWhitelistedDomains', newlyWhitelistedDomains)
     console.log('challenges', challenges)
 
     yield put(setDecodedLogs(applications))
     yield put(updateItems(challenges))
-    // yield put(updateItems(newlyWhitelistedDomains))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
   }
-  yield call(tokensAllowedSaga)
+  yield call(tokensAllowedSaga, registry.address)
 }
 
 
@@ -66,12 +59,12 @@ function* handleLogs(topic) {
   // }
 
   return yield all(
-    yield all(decodedLogs.map(async (dLog, ind) => {
+    decodedLogs.map(async (dLog, ind) => {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
 
       return call(buildListing, rawLogs, registry, block, dLog, ind, txDetails)
-    }))
+    })
   )
 }
 

@@ -1,20 +1,16 @@
 import { List, fromJS } from 'immutable'
 
 import {
-  CHANGE_DOMAIN,
-  CHANGE_AMOUNT,
+  SET_ETHJS,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
-  SET_ETHJS,
   NEW_ITEM,
   CHANGE_ITEM,
   CHANGE_ITEMS,
+  SET_DECODED_LOGS,
   CONTRACT_ERROR,
   LOGS_ERROR,
-  GET_ETHEREUM,
-  SET_DECODED_LOGS,
-  SET_METHOD_SIGNATURES,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -62,12 +58,6 @@ const initialState = fromJS({
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case GET_ETHEREUM:
-      return state.set('loading', true).set('error', false)
-    // case CHANGE_AMOUNT:
-    //   return state.set('amount', action.amount.replace(/@/gi, ''))
-    // case CHANGE_DOMAIN:
-    //   return state.set('domain', action.domain.replace(/@/gi, ''))
     case CONTRACT_ERROR:
       return state
         .setIn(['error', 'type'], true)
@@ -77,22 +67,11 @@ function homeReducer(state = initialState, action) {
         .setIn(['ethereum', 'address'], fromJS(action.payload.address))
         .setIn(['ethereum', 'balance'], fromJS(action.payload.balance))
         .setIn(['ethereum', 'network'], fromJS(action.payload.network))
-    // .set('currentBlock', fromJS(action.userInfo.blockNumber))
-    // case SET_CONTRACTS:
-    //   return state
-    //     .set('contracts', fromJS(action.contracts))
-    //     .set('canonicalMinDeposit', fromJS(action.contracts.parameterizer.minDeposit))
-    //     .setIn(
-    //     ['userInfo', 'tokenBalance'],
-    //     fromJS(action.contracts.token.balance)
-    //     )
-    // case SET_MIN_DEPOSIT:
-    //   return state.set('canonicalMinDeposit', fromJS(action.minDeposit))
-    // case SET_TOKENS_ALLOWED:
-    //   return state
-    //     .set('loading', false)
-    //     .set('error', false)
-    //     .setIn(['userInfo', 'tokensAllowed'], fromJS(action.allowed))
+    case SET_MIN_DEPOSIT:
+      return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
+    case SET_TOKENS_ALLOWED:
+      return state
+        .setIn(['ethereum', 'token', 'allowances', action.payload.allowedContractAddress], fromJS(action.payload.allowance))
     case CHANGE_ITEMS:
       return changeItems(state, action.payload)
     case CHANGE_ITEM:
@@ -102,8 +81,6 @@ function homeReducer(state = initialState, action) {
         .update('listings', list => list.push(fromJS(action.payload)))
     case SET_DECODED_LOGS:
       return setNewItems(state, action.payload)
-    // case SET_METHOD_SIGNATURES:
-    //   return state.set('methodSignatures', fromJS(action.payload))
     default:
       return state
   }
@@ -196,17 +173,17 @@ function filterStatus(initialValue, value) {
 
 
 function editListing(state, payload) {
-    // const newListings = updateItemInArray(state.get('listings'), payload.domain, ri => {
-    //   return updateObject(ri, payload.golem)
-    // })
-    // return state.set('listings', fromJS(newListings))
+  // const newListings = updateItemInArray(state.get('listings'), payload.domain, ri => {
+  //   return updateObject(ri, payload.golem)
+  // })
+  // return state.set('listings', fromJS(newListings))
 
-    const index = state
-      .get('listings')
-      .findIndex(ri => ri.get('domain') === payload.domain)
+  const index = state
+    .get('listings')
+    .findIndex(ri => ri.get('domain') === payload.domain)
 
-    return state.get('listings')
-      .setIn([index, 'golem'], fromJS(payload.golem))
-  }
+  return state.get('listings')
+    .setIn([index, 'golem'], fromJS(payload.golem))
+}
 
 export default homeReducer
