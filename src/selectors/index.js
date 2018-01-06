@@ -2,62 +2,42 @@ import { createSelector } from 'reselect'
 
 export const selectHome = state => state.get('home')
 
-// Account details selectors
-export const selectEthjs = createSelector(selectHome, homeState =>
-  homeState.get('ethjs')
-)
-export const selectAccount = createSelector(
-  makeSelectParameters(), parameters =>
-    parameters.get('account')
-)
-
-export const makeSelectParameters = () => createSelector(
+export const selectParameters = createSelector(
   selectHome, homeState => homeState.get('parameters')
 )
-
-// UI selectors
-export const selectAmount = createSelector(selectHome, homeState =>
-  homeState.get('amount')
-)
-export const selectDomain = createSelector(selectHome, homeState =>
-  homeState.get('domain')
-)
-export const selectVFilter = createSelector(selectHome, substate =>
-  substate.get('vFilter')
+export const selectAccount = createSelector(
+  selectParameters, parameters =>
+    parameters.getIn(['ethereum', 'address'])
 )
 
-// Contract selectors
-export const makeSelectContracts = () =>
-  createSelector(selectHome, homeState => homeState.get('contracts'))
-export const makeSelectContract = contract =>
-  createSelector(makeSelectContracts(), contracts => contracts.get(contract))
-export const selectRegistry = createSelector(
-  makeSelectContract('registry'),
-  registry => registry
-)
-
-// List selectors
-export const selectListings = createSelector(
+// All listings
+export const selectAllListings = createSelector(
   selectHome, homeState =>
-    homeState.get('listings')
+    homeState.getIn(['listings', 'byDomain'])
+)
+export const selectPollID = createSelector(
+  selectAllListings, listings =>
+    listings.get('pollID')
 )
 
-// Filter selectors
+// Candidate listings
 export const makeSelectCandidates = () =>
-  createSelector(selectListings, listings =>
-    listings.filter(ri => (
-      ri.get('whitelisted') === false && ri.get('pollID') === false
+  createSelector(selectAllListings, listings =>
+    listings.filter(li => (
+      (li.get('whitelisted') === false && !li.getIn(['golem', 'pollID']))
     ))
   )
 
+// Only voteable listings
 export const selectFaceoffs = createSelector(
-  selectHome, homeState =>
-    homeState.get('listings').filter(ri => (
-      (!ri.get('whitelisted') && ri.get('pollID'))
+  selectAllListings, listings =>
+    listings.filter(li => (
+      (!li.getIn(['golem', 'pollID']) && li.getIn(['golem', 'pollID']))
     ))
 )
 
-export const makeSelectWhitelistItems = () =>
-  createSelector(selectListings, listings =>
-    listings.filter(ri => ri.get('whitelisted'))
-  )
+// Only whitelisted listings
+export const selectWhitelist = createSelector(
+  selectAllListings, listings =>
+    listings.filter(li => li.get('whitelisted'))
+)

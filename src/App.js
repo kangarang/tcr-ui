@@ -28,13 +28,12 @@ import {
 } from './actions'
 
 import {
-  selectDomain,
   selectAmount,
-  makeSelectParameters,
+  selectParameters,
   selectListings,
-  selectFaceoffs,
   makeSelectCandidates,
-  makeSelectWhitelistItems,
+  selectFaceoffs,
+  selectWhitelist,
 } from './selectors'
 
 class App extends Component {
@@ -115,7 +114,7 @@ class App extends Component {
           account={parameters.get('account')}
           network={parameters.get('network')}
           ethBalance={ethereum.get('balance')}
-          tokenBalance={parameters.get('tokenBalance')}
+          tokenBalance={ethereum.getIn(['token', 'balance'])}
           tokensAllowed={parameters.get('tokensAllowed')}
           onApprove={this.handleApprove}
         />
@@ -191,24 +190,24 @@ class App extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: () => dispatch(setupEthereum()),
-    onChangeUsername: evt => dispatch(changeDomain(evt.target.value)),
-    onChangeAmount: evt => dispatch(changeAmount(evt.target.value)),
+    // onChangeUsername: evt => dispatch(changeDomain(evt.target.value)),
+    // onChangeAmount: evt => dispatch(changeAmount(evt.target.value)),
+    onGetTokensAllowed: () => dispatch(getTokensAllowed()),
     onApprove: amount => dispatch(requestApproval(amount)),
     onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
     onChallenge: domain => dispatch(challengeDomain(domain)),
     onCommitVote: (domain, pollID, amount) => dispatch(commitVote(domain, pollID, amount)),
-    onGetTokensAllowed: () => dispatch(getTokensAllowed()),
     onUpdateStatus: domain => dispatch(updateStatus(domain)),
     onTest: domain => dispatch(checkTest(domain)),
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  parameters: makeSelectParameters(),
+  parameters: selectParameters,
   listings: selectListings,
-  faceoffs: selectFaceoffs,
-  members: makeSelectWhitelistItems(),
   candidates: makeSelectCandidates(),
+  faceoffs: selectFaceoffs,
+  members: selectWhitelist,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

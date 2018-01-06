@@ -18,10 +18,6 @@ import {
   contractError,
   statusUpdate,
 } from '../actions'
-import {
-  makeSelectContract,
-  selectRegistry,
-} from '../selectors'
 
 import logsSaga from './logs'
 import { tokensAllowedSaga, approvalSaga } from './token'
@@ -34,10 +30,15 @@ export default function* registrySaga() {
   yield takeEvery(TX_UPDATE_STATUS, updateStatusSaga)
   yield takeEvery(TX_CHECK_TEST, checkTestSaga)
 }
+
+function setupRegistry() {
+
+}
 // Registry interactions
 // Apply
 function* applicationSaga(payload) {
-  const registry = yield select(selectRegistry)
+  const registry = yield call(setupRegistry)
+  // const registry = yield select(selectRegistry)
   const token = yield select(makeSelectContract('token'))
 
   try {

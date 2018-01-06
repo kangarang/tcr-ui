@@ -12,13 +12,13 @@ const Container = styled.div`
 `
 
 function Identicon(props) {
-  const account = props.account || ''
+  const owner = props.owner || ''
   const size = props.size || 8
   const scale = props.scale || 8
 
   const dataUrl = blockies({
     // lowercase it in case it's a checksummedaccount
-    seed: account.toLowerCase(),
+    seed: owner.toLowerCase(),
     size,
     scale,
   }).toDataURL()
@@ -31,7 +31,7 @@ function Identicon(props) {
 }
 
 Identicon.propTypes = {
-  account: PropTypes.string,
+  owner: PropTypes.string,
   size: PropTypes.number,
   scale: PropTypes.number,
 }

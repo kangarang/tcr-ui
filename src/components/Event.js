@@ -27,7 +27,7 @@ const Container = styled.div`
 
 export default ({
   golem,
-  account,
+  owner,
   domain,
 
   handleClickChallenge,
@@ -35,9 +35,9 @@ export default ({
   handleClickUpdateStatus,
   handleClickTest,
 }) => (
-    <Container txHash={golem.get('txHash')}>
+    <Container txHash={golem.getIn(['transaction', 'txHash'])}>
       <FlexCenteredItem gR={1} gC={1}>
-        <Identicon account={golem.get('account')} size={6} scale={6} />
+        <Identicon owner={golem.get('owner')} size={6} scale={6} />
       </FlexCenteredItem>
 
       {golem.get('whitelisted') && (
@@ -53,22 +53,24 @@ export default ({
         </BigBoldInlineText>
       </Item>
 
-      {golem.get('unstakedDeposit') && (
+      {golem.getIn(['transaction', 'numTokens']) && (
         <Item pad={0.5} gR={1} gC={3}>
           <BoldInlineText>
             {'Deposit: '}
-            {golem.get('unstakedDeposit').toString(10)}
+            {golem.getIn(['transaction', 'numTokens']).toString(10)}
             {' CATT'}
           </BoldInlineText>
         </Item>
       )}
 
       <Item pad={0.5} gR={1} gC={4} >
-        {!golem.get('pollID') && (
+        {!golem.getIn(['transaction', 'pollID']) && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
-        {(!golem.get('whitelisted') && golem.get('pollID')) && (
-          <Button onClick={e => handleClickCommitVote(e, domain, golem.get('pollID'))}>{'Commit Vote'}</Button>
+        {(!golem.get('whitelisted') && golem.getIn(['transaction', 'pollID'])) && (
+          <Button onClick={e => handleClickCommitVote(e, domain, golem.getIn(['transaction', 'pollID']))}>
+            {'Commit Vote'}
+          </Button>
         )}
         {(!golem.get('whitelisted') && golem.get('canBeWhitelisted')) && (
           <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
@@ -88,9 +90,9 @@ export default ({
           {'Address: '}
           <A
             target="_blank"
-            href={`https://rinkeby.etherscan.io/address/${account}`}
+            href={`https://rinkeby.etherscan.io/address/${owner}`}
           >
-            {account}
+            {owner}
           </A>
         </BoldInlineText>
       </Item>
