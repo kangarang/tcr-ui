@@ -4,11 +4,14 @@ import {
   GET_ETHEREUM,
 
   SET_ETHJS,
+  SET_WALLET,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
+  GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
   SET_LOGS,
   SET_DECODED_LOGS,
+  NEW_ARRAY,
 
   TX_APPROVE,
   TX_APPLY,
@@ -23,6 +26,23 @@ import {
 } from './constants'
 
 
+export function setupEthereum() {
+  return {
+    type: GET_ETHEREUM,
+  }
+}
+export function setContracts(payload) {
+  return {
+    type: SET_CONTRACTS,
+    payload,
+  }
+}
+export function setWallet(payload) {
+  return {
+    type: SET_WALLET,
+    payload,
+  }
+}
 export function setEthjs(ethjs, parameters) {
   return {
     type: SET_ETHJS,
@@ -83,6 +103,12 @@ export function requestApproval(amount) {
     amount,
   }
 }
+export function getTokensAllowed(payload) {
+  return {
+    type: GET_TOKENS_ALLOWED,
+    payload,
+  }
+}
 export function setTokensAllowed(payload) {
   return {
     type: SET_TOKENS_ALLOWED,
@@ -98,6 +124,12 @@ export function setDecodedLogs(payload) {
 export function newItem(payload) {
   return {
     type: NEW_ITEM,
+    payload,
+  }
+}
+export function newArray(payload) {
+  return {
+    type: NEW_ARRAY,
     payload,
   }
 }

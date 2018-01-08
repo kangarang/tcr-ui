@@ -1,13 +1,16 @@
 export const CONTRACT_ERROR = 'CONTRACT_ERROR--|--Home'
 export const LOGS_ERROR = 'LOGS_ERROR--|--Home'
 export const GET_ETHEREUM = 'GET_ETHEREUM--|--Home'
+export const GET_TOKENS_ALLOWED = 'GET_TOKENS_ALLOWED--|--Home'
 
 export const SET_ETHJS = 'SET_ETHJS--|--Home'
+export const SET_WALLET = 'SET_WALLET--|--Home'
 export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'
 export const SET_MIN_DEPOSIT = 'SET_MIN_DEPOSIT--|--Home'
 export const SET_TOKENS_ALLOWED = 'SET_TOKENS_ALLOWED--|--Home'
 export const SET_LOGS = 'SET_LOGS--|--Home'
 export const SET_DECODED_LOGS = 'SET_DECODED_LOGS--|--Home'
+export const NEW_ARRAY = 'NEW_ARRAY--|--Home'
 
 export const TX_APPROVE = 'TX_APPROVE--|--Home'
 export const TX_APPLY = 'TX_APPLY--|--Home'

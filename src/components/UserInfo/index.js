@@ -55,7 +55,7 @@ function UserInfo({
       </Item>
 
       <FlexCenteredItem gR={2} gC={1}>
-        <Identicon account={account} size={6} scale={6} />
+        <Identicon owner={account} size={6} scale={6} />
       </FlexCenteredItem>
 
       <Item gR={2} gC={2}>
@@ -94,8 +94,8 @@ UserInfo.propTypes = {
   account: PropTypes.string,
   network: PropTypes.string,
   onApprove: PropTypes.func,
-  tokenBalance: PropTypes.string,
-  tokensAllowed: PropTypes.string,
+  tokenBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  tokensAllowed: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 }
 

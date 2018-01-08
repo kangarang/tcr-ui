@@ -2,19 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import catIcon from '../assets/icons/favicon.ico'
+import catIcon from '../../assets/icons/favicon.ico'
 
-import A from './A'
-import Button from './Button'
-import Identicon from './Identicon'
-import Img from './Img'
+import A from '../A'
+import Button from '../Button'
+import Identicon from '../Identicon'
+import Img from '../Img'
 
 import {
   Item,
   FlexCenteredItem,
   BoldInlineText,
   BigBoldInlineText,
-} from './Item'
+} from '../Item'
 
 const Container = styled.div`
   display: grid;
@@ -26,21 +26,22 @@ const Container = styled.div`
 `
 
 export default ({
-  golem,
+  latest,
   owner,
   domain,
+  whitelisted,
 
   handleClickChallenge,
   handleClickCommitVote,
   handleClickUpdateStatus,
   handleClickTest,
 }) => (
-    <Container txHash={golem.getIn(['transaction', 'txHash'])}>
+    <Container txHash={latest.get('txHash')}>
       <FlexCenteredItem gR={1} gC={1}>
-        <Identicon owner={golem.get('owner')} size={6} scale={6} />
+        <Identicon owner={latest.get('txHash')} size={6} scale={6} />
       </FlexCenteredItem>
 
-      {golem.get('whitelisted') && (
+      {whitelisted && (
         <FlexCenteredItem gR={1} gC={1}>
           <Img src={catIcon} alt="" />
         </FlexCenteredItem>
@@ -48,32 +49,32 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={2}>
         <BigBoldInlineText>
-          {golem.get('whitelisted') ? 'Member: ' : 'Candidate: '}
+          {whitelisted ? 'Member: ' : 'Candidate: '}
           {domain}
         </BigBoldInlineText>
       </Item>
 
-      {golem.getIn(['transaction', 'numTokens']) && (
+      {latest.get('numTokens') && (
         <Item pad={0.5} gR={1} gC={3}>
           <BoldInlineText>
             {'Deposit: '}
-            {golem.getIn(['transaction', 'numTokens']).toString(10)}
+            {latest.get('numTokens').toString(10)}
             {' CATT'}
           </BoldInlineText>
         </Item>
       )}
 
       <Item pad={0.5} gR={1} gC={4} >
-        {!golem.getIn(['transaction', 'pollID']) && (
+        {!latest.get('pollID') && (
           <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
         )}
-        {(!golem.get('whitelisted') && golem.getIn(['transaction', 'pollID'])) && (
-          <Button onClick={e => handleClickCommitVote(e, domain, golem.getIn(['transaction', 'pollID']))}>
+        {(!whitelisted && latest.get('pollID')) && (
+          <Button onClick={e => handleClickCommitVote(e, domain, latest.get('pollID'))}>
             {'Commit Vote'}
           </Button>
         )}
-        {(!golem.get('whitelisted') && golem.get('canBeWhitelisted')) && (
-          <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update membership status'}</Button>
+        {(!whitelisted && latest.get('canBeWhitelisted')) && (
+          <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update registry state'}</Button>
         )}
         <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>
       </Item>
@@ -81,7 +82,7 @@ export default ({
       <Item pad={0.5} gR={2} gC={2}>
         <BoldInlineText>
           {'Block number: '}
-          {golem.get('blockNumber')}
+          {latest.get('blockNumber')}
         </BoldInlineText>
       </Item>
 
@@ -100,8 +101,8 @@ export default ({
       <Item pad={0.5} gR={2} gC={4}>
         <BoldInlineText>
           {'Tx hash: '}
-          <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${golem.get('txHash')}`}>
-            {golem.get('txHash')}
+          <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${latest.get('txHash')}`}>
+            {latest.get('txHash')}
           </A>
         </BoldInlineText>
       </Item>

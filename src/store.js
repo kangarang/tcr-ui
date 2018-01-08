@@ -4,7 +4,7 @@ import { createLogger } from 'redux-logger';
 
 import { fromJS, Iterable } from 'immutable';
 
-import { CHANGE_DOMAIN, SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
+import { SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
 import createReducer from './reducers';
 import rootSaga from './sagas'
 
@@ -16,8 +16,8 @@ const stateTransformer = (state) => {
 };
 
 const logger = createLogger({
-  predicate: (getState, action) => action.type !== CHANGE_DOMAIN && action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
-  collapsed: (getState, action, logEntry) => !logEntry.error,
+  predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
+  collapsed: (getState, action, logEntry) => !action.error,
   stateTransformer,
 });
 

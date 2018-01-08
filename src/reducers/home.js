@@ -1,42 +1,60 @@
-import { List, fromJS } from 'immutable'
+import { fromJS } from 'immutable'
 
 import {
-  SET_ETHJS,
-  SET_CONTRACTS,
+  SET_WALLET,
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
-  NEW_ITEM,
-  CHANGE_ITEM,
+  // NEW_ITEM,
+  // CHANGE_ITEM,
   CHANGE_ITEMS,
-  SET_DECODED_LOGS,
+  // SET_DECODED_LOGS,
   CONTRACT_ERROR,
-  LOGS_ERROR,
+  NEW_ARRAY,
+  // LOGS_ERROR,
 } from '../actions/constants'
 
 const initialState = fromJS({
-  ethereum: {
+  wallet: {
     address: '',
     network: '',
-    balance: '',
+    ethBalance: '',
     token: {
       address: '',
-      balance: '',
+      tokenBalance: '',
       allowances: {
         registry: {
-          address: '',
-          total: {},
-          locked: {}
+          total: '',
+          locked: ''
         },
         voting: {
-          address: '',
-          total: {},
-          locked: {}
+          total: '',
+          locked: ''
         }
       }
     }
   },
   listings: {
-    byDomain: {},
+    byDomain: {
+      // 'adchain.com': {
+      //   domain: '',
+      //   owner: '',
+      //   challenger: '',
+      //   whitelisted: '',
+      //   canBeWhitelisted: '',
+      //   latest: {
+      //     sender: '',
+      //     blockHash: '',
+      //     blockNumber: '',
+      //     timestamp: '',
+      //     txHash: '',
+      //     txIndex: '',
+      //     numTokens: '',
+      //     event: '',
+      //     logIndex: '',
+      //     pollID: ''
+      //   }
+      // },
+    },
     allDomains: []
   },
   parameters: {
@@ -61,56 +79,83 @@ function homeReducer(state = initialState, action) {
     case CONTRACT_ERROR:
       return state
         .setIn(['error', 'type'], true)
-        .setIn(['ethereum', 'address'], fromJS('You need MetaMask!'))
-    case SET_ETHJS:
+        .setIn(['wallet', 'address'], fromJS('You need MetaMask!'))
+    case SET_WALLET:
       return state
-        .setIn(['ethereum', 'address'], fromJS(action.payload.address))
-        .setIn(['ethereum', 'balance'], fromJS(action.payload.balance))
-        .setIn(['ethereum', 'network'], fromJS(action.payload.network))
+        .setIn(['wallet', 'address'], fromJS(action.payload.address))
+        .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
+        .setIn(['wallet', 'network'], fromJS(action.payload.network))
     case SET_MIN_DEPOSIT:
       return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
     case SET_TOKENS_ALLOWED:
       return state
-        .setIn(['ethereum', 'token', 'allowances', action.payload.allowedContractAddress], fromJS(action.payload.allowance))
+        .setIn(['wallet', 'token', 'allowances', 'registry', 'total'], fromJS(action.payload.allowance))
+        .setIn(['wallet', 'token', 'tokenBalance'], fromJS(action.payload.balance))
     case CHANGE_ITEMS:
       return changeItems(state, action.payload)
-    case CHANGE_ITEM:
-      return changeItem(state, action.payload)
-    case NEW_ITEM:
-      return state
-        .update('listings', list => list.push(fromJS(action.payload)))
-    case SET_DECODED_LOGS:
-      return setNewItems(state, action.payload)
+    case NEW_ARRAY:
+      return newListingsByDomain(state, action.payload)
+      // return state
+      //   .setIn(['listings', 'byDomain'], fromJS(action.payload))
+    // case NEW_ITEM:
+    //   return state
+    //     .update('listings', list => list.push(fromJS(action.payload)))
+    // case SET_DECODED_LOGS:
+      // return setNewItems(state, action.payload)
+      // return state
     default:
       return state
   }
 }
 
-function updateObject(oldObject, newValues) {
-  return Object.assign({}, oldObject, fromJS(newValues));
-  return oldObject.set(newValues)
-}
-// return updateObject(todo, {completed : !todo.completed});
+function newListingsByDomain(state, payload) {
+  // const newListings = payload.reduce((acc, val) => {
+  //   return acc.set(fromJS(val.domain), fromJS(val))
+  // }, state.getIn(['listings', 'byDomain']))
+  // console.log('newListings', newListings.toJS())
 
-function editObject(state, payload) {
-  return state
-    .setIn(['listings', payload.domain, 'golem'], fromJS(payload.golem))
+  // return state.setIn(['listings', 'byDomain'], newListings)
+  return state.setIn(['listings', 'byDomain'], fromJS(payload))
 }
 
-function updateItemInArray(array, domain, updateItemCallback) {
-  const updatedItems = array.map(item => {
-    const index = array
-      .findIndex(ri => ri.get('domain') === domain)
-    if (index !== -1) {
-      return item
-    }
-    // Use the provided callback to create an updated item
-    const updatedItem = updateItemCallback(item);
-    return updatedItem;
-  });
+// TODO: check blockNumber to make sure updating is ok
+function changeItems(state, payload) {
+  const newItems = payload.reduce((acc, val) => {
+    console.log('acc', acc)
+    console.log('val', val)
+    const index = acc.findIndex(ri => ri.get('domain') === val.domain)
+    return acc
+      .setIn([index, 'latest'], fromJS(val.latest))
+  }, state.getIn(['listings', 'byDomain']))
 
-  return updatedItems;
+  return state.setIn(['listings', 'byDomain'], newItems)
 }
+
+// function updateObject(oldObject, newValues) {
+//   return Object.assign({}, oldObject, fromJS(newValues));
+//   return oldObject.set(newValues)
+// }
+// // return updateObject(todo, {completed : !todo.completed});
+
+// function editObject(state, payload) {
+//   return state
+//     .setIn(['listings', payload.domain, 'latest'], fromJS(payload.latest))
+// }
+
+// function updateItemInArray(array, domain, updateItemCallback) {
+//   const updatedItems = array.map(item => {
+//     const index = array
+//       .findIndex(ri => ri.get('domain') === domain)
+//     if (index !== -1) {
+//       return item
+//     }
+//     // Use the provided callback to create an updated item
+//     const updatedItem = updateItemCallback(item);
+//     return updatedItem;
+//   });
+
+//   return updatedItems;
+// }
 
 
 
@@ -143,47 +188,36 @@ function setNewItems(state, payload) {
   return state.set('listings', twoArrays)
 }
 
-// TODO: check blockNumber to make sure updating is ok
-function changeItems(state, payload) {
-  const newItems = payload.reduce((acc, val) => {
-    const index = acc.findIndex(ri => ri.get('domain') === val.domain)
-    return acc
-      .setIn([index, 'golem'], fromJS(val.golem))
-  }, state.get('listings'))
+// function transformListings(initialValue, value, key, iter) {
+//   let list = initialValue.get(value.completed.toString()).push(value)
+//   return initialValue.set(value.completed.toString(), list)
+// }
 
-  return state.set('listings', newItems)
-}
+// // start with a List,
+// // the shape of the data that you want it to look like at the end
+// // Then you start iterating over each of the values and push it onto the List if it returns true
+// function filterStatus(initialValue, value) {
+//   if (value.completed) {
+//     initialValue = initialValue.push(value)
+//   }
+//   return initialValue
+// }
 
-function transformListings(initialValue, value, key, iter) {
-  let list = initialValue.get(value.completed.toString()).push(value)
-  return initialValue.set(value.completed.toString(), list)
-}
-
-// start with a List,
-// the shape of the data that you want it to look like at the end
-// Then you start iterating over each of the values and push it onto the List if it returns true
-function filterStatus(initialValue, value) {
-  if (value.completed) {
-    initialValue = initialValue.push(value)
-  }
-  return initialValue
-}
-
-// todos.reduce(transformListings, new Immutable.Map({ 'true': Immutable.List(), 'false': Immutable.List() })
+// // todos.reduce(transformListings, new Immutable.Map({ 'true': Immutable.List(), 'false': Immutable.List() })
 
 
-function editListing(state, payload) {
-  // const newListings = updateItemInArray(state.get('listings'), payload.domain, ri => {
-  //   return updateObject(ri, payload.golem)
-  // })
-  // return state.set('listings', fromJS(newListings))
+// function editListing(state, payload) {
+//   // const newListings = updateItemInArray(state.get('listings'), payload.domain, ri => {
+//   //   return updateObject(ri, payload.latest)
+//   // })
+//   // return state.set('listings', fromJS(newListings))
 
-  const index = state
-    .get('listings')
-    .findIndex(ri => ri.get('domain') === payload.domain)
+//   const index = state
+//     .get('listings')
+//     .findIndex(ri => ri.get('domain') === payload.domain)
 
-  return state.get('listings')
-    .setIn([index, 'golem'], fromJS(payload.golem))
-}
+//   return state.get('listings')
+//     .setIn([index, 'latest'], fromJS(payload.latest))
+// }
 
 export default homeReducer

@@ -1,12 +1,15 @@
+import { SET_CONTRACTS } from "../actions/constants";
+
 import { all, takeLatest, call, put, select } from 'redux-saga/effects'
 
 import {
   setDecodedLogs,
+  newArray,
   logsError,
   updateItems,
 } from '../actions'
-import { SET_CONTRACTS } from '../actions/constants'
-import { selectEthjs, selectRegistry } from '../selectors'
+
+import { getContract, getRegistry } from '../contracts/index';
 
 import {
   logUtils,
@@ -17,14 +20,15 @@ import { tokensAllowedSaga } from "./token";
 import {
   fromNaturalUnit,
 } from '../libs/units'
+import { getEthjs } from "../libs/provider";
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
 }
 
 // Gets fresh logs
-function* getFreshLogs() {
-  const registry = yield select(selectRegistry)
+function* getFreshLogs(action) {
+  const registry = action.payload.registry
   try {
     const [
       applications,
@@ -36,7 +40,7 @@ function* getFreshLogs() {
     console.log('applications', applications)
     console.log('challenges', challenges)
 
-    yield put(setDecodedLogs(applications))
+    yield put(newArray(applications))
     yield put(updateItems(challenges))
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -47,8 +51,8 @@ function* getFreshLogs() {
 
 
 function* handleLogs(topic) {
-  const eth = yield select(selectEthjs)
-  const registry = yield select(selectRegistry)
+  const eth = yield call(getEthjs)
+  const registry = yield call(getRegistry)
 
   const filter = yield call(logUtils.buildFilter, registry.address, topic)
   const rawLogs = yield call(eth.getLogs, filter)
@@ -58,14 +62,15 @@ function* handleLogs(topic) {
   //   return decodedLogs
   // }
 
-  return yield all(
-    decodedLogs.map(async (dLog, ind) => {
+  const builtLogs = yield all(
+    yield decodedLogs.map(async (dLog, ind) => {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
 
       return call(buildListing, rawLogs, registry, block, dLog, ind, txDetails)
     })
   )
+  return builtLogs
 }
 
 function* buildListing(rawLogs, registry, block, log, i, txDetails) {
@@ -74,8 +79,8 @@ function* buildListing(rawLogs, registry, block, log, i, txDetails) {
     unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
   }
 
-  const isWhitelisted = (yield call([registry.contract, 'isWhitelisted', 'call'], log.domain))['0']
-  const canBeWhitelisted = (yield call([registry.contract, 'canBeWhitelisted', 'call'], log.domain))['0']
+  const isWhitelisted = (yield call([registry.contract, 'isWhitelisted'], log.domain))['0']
+  const canBeWhitelisted = (yield call([registry.contract, 'canBeWhitelisted'], log.domain))['0']
 
   const tx = {
     hash: rawLogs[i].transactionHash,

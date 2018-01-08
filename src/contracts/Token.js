@@ -32,8 +32,8 @@ export default class Token {
     await this.params()
 
     const tokenBalance = (await this.contract.balanceOf(account))['0']
-    // console.log('tokenBalance', tokenBalance)
-    // console.log('natural unit balance:', tokenBalance.toString(10))
+    console.log('tokenBalance', tokenBalance)
+    console.log('natural unit balance:', tokenBalance.toString(10))
     this.balance = fromToken(tokenBalance, this.decimalPower).toString(10)
 
     return this
@@ -47,16 +47,20 @@ export default class Token {
     this.decimalPower = decimalConversion(this.decimals)
   }
 
-  approve = async (address, amount) => {
+  approve = async (address, amount, account) => {
     const tokens = toToken(amount, this.decimalPower).toString(10)
     const approval = (await this.contract.approve(address, tokens))['0']
-    console.log('approval', approval)
-    return approval
+    const { allowance, balance } = await this.allowance(account, address)
+    return { approval, allowance, balance }
   }
 
   allowance = async (owner, spender) => {
     const tokensAllowed = (await this.contract.allowance(owner, spender))['0']
     this.tokensAllowed = fromToken(tokensAllowed, this.decimalPower).toString(10)
-    return this.tokensAllowed
+    const obj = {
+      allowance: this.tokensAllowed,
+      balance: this.balance
+    }
+    return obj
   }
 }

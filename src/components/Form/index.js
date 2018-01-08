@@ -10,9 +10,9 @@ const FormComponent = styled.form`
   padding: 2em;
 `
 const Input = styled.input`
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
   border: none;
-  border-bottom: 2px solid ${colors.purple};
+  border-bottom: 2px solid ${colors.prism};
   font-size: 1em;
   padding: .75em;
   color: white;
@@ -21,21 +21,18 @@ const Input = styled.input`
 function Form(props) {
   return (
     <FormComponent onSubmit={props.onSubmit}>
-      {'ConsenSys Ad Tech membership requires a minimum deposit of 50,000 Cat Token (CATT).'}
-      <br />
-      {'Please use this form to apply for CAT membership: '}
       {/* <div>
         <Input
           id={props.idAmount}
           type="number"
           placeholder={'Enter amount'}
           value={props.amountValue}
-          onChange={props.onChangeAmount}
+          onChange={props.onChangeDeposit}
         />
       </div> */}
       <div>
         <Input
-          id={props.id}
+          // id={props.id}
           type="text"
           placeholder={props.placeholder}
           value={props.value}

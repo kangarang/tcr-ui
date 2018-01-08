@@ -24,16 +24,16 @@ export default class Registry {
 
   applyDomain = async (domain, amount, tokenDecimalPower) => {
     // TODO: check to see that there's an allowance
-    const gTokens = toToken(amount, tokenDecimalPower).toString(10)
+    const gTokens = toToken(amount, tokenDecimalPower)
     return this.contract.apply(domain, gTokens)
   }
 
   challengeDomain = async (domain) => this.contract.challenge(domain)
 
   checkCall = async (fn, ...args) => {
-    const result = await this.contract[fn].call(...args)
+    const result = await this.contract[fn](...args)
     console.log(fn, result)
-    return result
+    return result['0']
   }
 
   updateStatus = async (domain) => {

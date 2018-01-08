@@ -33,4 +33,13 @@ export const getProviderUrl = () => {
   }
 }
 
-export const getEthjs = () => new Ethjs(getProvider())
+const ethjs = {
+  eth: {}
+}
+
+export const setupEthjs = () => {
+  ethjs.eth = new Ethjs(getProvider())
+  return ethjs.eth
+}
+
+export const getEthjs = () => ethjs.eth

@@ -17,9 +17,6 @@ import './global-styles'
 import {
   setupEthereum,
   requestApproval,
-  getTokensAllowed,
-  changeDomain,
-  changeAmount,
   applyDomain,
   commitVote,
   checkTest,
@@ -28,26 +25,26 @@ import {
 } from './actions'
 
 import {
-  selectAmount,
   selectParameters,
-  selectListings,
-  makeSelectCandidates,
+  selectWallet,
+  selectAllListingsByDomain,
+  selectCandidates,
   selectFaceoffs,
   selectWhitelist,
+  selectAccount,
 } from './selectors'
 
 class App extends Component {
+  constructor() {
+    super()
+    this.state = {
+      domain: '',
+      deposit: '',
+    }
+  }
+
   componentDidMount() {
-    this.setup()
-  }
-
-  setup = () => {
     this.props.onSetupEthereum()
-  }
-
-  handleGetTokensAllowed = e => {
-    e.preventDefault()
-    this.props.onGetTokensAllowed()
   }
 
   checkProvider = () => {
@@ -57,26 +54,20 @@ class App extends Component {
     )
   }
 
-  handleChallenge = (e, domain) => {
-    e.preventDefault()
-    this.props.onChallenge(domain)
-  }
-
-  handleApply = e => {
-    e.preventDefault()
-    this.props.onApply(this.props.domain, '50000')
-    // this.props.onApply(this.props.domain, this.props.amount)
-  }
-
   handleApprove = e => {
     e.preventDefault()
     const deposit = '1000000'
     this.props.onApprove(deposit)
   }
 
-  handleCommitVote = (e, domain, pollID) => {
+  handleApply = e => {
     e.preventDefault()
-    this.props.onCommitVote(domain, pollID, this.props.amount)
+    this.props.onApply(this.state.domain, '50000')
+  }
+
+  handleChallenge = (e, domain) => {
+    e.preventDefault()
+    this.props.onChallenge(domain)
   }
 
   handleUpdateStatus = (e, domain) => {
@@ -84,9 +75,27 @@ class App extends Component {
     this.props.onUpdateStatus(domain)
   }
 
+  handleCommitVote = (e, domain, pollID) => {
+    e.preventDefault()
+    this.props.onCommitVote(domain, pollID, this.props.amount)
+  }
+
   handleTest = (e, domain) => {
     e.preventDefault()
     this.props.onTest(domain)
+  }
+
+  handleChangeDeposit = (e) => {
+    console.log('e', e)
+    this.setState({
+      deposit: e.target.value
+    })
+  }
+
+  handleChangeDomain = (e) => {
+    this.setState({
+      domain: e.target.value
+    })
   }
 
   handleSetVisibility = (e, vFilter) => {
@@ -96,49 +105,45 @@ class App extends Component {
 
   render() {
     const {
-      domain,
+      wallet,
+      account,
       candidates,
       faceoffs,
-      members,
+      registryListings,
       parameters,
-      onChangeUsername,
-      idAmount,
-      amount,
-      onChangeAmount,
     } = this.props
 
     return (
       <div>
-
         <UserInfo
-          account={parameters.get('account')}
           network={parameters.get('network')}
-          ethBalance={ethereum.get('balance')}
-          tokenBalance={ethereum.getIn(['token', 'balance'])}
-          tokensAllowed={parameters.get('tokensAllowed')}
+          account={account}
+          ethBalance={wallet.get('ethBalance')}
+          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+          tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           onApprove={this.handleApprove}
         />
 
         <Form
+          placeholder={'Domain'}
+          // id={this.state.domain}
+          value={this.state.domain}
+          onChange={this.handleChangeDomain}
+          depositValue={this.state.deposit}
+          onChangeDeposit={this.handleChangeDeposit}
           onSubmit={this.handleApply}
-          value={domain}
-          onChange={onChangeUsername}
-          id={domain}
-          placeholder={'Applicant Name'}
-          idAmount={idAmount}
-          amountValue={amount}
-          onChangeAmount={onChangeAmount}
         />
 
         <H2>{'Applicants ('}{candidates.size}{')'}</H2>
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
-              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
+              <Section key={log.get('domain')}>
                 <Event
-                  golem={log.get('golem')}
+                  latest={log.get('latest')}
                   owner={log.get('owner')}
                   domain={log.get('domain')}
+                  whitelisted={log.getIn(['latest', 'whitelisted'])}
 
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickChallenge={this.handleChallenge}
@@ -152,11 +157,12 @@ class App extends Component {
         <FlexContainer>
           {faceoffs.size > 0 &&
             faceoffs.map(log => (
-              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
+              <Section key={log.get('domain')}>
                 <Event
-                  golem={log.get('golem')}
+                  latest={log.get('latest')}
                   owner={log.get('owner')}
                   domain={log.get('domain')}
+                  whitelisted={log.getIn(['latest', 'whitelisted'])}
 
                   handleClickCommitVote={this.handleCommitVote}
                   handleClickUpdateStatus={this.handleUpdateStatus}
@@ -166,16 +172,18 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Members ('}{members.size}{')'}</H2>
+        <H2>{'Registry ('}{registryListings.size}{')'}</H2>
         <FlexContainer>
-          {members.size > 0 &&
-            members.map(log => (
-              <Section key={log.getIn(['block', 'number']) + log.get('domain')}>
+          {registryListings.size > 0 &&
+            registryListings.map(log => (
+              <Section key={log.get('domain')}>
                 <Event
-                  golem={log.get('golem')}
+                  latest={log.get('latest')}
                   owner={log.get('owner')}
                   domain={log.get('domain')}
+                  whitelisted={log.getIn(['latest', 'whitelisted'])}
 
+                  handleClickChallenge={this.handleChallenge}
                   handleClickUpdateStatus={this.handleUpdateStatus}
                   handleClickTest={this.handleTest}
                 />
@@ -190,9 +198,6 @@ class App extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: () => dispatch(setupEthereum()),
-    // onChangeUsername: evt => dispatch(changeDomain(evt.target.value)),
-    // onChangeAmount: evt => dispatch(changeAmount(evt.target.value)),
-    onGetTokensAllowed: () => dispatch(getTokensAllowed()),
     onApprove: amount => dispatch(requestApproval(amount)),
     onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
     onChallenge: domain => dispatch(challengeDomain(domain)),
@@ -204,10 +209,11 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   parameters: selectParameters,
-  listings: selectListings,
-  candidates: makeSelectCandidates(),
+  wallet: selectWallet,
+  account: selectAccount,
+  candidates: selectCandidates,
   faceoffs: selectFaceoffs,
-  members: selectWhitelist,
+  registryListings: selectWhitelist,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

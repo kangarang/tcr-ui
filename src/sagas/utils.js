@@ -32,21 +32,19 @@ export const commonUtils = {
     domain: details.domain,
     owner: details.eventName === '_Application' && tx.from,
     challenger: details.pollID && details.challenger,
-    whitelisted: details.isWhitelisted,
-    canBeWhitelisted: details.canBeWhitelisted,
-    block: {
-      hash: b.hash,
-      number: b.number.toString(10),
+    latest: {
+      whitelisted: details.isWhitelisted,
+      canBeWhitelisted: details.canBeWhitelisted,
+      blockHash: b.hash,
+      blockNumber: b.number.toString(10),
       timestamp: b.timestamp && new Date(b.timestamp.toNumber(10)),
-      transaction: {
-        txHash: tx.hash,
-        txIndex: tx.index.toString(10),
-        sender: tx.from,
-        numTokens: details.unstakedDeposit ? details.unstakedDeposit.toString(10) : false,
-        event: details.eventName,
-        logIndex: details.index.toString(10),
-        pollID: details.pollID ? details.pollID.toString(10) : false
-      }
+      txHash: tx.hash,
+      txIndex: tx.index.toString(10),
+      sender: tx.from,
+      numTokens: details.unstakedDeposit ? details.unstakedDeposit.toString(10) : false,
+      event: details.eventName,
+      logIndex: details.index.toString(10),
+      pollID: details.pollID ? details.pollID.toString(10) : false
     }
   }),
 }

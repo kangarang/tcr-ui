@@ -10,15 +10,14 @@ import {
   GET_ETHEREUM,
 } from '../actions/constants'
 
-import { setupRegistry, setupContract } from '../contracts'
+import { getRegistry, setupContract, setupRegistry } from '../contracts'
 
 import {
-  setEthjs,
+  setWallet,
   contractError,
   setContracts,
 } from '../actions'
 import {
-  selectEthjs,
   selectAccount,
 } from '../selectors'
 
@@ -26,7 +25,7 @@ import registrySaga from './registry'
 import tokenSaga, { tokensAllowedSaga } from './token'
 import votingSaga from './voting'
 
-import { getEthjs } from '../libs/provider'
+import { setupEthjs, getEthjs } from '../libs/provider'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -37,20 +36,19 @@ export default function* rootSaga() {
 
 function* genesis() {
   try {
-    const eth = yield call(getEthjs)
-    const account = yield call(eth.coinbase)
+    const eth = yield call(setupEthjs)
+    const address = yield call(eth.coinbase)
 
     const [blockNumber, ethBalance, network] = yield all([
       call(eth.blockNumber),
-      call(eth.getBalance, account),
+      call(eth.getBalance, address),
       call(eth.net_version),
     ])
-    console.log('account', account)
+    console.log('address', address)
     console.log('network', network)
 
-    yield put(setEthjs(eth, { account, ethBalance, blockNumber, network }))
-
-    yield fork(contractsSaga)
+    yield put(setWallet({ address, ethBalance, blockNumber, network }))
+    yield call(contractsSaga)
   } catch (err) {
     yield put(contractError(err))
   }
@@ -59,24 +57,17 @@ function* genesis() {
 // Sets up contracts
 function* contractsSaga() {
   try {
-    const eth = yield select(selectEthjs)
+    const eth = yield call(getEthjs)
     const account = yield select(selectAccount)
     const registry = yield call(setupRegistry, eth, account)
+    console.log('registry', registry)
 
     const [token, parameterizer, voting] = yield all([
-      call(setupContract, eth, account, registry.contract, 'Token'),
-      call(setupContract, eth, account, registry.contract, 'Parameterizer'),
-      call(setupContract, eth, account, registry.contract, 'Voting'),
+      call(setupContract, eth, account, 'token'),
+      call(setupContract, eth, account, 'parameterizer'),
+      call(setupContract, eth, account, 'voting'),
     ])
-
-    yield put(
-      setContracts({
-        registry,
-        token,
-        parameterizer,
-        voting,
-      })
-    )
+    yield put(setContracts({ registry, token, parameterizer, voting }))
 
     // Gets tokens allowed
     yield fork(tokensAllowedSaga, registry.address)

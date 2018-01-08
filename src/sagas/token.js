@@ -14,9 +14,9 @@ import {
 } from '../actions/constants'
 import {
   selectAccount,
-  makeSelectContract,
-  selectRegistry,
 } from '../selectors'
+import { getContract, getRegistry } from '../contracts/index';
+import { getEthjs } from '../libs/provider';
 
 export default function* tokenSaga() {
   yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
@@ -26,24 +26,29 @@ export default function* tokenSaga() {
 // Token interactions
 // Approve Registry
 export function* approvalSaga(payload) {
-  const registry = yield select(selectRegistry)
-  const token = yield select(makeSelectContract('token'))
+  const eth = yield call(getEthjs)
+  const account = yield select(selectAccount)
+  const registry = yield call(getRegistry, eth, account)
+  const token = yield call(getContract, 'token')
   try {
-    yield call(token.approve, registry.address, payload.amount)
-    yield call(tokensAllowedSaga, registry.address)
+    const { approval, allowance, balance } = yield call(token.approve, registry.address, payload.amount, account)
+    const allowedContractAddress = registry.address
+    yield put(setTokensAllowed({ allowedContractAddress, allowance, balance }))
   } catch (err) {
     console.log('Approval error:', err)
     yield put(contractError(err))
   }
 }
 
-// Gets Token-Registry allowance
+// // Gets Token-Registry allowance
 export function* tokensAllowedSaga(allowedContractAddress) {
+  const eth = yield call(getEthjs)
   const account = yield select(selectAccount)
-  const token = yield select(makeSelectContract('token'))
+  const registry = yield call(getRegistry, eth, account)
+  const token = yield call(getContract, 'token')
   try {
-    const allowance = yield call(token.allowance, account, allowedContractAddress)
-    yield put(setTokensAllowed({ allowedContractAddress, allowance }))
+    const { allowance, balance } = yield call(token.allowance, account, allowedContractAddress)
+    yield put(setTokensAllowed({ allowedContractAddress, allowance, balance }))
   } catch (err) {
     console.log('Allowance error:', err)
     yield put(contractError(err))
