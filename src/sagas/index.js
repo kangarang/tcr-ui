@@ -37,18 +37,18 @@ export default function* rootSaga() {
 function* genesis() {
   try {
     const eth = yield call(setupEthjs)
-    const address = yield call(eth.coinbase)
+    const account = yield call(eth.coinbase)
 
     const [blockNumber, ethBalance, network] = yield all([
       call(eth.blockNumber),
-      call(eth.getBalance, address),
+      call(eth.getBalance, account),
       call(eth.net_version),
     ])
-    console.log('address', address)
+    console.log('account', account)
     console.log('network', network)
 
-    yield put(setWallet({ address, ethBalance, blockNumber, network }))
-    yield call(contractsSaga, eth, address)
+    yield put(setWallet({ account, ethBalance, blockNumber, network }))
+    yield call(contractsSaga, eth, account)
   } catch (err) {
     yield put(contractError(err))
   }

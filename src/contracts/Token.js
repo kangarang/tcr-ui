@@ -1,20 +1,16 @@
 import contract from 'truffle-contract'
-import {
-  // bigTen,
-  decimalConversion,
-
-  toToken,
-  fromToken,
-
-  // withCommas,
-
-  // toWei,
-  // toEther,
-
-  // trimDecimalsThree,
-} from '../libs/units'
 import abis from './abis'
 import { getDefaults } from './defaults'
+
+import {
+  decimalConversion,
+  toToken,
+  fromToken,
+  // withCommas,
+  // toWei,
+  // toEther,
+  // trimDecimalsThree,
+} from '../libs/units'
 
 export default class Token {
   constructor(eth, account, registry) {
