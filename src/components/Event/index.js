@@ -21,8 +21,9 @@ const Container = styled.div`
   grid-template-columns: 1.5fr 3fr 6fr 8fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 15px;
-  /* padding: .7em; */
+  padding: .7em;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
+  border-radius: 4px;
 `
 
 export default ({

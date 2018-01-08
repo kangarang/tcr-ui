@@ -84,7 +84,7 @@ function* pollLogsSaga(action) {
     const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock)
     console.log('newLogs', newLogs)
 
-    sB += 2
+    sB += 5
     yield put(updateItems(newLogs))
     // yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
