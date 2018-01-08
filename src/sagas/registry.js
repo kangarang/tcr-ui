@@ -56,9 +56,7 @@ function* challengeSaga(payload) {
   try {
     const hash = yield call(registry.challengeDomain, payload.domain)
     console.log('hash', hash)
-
     yield call(tokensAllowedSaga, registry.address)
-    console.log('hash', hash)
   } catch (err) {
     console.log('Challenge error:', err)
     yield put(contractError(err))

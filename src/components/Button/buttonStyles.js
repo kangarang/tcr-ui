@@ -4,7 +4,7 @@ import { colors } from '../Colors'
 const buttonStyles = css`
   display: inline-block;
   box-sizing: border-box;
-  padding: 1em;
+  padding: 1.5em;
   text-decoration: none;
   -webkit-font-smoothing: antialiased;
   -webkit-touch-callout: none;
@@ -12,7 +12,7 @@ const buttonStyles = css`
   cursor: pointer;
   outline: 0;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
   color: ${colors.purple};
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
@@ -25,6 +25,7 @@ const buttonStyles = css`
     content: '';
     position: absolute;
     border: 2px solid ${colors.purple};
+    border-radius: 4px;
     top: 0;
     right: 0;
     bottom: 0;

@@ -2,7 +2,7 @@ import {
   call,
   put,
   fork,
-  select,
+  // select,
   all,
   takeLatest,
 } from 'redux-saga/effects'
@@ -10,7 +10,7 @@ import {
   GET_ETHEREUM,
 } from '../actions/constants'
 
-import { getRegistry, setupContract, setupRegistry } from '../contracts'
+import { setupContract, setupRegistry } from '../contracts'
 
 import {
   setWallet,
@@ -18,14 +18,14 @@ import {
   setContracts,
 } from '../actions'
 import {
-  selectAccount,
+  // selectAccount,
 } from '../selectors'
 
 import registrySaga from './registry'
 import tokenSaga, { tokensAllowedSaga } from './token'
 import votingSaga from './voting'
 
-import { setupEthjs, getEthjs } from '../libs/provider'
+import { setupEthjs } from '../libs/provider'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -48,19 +48,16 @@ function* genesis() {
     console.log('network', network)
 
     yield put(setWallet({ address, ethBalance, blockNumber, network }))
-    yield call(contractsSaga)
+    yield call(contractsSaga, eth, address)
   } catch (err) {
     yield put(contractError(err))
   }
 }
 
 // Sets up contracts
-function* contractsSaga() {
+function* contractsSaga(eth, account) {
   try {
-    const eth = yield call(getEthjs)
-    const account = yield select(selectAccount)
     const registry = yield call(setupRegistry, eth, account)
-    console.log('registry', registry)
 
     const [token, parameterizer, voting] = yield all([
       call(setupContract, eth, account, 'token'),

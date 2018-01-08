@@ -121,9 +121,10 @@ function newListingsByDomain(state, payload) {
 // TODO: check blockNumber to make sure updating is ok
 function changeItems(state, payload) {
   const newItems = payload.reduce((acc, val) => {
-    console.log('acc', acc)
-    console.log('val', val)
     const index = acc.findIndex(ri => ri.get('domain') === val.domain)
+    if (index === -1) {
+      return acc.push(fromJS(val))
+    }
     return acc
       .setIn([index, 'latest'], fromJS(val.latest))
   }, state.getIn(['listings', 'byDomain']))

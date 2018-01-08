@@ -5,9 +5,9 @@ import topics from '../libs/topics'
 
 // Logs helpers
 export const logUtils = {
-  buildFilter: (address, topic) => ({
-    fromBlock: new Eth.BN('1'),
-    toBlock: 'latest',
+  buildFilter: (address, topic, sb, eb) => ({
+    fromBlock: new Eth.BN(sb),
+    toBlock: eb,
     address,
     topics: topics[topic],
   }),
@@ -30,7 +30,7 @@ export const commonUtils = {
 
   shapeShift: (b, tx, details) => ({
     domain: details.domain,
-    owner: details.eventName === '_Application' && tx.from,
+    owner: tx.from,
     challenger: details.pollID && details.challenger,
     latest: {
       whitelisted: details.isWhitelisted,

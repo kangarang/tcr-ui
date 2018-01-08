@@ -48,6 +48,7 @@ export function* tokensAllowedSaga(allowedContractAddress) {
   const token = yield call(getContract, 'token')
   try {
     const { allowance, balance } = yield call(token.allowance, account, allowedContractAddress)
+    console.log('allowance', allowance)
     yield put(setTokensAllowed({ allowedContractAddress, allowance, balance }))
   } catch (err) {
     console.log('Allowance error:', err)

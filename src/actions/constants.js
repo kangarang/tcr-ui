@@ -9,6 +9,7 @@ export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'
 export const SET_MIN_DEPOSIT = 'SET_MIN_DEPOSIT--|--Home'
 export const SET_TOKENS_ALLOWED = 'SET_TOKENS_ALLOWED--|--Home'
 export const SET_LOGS = 'SET_LOGS--|--Home'
+export const POLL_LOGS_REQUEST = 'POLL_LOGS_REQUEST--|--Home'
 export const SET_DECODED_LOGS = 'SET_DECODED_LOGS--|--Home'
 export const NEW_ARRAY = 'NEW_ARRAY--|--Home'
 

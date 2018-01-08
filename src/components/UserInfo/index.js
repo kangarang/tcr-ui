@@ -78,7 +78,7 @@ function UserInfo({
 
       <Item gR={2} gC={4}>
         {tokensAllowed < 50000 ? (
-          <Button onClick={onApprove}>{'Approve(1,000,000)'}</Button>
+          <Button onClick={onApprove}>{'A P P R O V E'}</Button>
         ) : (
           <BoldInlineText>
             {'CATT Allowed: '}

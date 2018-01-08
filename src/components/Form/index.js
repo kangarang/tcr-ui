@@ -40,7 +40,7 @@ function Form(props) {
           onSubmit={props.onSubmit}
         />
         <Button onClick={props.onSubmit}>
-          <h4>{'Submit'}</h4>
+          <h4>{'S U B M I T'}</h4>
         </Button>
       </div>
     </FormComponent>

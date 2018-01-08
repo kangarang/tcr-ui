@@ -10,6 +10,7 @@ import {
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
   SET_LOGS,
+  POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
   NEW_ARRAY,
 
@@ -51,6 +52,12 @@ export function setEthjs(ethjs, parameters) {
   }
 }
 
+export function pollLogsRequest(payload) {
+  return {
+    type: POLL_LOGS_REQUEST,
+    payload
+  }
+}
 export function logsError(logType, error) {
   return {
     type: LOGS_ERROR,
