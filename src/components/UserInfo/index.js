@@ -37,7 +37,7 @@ function UserInfo({
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{'ConsenSys Ad Tech Membership Registry'}</BigBoldInlineText>
+        <BigBoldInlineText>{'Token-Curated Registries'}</BigBoldInlineText>
       </Item>
 
       <Item gR={1} gC={3}>

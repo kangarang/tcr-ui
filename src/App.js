@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+// import NetworkStatus from 'react-web3-network-status/stateless'
 
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -27,11 +28,11 @@ import {
 import {
   selectParameters,
   selectWallet,
-  selectAllListingsByDomain,
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
   selectAccount,
+  selectAllListings,
 } from './selectors'
 
 class App extends Component {
@@ -48,10 +49,10 @@ class App extends Component {
   }
 
   checkProvider = () => {
-    this.intervalID = window.setInterval(
-      () => this.props.onCheckProvider(),
-      1000
-    )
+    // this.intervalID = window.setInterval(
+    //   () => this.props.onCheckProvider(),
+    //   1000
+    // )
   }
 
   handleApprove = e => {
@@ -115,6 +116,13 @@ class App extends Component {
 
     return (
       <div>
+
+        {/* <div>
+          <NetworkStatus
+            networkId='420' // 1, 3, 4, 42, null, 'not-listening', or 'account-not-unlocked'
+            address={account} // optional
+          />
+        </div> */}
         <UserInfo
           network={parameters.get('network')}
           account={account}
@@ -212,6 +220,7 @@ const mapStateToProps = createStructuredSelector({
   wallet: selectWallet,
   account: selectAccount,
   candidates: selectCandidates,
+  listings: selectAllListings,
   faceoffs: selectFaceoffs,
   registryListings: selectWhitelist,
 })

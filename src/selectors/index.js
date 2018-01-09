@@ -14,14 +14,18 @@ export const selectAccount = createSelector(
 )
 
 // All listings
-export const selectAllListingsByDomain = createSelector(
+export const selectAllListings = createSelector(
   selectHome, homeState =>
-    homeState.getIn(['listings', 'byDomain'])
+    homeState.get('listings')
 )
-export const selectPollID = createSelector(
-  selectAllListingsByDomain, listings =>
-    listings.get('pollID')
+export const selectAllListingsByDomain = createSelector(
+  selectAllListings, listings =>
+    listings.get('byDomain')
 )
+// export const selectPollID = createSelector(
+//   selectAllListingsByDomain, listings =>
+//     listings.get('pollID')
+// )
 
 // Candidate listings
 export const selectCandidates = createSelector(

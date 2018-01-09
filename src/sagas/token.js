@@ -27,11 +27,12 @@ export default function* tokenSaga() {
 // Approve Registry
 export function* approvalSaga(payload) {
   const eth = yield call(getEthjs)
-  const account = yield select(selectAccount)
-  const registry = yield call(getRegistry, eth, account)
+  const address = yield select(selectAccount)
+  const registry = yield call(getRegistry, eth, address)
   const token = yield call(getContract, 'token')
   try {
-    const { approval, allowance, balance } = yield call(token.approve, registry.address, payload.amount, account)
+    const { approval, allowance, balance } = yield call(token.approve, registry.address, payload.amount, address)
+    console.log('approval', approval)
     const allowedContractAddress = registry.address
     yield put(setTokensAllowed({ allowedContractAddress, allowance, balance }))
   } catch (err) {
@@ -43,12 +44,11 @@ export function* approvalSaga(payload) {
 // // Gets Token-Registry allowance
 export function* tokensAllowedSaga(allowedContractAddress) {
   const eth = yield call(getEthjs)
-  const account = yield select(selectAccount)
-  const registry = yield call(getRegistry, eth, account)
+  const address = yield select(selectAccount)
+  // const registry = yield call(getRegistry, eth, address)
   const token = yield call(getContract, 'token')
   try {
-    const { allowance, balance } = yield call(token.allowance, account, allowedContractAddress)
-    console.log('allowance', allowance)
+    const { allowance, balance } = yield call(token.allowance, address, allowedContractAddress)
     yield put(setTokensAllowed({ allowedContractAddress, allowance, balance }))
   } catch (err) {
     console.log('Allowance error:', err)

@@ -1,6 +1,7 @@
 import {
   CONTRACT_ERROR,
   LOGS_ERROR,
+  UDAPP_ERROR,
   GET_ETHEREUM,
 
   SET_ETHJS,
@@ -9,7 +10,8 @@ import {
   SET_MIN_DEPOSIT,
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
-  SET_LOGS,
+  GET_PROVIDER_REQUEST,
+  // SET_LOGS,
   POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
   NEW_ARRAY,
@@ -44,11 +46,10 @@ export function setWallet(payload) {
     payload,
   }
 }
-export function setEthjs(ethjs, parameters) {
+export function setEthjs(payload) {
   return {
     type: SET_ETHJS,
-    ethjs,
-    parameters,
+    payload,
   }
 }
 
@@ -56,6 +57,12 @@ export function pollLogsRequest(payload) {
   return {
     type: POLL_LOGS_REQUEST,
     payload
+  }
+}
+export function udappError(error) {
+  return {
+    type: UDAPP_ERROR,
+    error,
   }
 }
 export function logsError(logType, error) {
@@ -69,6 +76,11 @@ export function contractError(error) {
   return {
     type: CONTRACT_ERROR,
     error,
+  }
+}
+export function getProviderRequest() {
+  return {
+    type: GET_PROVIDER_REQUEST,
   }
 }
 

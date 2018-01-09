@@ -9,13 +9,13 @@ import {
 } from '../actions'
 import {
   TX_COMMIT_VOTE,
-  TX_APPROVE,
+  // TX_APPROVE,
 } from '../actions/constants'
 import { getContract } from '../contracts/index';
 import {
   selectAccount,
 } from '../selectors'
-import { tokensAllowedSaga, approvalSaga } from "./token";
+import { tokensAllowedSaga } from './token';
 
 export default function* votingSaga() {
   // yield takeEvery(TX_APPROVE, approvalSaga)

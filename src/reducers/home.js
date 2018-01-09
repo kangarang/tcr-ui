@@ -10,6 +10,7 @@ import {
   // SET_DECODED_LOGS,
   CONTRACT_ERROR,
   NEW_ARRAY,
+  SET_ETHJS,
   // LOGS_ERROR,
 } from '../actions/constants'
 
@@ -39,9 +40,9 @@ const initialState = fromJS({
       //   domain: '',
       //   owner: '',
       //   challenger: '',
-      //   whitelisted: '',
-      //   canBeWhitelisted: '',
       //   latest: {
+        //   whitelisted: '',
+        //   canBeWhitelisted: '',
       //     sender: '',
       //     blockHash: '',
       //     blockNumber: '',
@@ -80,6 +81,10 @@ function homeReducer(state = initialState, action) {
       return state
         .setIn(['error', 'type'], true)
         .setIn(['wallet', 'address'], fromJS('You need MetaMask!'))
+    case SET_ETHJS:
+      return state
+        .setIn(['wallet', 'address'], fromJS(action.payload.address))
+        .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
     case SET_WALLET:
       return state
         .setIn(['wallet', 'address'], fromJS(action.payload.address))

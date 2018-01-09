@@ -1,7 +1,6 @@
 import {
   call,
   put,
-  select,
   fork,
   takeEvery,
 } from 'redux-saga/effects'
@@ -15,11 +14,10 @@ import { getRegistry, getContract } from '../contracts/index';
 
 import {
   contractError,
-  statusUpdate,
 } from '../actions'
 
 import logsSaga from './logs'
-import { tokensAllowedSaga, approvalSaga } from './token'
+import { tokensAllowedSaga } from './token'
 
 export default function* registrySaga() {
   yield fork(logsSaga)
@@ -66,7 +64,7 @@ function* challengeSaga(payload) {
 function* checkTestSaga(payload) {
   const registry = yield call(getRegistry)
   // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.domain)
-  const receipt = yield call([registry, 'checkCall'], 'challengeExists', payload.domain)
+  const receipt = yield call(registry, 'checkCall', 'challengeExists', payload.domain)
   console.log('receipt', receipt)
   yield call(tokensAllowedSaga, registry.address)
   // yield put(statusUpdate(payload.domain, receipt))

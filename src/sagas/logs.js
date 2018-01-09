@@ -1,17 +1,16 @@
-import { all, takeLatest, takeEvery, fork, call, put, select } from 'redux-saga/effects'
-import { fromJS } from 'immutable'
+import { all, takeLatest, takeEvery, call, put} from 'redux-saga/effects'
+// import { fromJS } from 'immutable'
 import { delay } from 'redux-saga'
-import Promise from 'bluebird'
+// import Promise from 'bluebird'
 
 import {
-  setDecodedLogs,
   newArray,
   logsError,
   updateItems,
   pollLogsRequest,
 } from '../actions'
 
-import { getContract, getRegistry } from '../contracts/index';
+import { getRegistry } from '../contracts/index';
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from "../actions/constants";
 
@@ -31,19 +30,14 @@ export default function* logsSaga() {
   yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
+let sB = 15
+
 // Gets fresh logs
 function* getFreshLogs() {
   const registry = yield call(getRegistry)
   try {
-    const [
-      applications,
-      challenges,
-    ] = yield all([
-      call(handleLogs, '1', 'latest', '_Application'),
-      call(handleLogs, '1', 'latest', '_Challenge'),
-    ])
+    const applications = yield call(handleLogs, sB, 'latest')
     console.log('applications', applications)
-    console.log('challenges', challenges)
 
     yield put(newArray(applications))
     // yield put(updateItems(challenges))
@@ -56,37 +50,34 @@ function* getFreshLogs() {
   yield call(startPolling)
 }
 
-let sB = 15
-
 function* startPolling() {
-  const eth = yield call(getEthjs)
+  yield all([
+    put(pollLogsRequest({startBlock: 1, endBlock: 'latest'})),
+    call(pollController),
+  ])
+}
+
+// Timer
+function* pollController() {
+  const pollInterval = 2000
   while (true) {
-    let blockNumber = yield call(eth.blockNumber)
-    if (sB < blockNumber) {
-      blockNumber = yield call(eth.blockNumber)
-      yield call(delay, 1000)
-      console.log('blockNumber', blockNumber.toString(10))
-      yield put(pollLogsRequest({ startBlock: sB, endBlock: blockNumber }))
-    } else {
-      blockNumber = yield call(eth.blockNumber)
-      yield call(delay, 1000)
-      console.log('sB was greater')
-      yield put(pollLogsRequest({ startBlock: 15, endBlock: blockNumber }))
+    try {
+      yield call(delay, pollInterval)
+      yield put(pollLogsRequest({startBlock: 1, endBlock: 'latest'}))
+    } catch (err) {
+      console.log('Polling Log Saga error', err)
+      throw new Error(err)
     }
   }
 }
 
 function* pollLogsSaga(action) {
   const registry = yield call(getRegistry)
-  console.log('startBlock', action.payload.startBlock)
-  console.log('endBlock', action.payload.endBlock)
   try {
     const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock)
-    console.log('newLogs', newLogs)
-
     sB += 5
     yield put(updateItems(newLogs))
-    // yield call(tokensAllowedSaga, registry.address)
+    yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
@@ -105,15 +96,14 @@ function* handleLogs(sb, eb, topic) {
   //   return decodedLogs
   // }
 
-  const builtLogs = yield all(
+  return yield all(
     yield decodedLogs.map(async (dLog, ind) => {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
-
-      return call(buildListing, rawLogs, registry, block, dLog, ind, txDetails)
+      const ddd = await buildListing(rawLogs, registry, block, dLog, ind, txDetails)
+      return ddd
     })
   )
-  return builtLogs
 }
 
 function* buildListing(rawLogs, registry, block, log, i, txDetails) {

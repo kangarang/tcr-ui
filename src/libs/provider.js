@@ -44,7 +44,7 @@ export const getProviderUrl = () => {
   }
 }
 
-export const setupEthjs = () => {
+export const setupEthjs = async () => {
   safe.eth = new Ethjs(setProvider())
   return safe.eth
 }

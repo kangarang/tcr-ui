@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Provider } from 'react-redux'
 
 import App from './App'
+import UDapp from './containers/UDapp'
 
 import adwaitaDay from './assets/images/adwaita-day.jpg'
 // import adwaitaNight from './assets/images/adwaita-night.jpg'
@@ -33,6 +34,7 @@ const AppWrapper = styled.div`
 ReactDOM.render(
   <Provider store={store}>
     <AppWrapper>
+      <UDapp />
       <App />
     </AppWrapper>
   </Provider>,
