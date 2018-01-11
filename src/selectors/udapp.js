@@ -23,9 +23,6 @@ export const selectDeposit = createSelector(
 export const selectValues = createSelector(
   selectUdapp, udappState => udappState.get('values')
 )
-export const selectDomain = createSelector(
-  selectUdapp, udappState => udappState.get('domain')
-)
 export const selectAbi = createSelector(
   selectUdapp, udappState => udappState.get('abi')
 )

@@ -15,7 +15,7 @@ export default {
   _Challenge: [
     '0xf6214eae86f3bedb9e3580242fc0aee0c63d31de315e420dc25917b0614ffe9f',
   ],
-  _NewDomainWhitelisted: [
+  _NewListingWhitelisted: [
     '0x492f06612b5389b4304f989412f79af523a6c649a0aad67ed85d2f3f1e727ce6',
   ],
   _ChallengeSucceeded: [

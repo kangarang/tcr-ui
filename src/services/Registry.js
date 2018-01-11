@@ -3,8 +3,9 @@ import Promise from 'bluebird'
 
 import { toToken } from '../libs/units'
 
-import abis from './abis'
+import abis from '../contracts'
 import { getDefaults } from './defaults'
+import { commonUtils } from '../sagas/utils';
 
 export default class Registry {
   constructor(eth, account) {
@@ -22,13 +23,16 @@ export default class Registry {
     return this
   }
 
-  applyDomain = async (domain, amount, tokenDecimalPower) => {
+  applyListing = async (listing, amount, tokenDecimalPower) => {
     // TODO: check to see that there's an allowance
     const gTokens = toToken(amount, tokenDecimalPower)
-    return this.contract.apply(domain, gTokens.toString(10))
+    return this.contract.apply(listing, gTokens.toString(10))
   }
 
-  challengeDomain = async (domain) => this.contract.challenge(domain)
+  challengeListing = async (listing) => {
+    const listingHash = commonUtils.getListingHash(listing)
+    return this.contract.challenge(listingHash)
+  }
 
   checkCall = async (fn, ...args) => {
     const result = await this.contract[fn](...args)
@@ -36,8 +40,9 @@ export default class Registry {
     return result
   }
 
-  updateStatus = async (domain) => {
-    const receipt = await this.contract.updateStatus(domain)
+  updateStatus = async (listing) => {
+    const listingHash = commonUtils.getListingHash(listing)
+    const receipt = await this.contract.updateStatus(listingHash)
     console.log('updateStatus receipt:', receipt)
     return receipt
   }
@@ -46,8 +51,8 @@ export default class Registry {
     this.contract[fn](...args)
   }
 
-  filterDomainAndCall = (dLogs, fn) =>
-    this.asyncFilter(dLogs, this.contract[fn].call, 'domain')
+  filterListingAndCall = (dLogs, fn) =>
+    this.asyncFilter(dLogs, this.contract[fn].call, 'listing')
 
   asyncFilter = (arr, fn, key) =>
     Promise.filter(arr, async (item, index) => fn(item[key]))

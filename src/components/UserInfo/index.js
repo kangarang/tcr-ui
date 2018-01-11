@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { config } from '../../config'
+
 import Identicon from '../Identicon'
 import Button from '../Button'
-
 import Img from '../Img'
 
 import {
@@ -37,7 +38,7 @@ function UserInfo({
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{'Token-Curated Registries'}</BigBoldInlineText>
+        <BigBoldInlineText>{`${config.spoke} Registry`}</BigBoldInlineText>
       </Item>
 
       <Item gR={1} gC={3}>
@@ -49,7 +50,7 @@ function UserInfo({
 
       <Item gR={1} gC={4}>
         <BoldInlineText>
-          {'CATT Balance: '}
+          {`${config.tokenSymbol} Balance: `}
           {withCommas(tokenBalance)}
         </BoldInlineText>
       </Item>
@@ -77,14 +78,16 @@ function UserInfo({
       </Item>
 
       <Item gR={2} gC={4}>
+        <BoldInlineText>
+          {`${config.tokenSymbol} Allowed: `}
+          {withCommas(tokensAllowed)}
+        </BoldInlineText>
+      </Item>
+
+      <Item gR={2} gC={5}>
         {tokensAllowed < 50000 ? (
           <Button onClick={onApprove}>{'A P P R O V E'}</Button>
-        ) : (
-          <BoldInlineText>
-            {'CATT Allowed: '}
-            {withCommas(tokensAllowed)}
-          </BoldInlineText>
-        )}
+        ) : false}
       </Item>
     </Container>
   )

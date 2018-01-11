@@ -28,7 +28,7 @@ Deploy on elastic beanstalk:
 ## Available contract endpoints
 
 #### Globals:
-- registry.listings[domainHash]
+- registry.listings[listingHash]
 - registry.challenges[challengeID]
 - registry.tokenClaims[challengeID, address]
 
@@ -51,11 +51,11 @@ Deploy on elastic beanstalk:
 - voting.revealVote(pollID, voteOptions, salt)
 
 #### Getter functions:
-- registry.canBeWhitelisted(domain)
-- registry.isWhitelisted(domain)
-- registry.appWasMade(domain)
-- registry.challengeExists(domain)
-- registry.challengeCanBeResolved(domain)
+- registry.canBeWhitelisted(listingHash)
+- registry.isWhitelisted(listingHash)
+- registry.appWasMade(listingHash)
+- registry.challengeExists(listingHash)
+- registry.challengeCanBeResolved(listingHash)
 - registry.determineReward(challengeID)
 - registry.isExpired(termDate)
 
@@ -77,7 +77,7 @@ Deploy on elastic beanstalk:
 - parameterizer.get(parameter)
 
 Registry
-  - listingMap: domainHashes -> Listing struct
+  - listingMap: listingHashes -> Listing struct
   - challengeMap: challengeIDs -> Challenge struct
   - tokenClaims: challengeIDs + address -> token claim data
 PLCR Voting
@@ -93,28 +93,28 @@ Parameterizer
 ## Events
 
 #### Registry
-event _Application(string domain, uint deposit)
+event _Application(bytes32 listing, uint deposit)
 
   - new registry_item {}
 
-event _Challenge(string domain, uint deposit, uint pollID)
+event _Challenge(bytes32 listing, uint deposit, uint pollID)
 
   - change -> registry_item.set(pollID, '1') i.e. voting_item
 
 event _ChallengeFailed(uint challengeID)
-event _NewDomainWhitelisted(string domain)
+event _NewListingWhitelisted(bytes32 listing)
 
   - change -> voting_item.set('whitelisted', true)
 
 event _ChallengeSucceeded(uint challengeID)
-event _ApplicationRemoved(string domain)
-event _ListingRemoved(string domain)
+event _ApplicationRemoved(bytes32 listing)
+event _ListingRemoved(bytes32 listing)
 
   - delete -> state.delete(item)
 
 event _RewardClaimed(address voter, uint challengeID, uint reward)
-event _Deposit(string domain, uint added, uint newTotal)
-event _Withdrawal(string domain, uint withdrew, uint newTotal)
+event _Deposit(bytes32 listing, uint added, uint newTotal)
+event _Withdrawal(bytes32 listing, uint withdrew, uint newTotal)
 
   - $$$
 

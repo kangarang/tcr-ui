@@ -1,4 +1,4 @@
-import { all, takeLatest, takeEvery, call, put} from 'redux-saga/effects'
+import { all, takeLatest, takeEvery, call, put } from 'redux-saga/effects'
 // import { fromJS } from 'immutable'
 import { delay } from 'redux-saga'
 // import Promise from 'bluebird'
@@ -10,7 +10,7 @@ import {
   pollLogsRequest,
 } from '../actions'
 
-import { getRegistry } from '../contracts/index';
+import { getRegistry } from '../services';
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from "../actions/constants";
 
@@ -36,23 +36,26 @@ let sB = 15
 function* getFreshLogs() {
   const registry = yield call(getRegistry)
   try {
-    const applications = yield call(handleLogs, sB, 'latest')
+    const applications = yield call(handleLogs, sB, 'latest', '_Application')
+    const challenges = yield call(handleLogs, sB, 'latest', '_Challenge')
     console.log('applications', applications)
+    const filteredApps = applications.filter(async (a) =>
+      (await registry.contract.getStatus.call(commonUtils.getListingHash(a.listing)).result === '0x0000000000000000000000000000000000000000000000000000000000000001')
+    )
 
-    yield put(newArray(applications))
-    // yield put(updateItems(challenges))
+    yield call(tokensAllowedSaga, registry.address)
+    yield put(newArray(filteredApps))
+    yield put(updateItems(challenges))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
   }
-  yield call(tokensAllowedSaga, registry.address)
-
   yield call(startPolling)
 }
 
 function* startPolling() {
   yield all([
-    put(pollLogsRequest({startBlock: 1, endBlock: 'latest'})),
+    put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' })),
     call(pollController),
   ])
 }
@@ -63,7 +66,7 @@ function* pollController() {
   while (true) {
     try {
       yield call(delay, pollInterval)
-      yield put(pollLogsRequest({startBlock: 1, endBlock: 'latest'}))
+      yield put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' }))
     } catch (err) {
       console.log('Polling Log Saga error', err)
       throw new Error(err)
@@ -74,7 +77,7 @@ function* pollController() {
 function* pollLogsSaga(action) {
   const registry = yield call(getRegistry)
   try {
-    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock)
+    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock, '_Application')
     sB += 5
     yield put(updateItems(newLogs))
     yield call(tokensAllowedSaga, registry.address)
@@ -108,12 +111,16 @@ function* handleLogs(sb, eb, topic) {
 
 function* buildListing(rawLogs, registry, block, log, i, txDetails) {
   let unstakedDeposit = '0'
-  if (log.deposit) {
-    unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
-  }
+  const listingHash = commonUtils.getListingHash(log.listing)
+  // if (log.deposit) {
+  //   unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
+  // } else {
+  const listing = yield call([registry.contract, 'listings', 'call'], listingHash)
+  unstakedDeposit = listing[3].toString(10)
+  // }
 
-  const isWhitelisted = yield call([registry.contract, 'isWhitelisted'], log.domain)
-  const canBeWhitelisted = yield call([registry.contract, 'canBeWhitelisted'], log.domain)
+  const isWhitelisted = yield call([registry.contract, 'isWhitelisted'], listingHash)
+  const canBeWhitelisted = yield call([registry.contract, 'canBeWhitelisted'], listingHash)
 
   const tx = {
     hash: rawLogs[i].transactionHash,
@@ -122,7 +129,7 @@ function* buildListing(rawLogs, registry, block, log, i, txDetails) {
     index: txDetails.transactionIndex,
   }
   const details = {
-    domain: log.domain,
+    listing: log.listing,
     unstakedDeposit,
     pollID: log.pollID && log.pollID.toString(10),
     index: i,

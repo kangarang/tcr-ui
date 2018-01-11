@@ -15,7 +15,7 @@ import {
 import {
   selectAccount,
 } from '../selectors'
-import { getContract, getRegistry } from '../contracts/index';
+import { getContract, getRegistry } from '../services';
 import { getEthjs } from '../libs/provider';
 
 export default function* tokenSaga() {

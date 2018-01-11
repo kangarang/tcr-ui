@@ -12,7 +12,7 @@ const fromToken = (wToken, decimalPower) => bigTen(wToken).div(decimalPower)
 const toNineToken = (smallToken) => bigTen(smallToken).mul(decimalConversion(9))
 // convert FROM natural unit
 // (reading logs or an event)
-const fromNaturalUnit = (naturalUnit) => bigTen(naturalUnit).div(decimalConversion(9))
+const fromNaturalUnit = (naturalUnit, decimals) => bigTen(naturalUnit, decimals).div(decimalConversion(decimals))
 
 const withCommas = (number) =>
   number.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -32,7 +32,6 @@ export {
   toToken,
   fromToken,
 
-  toNineToken,
   fromNaturalUnit,
 
   withCommas,

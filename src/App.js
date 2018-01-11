@@ -18,10 +18,10 @@ import './global-styles'
 import {
   setupEthereum,
   requestApproval,
-  applyDomain,
+  applyListing,
   commitVote,
   checkTest,
-  challengeDomain,
+  challengeListing,
   updateStatus,
 } from './actions'
 
@@ -39,7 +39,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      domain: '',
+      listing: '',
       deposit: '',
     }
   }
@@ -57,33 +57,33 @@ class App extends Component {
 
   handleApprove = e => {
     e.preventDefault()
-    const deposit = '1000000'
+    const deposit = '420'
     this.props.onApprove(deposit)
   }
 
   handleApply = e => {
     e.preventDefault()
-    this.props.onApply(this.state.domain, '50000')
+    this.props.onApply(this.state.listing, '11')
   }
 
-  handleChallenge = (e, domain) => {
+  handleChallenge = (e, listing) => {
     e.preventDefault()
-    this.props.onChallenge(domain)
+    this.props.onChallenge(listing)
   }
 
-  handleUpdateStatus = (e, domain) => {
+  handleUpdateStatus = (e, listing) => {
     e.preventDefault()
-    this.props.onUpdateStatus(domain)
+    this.props.onUpdateStatus(listing)
   }
 
-  handleCommitVote = (e, domain, pollID) => {
+  handleCommitVote = (e, listing, pollID) => {
     e.preventDefault()
-    this.props.onCommitVote(domain, pollID, this.props.amount)
+    this.props.onCommitVote(listing, pollID, this.props.amount)
   }
 
-  handleTest = (e, domain) => {
+  handleTest = (e, listing) => {
     e.preventDefault()
-    this.props.onTest(domain)
+    this.props.onTest(listing)
   }
 
   handleChangeDeposit = (e) => {
@@ -93,9 +93,9 @@ class App extends Component {
     })
   }
 
-  handleChangeDomain = (e) => {
+  handleChangeListing = (e) => {
     this.setState({
-      domain: e.target.value
+      listing: e.target.value
     })
   }
 
@@ -133,10 +133,10 @@ class App extends Component {
         />
 
         <Form
-          placeholder={'Domain'}
-          // id={this.state.domain}
-          value={this.state.domain}
-          onChange={this.handleChangeDomain}
+          placeholder={'Listing'}
+          // id={this.state.listing}
+          value={this.state.listing}
+          onChange={this.handleChangeListing}
           depositValue={this.state.deposit}
           onChangeDeposit={this.handleChangeDeposit}
           onSubmit={this.handleApply}
@@ -146,11 +146,11 @@ class App extends Component {
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
-              <Section key={log.get('domain')}>
+              <Section key={log.get('listing')}>
                 <Event
                   latest={log.get('latest')}
                   owner={log.get('owner')}
-                  domain={log.get('domain')}
+                  listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
                   handleClickUpdateStatus={this.handleUpdateStatus}
@@ -165,11 +165,11 @@ class App extends Component {
         <FlexContainer>
           {faceoffs.size > 0 &&
             faceoffs.map(log => (
-              <Section key={log.get('domain')}>
+              <Section key={log.get('listing')}>
                 <Event
                   latest={log.get('latest')}
                   owner={log.get('owner')}
-                  domain={log.get('domain')}
+                  listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
                   handleClickCommitVote={this.handleCommitVote}
@@ -184,11 +184,11 @@ class App extends Component {
         <FlexContainer>
           {registryListings.size > 0 &&
             registryListings.map(log => (
-              <Section key={log.get('domain')}>
+              <Section key={log.get('listing')}>
                 <Event
                   latest={log.get('latest')}
                   owner={log.get('owner')}
-                  domain={log.get('domain')}
+                  listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
                   handleClickChallenge={this.handleChallenge}
@@ -207,11 +207,11 @@ function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: () => dispatch(setupEthereum()),
     onApprove: amount => dispatch(requestApproval(amount)),
-    onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
-    onChallenge: domain => dispatch(challengeDomain(domain)),
-    onCommitVote: (domain, pollID, amount) => dispatch(commitVote(domain, pollID, amount)),
-    onUpdateStatus: domain => dispatch(updateStatus(domain)),
-    onTest: domain => dispatch(checkTest(domain)),
+    onApply: (listing, deposit) => dispatch(applyListing(listing, deposit)),
+    onChallenge: listing => dispatch(challengeListing(listing)),
+    onCommitVote: (listing, pollID, amount) => dispatch(commitVote(listing, pollID, amount)),
+    onUpdateStatus: listing => dispatch(updateStatus(listing)),
+    onTest: listing => dispatch(checkTest(listing)),
   }
 }
 

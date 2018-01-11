@@ -29,7 +29,7 @@ const Container = styled.div`
 export default ({
   latest,
   owner,
-  domain,
+  listing,
   whitelisted,
 
   handleClickChallenge,
@@ -50,8 +50,8 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={2}>
         <BigBoldInlineText>
-          {whitelisted ? 'Member: ' : 'Candidate: '}
-          {domain}
+          {whitelisted ? 'Registered: ' : 'Application: '}
+          {listing}
         </BigBoldInlineText>
       </Item>
 
@@ -67,17 +67,17 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={4} >
         {!latest.get('pollID') && (
-          <Button onClick={e => handleClickChallenge(e, domain)}>{'Challenge'}</Button>
+          <Button onClick={e => handleClickChallenge(e, listing)}>{'Challenge'}</Button>
         )}
         {(!whitelisted && latest.get('pollID')) && (
-          <Button onClick={e => handleClickCommitVote(e, domain, latest.get('pollID'))}>
+          <Button onClick={e => handleClickCommitVote(e, listing, latest.get('pollID'))}>
             {'Commit Vote'}
           </Button>
         )}
         {(!whitelisted && latest.get('canBeWhitelisted')) && (
-          <Button onClick={e => handleClickUpdateStatus(e, domain)}>{'Update registry state'}</Button>
+          <Button onClick={e => handleClickUpdateStatus(e, listing)}>{'Update registry state'}</Button>
         )}
-        <Button onClick={e => handleClickTest(e, domain)}>{'Test'}</Button>
+        <Button onClick={e => handleClickTest(e, listing)}>{'Test'}</Button>
       </Item>
 
       <Item pad={0.5} gR={2} gC={2}>

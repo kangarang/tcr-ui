@@ -38,9 +38,9 @@ const reduxState = {
     }
   },
   listings: {
-    byDomain: {
+    byListing: {
       'adchain.com': {
-        domain,
+        listing,
         owner,
         challenger,
         whitelisted,
@@ -59,7 +59,7 @@ const reduxState = {
         }
       },
       'kangarang': {
-        domain,
+        listing,
         owner,
         challenger,
         whitelisted,
@@ -80,7 +80,7 @@ const reduxState = {
         }
       },
       'consensys.net': {
-        domain: 'consensys.net',
+        listing: 'consensys.net',
         owner,
         challenger,
         whitelisted,
@@ -112,7 +112,7 @@ const reduxState = {
         }
       }
     },
-    allDomains: ['adchain.com', 'kangarang', 'consensys.net']
+    allListings: ['adchain.com', 'kangarang', 'consensys.net']
   },
   parameters: {
     minDeposit,
@@ -130,7 +130,7 @@ const reduxState = {
     message: ''
   },
   visiblityFilter: {
-    domains: ['in_application', 'in_whitelist'],
+    listings: ['in_application', 'in_whitelist'],
     isPolling: false,
     offset: 0,
 

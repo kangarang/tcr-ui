@@ -10,7 +10,7 @@ import {
   TX_UPDATE_STATUS,
   TX_CHECK_TEST,
 } from '../actions/constants'
-import { getRegistry, getContract } from '../contracts/index';
+import { getRegistry, getContract } from '../services';
 
 import {
   contractError,
@@ -35,8 +35,8 @@ function* applicationSaga(payload) {
 
   try {
     const applied = yield call(
-      registry.applyDomain,
-      payload.domain,
+      registry.applyListing,
+      payload.listing,
       payload.deposit,
       token.decimalPower
     )
@@ -52,7 +52,7 @@ function* applicationSaga(payload) {
 function* challengeSaga(payload) {
   const registry = yield call(getRegistry)
   try {
-    const hash = yield call(registry.challengeDomain, payload.domain)
+    const hash = yield call(registry.challengeListing, payload.listing)
     console.log('hash', hash)
     yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
@@ -63,17 +63,17 @@ function* challengeSaga(payload) {
 
 function* checkTestSaga(payload) {
   const registry = yield call(getRegistry)
-  // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.domain)
-  const receipt = yield call(registry, 'checkCall', 'challengeExists', payload.domain)
+  // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.listing)
+  const receipt = yield call(registry, 'checkCall', 'challengeExists', payload.listing)
   console.log('receipt', receipt)
   yield call(tokensAllowedSaga, registry.address)
-  // yield put(statusUpdate(payload.domain, receipt))
+  // yield put(statusUpdate(payload.listing, receipt))
 }
 
 function* updateStatusSaga(payload) {
   const registry = yield call(getRegistry)
-  const receipt = yield call(registry.updateStatus, payload.domain)
+  const receipt = yield call(registry.updateStatus, payload.listing)
   console.log('receipt', receipt)
   yield call(tokensAllowedSaga, registry.address)
-  // yield put(statusUpdate(payload.domain, receipt))
+  // yield put(statusUpdate(payload.listing, receipt))
 }

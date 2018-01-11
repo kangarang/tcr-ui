@@ -1,9 +1,8 @@
 import contract from 'truffle-contract'
 import abi from 'ethereumjs-abi'
 
-import abis from './abis'
+import abis from '../contracts'
 import { getDefaults } from './defaults'
-import { toNineToken } from '../libs/units';
 
 export default class Voting {
   constructor(eth, account, registry) {
@@ -28,7 +27,7 @@ export default class Voting {
   }
 
   requestVotingRights = (votingRights) =>
-    this.contract.requestVotingRights(toNineToken(votingRights).toString(10))
+    this.contract.requestVotingRights(votingRights)
 
   commitVote = async (pollID, account, numTokens) => {
     const prevPollID = await this.contract.getInsertPointForNumTokens.call(account, numTokens)

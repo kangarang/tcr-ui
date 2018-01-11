@@ -1,7 +1,7 @@
 export const getDefaults = (account) => {
     return {
         from: account,
-        gas: 400000,
+        gas: 4500000,
         gasPrice: 25000000000
     }
 }

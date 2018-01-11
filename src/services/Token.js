@@ -1,15 +1,11 @@
 import contract from 'truffle-contract'
-import abis from './abis'
+import abis from '../contracts'
 import { getDefaults } from './defaults'
 
 import {
   decimalConversion,
   toToken,
   fromToken,
-  // withCommas,
-  // toWei,
-  // toEther,
-  // trimDecimalsThree,
 } from '../libs/units'
 
 export default class Token {
@@ -18,7 +14,7 @@ export default class Token {
   }
 
   setupToken = async (eth, account, registry) => {
-    const TokenContract = contract(abis.HumanStandardToken)
+    const TokenContract = contract(abis.EIP20)
     TokenContract.setProvider(eth.currentProvider)
     TokenContract.defaults(getDefaults(account))
 
@@ -39,7 +35,7 @@ export default class Token {
     this.name = await this.contract.name.call()
     this.decimals = await this.contract.decimals.call()
     this.symbol = await this.contract.symbol.call()
-    this.version = await this.contract.version.call()
+    this.totalSupply = await this.contract.totalSupply.call()
     this.decimalPower = decimalConversion(this.decimals)
   }
 

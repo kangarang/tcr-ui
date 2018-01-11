@@ -4,15 +4,13 @@ import {
   SET_WALLET,
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
-  // NEW_ITEM,
-  // CHANGE_ITEM,
+  SET_CONTRACTS,
   CHANGE_ITEMS,
-  // SET_DECODED_LOGS,
   CONTRACT_ERROR,
   NEW_ARRAY,
   SET_ETHJS,
-  // LOGS_ERROR,
 } from '../actions/constants'
+import { commonUtils } from '../sagas/utils';
 
 const initialState = fromJS({
   wallet: {
@@ -35,14 +33,14 @@ const initialState = fromJS({
     }
   },
   listings: {
-    byDomain: {
+    byListing: {
       // 'adchain.com': {
-      //   domain: '',
+      //   listing: '',
       //   owner: '',
       //   challenger: '',
       //   latest: {
-        //   whitelisted: '',
-        //   canBeWhitelisted: '',
+      //   whitelisted: '',
+      //   canBeWhitelisted: '',
       //     sender: '',
       //     blockHash: '',
       //     blockNumber: '',
@@ -56,7 +54,7 @@ const initialState = fromJS({
       //   }
       // },
     },
-    allDomains: []
+    allListings: []
   },
   parameters: {
     minDeposit: '',
@@ -90,6 +88,10 @@ function homeReducer(state = initialState, action) {
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
+    case SET_CONTRACTS:
+      return state.setIn(['wallet', 'token', 'tokenName'], fromJS(action.payload.token.name))
+        .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(action.payload.token.symbol))
+        .setIn(['wallet', 'token', 'totalSupply'], fromJS(action.payload.token.totalSupply))
     case SET_MIN_DEPOSIT:
       return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
     case SET_TOKENS_ALLOWED:
@@ -99,42 +101,36 @@ function homeReducer(state = initialState, action) {
     case CHANGE_ITEMS:
       return changeItems(state, action.payload)
     case NEW_ARRAY:
-      return newListingsByDomain(state, action.payload)
-      // return state
-      //   .setIn(['listings', 'byDomain'], fromJS(action.payload))
-    // case NEW_ITEM:
-    //   return state
-    //     .update('listings', list => list.push(fromJS(action.payload)))
-    // case SET_DECODED_LOGS:
-      // return setNewItems(state, action.payload)
-      // return state
+      return newListingsByListing(state, action.payload)
     default:
       return state
   }
 }
 
-function newListingsByDomain(state, payload) {
+function newListingsByListing(state, payload) {
   // const newListings = payload.reduce((acc, val) => {
-  //   return acc.set(fromJS(val.domain), fromJS(val))
-  // }, state.getIn(['listings', 'byDomain']))
+  //   return acc.set(fromJS(val.listing), fromJS(val))
+  // }, state.getIn(['listings', 'byListing']))
   // console.log('newListings', newListings.toJS())
 
-  // return state.setIn(['listings', 'byDomain'], newListings)
-  return state.setIn(['listings', 'byDomain'], fromJS(payload))
+  // return state.setIn(['listings', 'byListing'], newListings)
+  return state.setIn(['listings', 'byListing'], fromJS(payload))
 }
 
 // TODO: check blockNumber to make sure updating is ok
 function changeItems(state, payload) {
   const newItems = payload.reduce((acc, val) => {
-    const index = acc.findIndex(ri => ri.get('domain') === val.domain)
+    const index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
+    // Unique
     if (index === -1) {
       return acc.push(fromJS(val))
     }
     return acc
       .setIn([index, 'latest'], fromJS(val.latest))
-  }, state.getIn(['listings', 'byDomain']))
 
-  return state.setIn(['listings', 'byDomain'], newItems)
+  }, state.getIn(['listings', 'byListing']))
+
+  return state.setIn(['listings', 'byListing'], newItems)
 }
 
 // function updateObject(oldObject, newValues) {
@@ -143,15 +139,10 @@ function changeItems(state, payload) {
 // }
 // // return updateObject(todo, {completed : !todo.completed});
 
-// function editObject(state, payload) {
-//   return state
-//     .setIn(['listings', payload.domain, 'latest'], fromJS(payload.latest))
-// }
-
-// function updateItemInArray(array, domain, updateItemCallback) {
+// function updateItemInArray(array, listing, updateItemCallback) {
 //   const updatedItems = array.map(item => {
 //     const index = array
-//       .findIndex(ri => ri.get('domain') === domain)
+//       .findIndex(ri => ri.get('listing') === listing)
 //     if (index !== -1) {
 //       return item
 //     }
@@ -161,69 +152,6 @@ function changeItems(state, payload) {
 //   });
 
 //   return updatedItems;
-// }
-
-
-
-// Array input
-function setNewItems(state, payload) {
-  if (!payload || payload.length < 1) {
-    return state
-  }
-  // const newListings = updateItemInArray(state.get('listings'), payload.get('domain'), ri => {
-  // })
-
-  // Filters an array of logs to find any duplicate listings
-  const uniqueListings = payload.filter(log => {
-    const index = state
-      .get('listings')
-      .findIndex(ri => ri.get('domain') === log.domain)
-    if (index === -1) {
-      // Unique registry item
-      return true
-    }
-    // Duplicate registry item
-    return false
-  })
-
-  // Concatenates two arrays
-  const twoArrays = state
-    .get('listings')
-    .concat(fromJS(uniqueListings))
-
-  return state.set('listings', twoArrays)
-}
-
-// function transformListings(initialValue, value, key, iter) {
-//   let list = initialValue.get(value.completed.toString()).push(value)
-//   return initialValue.set(value.completed.toString(), list)
-// }
-
-// // start with a List,
-// // the shape of the data that you want it to look like at the end
-// // Then you start iterating over each of the values and push it onto the List if it returns true
-// function filterStatus(initialValue, value) {
-//   if (value.completed) {
-//     initialValue = initialValue.push(value)
-//   }
-//   return initialValue
-// }
-
-// // todos.reduce(transformListings, new Immutable.Map({ 'true': Immutable.List(), 'false': Immutable.List() })
-
-
-// function editListing(state, payload) {
-//   // const newListings = updateItemInArray(state.get('listings'), payload.domain, ri => {
-//   //   return updateObject(ri, payload.latest)
-//   // })
-//   // return state.set('listings', fromJS(newListings))
-
-//   const index = state
-//     .get('listings')
-//     .findIndex(ri => ri.get('domain') === payload.domain)
-
-//   return state.get('listings')
-//     .setIn([index, 'latest'], fromJS(payload.latest))
 // }
 
 export default homeReducer

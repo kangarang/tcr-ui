@@ -1,38 +1,9 @@
-import Registry from './Registry'
-import Token from './Token'
-import Parameterizer from './Parameterizer'
-import Voting from './Voting'
+import Registry from './Registry.json'
+import Challenge from './Challenge.json'
+import PLCRVoting from './PLCRVoting.json'
+import Parameterizer from './Parameterizer.json'
+import EIP20 from './EIP20.json'
 
-const Contracts = {
-  registry: false,
-  token: {
-    abi: Token,
-    contract: false,
-  },
-  voting: {
-    abi: Voting,
-    contract: false,
-  },
-  parameterizer: {
-    abi: Parameterizer,
-    contract: false,
-  },
+export default {
+  Registry, Challenge, PLCRVoting, Parameterizer, EIP20,
 }
-
-export const setupRegistry = async (eth, account) => {
-  Contracts.registry = await new Registry(eth, account)
-  return Contracts.registry
-}
-
-export const getRegistry = async () => Contracts.registry
-
-export const setupContract = async (eth, account, c) => {
-  Contracts[c].contract = new Contracts[c].abi(
-    eth,
-    account,
-    Contracts.registry.contract,
-  )
-  return Contracts[c]
-}
-
-export const getContract = async (c) => Contracts[c].contract

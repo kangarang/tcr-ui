@@ -78,10 +78,10 @@ function* handleEvent(result) {
 
   // This is faster than registry.isWhitelisted
   const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
-  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.domain)
+  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.listing)
 
-  if (result.event === '_Challenge' || result.event === '_NewDomainWhitelisted') {
-    // Send the event with the domain and pollID
+  if (result.event === '_Challenge' || result.event === '_NewListingWhitelisted') {
+    // Send the event with the listing and pollID
     // Reducer takes care of the rest
     yield put(updateItem(result))
   } else if (result.event === '_Application') {
@@ -96,7 +96,7 @@ function* handleEvent(result) {
       from: txDetails.from
     }
     const details = {
-      domain: result.args.domain,
+      listing: result.args.listing,
       unstakedDeposit: result.args.deposit ? fromNaturalUnit(result.args.deposit).toString(10) : '?',
       pollID: result.args.pollID && result.args.pollID,
       index: result.logIndex,

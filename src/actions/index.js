@@ -93,23 +93,23 @@ export function setMinDeposit(minDeposit) {
 }
 
 // User interactions
-export function applyDomain(domain, deposit) {
+export function applyListing(listing, deposit) {
   return {
     type: TX_APPLY,
-    domain,
+    listing,
     deposit,
   }
 }
-export function challengeDomain(domain) {
+export function challengeListing(listing) {
   return {
     type: TX_CHALLENGE,
-    domain,
+    listing,
   }
 }
-export function commitVote(domain, pollID, amount) {
+export function commitVote(listing, pollID, amount) {
   return {
     type: TX_COMMIT_VOTE,
-    domain,
+    listing,
     pollID,
     amount,
   }
@@ -165,15 +165,15 @@ export function updateItem(payload) {
   }
 }
 
-export function checkTest(domain) {
+export function checkTest(listing) {
   return {
     type: TX_CHECK_TEST,
-    domain,
+    listing,
   }
 }
-export function updateStatus(domain) {
+export function updateStatus(listing) {
   return {
     type: TX_UPDATE_STATUS,
-    domain,
+    listing,
   }
 }

@@ -12,7 +12,7 @@ import {
   GET_PROVIDER_REQUEST,
 } from '../actions/constants'
 
-import { setupContract, setupRegistry } from '../contracts'
+import { setupContract, setupRegistry } from '../services'
 
 import {
   setWallet,
@@ -21,9 +21,6 @@ import {
   getProviderRequest,
   setEthjs,
 } from '../actions'
-import {
-  // selectAccount,
-} from '../selectors'
 
 import registrySaga from './registry'
 import tokenSaga, { tokensAllowedSaga } from './token'
@@ -34,7 +31,7 @@ import { setupEthjs, getEthjs } from '../libs/provider'
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield takeLatest(SET_WALLET, initPoll)
-  yield takeLatest(GET_PROVIDER_REQUEST, pollProvider)
+  // yield takeLatest(GET_PROVIDER_REQUEST, pollProvider)
   yield fork(registrySaga)
   yield fork(tokenSaga)
   yield fork(votingSaga)
@@ -61,18 +58,44 @@ function* genesis() {
   }
 }
 
+
+// Setup contracts
+
+function* contractsSaga(eth, address) {
+  const registry = yield call(setupRegistry, eth, address)
+  console.log('registry', registry)
+  try {
+
+    const [token, parameterizer, voting] = yield all([
+      call(setupContract, eth, address, 'token'),
+      call(setupContract, eth, address, 'parameterizer'),
+      call(setupContract, eth, address, 'voting')
+    ])
+    yield put(setContracts({ registry, token, parameterizer, voting }))
+
+    // Gets tokens allowed
+    yield fork(tokensAllowedSaga, registry.address)
+  } catch (err) {
+    yield put(contractError(err))
+  }
+}
+
+
+// Polling
+
 function* initPoll() {
   yield all([
-    put(getProviderRequest()),
+    // put(getProviderRequest()),
     call(runPolling),
   ])
 }
+
 function* runPolling() {
   const pollInterval = 5000
   while (true) {
     try {
       yield call(delay, pollInterval)
-      yield put(getProviderRequest())
+      // yield put(getProviderRequest())
     } catch (e) {
       throw new Error(e)
     }
@@ -95,24 +118,6 @@ function* pollProvider() {
     yield put(setEthjs(obj))
   } catch (err) {
     console.log('pollProvider error', err)
-    yield put(contractError(err))
-  }
-}
-
-// Sets up contracts
-function* contractsSaga(eth, address) {
-  const registry = yield call(setupRegistry, eth, address)
-  try {
-    const [token, parameterizer, voting] = yield all([
-      call(setupContract, eth, address, 'token'),
-      call(setupContract, eth, address, 'parameterizer'),
-      call(setupContract, eth, address, 'voting')
-    ])
-    yield put(setContracts({ registry, token, parameterizer, voting }))
-
-    // Gets tokens allowed
-    yield fork(tokensAllowedSaga, registry.address)
-  } catch (err) {
     yield put(contractError(err))
   }
 }

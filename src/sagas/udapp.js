@@ -31,15 +31,14 @@ import {
   selectAddress,
   selectFromAddress,
   selectValues,
-  selectDomain,
 } from '../selectors/udapp';
 
-import ABIs from '../contracts/abis'
+import ABIs from '../contracts'
 import { getEthjs } from '../libs/provider'
 
 export default function* udappSaga() {
-  yield takeLatest(GET_ETHEREUM, genesis)
-  yield takeLatest(EXECUTE_METH, executeMeth)
+  // yield takeLatest(GET_ETHEREUM, genesis)
+  // yield takeLatest(EXECUTE_METH, executeMeth)
   // yield takeLatest(REFRESH_ETH_STORE, subscribeEthStoreToAbi)
 }
 

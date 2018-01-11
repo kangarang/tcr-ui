@@ -10,7 +10,7 @@ const initialState = fromJS({
   provider: {},
   fromAddress: '',
   address: '',
-  domain: '',
+  listing: '',
   deposit: '',
   tokenBalance: '',
   ethBalance: '',

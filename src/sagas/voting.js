@@ -11,7 +11,7 @@ import {
   TX_COMMIT_VOTE,
   // TX_APPROVE,
 } from '../actions/constants'
-import { getContract } from '../contracts/index';
+import { getContract } from '../services';
 import {
   selectAccount,
 } from '../selectors'

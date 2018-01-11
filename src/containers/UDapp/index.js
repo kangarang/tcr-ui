@@ -1,145 +1,199 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { createStructuredSelector } from 'reselect'
-import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import Ethjs from 'ethjs'
+import EthAbi from 'ethjs-abi'
 
-import Identicon from '../../components/Identicon'
-import {colors} from '../../components/Colors'
+import Methods from '../../components/Methods'
 
-import {
-  FlexCenteredItem,
-  BoldInlineText,
-  BigBoldInlineText,
-} from '../../components/Item'
-import {
-  selectAddress,
-  selectFromAddress,
-  selectDeposit,
-  selectValues,
-  selectDomain,
-  selectTokenBalance,
-  selectEthBalance,
-  selectProvider,
-} from '../../selectors/udapp';
+import registryContract from '../../contracts/Registry.json'
+import { commonUtils } from '../../sagas/utils';
 
-import {
-  toEther,
-  withCommas,
-  trimDecimalsThree,
-} from '../../libs/units'
+// import {
+//   selectAddress,
+//   selectFromAddress,
+//   selectDeposit,
+//   selectValues,
+//   selectTokenBalance,
+//   selectEthBalance,
+//   selectProvider,
+// } from '../../selectors/udapp';
+// import {
+//   toEther,
+//   withCommas,
+//   trimDecimalsThree,
+// } from '../../libs/units'
 
-const Container = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 5fr 3fr;
-  grid-template-rows: 2fr 2fr 5fr 2fr 2fr;
-  grid-gap: 10px;
-  padding: 1em;
-  background-color: ${colors.offBlack};
-  color: ${colors.prism};
-  border: 2px solid ${colors.prism};
-`
-
-const Item = styled.div`
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: flex-start; */
-  /* grid-row: ${(props) => props.gR}; */
-  /* grid-column: ${(props) => props.gC}; */
-  /* padding: ${(props) => props.pad && props.pad + 'em'}; */
-  overflow: hidden;
-`
+const defaultContractState = {
+  abi: registryContract.abi,
+  address: '0xaa588d3737b611bafd7bd713445b314bd453a5c8',
+}
 
 class UDapp extends Component {
-  componentDidMount() {
-    // this.props.onSetupEthereum()
+  constructor() {
+    super()
+    this.state = {
+      contract: defaultContractState,
+      eventStream: [],
+    }
   }
-  render() {
-    const {
-      ethBalance,
-      provider,
-      deposit,
-      domain,
-      address,
-      fromAddress,
-      tokenBalance,
-    } = this.props
-    // const events = (appState.abi || []).filter((interface) => interface.type === 'event')
-    // const methods = (appState.abi || []).filter((interface) => interface.type === 'function')
-    // const methodsWithNoArgs = methods.filter((interface) => interface.inputs.length === 0)
-    // const methodsWithArgs = methods.filter((interface) => interface.inputs.length > 0)
-    // const eventStream = appState.eth.logs || []
-    
+
+  componentDidMount() {
+    setTimeout(this.startApp, 2000)
+  }
+
+  startApp = async () => {
+    this.provider = new Ethjs.HttpProvider('http://localhost:7545')
+    const eth = new Ethjs(this.provider)
+
+    const fromAddress = (await eth.accounts())[0]
+    this.setState({
+      fromAddress
+    })
+  }
+
+
+  decodeAbiOutput = (methodInterface, rawOutput) => {
+    const result = EthAbi.decodeMethod(methodInterface, rawOutput)
+    result.length = methodInterface.outputs.length
+    const resultArray = [].slice.call(result)
+    return resultArray
+  }
+
+  readMethodArguments(method) {
+    return method.inputs.map((arg, index) => {
+      const value = this.state[method.name][arg.name]
+      if (!value) return
+      // const isArray = (arg.type.slice(-2) === '[]')
+      console.log('arg', arg)
+      console.log('value', value)
+      // if (isArray) {
+        // try {
+        //   return JSON.parse(value)
+        // } catch (err) {
+          return value 
+        // }
+      // }
+      // return value 
+    })
+  }
+
+  handleInputChange(method, e, index, input) {
+    console.log('input', input)
+    let value
+    if (input.type === 'bytes32') {
+      value = commonUtils.getListingHash(e.target.value)
+    } else if (input.type === 'string') {
+      value = e.target.value
+    } else if (input.type === 'uint256') {
+      value = e.target.value
+    }
+
+    this.setState(prevState => ({
+      ...prevState,
+      [method.name]: {
+        ...prevState[method.name],
+        [input.name]: value,
+      }
+    }))
+    console.log('method', method)
+    console.log('this.state', this.state)
+    return true
+  }
+
+  handleCall = (method) => {
+    const args = this.readMethodArguments(method)
+    const txData = EthAbi.encodeMethod(method, args)
+    console.log('txData', txData)
+    const payload = {
+      method: 'eth_call',
+      params: [{
+        from: this.state.fromAddress,
+        to: this.state.contract.address,
+        data: txData,
+      }]
+    }
+    console.log('exec:', method.name, args, payload)
+    return this.provider.sendAsync(payload, console.log)
+  }
+
+  handleExecute = (method) => {
+    console.log('method', method)
+    const args = this.readMethodArguments(method)
+    console.log('args', args)
+    // const args = Object.values(this.state[method.name])
+    const txData = EthAbi.encodeMethod(method, args)
+    console.log('txData', txData)
+    const payload = {
+      id: 1,
+      method: 'eth_sendTransaction',
+      params: [{
+        from: this.state.fromAddress,
+        to: this.state.contract.address,
+        data: txData,
+      }]
+    }
+    console.log('exec:', method.name, args, payload)
+    console.log('this.provider', this.provider)
+    return this.provider.sendAsync(payload, console.log)
+  }
+
+  renderMethod(method) {
+    const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
+    const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
+    const rawOutput = this.state.contract.abi[method.name]
+    // const decodedValues = rawOutput ? this.decodeAbiOutput(method, rawOutput) : null
     return (
-      <Container>
+      <div key={method.name}>
+        <h4>{`${method.name} (${inputs})`}</h4>
+        {method.inputs.map((input, ind) => (
+          <form key={input.name + ind}>
+            <input
+              id={input.name}
+              placeholder={`${input.name} (${input.type})`}
+              onChange={e => this.handleInputChange(method, e, ind, input)}
+            />
+          </form>
+        ))}
+        {/* {method.outputs.length ? `Returns: ${outputs}` : false} */}
+        {/* <br /> */}
+        {method.constant ? <button onClick={(e) => this.handleCall(method)}>{'C A L L'}</button> : (
+          <button onClick={(e) => this.handleExecute(method)}>{'S E N D _ T X N'}</button>
+        )}
+        <br />
+        <br />
+      </div>
+    )
+  }
 
-        <Item gR={1} gC={2}>
-          <BigBoldInlineText>{'Token-Curated Registries'}</BigBoldInlineText>
-        </Item>
-
-        <Item gR={2} gC={2}>
-          <BoldInlineText>
-            {'Account: '}
-            {fromAddress}
-          </BoldInlineText>
-        </Item>
-        <Item gR={1} gC={3}>
-          <BoldInlineText>
-            {'ΞTH Balance: '}
-            {trimDecimalsThree(toEther(ethBalance))}
-          </BoldInlineText>
-        </Item>
-
-        <Item gR={1} gC={4}>
-          <BoldInlineText>
-            {'CATT Balance: '}
-            {withCommas(tokenBalance)}
-          </BoldInlineText>
-        </Item>
-
-        <FlexCenteredItem gR={2} gC={1}>
-          <Identicon owner={fromAddress} size={6} scale={6} />
-        </FlexCenteredItem>
-
-
-      </Container>
+  render() {
+    const events = (this.state.contract.abi || []).filter((methodInterface) => methodInterface.type === 'event')
+    const methods = (this.state.contract.abi || []).filter((methodInterface) => methodInterface.type === 'function')
+    const methodsWithNoArgs = methods.filter((methodInterface) => methodInterface.inputs.length === 0)
+    const methodsWithArgs = methods.filter((methodInterface) => methodInterface.inputs.length > 0)
+    const getters = methodsWithArgs.filter((methodInterface) => !methodInterface.constant)
+    const eventStream = this.state.eventStream || []
+    return (
+      <div className="UDapp">
+        <h1 className="UDapp-title">U D A P P</h1>
+        <Methods>
+          {/* <form>
+            <input rows='10' id='abi' placeholder='abi goes here' onChange={this.handleSetAbi} value={JSON.stringify(this.state.contract.abi)} />
+            <input id='address' value={this.state.contract.address} onChange={this.handleSetAddress} />
+          </form> */}
+          {/* <br /> */}
+          {methods.map((one) => this.renderMethod(one))}
+          <br />
+          {/* {events.map((one) => (
+            <div key={one.name}>{JSON.stringify(one)}</div>
+            // <div key={one.name}>{`${one.name}: ${JSON.stringify(one.inputs)}`}</div>
+          ))}
+          <br />
+          {eventStream.map((one) => (
+            <div key={one.value}>{JSON.stringify(one)}</div>
+          ))} */}
+        </Methods>
+      </div>
     )
   }
 }
 
-UDapp.propTypes = {
-  // address: PropTypes.string,
-  // network: PropTypes.string,
-  // onApprove: PropTypes.func,
-  // tokenBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  // tokensAllowed: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  // ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    // onSetupEthereum: () => dispatch(setupEthereum()),
-    // onApprove: amount => dispatch(requestApproval(amount)),
-    // onApply: (domain, deposit) => dispatch(applyDomain(domain, deposit)),
-    // onChallenge: domain => dispatch(challengeDomain(domain)),
-    // onCommitVote: (domain, pollID, amount) => dispatch(commitVote(domain, pollID, amount)),
-    // onUpdateStatus: domain => dispatch(updateStatus(domain)),
-    // onTest: domain => dispatch(checkTest(domain)),
-  }
-}
-
-const mapStateToProps = createStructuredSelector({
-  address: selectAddress,
-  fromAddress: selectFromAddress,
-  ethBalance: selectEthBalance,
-  tokenBalance: selectTokenBalance,
-  domain: selectDomain,
-  values: selectValues,
-  provider: selectProvider,
-  deposit: selectDeposit,
-})
-
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
-
-export default compose(withConnect)(UDapp)
+export default UDapp

@@ -37,7 +37,6 @@
     "reselect": "3.0.1",
     "styled-components": "2.3.0",
     "truffle-contract": "3.0.1",
-    "web3": "0.20.3",
     "web3-provider-engine": "13.4.0"
   },
   "scripts": {
