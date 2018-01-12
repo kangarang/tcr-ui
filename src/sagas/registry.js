@@ -27,7 +27,9 @@ export default function* registrySaga() {
   yield takeEvery(TX_CHECK_TEST, checkTestSaga)
 }
 
+
 // Registry interactions
+
 // Apply
 function* applicationSaga(payload) {
   const registry = yield call(getRegistry)
@@ -48,11 +50,11 @@ function* applicationSaga(payload) {
   yield call(tokensAllowedSaga, registry.address)
 }
 
-// // Challenge
+// Challenge
 function* challengeSaga(payload) {
   const registry = yield call(getRegistry)
   try {
-    const hash = yield call(registry.challengeListing, payload.listing)
+    const hash = yield call([registry, 'challengeListing'], payload.listing)
     console.log('hash', hash)
     yield call(tokensAllowedSaga, registry.address)
   } catch (err) {
@@ -63,11 +65,9 @@ function* challengeSaga(payload) {
 
 function* checkTestSaga(payload) {
   const registry = yield call(getRegistry)
-  // const receipt = yield call([registry, 'checkCall'], 'isWhitelisted', payload.listing)
-  const receipt = yield call(registry, 'checkCall', 'challengeExists', payload.listing)
+  const receipt = yield call([registry, 'checkCall'], 'challengeExists', payload.listing)
   console.log('receipt', receipt)
   yield call(tokensAllowedSaga, registry.address)
-  // yield put(statusUpdate(payload.listing, receipt))
 }
 
 function* updateStatusSaga(payload) {
@@ -75,5 +75,4 @@ function* updateStatusSaga(payload) {
   const receipt = yield call(registry.updateStatus, payload.listing)
   console.log('receipt', receipt)
   yield call(tokensAllowedSaga, registry.address)
-  // yield put(statusUpdate(payload.listing, receipt))
 }

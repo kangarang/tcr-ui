@@ -24,9 +24,12 @@ export default class Registry {
   }
 
   applyListing = async (listing, amount, tokenDecimalPower) => {
+    // For tokens with decimals...
+    // const gTokens = toToken(amount, tokenDecimalPower)
+    // return this.contract.apply(listing, gTokens.toString(10))
+
     // TODO: check to see that there's an allowance
-    const gTokens = toToken(amount, tokenDecimalPower)
-    return this.contract.apply(listing, gTokens.toString(10))
+    return this.contract.apply(listing, amount)
   }
 
   challengeListing = async (listing) => {

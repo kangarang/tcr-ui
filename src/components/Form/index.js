@@ -6,7 +6,6 @@ import Button from '../Button'
 import { colors } from '../Colors'
 
 const FormComponent = styled.form`
-  /* margin-bottom: 1em; */
   padding: 2em;
 `
 const Input = styled.input`
@@ -21,18 +20,8 @@ const Input = styled.input`
 function Form(props) {
   return (
     <FormComponent onSubmit={props.onSubmit}>
-      {/* <div>
-        <Input
-          id={props.idAmount}
-          type="number"
-          placeholder={'Enter amount'}
-          value={props.amountValue}
-          onChange={props.onChangeDeposit}
-        />
-      </div> */}
       <div>
         <Input
-          // id={props.id}
           type="text"
           placeholder={props.placeholder}
           value={props.value}

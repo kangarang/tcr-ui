@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-// import NetworkStatus from 'react-web3-network-status/stateless'
-
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+
+import UDappHOC from './HOC/UDapp'
 
 import H2 from './components/H2'
 import Form from './components/Form'
@@ -32,7 +32,6 @@ import {
   selectFaceoffs,
   selectWhitelist,
   selectAccount,
-  selectAllListings,
 } from './selectors'
 
 class App extends Component {
@@ -40,19 +39,12 @@ class App extends Component {
     super()
     this.state = {
       listing: '',
-      deposit: '',
     }
   }
 
   componentDidMount() {
+    console.log('App props:', this.props)
     this.props.onSetupEthereum()
-  }
-
-  checkProvider = () => {
-    // this.intervalID = window.setInterval(
-    //   () => this.props.onCheckProvider(),
-    //   1000
-    // )
   }
 
   handleApprove = e => {
@@ -86,14 +78,7 @@ class App extends Component {
     this.props.onTest(listing)
   }
 
-  handleChangeDeposit = (e) => {
-    console.log('e', e)
-    this.setState({
-      deposit: e.target.value
-    })
-  }
-
-  handleChangeListing = (e) => {
+  handleChange = (e) => {
     this.setState({
       listing: e.target.value
     })
@@ -110,19 +95,13 @@ class App extends Component {
       account,
       candidates,
       faceoffs,
-      registryListings,
+      whitelist,
       parameters,
     } = this.props
 
     return (
       <div>
 
-        {/* <div>
-          <NetworkStatus
-            networkId='420' // 1, 3, 4, 42, null, 'not-listening', or 'account-not-unlocked'
-            address={account} // optional
-          />
-        </div> */}
         <UserInfo
           network={parameters.get('network')}
           account={account}
@@ -134,11 +113,8 @@ class App extends Component {
 
         <Form
           placeholder={'Listing'}
-          // id={this.state.listing}
           value={this.state.listing}
-          onChange={this.handleChangeListing}
-          depositValue={this.state.deposit}
-          onChangeDeposit={this.handleChangeDeposit}
+          onChange={this.handleChange}
           onSubmit={this.handleApply}
         />
 
@@ -180,10 +156,10 @@ class App extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Registry ('}{registryListings.size}{')'}</H2>
+        <H2>{'Registry ('}{whitelist.size}{')'}</H2>
         <FlexContainer>
-          {registryListings.size > 0 &&
-            registryListings.map(log => (
+          {whitelist.size > 0 &&
+            whitelist.map(log => (
               <Section key={log.get('listing')}>
                 <Event
                   latest={log.get('latest')}
@@ -211,7 +187,6 @@ function mapDispatchToProps(dispatch) {
     onChallenge: listing => dispatch(challengeListing(listing)),
     onCommitVote: (listing, pollID, amount) => dispatch(commitVote(listing, pollID, amount)),
     onUpdateStatus: listing => dispatch(updateStatus(listing)),
-    onTest: listing => dispatch(checkTest(listing)),
   }
 }
 
@@ -220,11 +195,10 @@ const mapStateToProps = createStructuredSelector({
   wallet: selectWallet,
   account: selectAccount,
   candidates: selectCandidates,
-  listings: selectAllListings,
   faceoffs: selectFaceoffs,
-  registryListings: selectWhitelist,
+  whitelist: selectWhitelist,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withConnect)(App)
+export default compose(withConnect)(UDappHOC(App))

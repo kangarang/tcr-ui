@@ -120,8 +120,7 @@ function newListingsByListing(state, payload) {
 // TODO: check blockNumber to make sure updating is ok
 function changeItems(state, payload) {
   const newItems = payload.reduce((acc, val) => {
-    const index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
-    // Unique
+    const index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === val.listing)
     if (index === -1) {
       return acc.push(fromJS(val))
     }

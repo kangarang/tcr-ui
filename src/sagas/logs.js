@@ -1,5 +1,4 @@
 import { all, takeLatest, takeEvery, call, put } from 'redux-saga/effects'
-// import { fromJS } from 'immutable'
 import { delay } from 'redux-saga'
 // import Promise from 'bluebird'
 
@@ -27,7 +26,7 @@ import { getEthjs } from "../libs/provider";
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
-  yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
+  // yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
 let sB = 15
@@ -38,26 +37,25 @@ function* getFreshLogs() {
   try {
     const applications = yield call(handleLogs, sB, 'latest', '_Application')
     const challenges = yield call(handleLogs, sB, 'latest', '_Challenge')
+    const ne = yield call(handleLogs, sB, 'latest', '_NewListingWhitelisted')
     console.log('applications', applications)
-    const filteredApps = applications.filter(async (a) =>
-      (await registry.contract.getStatus.call(commonUtils.getListingHash(a.listing)).result === '0x0000000000000000000000000000000000000000000000000000000000000001')
-    )
+    console.log('challenges', challenges)
+    console.log('ne', ne)
 
-    yield call(tokensAllowedSaga, registry.address)
-    yield put(newArray(filteredApps))
+    yield put(newArray(applications))
     yield put(updateItems(challenges))
+    yield put(updateItems(ne))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
   }
-  yield call(startPolling)
+  yield call(tokensAllowedSaga, registry.address)
+  // yield call(startPolling)
 }
 
 function* startPolling() {
-  yield all([
-    put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' })),
-    call(pollController),
-  ])
+  yield put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' }))
+  yield call(pollController)
 }
 
 // Timer
