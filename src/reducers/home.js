@@ -33,28 +33,25 @@ const initialState = fromJS({
     }
   },
   listings: {
-    byListing: {
-      // 'adchain.com': {
-      //   listing: '',
-      //   owner: '',
-      //   challenger: '',
-      //   latest: {
-      //   whitelisted: '',
-      //   canBeWhitelisted: '',
-      //     sender: '',
-      //     blockHash: '',
-      //     blockNumber: '',
-      //     timestamp: '',
-      //     txHash: '',
-      //     txIndex: '',
-      //     numTokens: '',
-      //     event: '',
-      //     logIndex: '',
-      //     pollID: ''
-      //   }
-      // },
-    },
-    allListings: []
+    // 'adchain.com': {
+    //   listing: '',
+    //   owner: '',
+    //   challenger: '',
+    //   latest: {
+    //   whitelisted: '',
+    //   canBeWhitelisted: '',
+    //     sender: '',
+    //     blockHash: '',
+    //     blockNumber: '',
+    //     timestamp: '',
+    //     txHash: '',
+    //     txIndex: '',
+    //     numTokens: '',
+    //     event: '',
+    //     logIndex: '',
+    //     pollID: ''
+    //   }
+    // },
   },
   parameters: {
     minDeposit: '',
@@ -99,7 +96,7 @@ function homeReducer(state = initialState, action) {
         .setIn(['wallet', 'token', 'allowances', 'registry', 'total'], fromJS(action.payload.allowance))
         .setIn(['wallet', 'token', 'tokenBalance'], fromJS(action.payload.balance))
     case CHANGE_ITEMS:
-      return changeItems(state, action.payload)
+      return changeListings(state, action.payload)
     case NEW_ARRAY:
       return newListingsByListing(state, action.payload)
     default:
@@ -114,22 +111,23 @@ function newListingsByListing(state, payload) {
   // console.log('newListings', newListings.toJS())
 
   // return state.setIn(['listings', 'byListing'], newListings)
-  return state.setIn(['listings', 'byListing'], fromJS(payload))
+  return state.set('listings', fromJS(payload))
 }
 
 // TODO: check blockNumber to make sure updating is ok
-function changeItems(state, payload) {
-  const newItems = payload.reduce((acc, val) => {
-    const index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === val.listing)
+function changeListings(state, payload) {
+  const newListings = payload.reduce((acc, val) => {
+    console.log('acc, val', acc, val)
+    const index = acc.findIndex(ri => (commonUtils.getListingHash(ri.get('listing')) === val.listing))
+    console.log('index', index)
     if (index === -1) {
       return acc.push(fromJS(val))
     }
     return acc
       .setIn([index, 'latest'], fromJS(val.latest))
+  }, state.get('listings'))
 
-  }, state.getIn(['listings', 'byListing']))
-
-  return state.setIn(['listings', 'byListing'], newItems)
+  return state.set('listings', fromJS(newListings))
 }
 
 // function updateObject(oldObject, newValues) {

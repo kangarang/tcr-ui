@@ -127,19 +127,23 @@ Parameterizer
 
 Each `Listing` starts out in the **Application** stage.
 - The owner of the `Listing` is called the "Applicant"
-- Tokens are called `deposit_stake`
+- Tokens are called `apply_stake`
+- `apply_stake` **>=** `min_deposit` (canonical parameter)
 
-If *challenged* a `Listing` moves into the **Voting** stage.
+If *challenged*, a `Listing` moves into the **Voting** stage.
 - The msg.sender of the *challenge* is called the "Challenger"
 - Tokens are called `challenge_stake`
+- `challenge_stake` **===** `min_deposit` (canonical parameter)
 
 The **Voting** stage consists of 2 sub-phases: *Commit* and *Reveal*
 - **Voting** can also be called **Faceoff**
-- Participants voting with token rights are called "Voters"
-- Tokens are called `voting_rights`
+- Participants voting with tokens are called "Voters"
+- Tokens used for *voting* are called `voting_rights`
+- Tokens are locked during the `commit_phase`
+- Once the `commit_phase` has ended and the `reveal_phase` has begun, a Voter can "reveal" his secret vote to unveil the contents
 
 If the majority of votes is FOR the Applicant's `Listing`, the `Listing` enters the **Registry** stage.
-- Applicant's `deposit_stake` stays with the `Listing`
+- Applicant's `apply_stake` stays with the `Listing`
 - Challenger forfeits full `challenge_stake`
 - Applicant receieves `%` of the Challenger's forfeited `challenge_stake`
 - Voters in the `majority_bloc` are awarded the remaining tokens of the Challenger's forfeited `challenge_stake`, disbursed based on token-vote weight
@@ -147,9 +151,9 @@ If the majority of votes is FOR the Applicant's `Listing`, the `Listing` enters 
 
 If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from the system.
 - Challenger is given back their full `challenge_stake`
-- Applicant forfeits full `deposit_stake`
-- Challenger receieves `%` of the Applicant's forfeited `deposit_stake`
-- Voters in the `majority_bloc`, those who voted AGAINST the Applicant, are awarded the remaining tokens from the Applicant's forfeited `deposit_stake`, disbursed based on token-vote weight
+- Applicant forfeits full `apply_stake`
+- Challenger receieves `%` of the Applicant's forfeited `apply_stake`
+- Voters in the `majority_bloc`, those who voted AGAINST the Applicant, are awarded the remaining tokens from the Applicant's forfeited `apply_stake`, disbursed based on token-vote weight
 - Voters in the `minority_bloc` are allowed to retreive tokens rights
 
 ---

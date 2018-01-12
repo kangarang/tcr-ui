@@ -2,23 +2,26 @@ import { css } from 'styled-components';
 import { colors } from '../Colors'
 
 const buttonStyles = css`
+  position: relative;
   display: inline-block;
   box-sizing: border-box;
-  padding: 1.5em;
+  box-shadow: 0 0 1px transparent;
+  padding: .5em .7em;
+  outline: 0;
+
   text-decoration: none;
   -webkit-font-smoothing: antialiased;
   -webkit-touch-callout: none;
-  user-select: none;
-  cursor: pointer;
-  outline: 0;
-  font-weight: bold;
-  font-size: 12px;
-  color: ${colors.purple};
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px transparent;
+  user-select: none;
+  cursor: pointer;
+
+  font-weight: bold;
+  font-size: 14px;
+
+  color: ${colors.magenta};
   background-color: ${colors.offWhite};
-  position: relative;
   z-index: 3;
 
   &:before {
@@ -35,6 +38,7 @@ const buttonStyles = css`
     transition-duration: 0.3s;
     transition-property: top, right, bottom, left;
   }
+
   &:hover:before, &:focus:before, &:active:before {
     top: -4px;
     right: -4px;

@@ -7,7 +7,6 @@ import { fromJS, Iterable } from 'immutable';
 import { SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
 import createReducer from './reducers';
 import rootSaga from './sagas'
-import udappSaga from './sagas/udapp'
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -52,7 +51,6 @@ export default function configureStore(initialState = {}) {
   // Extensions
   // store.runSaga = sagaMiddleware.run(rootSaga);
   sagaMiddleware.run(rootSaga);
-  sagaMiddleware.run(udappSaga);
   // store.injectedReducers = {}; // Reducer registry
   // store.injectedSagas = {}; // Saga registry
 

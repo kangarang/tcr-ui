@@ -6,7 +6,6 @@ import { createStructuredSelector } from 'reselect'
 import UDappHOC from './HOC/UDapp'
 
 import H2 from './components/H2'
-import Form from './components/Form'
 import UserInfo from './components/UserInfo'
 
 import Event from './components/Event'
@@ -17,12 +16,6 @@ import './global-styles'
 
 import {
   setupEthereum,
-  requestApproval,
-  applyListing,
-  commitVote,
-  checkTest,
-  challengeListing,
-  updateStatus,
 } from './actions'
 
 import {
@@ -47,48 +40,6 @@ class App extends Component {
     this.props.onSetupEthereum()
   }
 
-  handleApprove = e => {
-    e.preventDefault()
-    const deposit = '420'
-    this.props.onApprove(deposit)
-  }
-
-  handleApply = e => {
-    e.preventDefault()
-    this.props.onApply(this.state.listing, '11')
-  }
-
-  handleChallenge = (e, listing) => {
-    e.preventDefault()
-    this.props.onChallenge(listing)
-  }
-
-  handleUpdateStatus = (e, listing) => {
-    e.preventDefault()
-    this.props.onUpdateStatus(listing)
-  }
-
-  handleCommitVote = (e, listing, pollID) => {
-    e.preventDefault()
-    this.props.onCommitVote(listing, pollID, this.props.amount)
-  }
-
-  handleTest = (e, listing) => {
-    e.preventDefault()
-    this.props.onTest(listing)
-  }
-
-  handleChange = (e) => {
-    this.setState({
-      listing: e.target.value
-    })
-  }
-
-  handleSetVisibility = (e, vFilter) => {
-    e.preventDefault()
-    this.props.onSetVisibility(vFilter)
-  }
-
   render() {
     const {
       wallet,
@@ -111,13 +62,6 @@ class App extends Component {
           onApprove={this.handleApprove}
         />
 
-        <Form
-          placeholder={'Listing'}
-          value={this.state.listing}
-          onChange={this.handleChange}
-          onSubmit={this.handleApply}
-        />
-
         <H2>{'Applicants ('}{candidates.size}{')'}</H2>
         <FlexContainer>
           {candidates.size > 0 &&
@@ -129,9 +73,6 @@ class App extends Component {
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
-                  handleClickUpdateStatus={this.handleUpdateStatus}
-                  handleClickChallenge={this.handleChallenge}
-                  handleClickTest={this.handleTest}
                 />
               </Section>
             ))}
@@ -148,9 +89,6 @@ class App extends Component {
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
-                  handleClickCommitVote={this.handleCommitVote}
-                  handleClickUpdateStatus={this.handleUpdateStatus}
-                  handleClickTest={this.handleTest}
                 />
               </Section>
             ))}
@@ -167,9 +105,6 @@ class App extends Component {
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
 
-                  handleClickChallenge={this.handleChallenge}
-                  handleClickUpdateStatus={this.handleUpdateStatus}
-                  handleClickTest={this.handleTest}
                 />
               </Section>
             ))}
@@ -182,11 +117,6 @@ class App extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: () => dispatch(setupEthereum()),
-    onApprove: amount => dispatch(requestApproval(amount)),
-    onApply: (listing, deposit) => dispatch(applyListing(listing, deposit)),
-    onChallenge: listing => dispatch(challengeListing(listing)),
-    onCommitVote: (listing, pollID, amount) => dispatch(commitVote(listing, pollID, amount)),
-    onUpdateStatus: listing => dispatch(updateStatus(listing)),
   }
 }
 

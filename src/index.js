@@ -17,7 +17,7 @@ const store = configureStore(initialState)
 const AppWrapper = styled.div`
   display: flex;
   min-height: 1800px;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0;
   padding: 2em;
   background-color: ${colors.offWhite};
@@ -27,8 +27,8 @@ const AppWrapper = styled.div`
 ReactDOM.render(
   <Provider store={store}>
     <AppWrapper>
-      <UDapp />
       <App />
+      <UDapp />
     </AppWrapper>
   </Provider>,
   document.getElementById('root')

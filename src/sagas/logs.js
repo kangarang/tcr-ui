@@ -19,9 +19,6 @@ import {
 } from './utils'
 import { tokensAllowedSaga } from "./token";
 
-import {
-  fromNaturalUnit,
-} from '../libs/units'
 import { getEthjs } from "../libs/provider";
 
 export default function* logsSaga() {
@@ -29,7 +26,7 @@ export default function* logsSaga() {
   // yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
-let sB = 15
+let sB = 10
 
 // Gets fresh logs
 function* getFreshLogs() {
@@ -54,17 +51,17 @@ function* getFreshLogs() {
 }
 
 function* startPolling() {
-  yield put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' }))
+  yield put(pollLogsRequest({ startBlock: sB, endBlock: 'latest' }))
   yield call(pollController)
 }
 
 // Timer
 function* pollController() {
-  const pollInterval = 2000
+  const pollInterval = 2500
   while (true) {
     try {
       yield call(delay, pollInterval)
-      yield put(pollLogsRequest({ startBlock: 1, endBlock: 'latest' }))
+      yield put(pollLogsRequest({ startBlock: sB, endBlock: 'latest' }))
     } catch (err) {
       console.log('Polling Log Saga error', err)
       throw new Error(err)
@@ -91,7 +88,9 @@ function* handleLogs(sb, eb, topic) {
 
   const filter = yield call(logUtils.buildFilter, registry.address, topic, sb, eb)
   const rawLogs = yield call(eth.getLogs, filter)
+  console.log('rawLogs', rawLogs)
   const decodedLogs = yield call(logUtils.decodeLogs, eth, registry.contract, rawLogs)
+  console.log('decodedLogs', decodedLogs)
 
   // if (topic !== '_Application') {
   //   return decodedLogs
@@ -101,8 +100,7 @@ function* handleLogs(sb, eb, topic) {
     yield decodedLogs.map(async (dLog, ind) => {
       const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
       const txDetails = await commonUtils.getTransaction(eth, rawLogs[ind].transactionHash)
-      const ddd = await buildListing(rawLogs, registry, block, dLog, ind, txDetails)
-      return ddd
+      return buildListing(rawLogs, registry, block, dLog, ind, txDetails)
     })
   )
 }
@@ -117,8 +115,8 @@ function* buildListing(rawLogs, registry, block, log, i, txDetails) {
   unstakedDeposit = listing[3].toString(10)
   // }
 
-  const isWhitelisted = yield call([registry.contract, 'isWhitelisted'], listingHash)
-  const canBeWhitelisted = yield call([registry.contract, 'canBeWhitelisted'], listingHash)
+  const isWhitelisted = yield call([registry.contract, 'isWhitelisted', 'call'], listingHash)
+  const canBeWhitelisted = yield call([registry.contract, 'canBeWhitelisted', 'call'], listingHash)
 
   const tx = {
     hash: rawLogs[i].transactionHash,

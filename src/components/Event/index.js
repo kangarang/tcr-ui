@@ -35,7 +35,6 @@ export default ({
   handleClickChallenge,
   handleClickCommitVote,
   handleClickUpdateStatus,
-  handleClickTest,
 }) => (
     <Container txHash={latest.get('txHash')}>
       <FlexCenteredItem gR={1} gC={1}>
@@ -50,7 +49,6 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={2}>
         <BigBoldInlineText>
-          {whitelisted ? 'Registered: ' : 'Application: '}
           {listing}
         </BigBoldInlineText>
       </Item>
@@ -77,7 +75,6 @@ export default ({
         {(!whitelisted && latest.get('canBeWhitelisted')) && (
           <Button onClick={e => handleClickUpdateStatus(e, listing)}>{'Update registry state'}</Button>
         )}
-        <Button onClick={e => handleClickTest(e, listing)}>{'Test'}</Button>
       </Item>
 
       <Item pad={0.5} gR={2} gC={2}>
