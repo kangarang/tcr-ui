@@ -36,8 +36,8 @@ function* getFreshLogs() {
     const challenges = yield call(handleLogs, sB, 'latest', '_Challenge')
     const ne = yield call(handleLogs, sB, 'latest', '_NewListingWhitelisted')
     console.log('applications', applications)
-    console.log('challenges', challenges)
-    console.log('ne', ne)
+    // console.log('challenges', challenges)
+    // console.log('ne', ne)
 
     yield put(newArray(applications))
     yield put(updateItems(challenges))

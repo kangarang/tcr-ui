@@ -52,9 +52,6 @@ const UDapp = (WrappedComponent, selectVFilter) => {
     }
 
     initUDapp = async () => {
-      console.log('HOC props:', this.props)
-      console.log('this.state', this.state)
-
       this.eth = new Ethjs(new Ethjs.HttpProvider('http://localhost:7545'))
       const fromAddress = (await this.eth.accounts())[0]
 

@@ -15,6 +15,8 @@ const Methods = styled.div`
 
   & > div {
     margin: .4em;
+    width: 33%;
+    overflow: hidden;
   }
 `
 export default Methods

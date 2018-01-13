@@ -12,7 +12,6 @@
     "eth-store": "3.2.1",
     "ethereumjs-abi": "0.6.5",
     "ethereumjs-tx": "1.3.3",
-    "ethereumjs-util": "5.1.3",
     "ethjs": "0.3.1",
     "ethjs-abi": "0.2.1",
     "ethjs-query": "0.3.2",
@@ -40,7 +39,7 @@
     "web3-provider-engine": "13.4.0"
   },
   "scripts": {
-    "start:prod": "npm run build && node server.js",
+    "start": "npm run build && node server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
