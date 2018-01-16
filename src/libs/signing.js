@@ -1,3 +1,6 @@
+// See: https://github.com/MyEtherWallet/MyEtherWallet/blob/develop/common/libs/signing.ts
+
+
 import EthTx from 'ethereumjs-tx';
 import {
   addHexPrefix,
