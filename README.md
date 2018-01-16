@@ -37,12 +37,6 @@ Start development server: `https://localhost:3000`
   $ npm run dev
 ```
 
-Deploy to aws elastic beanstalk:
-
-```
-  $ eb deploy
-```
-
 ---
 
 ## U D A P P
@@ -195,53 +189,53 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 Particular events effectively signal changes in state. The following events are organized by the effects they have on state changes.
 
 #### Registry
-`event _Application(bytes32 listing, uint deposit)`
+`_Application(bytes32 listingHash, uint deposit, string data)`
 
   - new Listing in Application stage
 
-`_Challenge(bytes32 listing, uint deposit, uint pollID)`
+`_Challenge(bytes32 listingHash, uint deposit, uint pollID, string data)`
 
   - change from Application stage -> Voting stage
 
-`event _ChallengeFailed(uint challengeID)`
+`_ChallengeFailed(uint challengeID)`
 
-`event _NewListingWhitelisted(bytes32 listing)`
+`_NewListingWhitelisted(bytes32 listingHash)`
 
   - change from Application -or- Voting stage -> Registry stage
 
-`event _ChallengeSucceeded(uint challengeID)`
+`_ChallengeSucceeded(uint challengeID)`
 
-`event _ApplicationRemoved(bytes32 listing)`
+`_ApplicationRemoved(bytes32 listingHash)`
 
-`event _ListingRemoved(bytes32 listing)`
+`_ListingRemoved(bytes32 listingHash)`
 
   - delete Listing
 
-`event _RewardClaimed(address voter, uint challengeID, uint reward)`
+`_RewardClaimed(address voter, uint challengeID, uint reward)`
 
-`event _Deposit(bytes32 listing, uint added, uint newTotal)`
+`_Deposit(bytes32 listingHash, uint added, uint newTotal)`
 
-`event _Withdrawal(bytes32 listing, uint withdrew, uint newTotal)`
+`_Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)`
 
   - $$$
 
 
 #### PLCR Voting
-`event PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)`
+`PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)`
 
   - new voting_item (comes with _Challenge)
 
-`event VoteCommitted(address voter, uint pollID, uint numTokens)`
+`VoteCommitted(address voter, uint pollID, uint numTokens)`
 
   - change voting_item
 
-`event VoteRevealed(address voter, uint pollID, uint numTokens, uint choice)`
+`VoteRevealed(address voter, uint pollID, uint numTokens, uint choice)`
 
   - change voting_item
 
-`event VotingRightsGranted(address voter, uint numTokens)`
+`VotingRightsGranted(address voter, uint numTokens)`
 
-`event VotingRightsWithdrawn(address voter, uint numTokens)`
+`VotingRightsWithdrawn(address voter, uint numTokens)`
 
   - $$$
 
