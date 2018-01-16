@@ -5,6 +5,9 @@ export const selectHome = state => state.get('home')
 export const selectParameters = createSelector(
   selectHome, homeState => homeState.get('parameters')
 )
+export const selectError = createSelector(
+  selectHome, homeState => homeState.get('error')
+)
 export const selectWallet = createSelector(
   selectHome, homeState => homeState.get('wallet')
 )

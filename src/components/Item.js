@@ -6,6 +6,7 @@ export const Container = styled.div`
   grid-template-columns: 1fr 12fr 6fr 6fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 5px;
+  margin: 1em;
   padding: .7em;
   background-color: rgba(0, 0, 0, 0.1);
   color: ${colors.offBlack};

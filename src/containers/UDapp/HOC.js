@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
+
 import Ethjs from "ethjs"
 import EthAbi from "ethjs-abi"
 
-import { commonUtils } from '../sagas/utils'
-import registryContract from '../contracts/Registry.json'
-import votingContract from '../contracts/PLCRVoting.json'
-import tokenContract from '../contracts/EIP20.json'
-import paramContract from '../contracts/Parameterizer.json'
-import { padLeftEven } from '../libs/values'
+import { commonUtils } from '../../sagas/utils'
+import registryContract from '../../contracts/Registry.json'
+import votingContract from '../../contracts/PLCRVoting.json'
+import tokenContract from '../../contracts/EIP20.json'
+import paramContract from '../../contracts/Parameterizer.json'
+import { padLeftEven } from '../../libs/values'
 
 const contracts = {
   registry: registryContract,
@@ -16,17 +17,16 @@ const contracts = {
   parameterizer: paramContract,
 }
 
-const UDapp = (WrappedComponent, selectVFilter) => {
+const UDappHOC = (WrappedComponent) => {
   return class UDapp extends Component {
     constructor(props) {
       super(props)
-      console.log('props', props)
+      // const network = props.wallet.get('network')
       this.state = {
         registry: {
           abi: contracts.registry.abi,
           address: contracts.registry.networks['420'].address,
         },
-        eventStream: [],
         fromAddress: false,
         voting: {
           abi: contracts.voting.abi,
@@ -40,10 +40,8 @@ const UDapp = (WrappedComponent, selectVFilter) => {
           abi: contracts.token.abi,
           address: contracts.token.networks['420'].address,
         },
-        INITIAL_POLL_NONCE: '',
-        approve: '',
         decodedValues: [],
-        pollExists: ''
+        sliderValue: ''
       }
     }
 
@@ -62,6 +60,9 @@ const UDapp = (WrappedComponent, selectVFilter) => {
 
     handleInputChange = (method, e, index, input) => {
       let value = e.target.value
+      if (input.type === 'bytes32' && input.name === '_secretHash') {
+        value = commonUtils.getListingHash(value, '1')
+      }
       if (input.type === 'bytes32') {
         value = commonUtils.getListingHash(value)
       }
@@ -123,10 +124,10 @@ const UDapp = (WrappedComponent, selectVFilter) => {
     render() {
       return (
         <WrappedComponent
+          registry={this.state.registry}
           hocInputChange={this.handleInputChange}
           hocCall={this.handleCall}
           hocSendTransaction={this.handleExecute}
-          registry={this.state.registry}
           voting={this.state.voting}
           token={this.state.token}
           decodedValues={this.state.decodedValues}
@@ -137,4 +138,4 @@ const UDapp = (WrappedComponent, selectVFilter) => {
   }
 }
 
-export default UDapp
+export default UDappHOC

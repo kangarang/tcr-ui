@@ -2,15 +2,16 @@ import {
   CONTRACT_ERROR,
   LOGS_ERROR,
   UDAPP_ERROR,
+  LOGIN_ERROR,
   GET_ETHEREUM,
 
-  SET_ETHJS,
+  SET_ETHEREUM_PROVIDER,
   SET_WALLET,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
-  GET_PROVIDER_REQUEST,
+  GET_ETH_PROVIDER,
   // SET_LOGS,
   POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
@@ -26,12 +27,14 @@ import {
   NEW_ITEM,
   CHANGE_ITEM,
   CHANGE_ITEMS,
+  CHANGE_SLIDER_VALUE,
 } from './constants'
 
 
-export function setupEthereum() {
+export function setupEthereum(network) {
   return {
     type: GET_ETHEREUM,
+    network,
   }
 }
 export function setContracts(payload) {
@@ -46,9 +49,15 @@ export function setWallet(payload) {
     payload,
   }
 }
-export function setEthjs(payload) {
+export function changeSliderValue(value) {
   return {
-    type: SET_ETHJS,
+    type: CHANGE_SLIDER_VALUE,
+    value,
+  }
+}
+export function setEthereumProvider(payload) {
+  return {
+    type: SET_ETHEREUM_PROVIDER,
     payload,
   }
 }
@@ -72,6 +81,12 @@ export function logsError(logType, error) {
     error,
   }
 }
+export function loginError(error) {
+  return {
+    type: LOGIN_ERROR,
+    error,
+  }
+}
 export function contractError(error) {
   return {
     type: CONTRACT_ERROR,
@@ -80,7 +95,7 @@ export function contractError(error) {
 }
 export function getProviderRequest() {
   return {
-    type: GET_PROVIDER_REQUEST,
+    type: GET_ETH_PROVIDER,
   }
 }
 

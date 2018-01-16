@@ -3,6 +3,8 @@ import { fromJS } from 'immutable'
 import {
   UDAPP_ERROR,
   SET_FROM_ADDRESS,
+  SET_METHOD_ARGS,
+  CHANGE_SLIDER_VALUE,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -14,13 +16,17 @@ const initialState = fromJS({
   deposit: '',
   tokenBalance: '',
   ethBalance: '',
+  sliderValue: '',
 })
 
 function udappReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_FROM_ADDRESS:
+    case CHANGE_SLIDER_VALUE:
       return state
-        .set('fromAddress', fromJS(action.fromAddress))
+        .set('sliderValue', fromJS(action))
+    case SET_METHOD_ARGS:
+      return state
+        .setIn([action.method, action.input.name], fromJS(action.args))
     case UDAPP_ERROR:
       return state
         .set('error', fromJS(action.error))

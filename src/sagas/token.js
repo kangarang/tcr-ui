@@ -19,8 +19,8 @@ import { getContract, getRegistry } from '../services';
 import { getEthjs } from '../libs/provider';
 
 export default function* tokenSaga() {
-  yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
-  yield takeEvery(TX_APPROVE, approvalSaga)
+  // yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
+  // yield takeEvery(TX_APPROVE, approvalSaga)
 }
 
 // Token interactions

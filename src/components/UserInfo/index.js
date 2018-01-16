@@ -29,7 +29,8 @@ function UserInfo({
   network,
   tokenBalance,
   tokensAllowed,
-  onApprove,
+  error,
+  onSelectNetwork,
 }) {
   return (
     <Container>
@@ -62,7 +63,7 @@ function UserInfo({
       <Item gR={2} gC={2}>
         <BoldInlineText>
           {'Account: '}
-          {account}
+          {account || 'You need MetaMask!'}
         </BoldInlineText>
       </Item>
 
@@ -71,9 +72,12 @@ function UserInfo({
           {'Network: '}
           {network === '5777'
             ? 'Ganache'
-            : network === '4'
-              ? 'Rinkeby'
-              : network === '1' ? 'Main' : 'Unknown'}
+            : network === '420'
+              ? 'Ganache-CLI'
+              : network === '4'
+                ? 'Rinkeby'
+                : network === '1' ? 'Main'
+                  : network || 'Need MetaMask!'}
         </BoldInlineText>
       </Item>
 
@@ -84,11 +88,6 @@ function UserInfo({
         </BoldInlineText>
       </Item>
 
-      <Item gR={2} gC={5}>
-        {tokensAllowed < 50000 ? (
-          <Button onClick={onApprove}>{'A P P R O V E'}</Button>
-        ) : false}
-      </Item>
     </Container>
   )
 }
@@ -97,6 +96,7 @@ UserInfo.propTypes = {
   account: PropTypes.string,
   network: PropTypes.string,
   onApprove: PropTypes.func,
+  onSelectNetwork: PropTypes.func,
   tokenBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   tokensAllowed: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),

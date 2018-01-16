@@ -8,7 +8,8 @@ import {
   CHANGE_ITEMS,
   CONTRACT_ERROR,
   NEW_ARRAY,
-  SET_ETHJS,
+  SET_ETHEREUM_PROVIDER,
+  LOGIN_ERROR,
 } from '../actions/constants'
 import { commonUtils } from '../sagas/utils';
 
@@ -75,11 +76,14 @@ function homeReducer(state = initialState, action) {
     case CONTRACT_ERROR:
       return state
         .setIn(['error', 'type'], true)
-        .setIn(['wallet', 'address'], fromJS('You need MetaMask!'))
-    case SET_ETHJS:
+    case LOGIN_ERROR:
+      return state
+        .set('error', action.error)
+    case SET_ETHEREUM_PROVIDER:
       return state
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
+        .setIn(['wallet', 'network'], fromJS(action.payload.network))
     case SET_WALLET:
       return state
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
@@ -114,17 +118,48 @@ function newListingsByListing(state, payload) {
   return state.set('listings', fromJS(payload))
 }
 
+function checkShape(thing) {
+  switch (thing.latest.event) {
+    case '_Application':
+      return 'apply'
+    case '_Challenge':
+      return 'challenge'
+    case '_NewListingWhitelisted':
+      return 'newlistingwhitelisted'
+    default:
+      return false
+  }
+}
+
 // TODO: check blockNumber to make sure updating is ok
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
     console.log('acc, val', acc, val)
-    const index = acc.findIndex(ri => (commonUtils.getListingHash(ri.get('listing')) === val.listing))
-    console.log('index', index)
+    const shape = checkShape(val)
+    console.log('shape', shape)
+    let index
+    if (shape === 'apply') {
+      index = acc.findIndex(ri =>
+        (commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
+      )
+    } else {
+      index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === val.listing)
+    }
+
+    // const index = acc.findIndex(ri =>
+    //   (commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
+    //   || (ri.get('listing') === commonUtils.getListingHash(val.listing))
+    //   || (commonUtils.getListingHash(ri.get('listing')) === val.listing)
+    // )
+    // console.log('index', index)
     if (index === -1) {
       return acc.push(fromJS(val))
     }
-    return acc
+    if (val.latest.blockNumber > acc.getIn([index, 'latest', 'blockNumber'])) {
+      return acc
       .setIn([index, 'latest'], fromJS(val.latest))
+    }
+    return acc
   }, state.get('listings'))
 
   return state.set('listings', fromJS(newListings))

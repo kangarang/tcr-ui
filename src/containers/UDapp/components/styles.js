@@ -7,7 +7,6 @@ const buttonStyles = css`
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  padding: .4em .6em;
   outline: 0;
 
   text-decoration: none;

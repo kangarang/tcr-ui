@@ -1,35 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import styled from 'styled-components'
-
 import { Provider } from 'react-redux'
+import { ConnectedRouter } from 'react-router-redux'
+import createHistory from 'history/createBrowserHistory'
 
-import App from './App'
-import UDapp from './containers/UDapp'
-
-import {colors} from './components/Colors'
 import configureStore from './store'
+import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 
 const initialState = {}
-const store = configureStore(initialState)
-
-const AppWrapper = styled.div`
-  display: flex;
-  min-height: 1800px;
-  flex-direction: row;
-  margin: 0;
-  padding: 2em;
-  background-color: ${colors.offWhite};
-  background-size: auto 120vh;
-`
+const history = createHistory()
+const store = configureStore(initialState, history)
 
 ReactDOM.render(
   <Provider store={store}>
-    <AppWrapper>
+    <ConnectedRouter history={history}>
       <App />
-      <UDapp />
-    </AppWrapper>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 )

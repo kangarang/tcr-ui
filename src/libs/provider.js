@@ -1,54 +1,33 @@
 import Ethjs from 'ethjs'
+
 const INFURA_API_KEY = 'J0cQm2XzyYPau90i8jyk'
 const PROVIDER_PORT = '7545'
 
-// import metamask from 'metamascara'
-// const ethereumProvider = metamask.createDefaultProvider({
-//   host: 'HTTP://127.0.0.1:7545'
-// })
-// console.log('ethereumProvider', ethereumProvider)
+let provider
+let eth
 
-const net = 'development'
-
-const safe = {
-  provider: false,
-  eth: false,
-}
-
-const setProvider = () => {
-  // if (process.env.NODE_ENV === 'development') {
-  if (net === 'development') {
-    // Dev: Ganache
-    safe.provider = new Ethjs.HttpProvider(getProviderUrl())
-  } else if (
-    typeof window.web3 !== 'undefined' &&
-    typeof window.web3.currentProvider !== 'undefined'
-  ) {
-    // MetaMask
-    safe.provider = window.web3.currentProvider
+const setProvider = (network) => {
+  if (network === 'ganache') {
+    provider = new Ethjs.HttpProvider(getProviderUrl(network))
+  } else if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !== 'undefined') {
+    provider = window.web3.currentProvider
   }
-  return safe.provider
+  return provider
 }
 
-export const getProvider = () => safe.provider
+export const getProvider = () => provider
 
-export const getProviderUrl = () => {
-  // if (process.env.NODE_ENV === 'development') {
-  if (net === 'development') {
-    // Dev: Ganache
+export const getProviderUrl = (network) => {
+  if (network === 'ganache') {
     return `http://localhost:${PROVIDER_PORT}`
-  } else if (
-    typeof window.web3 !== 'undefined' &&
-    typeof window.web3.currentProvider !== 'undefined'
-  ) {
-    // MetaMask
+  } else if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !== 'undefined') {
     return `https://rinkeby.infura.io/${INFURA_API_KEY}`
   }
 }
 
-export const setupEthjs = async () => {
-  safe.eth = new Ethjs(setProvider())
-  return safe.eth
+export const setupEthjs = async (network) => {
+  eth = new Ethjs(setProvider(network))
+  return eth
 }
 
-export const getEthjs = () => safe.eth
+export const getEthjs = () => eth

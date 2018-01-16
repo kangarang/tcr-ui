@@ -1,26 +1,64 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createStructuredSelector } from 'reselect'
 
-import Methods from '../../components/Methods'
+import Eth from 'ethjs'
+import styled from 'styled-components'
+
+import Slider from 'rc-slider'
+import Tooltip from 'rc-tooltip'
+
+import 'rc-slider/assets/index.css'
+import 'rc-tooltip/assets/bootstrap.css'
+
 import H1 from '../../components/H1'
-import UDappHOC from '../../HOC/UDapp'
+import UDappHOC from './HOC'
 
 import Button from '../../components/Button'
+import { colors } from '../../components/Colors'
 import Input from './components/Input.js'
+import { trimDecimalsThree, toEther, withCommas, fromNaturalUnit } from '../../libs/units'
+import { config } from '../../config/index'
+import { changeSliderValue } from "../../actions";
+import { selectSliderValue } from '../../selectors/udapp';
 
 const styles = {
   container: {
-    padding: '0 3em',
+    padding: '0 1em',
+    overflow: 'hidden'
   }
 }
 
+const createSliderWithTooltip = Slider.createSliderWithTooltip
+const SliderTT = createSliderWithTooltip(Slider)
+const Handle = Slider.Handle
+
+const Methods = styled.div`
+  display: flex;
+  flex-flow: column wrap;
+  overflow: hidden;
+
+  & > div {
+    margin: .5em;
+    display: flex;
+    flex-flow: row wrap;
+    overflow: hidden;
+  }
+`
 class UDapp extends Component {
+
+  componentWillReceiveProps(newProps) {
+    console.log(`old props: ${this.props}`);
+    console.log(`new props: ${newProps}`);
+  }
 
   renderMethod(method, contract) {
     const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
     const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
     return (
       <div key={method.name}>
-        <h4>{`${method.name} -> ${this.props.decodedValues} ${outputs}`}</h4>
+        <h4>{`${method.name}`}</h4>
 
         {method.inputs.map((input, ind) => (
           <form key={input.name + ind} onSubmit={e => this.props.hocCall(e, method, contract)}>
@@ -40,8 +78,22 @@ class UDapp extends Component {
     )
   }
 
+  handle = (props) => {
+    const { value, dragging, index, ...restProps } = props;
+    return (
+      <Tooltip
+        prefixCls="rc-slider-tooltip"
+        overlay={value}
+        visible={dragging}
+        placement="top"
+        key={index}
+      >
+        <Handle value={value} {...restProps} />
+      </Tooltip>
+    )
+  }
+
   render() {
-    // const registryEvents = (this.props.registry.abi || []).filter((methodInterface) => methodInterface.type === 'event')
     const registryMethods = (this.props.registry.abi || []).filter((methodInterface) => methodInterface.type === 'function')
     const registryMethodsWithArgs = registryMethods.filter((methodInterface) => methodInterface.inputs.length > 0)
 
@@ -54,27 +106,36 @@ class UDapp extends Component {
     return (
       <div style={styles.container}>
         <H1 className="UDapp-title">U D A P P</H1>
+
+        <SliderTT
+          min={1}
+          max={this.props.tokenBalance ? Number(this.props.tokenBalance) : 100}
+          defaultValue={420}
+          handle={this.handle}
+          tipFormatter={value => `${value} ${config.tokenSymbol}`}
+          onChange={this.props.onChangeSliderValue}
+        />
+
         <Methods>
-          <div>
+
+          REGISTRY:
             {this.props.registry.address}
-            {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))}
-          </div>
           <div>
+            {registryMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'registry'))}
+          </div>
+
+          TOKEN:
             {this.props.token.address}
-            {tokenMethodsWithArgs.map((one) => this.renderMethod(one, 'token'))}
-          </div>
           <div>
-            {this.props.voting.address}
-            {votingMethodsWithArgs.map((one) => this.renderMethod(one, 'voting'))}
+            {tokenMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'token'))}
           </div>
-          {/* {registryEvents.map((one) => (
-            <div key={one.name}>{JSON.stringify(one)}</div>
-          ))} */}
 
+          VOTING:
+            {this.props.voting.address}
+          <div>
+            {votingMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'voting'))}
+          </div>
 
-          {/* {eventStream.map((one) => (
-            <div key={one.value}>{JSON.stringify(one)}</div>
-          ))} */}
         </Methods>
       </div>
     )
