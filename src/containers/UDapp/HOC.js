@@ -60,17 +60,20 @@ const UDappHOC = (WrappedComponent) => {
 
     handleInputChange = (method, e, index, input) => {
       let value = e.target.value
+
+      // TODO: explain this. also, figure out a better way to handle different inputs
       if (input.type === 'bytes32' && input.name === '_secretHash') {
         value = commonUtils.getListingHash(value, '1')
       }
       if (input.type === 'bytes32') {
         value = commonUtils.getListingHash(value)
       }
-      console.log('method', method)
-      console.log('value', value)
-      console.log('input', input)
+
+      console.log('method, value, input', method, value, input)
+
       const rawOutput = this.state[method.name]
       
+      // see: https://github.com/kumavis/udapp/blob/master/index.js#L340
       // const result = EthAbi.decodeMethod(method, `0x${value}`)
       // result.length = method.outputs.length
       // const resultArray = [].slice.call(result)
@@ -87,6 +90,8 @@ const UDappHOC = (WrappedComponent) => {
       console.log('this.state', this.state)
     }
 
+    // adapted from:
+    // https://github.com/kumavis/udapp/blob/master/index.js#L158
     handleCall = (e, method, contract) => {
       e.preventDefault()
       const args = Object.values(this.state[method.name])
@@ -105,6 +110,8 @@ const UDappHOC = (WrappedComponent) => {
       return this.eth.currentProvider.sendAsync(payload, console.log)
     }
 
+    // adapted from:
+    // https://github.com/kumavis/udapp/blob/master/index.js#L63
     handleExecute = (e, method, contract) => {
       e.preventDefault()
       const args = Object.values(this.state[method.name])

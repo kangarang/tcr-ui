@@ -48,11 +48,14 @@ const Methods = styled.div`
 `
 class UDapp extends Component {
 
+  // TODO: use props to determine rendering
   componentWillReceiveProps(newProps) {
     console.log(`old props: ${this.props}`);
     console.log(`new props: ${newProps}`);
   }
 
+  // adapted from:
+  // https://github.com/kumavis/udapp/blob/master/index.js#L310
   renderMethod(method, contract) {
     const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
     const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
@@ -93,6 +96,8 @@ class UDapp extends Component {
     )
   }
 
+  // adapted from:
+  // https://github.com/kumavis/udapp/blob/master/index.js#L205
   render() {
     const registryMethods = (this.props.registry.abi || []).filter((methodInterface) => methodInterface.type === 'function')
     const registryMethodsWithArgs = registryMethods.filter((methodInterface) => methodInterface.inputs.length > 0)
@@ -122,18 +127,21 @@ class UDapp extends Component {
             {this.props.registry.address}
           <div>
             {registryMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'registry'))}
+            {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
           </div>
 
           TOKEN:
             {this.props.token.address}
           <div>
             {tokenMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'token'))}
+            {/* {tokenMethodsWithArgs.map((one) => this.renderMethod(one, 'token'))} */}
           </div>
 
           VOTING:
             {this.props.voting.address}
           <div>
             {votingMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'voting'))}
+            {/* {votingMethodsWithArgs.map((one) => this.renderMethod(one, 'voting'))} */}
           </div>
 
         </Methods>
