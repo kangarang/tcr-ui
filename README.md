@@ -3,7 +3,7 @@ TCR UI (WIP)
 
 "Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
-TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a list of high-quality entries (in a Registry)
+TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a list of high-quality entries (Registry)
 
 The vision of this project is to build a registry-agnostic, highly-configurable, client-side user interface to interact and transact with Ethereum TCRs
 
@@ -141,13 +141,13 @@ Calls:
 #### Parameterizer
 ```
 Calls:
-  - proposalMap: (pollIDs) -> Poll struct (indended data change)
-  - challengeMap: (challengeIDs) -> Challenge struct
+  - proposals(pollIDs) -> Poll struct (indended data change)
+  - challenges(challengeIDs) -> Challenge struct
 ```
 
 ---
 
-## Lifecycle of a `Listing`; General TCR Language
+## Lifecycle of a `Listing`; General TCR Language (WIP)
 
 Each `Listing` starts out in the **Application** stage.
 - The owner of the `Listing` is called the "Applicant"
@@ -217,7 +217,7 @@ Particular events effectively signal changes in state. The following events are 
 
 `_Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)`
 
-  - $$$
+  - ETH/TOKEN
 
 
 #### PLCR Voting
@@ -237,7 +237,7 @@ Particular events effectively signal changes in state. The following events are 
 
 `VotingRightsWithdrawn(address voter, uint numTokens)`
 
-  - $$$
+  - ETH/TOKEN
 
 
 ### Workflow diagrams

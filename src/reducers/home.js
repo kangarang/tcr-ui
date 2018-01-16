@@ -13,6 +13,23 @@ import {
 } from '../actions/constants'
 import { commonUtils } from '../sagas/utils'
 
+
+// const reactState = {
+//   stupid_toggle_components,
+//   ethjs,
+//   ethereumProvider,
+//   HOC/formInput/votingModal/sendTransaction: {
+//     amount,
+//     vote
+//   },
+//   contracts: {
+//     registry,
+//     voting,
+//     token,
+//     parameterizer
+//   }
+// }
+
 const initialState = fromJS({
   wallet: {
     address: '',
@@ -67,6 +84,10 @@ const initialState = fromJS({
     type: false,
     message: '',
   },
+  // visiblityFilter: {
+  //   listings: ['in_application', 'in_whitelist'],
+  //   isPolling: false,
+  // },
 })
 
 function homeReducer(state = initialState, action) {
