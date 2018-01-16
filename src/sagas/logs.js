@@ -1,6 +1,5 @@
 import { all, takeLatest, fork, takeEvery, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-// import Promise from 'bluebird'
 
 import {
   newArray,
@@ -26,57 +25,35 @@ export default function* logsSaga() {
   yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
-let sB = 10
-
-// Gets fresh logs
+// Init log queries
 function* getFreshLogs() {
+  // TODO: initial log queries (Backend APIs - GovernX, Etherscan)
+
+  // We need a few things:
+  // 1. get current registry and contexts
+  // 2. get current applications and contexts
+  // 3. get current challenges (faceoffs) and contexts
   const registry = yield call(getRegistry)
   try {
     const applications = yield call(handleLogs, sB, 'latest', '_Application')
     const challenges = yield call(handleLogs, sB, 'latest', '_Challenge')
-    const ne = yield call(handleLogs, sB, 'latest', '_NewListingWhitelisted')
+    const registeredListings = yield call(handleLogs, sB, 'latest', '_NewListingWhitelisted')
+
     console.log('applications', applications)
     console.log('challenges', challenges)
-    console.log('ne', ne)
+    console.log('registeredListings', registeredListings)
 
     yield put(newArray(applications))
     yield put(updateItems(challenges))
-    yield put(updateItems(ne))
+    yield put(updateItems(registeredListings))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
   }
   yield fork(tokensAllowedSaga, registry.address)
+
+  // init polling
   yield call(pollController)
-}
-
-// Timer
-function* pollController() {
-  const pollInterval = 3000
-  while (true) {
-    try {
-      yield call(delay, pollInterval)
-      yield put(pollLogsRequest({ startBlock: sB, endBlock: 'latest' }))
-    } catch (err) {
-      console.log('Polling Log Saga error', err)
-      throw new Error(err)
-    }
-  }
-}
-
-function* pollLogsSaga(action) {
-  const eth = yield call(getEthjs)
-  const registry = yield call(getRegistry)
-  try {
-    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock, '_Application')
-    // const blockTimestamp = yield call(eth, )
-    sB += 5
-    yield put(updateItems(newLogs))
-    yield fork(tokensAllowedSaga, registry.address)
-  } catch (err) {
-    console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
-  }
 }
 
 function* handleLogs(sb, eb, topic) {
@@ -87,6 +64,7 @@ function* handleLogs(sb, eb, topic) {
     const filter = yield call(logUtils.buildFilter, registry.address, topic, sb, eb)
     const rawLogs = yield call(eth.getLogs, filter)
     console.log('rawLogs', rawLogs)
+
     const decodedLogs = yield call(logUtils.decodeLogs, eth, registry.contract, rawLogs)
     console.log('decodedLogs', decodedLogs)
 
@@ -104,12 +82,16 @@ function* handleLogs(sb, eb, topic) {
 }
 
 function* buildListing(rawLogs, registry, block, log, i, txDetails) {
+  // Note: this function does not scale
+  // TODO: reduce the # of calls
   try {
     let unstakedDeposit = '0'
     let listingHash = log.listing
+
     if (log._eventName === '_Application') {
       listingHash = commonUtils.getListingHash(log.listing)
     }
+
     // if (log.deposit) {
     //   unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
     // } else {
@@ -148,3 +130,44 @@ function* buildListing(rawLogs, registry, block, log, i, txDetails) {
     yield put(logsError('logs error', err))
   }
 }
+
+let sB = 10
+
+// Timer
+function* pollController() {
+  const pollInterval = 2000
+  while (true) {
+    try {
+
+      // Every 2 secs:
+      yield call(delay, pollInterval)
+      // Dispatch: log query request
+      yield put(pollLogsRequest({ startBlock: sB, endBlock: 'latest' }))
+      // -> pollLogsSaga(action)
+      // -> handleLogs(sb, eb, '_Application')
+
+    } catch (err) {
+      console.log('Polling Log Saga error', err)
+      throw new Error(err)
+    }
+  }
+}
+
+function* pollLogsSaga(action) {
+  const eth = yield call(getEthjs)
+  const registry = yield call(getRegistry)
+  try {
+    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock, '_Application')
+
+    // TODO: standardize block.timestamp
+    // const blockTimestamp = yield call(eth, )
+
+    sB += 5
+    yield put(updateItems(newLogs))
+    yield fork(tokensAllowedSaga, registry.address)
+  } catch (err) {
+    console.log('Fresh log error:', err)
+    yield put(logsError('logs error', err))
+  }
+}
+

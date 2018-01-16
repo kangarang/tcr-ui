@@ -15,6 +15,8 @@ export default class Parameterizer {
     this.address = await registry.parameterizer.call()
     this.contract = await ParameterizerContract.at(this.address)
 
+    // TODO: use udapp calls to get all canonical parameters
+
     // TODO: get_storage?
     this.minDeposit = (await this.contract.get('minDeposit')).toString(10)
     this.pMinDeposit = (await this.contract.get('pMinDeposit')).toString(10)

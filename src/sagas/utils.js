@@ -21,6 +21,7 @@ export const logUtils = {
   canAnyBeWhitelisted: async (registry, logs) => registry.filterListingAndCall(logs, 'canBeWhitelisted'),
 }
 
+
 // Common helpers
 export const commonUtils = {
   getBlock: async (eth, hash) => eth.getBlockByHash(hash, false),
@@ -52,7 +53,12 @@ export const commonUtils = {
   }),
 }
 
-// Event helpers
+
+
+
+
+
+// Event helpers (deprecated)
 export const eventUtils = {
   checkForWhitelist: (item) => {
     switch (item.event) {

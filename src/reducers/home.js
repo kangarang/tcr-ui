@@ -11,7 +11,7 @@ import {
   SET_ETHEREUM_PROVIDER,
   LOGIN_ERROR,
 } from '../actions/constants'
-import { commonUtils } from '../sagas/utils';
+import { commonUtils } from '../sagas/utils'
 
 const initialState = fromJS({
   wallet: {
@@ -22,36 +22,34 @@ const initialState = fromJS({
       address: '',
       tokenBalance: '',
       allowances: {
-        registry: {
-          total: '',
-          locked: ''
-        },
-        voting: {
-          total: '',
-          locked: ''
-        }
-      }
-    }
+        // registry: {
+        //   total: '',
+        //   locked: '',
+        // },
+        // voting: {
+        //   total: '',
+        //   locked: '',
+        // },
+      },
+    },
   },
   listings: {
-    // 'adchain.com': {
-    //   listing: '',
-    //   owner: '',
-    //   challenger: '',
-    //   latest: {
+    // listing: '',
+    // owner: '',
+    // challenger: '',
+    // latest: {
     //   whitelisted: '',
     //   canBeWhitelisted: '',
-    //     sender: '',
-    //     blockHash: '',
-    //     blockNumber: '',
-    //     timestamp: '',
-    //     txHash: '',
-    //     txIndex: '',
-    //     numTokens: '',
-    //     event: '',
-    //     logIndex: '',
-    //     pollID: ''
-    //   }
+    //   sender: '',
+    //   blockHash: '',
+    //   blockNumber: '',
+    //   timestamp: '',
+    //   txHash: '',
+    //   txIndex: '',
+    //   numTokens: '',
+    //   event: '',
+    //   logIndex: '',
+    //   pollID: '',
     // },
   },
   parameters: {
@@ -59,26 +57,24 @@ const initialState = fromJS({
     appExpiry: '',
     commitStageLen: '',
     revealStageLen: '',
-    voteQuorum: ''
+    voteQuorum: '',
   },
   loading: {
     type: false,
-    message: ''
+    message: '',
   },
   error: {
     type: false,
-    message: ''
-  }
+    message: '',
+  },
 })
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case CONTRACT_ERROR:
-      return state
-        .setIn(['error', 'type'], true)
+      return state.setIn(['error', 'type'], true)
     case LOGIN_ERROR:
-      return state
-        .set('error', action.error)
+      return state.set('error', action.error)
     case SET_ETHEREUM_PROVIDER:
       return state
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
@@ -90,15 +86,34 @@ function homeReducer(state = initialState, action) {
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
     case SET_CONTRACTS:
-      return state.setIn(['wallet', 'token', 'tokenName'], fromJS(action.payload.token.name))
-        .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(action.payload.token.symbol))
-        .setIn(['wallet', 'token', 'totalSupply'], fromJS(action.payload.token.totalSupply))
+      return state
+        .setIn(
+          ['wallet', 'token', 'tokenName'],
+          fromJS(action.payload.token.name)
+        )
+        .setIn(
+          ['wallet', 'token', 'tokenSymbol'],
+          fromJS(action.payload.token.symbol)
+        )
+        .setIn(
+          ['wallet', 'token', 'totalSupply'],
+          fromJS(action.payload.token.totalSupply)
+        )
     case SET_MIN_DEPOSIT:
-      return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
+      return state.setIn(
+        ['parameters', 'minDeposit'],
+        fromJS(action.minDeposit)
+      )
     case SET_TOKENS_ALLOWED:
       return state
-        .setIn(['wallet', 'token', 'allowances', 'registry', 'total'], fromJS(action.payload.allowance))
-        .setIn(['wallet', 'token', 'tokenBalance'], fromJS(action.payload.balance))
+        .setIn(
+          ['wallet', 'token', 'allowances', 'registry', 'total'],
+          fromJS(action.payload.allowance)
+        )
+        .setIn(
+          ['wallet', 'token', 'tokenBalance'],
+          fromJS(action.payload.balance)
+        )
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
     case NEW_ARRAY:
@@ -139,11 +154,15 @@ function changeListings(state, payload) {
     console.log('shape', shape)
     let index
     if (shape === 'apply') {
-      index = acc.findIndex(ri =>
-        (commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
+      index = acc.findIndex(
+        ri =>
+          commonUtils.getListingHash(ri.get('listing')) ===
+          commonUtils.getListingHash(val.listing)
       )
     } else {
-      index = acc.findIndex(ri => commonUtils.getListingHash(ri.get('listing')) === val.listing)
+      index = acc.findIndex(
+        ri => commonUtils.getListingHash(ri.get('listing')) === val.listing
+      )
     }
 
     // const index = acc.findIndex(ri =>
@@ -156,8 +175,7 @@ function changeListings(state, payload) {
       return acc.push(fromJS(val))
     }
     if (val.latest.blockNumber > acc.getIn([index, 'latest', 'blockNumber'])) {
-      return acc
-      .setIn([index, 'latest'], fromJS(val.latest))
+      return acc.setIn([index, 'latest'], fromJS(val.latest))
     }
     return acc
   }, state.get('listings'))

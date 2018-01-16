@@ -1,15 +1,16 @@
+// TODO: make udapp async saga functions
+
 import {
   call,
   put,
   select,
-  takeEvery,
+  // takeEvery,
 } from 'redux-saga/effects'
 import {
   contractError,
 } from '../actions'
 import {
-  TX_COMMIT_VOTE,
-  // TX_APPROVE,
+  // TX_COMMIT_VOTE,
 } from '../actions/constants'
 import { getContract } from '../services';
 import {
@@ -18,9 +19,9 @@ import {
 import { tokensAllowedSaga } from './token';
 
 export default function* votingSaga() {
-  // yield takeEvery(TX_APPROVE, approvalSaga)
-  yield takeEvery(TX_COMMIT_VOTE, commitSaga)
+  // yield takeEvery(TX_COMMIT_VOTE, commitSaga)
 }
+
 // Commit vote
 function* commitSaga(payload) {
   const account = yield select(selectAccount)
@@ -28,6 +29,7 @@ function* commitSaga(payload) {
   const voting = yield call(getContract, 'voting')
 
   try {
+    // TODO: use udapp instead
     yield call(token.approve, voting.address, payload.amount)
     yield call(voting.requestVotingRights, payload.amount)
 

@@ -2,18 +2,12 @@ import { fromJS } from 'immutable'
 
 import {
   UDAPP_ERROR,
-  SET_FROM_ADDRESS,
   SET_METHOD_ARGS,
   CHANGE_SLIDER_VALUE,
 } from '../actions/constants'
 
 const initialState = fromJS({
   error: false,
-  provider: {},
-  fromAddress: '',
-  address: '',
-  listing: '',
-  deposit: '',
   tokenBalance: '',
   ethBalance: '',
   sliderValue: '',

@@ -25,8 +25,7 @@ import {
   loginError, initErrorinitError
 } from '../actions'
 
-import tokenSaga, { tokensAllowedSaga } from './token'
-import votingSaga from './voting'
+import { tokensAllowedSaga } from './token'
 
 import { setupEthjs, getEthjs } from '../libs/provider'
 

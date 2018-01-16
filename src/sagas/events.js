@@ -1,3 +1,7 @@
+// NOTE: putting a hold on event listening for now
+// Focusing on logs / polling
+
+
 import { eventChannel, END } from 'redux-saga'
 import { call, all, put, fork, take, select, takeLatest, cancelled } from 'redux-saga/effects'
 
