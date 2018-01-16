@@ -29,3 +29,4 @@ yarn-error.log*
 !.elasticbeanstalk/*.global.yml
 
 /ganache-db
+/.vscode
