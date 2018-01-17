@@ -148,40 +148,11 @@ function replaceListings(state, payload) {
   return state.set('listings', fromJS(payload))
 }
 
-function checkShape(thing) {
-  switch (thing.latest.event) {
-    case '_Application':
-      return 'apply'
-    case '_Challenge':
-      return 'challenge'
-    case '_NewListingWhitelisted':
-      return 'newlistingwhitelisted'
-    default:
-      return false
-  }
-}
-
-// TODO: check blockNumber to make sure updating is ok
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
-    const shape = checkShape(val)
-    console.log('acc, val, shape', acc, val, shape)
-
-    let index
-
-    // _Application event
-    if (shape === 'apply') {
-      index = acc.findIndex(
-        ri =>
-          commonUtils.getListingHash(ri.get('listing')) ===
-          commonUtils.getListingHash(val.listing)
-      )
-    } else {
-      // Other type of event
-      index = acc.findIndex(
-        ri => commonUtils.getListingHash(ri.get('listing')) === val.listing
-      )
-    }
+    const index = acc.findIndex(
+      ri => ri.get('listingHash') === val.listingHash
+    )
 
     // New listing
     if (index === -1) {

@@ -34,6 +34,7 @@ export const commonUtils = {
 
   shapeShift: (b, tx, details) => ({
     listing: details.listing,
+    listingHash: details.listingHash,
     owner: tx.from,
     challenger: details.pollID && details.challenger,
     latest: {

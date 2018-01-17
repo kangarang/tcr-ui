@@ -35,17 +35,13 @@ function* getFreshLogs() {
   // 3. get current challenges (faceoffs) and contexts
   const registry = yield call(getRegistry)
   try {
+    const allEvents = yield call(handleLogs, sB, 'latest')
     const applications = yield call(handleLogs, sB, 'latest', '_Application')
-    const challenges = yield call(handleLogs, sB, 'latest', '_Challenge')
-    const registeredListings = yield call(handleLogs, sB, 'latest', '_NewListingWhitelisted')
 
+    console.log('allEvents', allEvents)
     console.log('applications', applications)
-    console.log('challenges', challenges)
-    console.log('registeredListings', registeredListings)
 
     yield put(newArray(applications))
-    yield put(updateItems(challenges))
-    yield put(updateItems(registeredListings))
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
@@ -81,29 +77,28 @@ function* handleLogs(sb, eb, topic) {
   }
 }
 
-function* buildListing(rawLogs, registry, block, log, i, txDetails) {
+function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
+  // dLog = {
+  //   0, 1, 2,
+  //   data: 'isaac',
+  //   listingHash: '0x5ab...',
+  //   _eventName: '_Application'
+  // }
+
   // Note: this function does not scale
   // TODO: reduce the # of calls
   try {
     let unstakedDeposit = '0'
-    let listingHash = log.listing
+    let listingHash = dLog.listingHash
 
-    if (log._eventName === '_Application') {
-      listingHash = commonUtils.getListingHash(log.listing)
-    }
-
-    // if (log.deposit) {
-    //   unstakedDeposit = fromNaturalUnit(log.deposit).toString(10)
-    // } else {
+    // Get the listing struct from the mapping
     const listing = yield call([registry.contract, 'listings', 'call'], listingHash)
     unstakedDeposit = listing[3].toString(10)
+
     console.log('listing', listing)
-    // }
 
     const isWhitelisted = yield call([registry.contract, 'isWhitelisted', 'call'], listingHash)
     const canBeWhitelisted = yield call([registry.contract, 'canBeWhitelisted', 'call'], listingHash)
-    const status = yield call([registry.contract, 'getStatus'], listingHash)
-    console.log('status', status)
 
     const tx = {
       hash: rawLogs[i].transactionHash,
@@ -112,16 +107,17 @@ function* buildListing(rawLogs, registry, block, log, i, txDetails) {
       index: txDetails.transactionIndex,
       timestamp: (new Date(block.timestamp * 1000)).toUTCString()
     }
+    
     const details = {
-      listing: log.listing,
+      listing: dLog.data,
       unstakedDeposit,
-      pollID: log.pollID && log.pollID.toString(10),
+      pollID: dLog.pollID && dLog.pollID.toString(10),
       index: i,
-      eventName: log._eventName,
+      eventName: dLog._eventName,
       contractAddress: rawLogs[i].address,
       isWhitelisted,
       canBeWhitelisted,
-      status,
+      listingHash,
     }
 
     return commonUtils.shapeShift(block, tx, details)
@@ -157,7 +153,7 @@ function* pollLogsSaga(action) {
   const eth = yield call(getEthjs)
   const registry = yield call(getRegistry)
   try {
-    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock, '_Application')
+    const newLogs = yield call(handleLogs, action.payload.startBlock, action.payload.endBlock)
 
     // TODO: standardize block.timestamp
     // const blockTimestamp = yield call(eth, )
