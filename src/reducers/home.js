@@ -138,19 +138,13 @@ function homeReducer(state = initialState, action) {
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
     case NEW_ARRAY:
-      return newListingsByListing(state, action.payload)
+      return replaceListings(state, action.payload)
     default:
       return state
   }
 }
 
-function newListingsByListing(state, payload) {
-  // const newListings = payload.reduce((acc, val) => {
-  //   return acc.set(fromJS(val.listing), fromJS(val))
-  // }, state.getIn(['listings', 'byListing']))
-  // console.log('newListings', newListings.toJS())
-
-  // return state.setIn(['listings', 'byListing'], newListings)
+function replaceListings(state, payload) {
   return state.set('listings', fromJS(payload))
 }
 
@@ -170,10 +164,12 @@ function checkShape(thing) {
 // TODO: check blockNumber to make sure updating is ok
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
-    console.log('acc, val', acc, val)
     const shape = checkShape(val)
-    console.log('shape', shape)
+    console.log('acc, val, shape', acc, val, shape)
+
     let index
+
+    // _Application event
     if (shape === 'apply') {
       index = acc.findIndex(
         ri =>
@@ -181,26 +177,27 @@ function changeListings(state, payload) {
           commonUtils.getListingHash(val.listing)
       )
     } else {
+      // Other type of event
       index = acc.findIndex(
         ri => commonUtils.getListingHash(ri.get('listing')) === val.listing
       )
     }
 
-    // const index = acc.findIndex(ri =>
-    //   (commonUtils.getListingHash(ri.get('listing')) === commonUtils.getListingHash(val.listing))
-    //   || (ri.get('listing') === commonUtils.getListingHash(val.listing))
-    //   || (commonUtils.getListingHash(ri.get('listing')) === val.listing)
-    // )
-    // console.log('index', index)
+    // New listing
     if (index === -1) {
       return acc.push(fromJS(val))
     }
+
+    // Check to see if the event is the more recent
     if (val.latest.blockNumber > acc.getIn([index, 'latest', 'blockNumber'])) {
       return acc.setIn([index, 'latest'], fromJS(val.latest))
     }
+
+    // Not unique, not more recent, return List
     return acc
   }, state.get('listings'))
 
+  // Replace entire List
   return state.set('listings', fromJS(newListings))
 }
 

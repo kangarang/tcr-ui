@@ -239,6 +239,7 @@ Particular events effectively signal changes in state. The following events are 
 
   - ETH/TOKEN
 
+---
 
 ### Workflow diagrams
 

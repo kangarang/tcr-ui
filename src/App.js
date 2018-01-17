@@ -5,10 +5,10 @@ import NotificationSystem from 'react-notification-system'
 
 import Home from './containers/Home'
 import Apply from './containers/Apply'
-// import Challenge from './containers/Challenge'
-// import Vote from './containers/Vote'
-// import Activities from './containers/Activities'
-// import Search from './containers/Search'
+import Challenge from './containers/Challenge'
+import Vote from './containers/Vote'
+import Activities from './containers/Activities'
+import Search from './containers/Search'
 
 import { colors } from './components/Colors'
 import './global-styles'
@@ -26,8 +26,10 @@ const App = () => (
     <Switch>
       <Route exact path='/' component={Home} />
       <Route path='/apply' component={Apply} />
-      {/* <Route path='/challenge' component={Challenge} />
-      <Route path='/vote' component={Vote} /> */}
+      <Route path='/challenge' component={Challenge} />
+      <Route path='/vote' component={Vote} />
+      <Route path='/activities' component={Activities} />
+      <Route path='/search' component={Search} />
     </Switch>
   </AppWrapper>
 )
