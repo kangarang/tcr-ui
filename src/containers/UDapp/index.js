@@ -11,6 +11,7 @@ import Tooltip from 'rc-tooltip'
 
 import 'rc-slider/assets/index.css'
 import 'rc-tooltip/assets/bootstrap.css'
+import Nav from '../Nav'
 
 import H1 from '../../components/H1'
 import UDappHOC from './HOC'
@@ -143,6 +144,8 @@ class UDapp extends Component {
           </div>
 
         </Methods>
+
+        <Nav />
       </div>
     )
   }

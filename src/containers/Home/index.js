@@ -144,5 +144,5 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withConnect)(UDappHOC(Home))
+export default compose(withConnect)(Home)
 

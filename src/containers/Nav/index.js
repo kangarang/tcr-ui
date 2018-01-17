@@ -5,7 +5,7 @@ class Nav extends Component {
   render() {
     return (
       <div>
-        <NavLink to='/home'>Home</NavLink>
+        <NavLink to='/'>Home</NavLink>
         <NavLink to='/apply'>Apply</NavLink>
         <NavLink to='/challenge'>Challenge</NavLink>
         <NavLink to='/vote'>Vote</NavLink>
