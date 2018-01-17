@@ -6,10 +6,11 @@ import {
   all,
   takeLatest,
 } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+// import { delay } from 'redux-saga'
 import {
-  GET_ETHEREUM, SET_WALLET,
-  GET_ETH_PROVIDER,
+  GET_ETHEREUM,
+  // SET_WALLET,
+  // GET_ETH_PROVIDER,
   LOGIN_ERROR,
   WALLET_ERROR,
 } from '../actions/constants'
@@ -20,18 +21,22 @@ import {
   setWallet,
   contractError,
   setContracts,
-  getProviderRequest,
-  setEthereumProvider,
-  loginError, initErrorinitError
+  // getProviderRequest,
+  // setEthereumProvider,
+  loginError,
 } from '../actions'
 
 import { tokensAllowedSaga } from './token'
 
-import { setupEthjs, getEthjs } from '../libs/provider'
+import {
+  setupEthjs,
+  // getEthjs
+} from '../libs/provider'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
-  yield takeLatest(SET_WALLET, runPolling)
+  // yield takeLatest(SET_WALLET, runPolling)
+  // yield takeLatest(GET_ETH_PROVIDER, pollProvider)
 }
 
 function* genesis(action) {
@@ -82,26 +87,29 @@ function* contractsSaga(eth, address) {
 
 // Polling
 
-function* runPolling() {
-  const pollInterval = 3000
-  while (true) {
-    try {
-      yield call(delay, pollInterval)
-      yield put(getProviderRequest())
-    } catch (e) {
-      throw new Error(e)
-    }
-  }
-}
+// function* runPolling() {
+//   const pollInterval = 30000
+//   while (true) {
+//     try {
+//       // Every 30 seconds:
+//       yield call(delay, pollInterval)
+//       // Dispatch: check provider request
+//       yield put(getProviderRequest())
+//     } catch (e) {
+//       throw new Error(e)
+//     }
+//   }
+// }
 
-function* pollProvider() {
-  try {
-    const eth = yield call(getEthjs)
-    const address = (yield call(eth.accounts))[0]
-    const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
-    yield put(setEthereumProvider(balanceBlockNetwork))
-  } catch (err) {
-    console.log('pollProvider error', err)
-    yield put(contractError(err))
-  }
-}
+// function* pollProvider() {
+//   try {
+//     const eth = yield call(getEthjs)
+//     const address = (yield call(eth.accounts))[0]
+//     const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
+//     // if (balanceBlockNetwork.network !== eth)
+//     yield put(setEthereumProvider(balanceBlockNetwork))
+//   } catch (err) {
+//     console.log('pollProvider error', err)
+//     yield put(contractError(err))
+//   }
+// }

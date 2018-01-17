@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { config } from '../../config'
 
 import Identicon from '../Identicon'
-import Button from '../Button'
+// import Button from '../Button'
 import Img from '../Img'
 
 import {

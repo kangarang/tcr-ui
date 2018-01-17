@@ -32,17 +32,19 @@ export const commonUtils = {
 
   getListingHash: (listing) => `0x${abi.soliditySHA3(['string'], [listing]).toString('hex')}`,
 
-  shapeShift: (b, tx, details) => ({
-    listing: details.listing,
+  // TODO: estimate block.timestamp without having to call eth.getBlockByHash
+  // ...then you can get rid of block input
+  shapeShift: (block, tx, details) => ({
+    listing: details.listingString,
     listingHash: details.listingHash,
     owner: tx.from,
     challenger: details.pollID && details.challenger,
     latest: {
       whitelisted: details.isWhitelisted,
       canBeWhitelisted: details.canBeWhitelisted,
-      blockHash: b.hash,
-      blockNumber: b.number.toString(10),
-      timestamp: b.timestamp && new Date(b.timestamp.toNumber(10)),
+      blockHash: details.blockHash,
+      blockNumber: details.blockNumber,
+      timestamp: block.timestamp && new Date(block.timestamp.toNumber(10)),
       txHash: tx.hash,
       txIndex: tx.index.toString(10),
       sender: tx.from,

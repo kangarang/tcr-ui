@@ -11,8 +11,6 @@ import {
   SET_ETHEREUM_PROVIDER,
   LOGIN_ERROR,
 } from '../actions/constants'
-import { commonUtils } from '../sagas/utils'
-
 
 // const reactState = {
 //   stupid_toggle_components,
@@ -169,7 +167,7 @@ function changeListings(state, payload) {
   }, state.get('listings'))
 
   // Replace entire List
-  return state.set('listings', fromJS(newListings))
+  return state.set('listings', newListings)
 }
 
 // function updateObject(oldObject, newValues) {

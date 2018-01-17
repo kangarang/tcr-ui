@@ -8,7 +8,7 @@ import registryContract from '../../contracts/Registry.json'
 import votingContract from '../../contracts/PLCRVoting.json'
 import tokenContract from '../../contracts/EIP20.json'
 import paramContract from '../../contracts/Parameterizer.json'
-import { padLeftEven } from '../../libs/values'
+// import { padLeftEven } from '../../libs/values'
 
 const contracts = {
   registry: registryContract,
@@ -71,7 +71,7 @@ const UDappHOC = (WrappedComponent) => {
 
       console.log('method, value, input', method, value, input)
 
-      const rawOutput = this.state[method.name]
+      // const rawOutput = this.state[method.name]
       
       // see: https://github.com/kumavis/udapp/blob/master/index.js#L340
       // const result = EthAbi.decodeMethod(method, `0x${value}`)

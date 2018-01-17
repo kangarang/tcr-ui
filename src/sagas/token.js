@@ -15,7 +15,7 @@ import {
   selectAccount,
 } from '../selectors'
 import { getContract } from '../services';
-import { getEthjs } from '../libs/provider';
+// import { getEthjs } from '../libs/provider';
 
 export default function* tokenSaga() {
   // yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
@@ -23,7 +23,7 @@ export default function* tokenSaga() {
 
 // Gets Token-Contract allowance
 export function* tokensAllowedSaga(allowedContractAddress) {
-  const eth = yield call(getEthjs)
+  // const eth = yield call(getEthjs)
   const address = yield select(selectAccount)
   const token = yield call(getContract, 'token')
   try {

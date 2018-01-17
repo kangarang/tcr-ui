@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { createStructuredSelector } from 'reselect'
+// import { connect } from 'react-redux'
+// import { compose } from 'redux'
+// import { createStructuredSelector } from 'reselect'
 
-import Eth from 'ethjs'
+// import Eth from 'ethjs'
 import styled from 'styled-components'
 
 import Slider from 'rc-slider'
@@ -16,12 +16,12 @@ import H1 from '../../components/H1'
 import UDappHOC from './HOC'
 
 import Button from '../../components/Button'
-import { colors } from '../../components/Colors'
+// import { colors } from '../../components/Colors'
 import Input from './components/Input.js'
-import { trimDecimalsThree, toEther, withCommas, fromNaturalUnit } from '../../libs/units'
+// import { trimDecimalsThree, toEther } from '../../libs/units'
 import { config } from '../../config/index'
-import { changeSliderValue } from "../../actions";
-import { selectSliderValue } from '../../selectors/udapp';
+// import { changeSliderValue } from "../../actions";
+// import { selectSliderValue } from '../../selectors/udapp';
 
 const styles = {
   container: {
@@ -55,8 +55,8 @@ class UDapp extends Component {
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
   renderMethod(method, contract) {
-    const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
-    const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
+    // const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
+    // const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
     return (
       <div key={method.name}>
         <h4>{`${method.name}`}</h4>
@@ -138,8 +138,8 @@ class UDapp extends Component {
           VOTING:
             {this.props.voting.address}
           <div>
-            {votingMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'voting'))}
-            {/* {votingMethodsWithArgs.map((one) => this.renderMethod(one, 'voting'))} */}
+            {/* {votingMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'voting'))} */}
+            {votingMethodsWithArgs.map((one) => this.renderMethod(one, 'voting'))}
           </div>
 
         </Methods>

@@ -1,7 +1,7 @@
 import contract from 'truffle-contract'
 import Promise from 'bluebird'
 
-import { toToken } from '../libs/units'
+// import { toToken } from '../libs/units'
 
 import abis from '../contracts'
 import { getDefaults } from './defaults'

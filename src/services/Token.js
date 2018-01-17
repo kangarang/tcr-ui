@@ -4,7 +4,7 @@ import { getDefaults } from './defaults'
 
 import {
   decimalConversion,
-  toToken,
+  // toToken,
   fromToken,
 } from '../libs/units'
 

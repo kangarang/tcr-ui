@@ -51,9 +51,9 @@ class Home extends Component {
       account,
       candidates,
       faceoffs,
-      listings,
+      // listings,
       whitelist,
-      parameters,
+      // parameters,
       error,
     } = this.props
 
