@@ -1,5 +1,5 @@
 import Ethjs from 'ethjs'
-import INFURA_API_KEY from '../config/keys'
+import { INFURA_API_KEY } from '../config/keys'
 import { config } from '../config'
 
 let provider

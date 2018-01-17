@@ -52,7 +52,7 @@ function UserInfo({
       <Item gR={1} gC={4}>
         <BoldInlineText>
           {`${config.tokenSymbol} Balance: `}
-          {withCommas(tokenBalance)}
+          {tokenBalance && withCommas(tokenBalance)}
         </BoldInlineText>
       </Item>
 
@@ -84,7 +84,7 @@ function UserInfo({
       <Item gR={2} gC={4}>
         <BoldInlineText>
           {`${config.tokenSymbol} Allowed: `}
-          {withCommas(tokensAllowed)}
+          {tokensAllowed && withCommas(tokensAllowed)}
         </BoldInlineText>
       </Item>
 

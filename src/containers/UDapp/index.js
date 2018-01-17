@@ -50,8 +50,6 @@ class UDapp extends Component {
 
   // TODO: use props to determine rendering
   componentWillReceiveProps(newProps) {
-    console.log(`old props: ${this.props}`);
-    console.log(`new props: ${newProps}`);
   }
 
   // adapted from:
