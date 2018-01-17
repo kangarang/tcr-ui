@@ -22,33 +22,33 @@ import util from 'ethjs-util'
 // fromUtf8             <Function (String) : (String)>
 // toAscii              <Function (String) : (String)>
 // toUtf8               <Function (String) : (String)>
-export function ethSign(msg, from) {
-  eth.sign(from, msg, (err, result) => {
-    if (err) return console.error(err)
-    console.log('SIGNED:', result)
-  })
-}
+// export function ethSign(msg, from) {
+//   eth.sign(from, msg, (err, result) => {
+//     if (err) return console.error(err)
+//     console.log('SIGNED:', result)
+//   })
+// }
 
-export async function personalSign(msg, from) {
-  const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
-  const params = [msg, from]
+// export async function personalSign(msg, from) {
+//   const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
+//   const params = [msg, from]
 
-  const eth = new Eth(getProvider())
-  const signed = await eth.personal_sign(msg, from)
-  // const serialized = await sigUtil.personalSign(pKey, params)
+//   const eth = new Eth(getProvider())
+//   const signed = await eth.personal_sign(msg, from)
+//   // const serialized = await sigUtil.personalSign(pKey, params)
 
-  console.log('signed', signed)
-  console.log('Recovering...')
+//   console.log('signed', signed)
+//   console.log('Recovering...')
 
-  const recovered = await eth.personal_ecRecover(msg, signed)
+//   const recovered = await eth.personal_ecRecover(msg, signed)
 
-  if (recovered === from) {
-    console.log('Ethjs recovered the message signer!')
-  } else {
-    console.log('Ethjs failed to recover the message signer!')
-    console.dir({ recovered })
-  }
-}
+//   if (recovered === from) {
+//     console.log('Ethjs recovered the message signer!')
+//   } else {
+//     console.log('Ethjs failed to recover the message signer!')
+//     console.dir({ recovered })
+//   }
+// }
 
 export const isValidSignature = (data, signature, signingAddress) => {
   // const dataBuffer = util.intToBuffer(data)
