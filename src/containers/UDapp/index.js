@@ -126,11 +126,11 @@ class UDapp extends Component {
     const votingMethodsWithArgs = votingMethods.filter(
       methodInterface => methodInterface.inputs.length > 0
     )
+    console.log('UDAPP props:', this.props)
 
     return (
       <div style={styles.container}>
         <H1 className="UDapp-title">U D A P P</H1>
-
         <SliderTT
           min={1}
           max={this.props.tokenBalance ? Number(this.props.tokenBalance) : 100}
@@ -139,39 +139,30 @@ class UDapp extends Component {
           tipFormatter={value => `${value} ${config.tokenSymbol}`}
           onChange={this.props.onChangeSliderValue}
         />
-
-        {this.props.route === '/apply' ? (
-          <Methods>
-            REGISTRY:
-            {this.props.registry.address}
-            <div>
-              {registryMethodsWithArgs.map(
-                one =>
-                  one.constant ? false : this.renderMethod(one, 'registry')
-              )}
-              {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
-            </div>
-            TOKEN:
-            {this.props.token.address}
-            <div>
-              {tokenMethodsWithArgs.map(
-                one => (one.constant ? false : this.renderMethod(one, 'token'))
-              )}
-              {/* {tokenMethodsWithArgs.map((one) => this.renderMethod(one, 'token'))} */}
-            </div>
-          </Methods>
-        ) : (
-          <Methods>
-            VOTING:
-            {this.props.voting.address}
-            <div>
-              {/* {votingMethodsWithArgs.map((one) => one.constant ? false : this.renderMethod(one, 'voting'))} */}
-              {votingMethodsWithArgs.map(one =>
-                this.renderMethod(one, 'voting')
-              )}
-            </div>
-          </Methods>
-        )}
+        <Methods>
+          REGISTRY:
+          {this.props.registry.address}
+          <div>
+            {registryMethodsWithArgs.map(
+              one => (one.constant ? false : this.renderMethod(one, 'registry'))
+            )}
+            {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
+          </div>
+          TOKEN:
+          {this.props.token.address}
+          <div>
+            {tokenMethodsWithArgs.map(
+              one => (one.constant ? false : this.renderMethod(one, 'token'))
+            )}
+          </div>
+          VOTING:
+          {this.props.voting.address}
+          <div>
+            {votingMethodsWithArgs.map(
+              one => (one.constant ? false : this.renderMethod(one, 'voting'))
+            )}
+          </div>
+        </Methods>
       </div>
     )
   }
