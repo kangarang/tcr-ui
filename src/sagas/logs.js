@@ -5,7 +5,7 @@ import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
 
 import { getRegistry } from '../services'
 
-import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
+import { SET_CONTRACTS, POLL_LOGS_REQUEST, SET_WALLET } from '../actions/constants'
 
 import { logUtils, commonUtils } from './utils'
 import { tokensAllowedSaga } from './token'
@@ -15,6 +15,7 @@ import { getEthjs } from '../libs/provider'
 let lastReadBlockNumber = 10
 
 export default function* logsSaga() {
+  // yield takeLatest(SET_WALLET, getFreshLogs)
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   yield takeEvery(POLL_LOGS_REQUEST, pollLogsSaga)
 }

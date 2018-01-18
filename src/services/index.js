@@ -1,3 +1,8 @@
+// import Registry from '../contracts/Registry.json'
+// import Token from '../contracts/EIP20.json'
+// import Parameterizer from '../contracts/Parameterizer.json'
+// import Voting from '../contracts/PLCRVoting.json'
+
 import Registry from './Registry'
 import Token from './Token'
 import Parameterizer from './Parameterizer'
