@@ -68,12 +68,12 @@ Calls:
 ```
 Transactions:
 // registry-related
-  .apply(_listing, _amount)
-  .challenge(_listing)
-  .deposit(_listing, _amount)
-  .withdraw(_listing, _amount)
-  .exit(_listing)
-  .updateStatus(_listing)
+  .apply(_listingHash, _amount, _data)
+  .challenge(_listingHash, _data)
+  .deposit(_listingHash, _amount)
+  .withdraw(_listingHash, _amount)
+  .exit(_listingHash)
+  .updateStatus(_listingHash)
 
 // token-related
   .claimReward(_challengeID, _salt)
@@ -83,8 +83,8 @@ Transactions:
 
 Calls:
 // registry-related
-  .appWasMade(_listing) -> Boolean
-  .canBeWhitelisted(_listing) -> Boolean
+  .appWasMade(_listingHash) -> Boolean
+  .canBeWhitelisted(_listingHash) -> Boolean
   .isWhitelisted(_listingHash) -> Boolean
   .isExpired(_termDate) -> Boolean
   .listings(_listingHash) -> Listing struct (Array)
@@ -95,8 +95,8 @@ Calls:
 
 // voting-related
   .challenges(_challengeID) -> Challenge struct (Array)
-  .challengeExists(_listing) -> Boolean
-  .challengeCanBeResolved(_listing) -> Boolean
+  .challengeExists(_listingHash) -> Boolean
+  .challengeCanBeResolved(_listingHash) -> Boolean
 ```
 
 #### PLCR Voting
@@ -141,8 +141,8 @@ Calls:
 #### Parameterizer
 ```
 Calls:
-  - proposals(pollIDs) -> Poll struct (indended data change)
-  - challenges(challengeIDs) -> Challenge struct
+  .proposals(_pollID) -> Poll struct (indended data change)
+  .challenges(_challengeID) -> Challenge struct
 ```
 
 ---
