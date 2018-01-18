@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import Modal from '../Modal'
 
 class Challenge extends Component {
 
   render() {
     return (
       <div>
-        {'Challenge'}
+        <Modal />
       </div>
     )
   }
