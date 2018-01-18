@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import styled from 'styled-components'
 
 import UDapp from '../UDapp'
-import UDappHOC from '../UDapp/HOC'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -27,6 +27,10 @@ import {
   selectAccount,
   selectAllListings,
 } from '../../selectors'
+
+const HomeWrapper = styled.div`
+  padding: 1em;
+`
 
 class Home extends Component {
   constructor() {
@@ -55,15 +59,17 @@ class Home extends Component {
       whitelist,
       // parameters,
       error,
+      match,
     } = this.props
 
     return (
-      <div>
+      <HomeWrapper>
         <UDapp
           ethBalance={wallet.get('ethBalance')}
           tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
           tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           error={error}
+          route={match.path}
         />
 
         <UserInfo
@@ -120,7 +126,7 @@ class Home extends Component {
               </Section>
             ))}
         </FlexContainer>
-      </div>
+      </HomeWrapper>
     )
   }
 }
