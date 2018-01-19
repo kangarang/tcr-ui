@@ -4,7 +4,8 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 
-import UDapp from '../UDapp'
+import Modal from '../Modal'
+import messages from '../../messages'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -64,13 +65,7 @@ class Home extends Component {
 
     return (
       <HomeWrapper>
-        <UDapp
-          ethBalance={wallet.get('ethBalance')}
-          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
-          error={error}
-          route={match.path}
-        />
+        <Modal messages={messages.home} />
 
         <UserInfo
           network={wallet.get('network')}

@@ -71,6 +71,7 @@ class UDapp extends Component {
             />
           </form>
         ))}
+
         {method.constant ? (
           <Button onClick={e => this.props.hocCall(e, method, contract)}>
             {'Call'}
@@ -106,6 +107,8 @@ class UDapp extends Component {
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L205
   render() {
+    console.log('UDAPP props:', this.props)
+
     const registryMethods = (this.props.registry.abi || []).filter(
       methodInterface => methodInterface.type === 'function'
     )
@@ -126,20 +129,20 @@ class UDapp extends Component {
     const votingMethodsWithArgs = votingMethods.filter(
       methodInterface => methodInterface.inputs.length > 0
     )
-    console.log('UDAPP props:', this.props)
 
     return (
       <div style={styles.container}>
-        <H1 className="UDapp-title">U D A P P</H1>
-        <SliderTT
+        {/* <SliderTT
           min={1}
           max={this.props.tokenBalance ? Number(this.props.tokenBalance) : 100}
           defaultValue={420}
           handle={this.handle}
           tipFormatter={value => `${value} ${config.tokenSymbol}`}
           onChange={this.props.onChangeSliderValue}
-        />
+        /> */}
+
         <Methods>
+
           REGISTRY:
           {this.props.registry.address}
           <div>
@@ -148,6 +151,7 @@ class UDapp extends Component {
             )}
             {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
           </div>
+
           TOKEN:
           {this.props.token.address}
           <div>
@@ -155,6 +159,7 @@ class UDapp extends Component {
               one => (one.constant ? false : this.renderMethod(one, 'token'))
             )}
           </div>
+
           VOTING:
           {this.props.voting.address}
           <div>
@@ -162,6 +167,7 @@ class UDapp extends Component {
               one => (one.constant ? false : this.renderMethod(one, 'voting'))
             )}
           </div>
+
         </Methods>
       </div>
     )

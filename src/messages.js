@@ -1,4 +1,8 @@
 export default {
+  home: {
+    heading: 'Home modal',
+    default: 'Home default message',
+  },
   apply: {
     heading: 'Apply modal heading',
     default: 'To apply you must approve the Registry smart contract to transfer your tokens. Enter the amount of tokens you would like to approve and enable for registry transactions',

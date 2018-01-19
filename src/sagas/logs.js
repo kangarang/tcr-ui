@@ -91,6 +91,22 @@ function* handleLogs(sb, eb, topic) {
   }
 }
 
+// rawLogs = [{
+//   address: '0x0d8cc4b8d15d4c3ef1d70af0071376fb26b5669b',
+//   blockHash:
+//     '0x96bbfd0ec4393aacdd86cb00e6bb3514f2eb93aa778d98163457edfd8227363f',
+//   blockNumber: BN,
+//   data:
+//     '0x5ab66da856c2a768ecadb30f433bc19736cb335a1663fe2032fff4903381b6e00000000000000000000000000000000000000000000000000000000000000021000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000056973616163',
+//   logIndex: BN,
+//   topics: [
+//     '0x5cde15b9901ca13a7e2eb4fb919870d1bde9e8d93d9aa5e26945b42190067bdc',
+//   ],
+//   transactionHash:
+//     '0x7fbd2631c0a74c690769ebc6f46d46b75a41f87991933d970047f229eec29931',
+//   transactionIndex: BN,
+//   type: 'mined',
+// }, ...]
 function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
   // This function does not scale
 
@@ -100,22 +116,6 @@ function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
   // ...as of now, it's being thrown in just for the contractAddress
   // ...might have some use in checking filter topics?
 
-  // rawLogs = [{
-  //   address: '0x0d8cc4b8d15d4c3ef1d70af0071376fb26b5669b',
-  //   blockHash:
-  //     '0x96bbfd0ec4393aacdd86cb00e6bb3514f2eb93aa778d98163457edfd8227363f',
-  //   blockNumber: BN,
-  //   data:
-  //     '0x5ab66da856c2a768ecadb30f433bc19736cb335a1663fe2032fff4903381b6e00000000000000000000000000000000000000000000000000000000000000021000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000056973616163',
-  //   logIndex: BN,
-  //   topics: [
-  //     '0x5cde15b9901ca13a7e2eb4fb919870d1bde9e8d93d9aa5e26945b42190067bdc',
-  //   ],
-  //   transactionHash:
-  //     '0x7fbd2631c0a74c690769ebc6f46d46b75a41f87991933d970047f229eec29931',
-  //   transactionIndex: BN,
-  //   type: 'mined',
-  // }, ...]
   try {
     let listingHash = dLog.listingHash
 

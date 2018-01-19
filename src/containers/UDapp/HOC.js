@@ -21,7 +21,9 @@ const UDappHOC = (WrappedComponent) => {
   return class UDapp extends Component {
     constructor(props) {
       super(props)
+
       // const network = props.wallet.get('network')
+
       this.state = {
         registry: {
           abi: contracts.registry.abi,
@@ -40,17 +42,16 @@ const UDappHOC = (WrappedComponent) => {
           abi: contracts.token.abi,
           address: contracts.token.networks['420'].address,
         },
-        decodedValues: [],
-        sliderValue: ''
+        sliderValue: '',
       }
     }
 
     componentDidMount() {
-      setTimeout(this.initUDapp, 1000)
+      setTimeout(this.initUDapp, 500)
     }
 
     initUDapp = async () => {
-      this.eth = new Ethjs(new Ethjs.HttpProvider('http://localhost:7545'))
+      this.eth = await new Ethjs(new Ethjs.HttpProvider('http://localhost:7545'))
       const fromAddress = (await this.eth.accounts())[0]
 
       this.setState({

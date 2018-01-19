@@ -12,22 +12,23 @@ const Wrapper = styled.div`
   top: 50;
   left: 50; */
 
-  padding: 2em;
+  padding: 1em;
   border: 2px solid ${colors.darkBlue};
 `
 const ModalMessage = styled.div`
-  padding: 2em;
+  padding: 0 2em 2em;
 `
 
 const modalStyles = {
   overlay: {
-    position: 'fixed',
-    top: '10vh',
-    left: '20vw',
-    right: '20vw',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    position: 'absolute',
+    top: '0',
+    left: '15vw',
+    right: '15vw',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     border: '1px solid black',
-    boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)'
+    boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)',
+    zIndex: '5',
   },
   content: {
     top: '50%',
@@ -93,11 +94,11 @@ class Modal extends Component {
         >
           <H2>{this.props.messages.heading}</H2>
           <ModalMessage>{this.props.messages.default}</ModalMessage>
-          <div onClick={this.handleCloseModal}>Close</div>
+
           <UDapp />
         </ReactModal>
 
-        <div onClick={this.handleOpenModal}>Open Modal</div>
+        <div onClick={this.handleOpenModal}>UDapp Transaction Modal</div>
       </Wrapper>
     )
   }
