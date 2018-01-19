@@ -147,6 +147,50 @@ Calls:
 
 ---
 
+## Events
+
+Particular events effectively signal changes in state. The following events are organized by the effects they have on state changes.
+
+#### Registry
+```
+_Application(bytes32 listingHash, uint deposit, string data)
+  -> new Listing in Application stage
+
+_Challenge(bytes32 listingHash, uint deposit, uint pollID, string data)
+  -> change from Application stage -> Voting stage
+
+_ChallengeFailed(uint challengeID)
+_NewListingWhitelisted(bytes32 listingHash)
+  -> change from Application -or- Voting stage -> Registry stage
+
+_ChallengeSucceeded(uint challengeID)
+_ApplicationRemoved(bytes32 listingHash)
+_ListingRemoved(bytes32 listingHash)
+  -> delete Listing
+
+_RewardClaimed(address voter, uint challengeID, uint reward)
+_Deposit(bytes32 listingHash, uint added, uint newTotal)
+_Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)
+  -> ETH/TOKEN-related
+```
+#### PLCR Voting
+```
+PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)
+  -> new voting_item (comes with _Challenge)
+
+VoteCommitted(address voter, uint pollID, uint numTokens)
+  -> change voting_item
+
+VoteRevealed(address voter, uint pollID, uint numTokens, uint choice)
+  -> change voting_item
+
+VotingRightsGranted(address voter, uint numTokens)
+VotingRightsWithdrawn(address voter, uint numTokens)
+  -> ETH/TOKEN-related
+```
+
+---
+
 ## Lifecycle of a `Listing`; General TCR Language (WIP)
 
 Each `Listing` starts out in the **Application** stage.
@@ -184,64 +228,8 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 
 ---
 
-## Events
 
-Particular events effectively signal changes in state. The following events are organized by the effects they have on state changes.
-
-#### Registry
-`_Application(bytes32 listingHash, uint deposit, string data)`
-
-  - new Listing in Application stage
-
-`_Challenge(bytes32 listingHash, uint deposit, uint pollID, string data)`
-
-  - change from Application stage -> Voting stage
-
-`_ChallengeFailed(uint challengeID)`
-
-`_NewListingWhitelisted(bytes32 listingHash)`
-
-  - change from Application -or- Voting stage -> Registry stage
-
-`_ChallengeSucceeded(uint challengeID)`
-
-`_ApplicationRemoved(bytes32 listingHash)`
-
-`_ListingRemoved(bytes32 listingHash)`
-
-  - delete Listing
-
-`_RewardClaimed(address voter, uint challengeID, uint reward)`
-
-`_Deposit(bytes32 listingHash, uint added, uint newTotal)`
-
-`_Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)`
-
-  - ETH/TOKEN
-
-
-#### PLCR Voting
-`PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)`
-
-  - new voting_item (comes with _Challenge)
-
-`VoteCommitted(address voter, uint pollID, uint numTokens)`
-
-  - change voting_item
-
-`VoteRevealed(address voter, uint pollID, uint numTokens, uint choice)`
-
-  - change voting_item
-
-`VotingRightsGranted(address voter, uint numTokens)`
-
-`VotingRightsWithdrawn(address voter, uint numTokens)`
-
-  - ETH/TOKEN
-
----
-
-### Workflow diagrams
+## Workflow diagrams
 
 ![Simple overview](./src/assets/simple-overview.png)
 
