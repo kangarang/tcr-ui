@@ -21,9 +21,6 @@ import {
 import {
   selectParameters,
   selectWallet,
-  selectCandidates,
-  selectFaceoffs,
-  selectWhitelist,
   selectError,
   selectAccount,
   selectAllListings,
@@ -52,15 +49,11 @@ class Apply extends Component {
 
   render() {
     const {
-      wallet,
       account,
-      candidates,
-      faceoffs,
-      // listings,
-      whitelist,
-      // parameters,
-      match,
       error,
+      listings,
+      parameters,
+      wallet,
     } = this.props
 
     return (
@@ -76,21 +69,6 @@ class Apply extends Component {
           tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           onSelectNetwork={this.selectNetwork}
         />
-
-        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
-        <FlexContainer>
-          {candidates.size > 0 &&
-            candidates.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
       </ApplyWrapper>
     )
   }
@@ -103,12 +81,11 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
+  account: selectAccount,
+  error: selectError,
+  listings: selectAllListings,
   parameters: selectParameters,
   wallet: selectWallet,
-  account: selectAccount,
-  candidates: selectCandidates,
-  listings: selectAllListings,
-  error: selectError,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

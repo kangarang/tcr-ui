@@ -55,94 +55,94 @@ Udapp is a higher-order component that does a few things:
 #### Token:
 ```
 Transactions:
-  .approve(_spender, _value)
-  .transferFrom(_from, _to, _value)
-  .transfer(_to, _value)
+  .approve(address _spender, uint _value)
+  .transferFrom(address _from, address _to, uint _value)
+  .transfer(address _to, uint _value)
 
 Calls:
-  .balanceOf(_owner) -> BN
-  .allowance(_owner, _spender) -> BN
+  .balanceOf(address _owner) -> BN
+  .allowance(address _owner, address _spender) -> BN
 ```
 
 #### Registry:
 ```
 Transactions:
 // registry-related
-  .apply(_listingHash, _amount, _data)
-  .challenge(_listingHash, _data)
-  .deposit(_listingHash, _amount)
-  .withdraw(_listingHash, _amount)
-  .exit(_listingHash)
-  .updateStatus(_listingHash)
+  .apply(bytes32 _listingHash, uint _amount, string _data)
+  .challenge(bytes32 _listingHash, string _data)
+  .deposit(bytes32 _listingHash, uint _amount)
+  .withdraw(bytes32 _listingHash, uint _amount)
+  .exit(bytes32 _listingHash)
+  .updateStatus(bytes32 _listingHash)
 
 // token-related
-  .claimReward(_challengeID, _salt)
+  .claimReward(uint _challengeID, uint _salt)
 
 // voting-related
-  .calculateVoterReward(_address, _challengeID, _salt)
+  .voterReward(address _address, uint _challengeID, uint _salt)
 
 Calls:
 // registry-related
-  .appWasMade(_listingHash) -> Boolean
-  .canBeWhitelisted(_listingHash) -> Boolean
-  .isWhitelisted(_listingHash) -> Boolean
-  .isExpired(_termDate) -> Boolean
-  .listings(_listingHash) -> Listing struct (Array)
+  .appWasMade(bytes32 _listingHash) -> Boolean
+  .canBeWhitelisted(bytes32 _listingHash) -> Boolean
+  .isWhitelisted(bytes32 _listingHash) -> Boolean
+  .isExpired(uint _termDate) -> Boolean
+  .listings(bytes32 _listingHash) -> Listing struct (Array)
 
 // token-related
-  .determineReward(_challengeID) -> BN
-  .tokenClaims(_challengeID, _address) -> BN
+  .determineReward(uint _challengeID) -> BN
+  .tokenClaims(uint _challengeID, address _address) -> BN
 
 // voting-related
-  .challenges(_challengeID) -> Challenge struct (Array)
-  .challengeExists(_listingHash) -> Boolean
-  .challengeCanBeResolved(_listingHash) -> Boolean
+  .challenges(uint _challengeID) -> Challenge struct (Array)
+  .challengeExists(bytes32 _listingHash) -> Boolean
+  .challengeCanBeResolved(bytes32 _listingHash) -> Boolean
 ```
 
 #### PLCR Voting
 ```
 Transactions:
 // token-related
-  .requestVotingRights(_numTokens)
-  .withdrawVotingRights(_numTokens)
-  .rescueTokens(_pollID)
+  .requestVotingRights(uint _numTokens)
+  .withdrawVotingRights(uint _numTokens)
+  .rescueTokens(uint _pollID)
 
 // voting-related
-  .commitVote(_pollID, _secretHash, _numTokens, _prevPollID)
-  .revealVote(_pollID, _voteOptions, _salt)
+  .commitVote(uint _pollID, bytes32 _secretHash, uint _numTokens, uint _prevPollID)
+  .revealVote(uint _pollID, uint _voteOption, uint _salt)
 
 (parameterizer-related)
-  .startPoll(_voteQuorum, _commitDuration, _revealDuration)
+  .startPoll(uint _voteQuorum, uint _commitDuration, uint _revealDuration)
 
 Calls:
 // token-related
-  .getLockedTokens(_voter) -> BN
-  .getInsertPointForNumTokens(_address, _numTokens) -> BN
-  .getNumPassingTokens(_address, _pollID, _salt) -> BN
-  .getNumTokens(_voter, _pollID) -> BN
-  .getTotalNumberOfTokensForWinningOption(_pollID) -> BN
-  .voteTokenBalance(_voter) -> BN
+  .getLockedTokens(address _voter) -> BN
+  .getInsertPointForNumTokens(address _address, uint _numTokens) -> BN
+  .getNumPassingTokens(address _address, uint _pollID, uint _salt) -> BN
+  .getNumTokens(address _voter, uint _pollID) -> BN
+  .getTotalNumberOfTokensForWinningOption(uint _pollID) -> BN
+  .voteTokenBalance(address _voter) -> BN
 
 // voting-related
-  .attrUUID(_user, _pollID) -> bytes32
-  .commitPeriodActive(_pollID) -> Boolean
-  .getCommitHash(_voter, _pollID) -> bytes32
-  .getLastNode(_voter) -> BN
-  .hasBeenRevealed(_voter, _pollID) -> Boolean
-  .isExpired(_terminationDate) -> Boolean
-  .isPassed(_pollID) -> Boolean
-  .pollEnded(_pollID) -> Boolean
-  .pollExists(_pollID) -> Boolean
-  .pollMap(_pollID) -> Poll struct (Array)
-  .revealPeriodActive(_pollID) -> Boolean
-  .validPosition(_prevID, _nextID, _address, _numTokens) -> Boolean
+  .attrUUID(address _user, uint _pollID) -> bytes32
+  .commitPeriodActive(address uint _pollID) -> Boolean
+  .getCommitHash(address _voter, uint _pollID) -> bytes32
+  .getLastNode(address _voter) -> BN
+  .hasBeenRevealed(address _voter, uint _pollID) -> Boolean
+  .isExpired(uint _terminationDate) -> Boolean
+  .isPassed(uint _pollID) -> Boolean
+  .pollEnded(uint _pollID) -> Boolean
+  .pollExists(uint _pollID) -> Boolean
+  .pollMap(uint _pollID) -> Poll struct (Array)
+  .revealPeriodActive(uint _pollID) -> Boolean
+  .validPosition(uint _prevID, uint _nextID, address _address, uint _numTokens) -> Boolean
 ```
 
 #### Parameterizer
 ```
 Calls:
-  .proposals(_pollID) -> Poll struct (indended data change)
-  .challenges(_challengeID) -> Challenge struct
+  .proposals(uint _pollID) -> Poll struct (indended data change)
+  .challenges(uint _challengeID) -> Challenge struct
 ```
 
 ---
@@ -240,3 +240,10 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 ### License
 
 This project is licensed under the MIT license, Copyright (c) 2018 Isaac Kang. For more information see `LICENSE`.
+
+
+
+
+types
+lines of code
+address / networks
