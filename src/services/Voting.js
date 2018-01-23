@@ -1,8 +1,11 @@
 import contract from 'truffle-contract'
 import abi from 'ethereumjs-abi'
+import FileSaver from 'file-saver'
+import moment from 'moment'
 
 import abis from '../contracts'
 import { getDefaults } from './defaults'
+import valUtils from '../libs/values'
 
 export default class Voting {
   constructor(eth, account, registry) {
@@ -20,23 +23,27 @@ export default class Voting {
     return this
   }
 
-  createIndexHash = (account, pollID, atr) => {
-    const hash = `0x${abi.soliditySHA3(['address', 'uint', 'string'],
-      [account, pollID, atr]).toString('hex')}`;
-    return hash;
-  }
-
-  requestVotingRights = (votingRights) =>
+  requestVotingRights = async votingRights =>
     this.contract.requestVotingRights(votingRights)
 
   commitVote = async (pollID, account, numTokens) => {
-    const prevPollID = await this.contract.getInsertPointForNumTokens.call(account, numTokens)
-    const secretHash = this.createIndexHash(account, pollID, numTokens)
+    const prevPollID = await this.contract.getInsertPointForNumTokens.call(
+      account,
+      numTokens
+    )
+    const salt = valUtils.randInt(1e6, 1e8)
+    console.log('salt', salt)
+    const secretHash = valUtils.getVoteSaltHash(vote, salt)
     console.log('secretHash', secretHash)
     console.log('pollID', pollID)
     console.log('numTokens', numTokens)
 
-    const receipt = await this.contract.commitVote(pollID, secretHash, numTokens, prevPollID)
+    const receipt = await this.contract.commitVote(
+      pollID,
+      secretHash,
+      numTokens,
+      prevPollID
+    )
     console.log('receipt', receipt)
     return receipt
   }

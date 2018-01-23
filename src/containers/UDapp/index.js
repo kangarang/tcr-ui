@@ -110,30 +110,31 @@ class UDapp extends Component {
   render() {
     console.log('UDAPP props:', this.props)
 
-    const registryMethods = (this.props.registry.abi || []).filter(
-      methodInterface => methodInterface.type === 'function'
+    const registryMethodsWithArgs = (this.props.registry.abi || []).filter(
+      methodInterface =>
+        methodInterface.type === 'function' && methodInterface.inputs.length > 0
     )
-    const registryMethodsWithArgs = registryMethods.filter(
-      methodInterface => methodInterface.inputs.length > 0
-    )
-    const applyMethods = registryMethodsWithArgs.filter(
-      methodInterface => methodInterface.name === 'apply'
+    const visibleRegistryMethods = registryMethodsWithArgs.filter(
+      methodInterface => this.props.actions.includes(methodInterface.name)
     )
 
-    const tokenMethods = (this.props.token.abi || []).filter(
-      methodInterface => methodInterface.type === 'function'
+    const tokenMethodsWithArgs = (this.props.token.abi || []).filter(
+      methodInterface =>
+        methodInterface.type === 'function' && methodInterface.inputs.length > 0
     )
-    const tokenMethodsWithArgs = tokenMethods.filter(
-      methodInterface => methodInterface.inputs.length > 0
-    )
-
-    const votingMethods = (this.props.voting.abi || []).filter(
-      methodInterface => methodInterface.type === 'function'
-    )
-    const votingMethodsWithArgs = votingMethods.filter(
-      methodInterface => methodInterface.inputs.length > 0
+    const visibleTokenMethods = tokenMethodsWithArgs.filter(methodInterface =>
+      this.props.actions.includes(methodInterface.name)
     )
 
+    const votingMethodsWithArgs = (this.props.voting.abi || []).filter(
+      methodInterface =>
+        methodInterface.type === 'function' && methodInterface.inputs.length > 0
+    )
+    const visibleVotingMethods = votingMethodsWithArgs.filter(methodInterface =>
+      this.props.actions.includes(methodInterface.name)
+    )
+
+    // TODO: filter methods based on actions
     return (
       <div style={styles.container}>
         {/* <SliderTT
@@ -145,51 +146,43 @@ class UDapp extends Component {
           onChange={this.props.onChangeSliderValue}
         /> */}
 
-        {this.props.action === 'apply' ? (
-          <Methods>
-            Registry:
-            {this.props.registry.address}
-            <div>
-              {applyMethods.map(
-                one =>
-                  one.constant ? false : this.renderMethod(one, 'registry', this.props.action)
-              )}
-            </div>
-            TOKEN:
-            {this.props.token.address}
-            <div>
-              {tokenMethodsWithArgs.map(
-                one => one.constant ? false : this.renderMethod(one, 'token', this.props.action)
-              )}
-            </div>
-          </Methods>
-        ) : (
-          <Methods>
-            REGISTRY:
-            {this.props.registry.address}
-            <div>
-              {registryMethodsWithArgs.map(
-                one =>
-                  one.constant ? false : this.renderMethod(one, 'registry')
-              )}
-              {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
-            </div>
-            TOKEN:
-            {this.props.token.address}
-            <div>
-              {tokenMethodsWithArgs.map(
-                one => (one.constant ? false : this.renderMethod(one, 'token'))
-              )}
-            </div>
-            VOTING:
-            {this.props.voting.address}
-            <div>
-              {votingMethodsWithArgs.map(
-                one => (one.constant ? false : this.renderMethod(one, 'voting'))
-              )}
-            </div>
-          </Methods>
-        )}
+        <Methods>
+          {visibleRegistryMethods.length ? (
+            <span>
+              REGISTRY:
+              {this.props.registry.address}
+            </span>
+          ) : (
+            false
+          )}
+          <div>
+            {visibleRegistryMethods.map(one => this.renderMethod(one, 'registry'))}
+          </div>
+
+          {visibleTokenMethods.length ? (
+            <span>
+              TOKEN:
+              {this.props.token.address}
+            </span>
+          ) : (
+            false
+          )}
+          <div>
+            {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
+          </div>
+
+          {visibleVotingMethods.length ? (
+            <span>
+              VOTING:
+              {this.props.voting.address}
+            </span>
+          ) : (
+            false
+          )}
+          <div>
+            {visibleVotingMethods.map(one => this.renderMethod(one, 'voting'))}
+          </div>
+        </Methods>
       </div>
     )
   }

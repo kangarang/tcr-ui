@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 
-import Ethjs from "ethjs"
-import EthAbi from "ethjs-abi"
+import Ethjs from 'ethjs'
+import EthAbi from 'ethjs-abi'
 
-import { commonUtils } from '../../sagas/utils'
 import registryContract from '../../contracts/Registry.json'
 import votingContract from '../../contracts/PLCRVoting.json'
 import tokenContract from '../../contracts/EIP20.json'
 import paramContract from '../../contracts/Parameterizer.json'
-// import { padLeftEven } from '../../libs/values'
+
+import valUtils from '../../libs/values'
 
 const contracts = {
   registry: registryContract,
@@ -17,7 +17,7 @@ const contracts = {
   parameterizer: paramContract,
 }
 
-const UDappHOC = (WrappedComponent) => {
+const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
     constructor(props) {
       super(props)
@@ -51,7 +51,9 @@ const UDappHOC = (WrappedComponent) => {
     }
 
     initUDapp = async () => {
-      this.eth = await new Ethjs(new Ethjs.HttpProvider('http://localhost:7545'))
+      this.eth = await new Ethjs(
+        new Ethjs.HttpProvider('http://localhost:7545')
+      )
       const fromAddress = (await this.eth.accounts())[0]
 
       this.setState({
@@ -64,21 +66,22 @@ const UDappHOC = (WrappedComponent) => {
 
       // TODO: explain this. also, figure out a better way to handle different inputs
       if (input.type === 'bytes32' && input.name === '_secretHash') {
-        value = commonUtils.getListingHash(value, '1')
-      }
-      if (input.type === 'bytes32') {
-        value = commonUtils.getListingHash(value)
+        // secretHash
+        const salt = valUtils.randInt(1e6, 1e8)
+        value = valUtils.getVoteSaltHash(value, salt)
+      } else if (input.type === 'bytes32') {
+        value = valUtils.getListingHash(value)
       }
 
       console.log('method, value, input', method, value, input)
 
       // const rawOutput = this.state[method.name]
-      
+
       // see: https://github.com/kumavis/udapp/blob/master/index.js#L340
       // const result = EthAbi.decodeMethod(method, `0x${value}`)
       // result.length = method.outputs.length
       // const resultArray = [].slice.call(result)
-      
+
       this.setState(prevState => ({
         ...prevState,
         [method.name]: {
@@ -93,27 +96,32 @@ const UDappHOC = (WrappedComponent) => {
 
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L158
-    handleCall = (e, method, contract) => {
+    handleCall = async (e, method, contract) => {
       e.preventDefault()
       const args = Object.values(this.state[method.name])
       const txData = EthAbi.encodeMethod(method, args)
       console.log('method', method)
       console.log('txData', txData)
-      const payload = {
-        method: 'eth_call',
-        params: [{
+      const params = [
+        {
           from: this.state.fromAddress,
           to: this.state[contract].address,
           data: txData,
-        }]
+        },
+      ]
+      const payload = {
+        method: 'eth_call',
+        params,
       }
       console.log('exec:', method.name, args, payload)
-      return this.eth.currentProvider.sendAsync(payload, console.log)
+      const called = await this.eth.call(params[0])
+      console.log('call result:', called)
+      return called
     }
 
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L63
-    handleExecute = (e, method, contract) => {
+    handleExecute = async (e, method, contract) => {
       e.preventDefault()
       const args = Object.values(this.state[method.name])
       const txData = EthAbi.encodeMethod(method, args)
@@ -126,7 +134,9 @@ const UDappHOC = (WrappedComponent) => {
         data: txData,
       }
       console.log('exec:', method.name, args, payload)
-      return this.eth.sendTransaction(payload)
+      const txHash = await this.eth.sendTransaction(payload)
+      console.log('txHash', txHash)
+      return txHash 
     }
 
     render() {
