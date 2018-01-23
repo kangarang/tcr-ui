@@ -33,18 +33,18 @@ export default class Voting {
     )
     const salt = valUtils.randInt(1e6, 1e8)
     console.log('salt', salt)
-    const secretHash = valUtils.getVoteSaltHash(vote, salt)
-    console.log('secretHash', secretHash)
-    console.log('pollID', pollID)
-    console.log('numTokens', numTokens)
+    // const secretHash = valUtils.getVoteSaltHash(vote, salt)
+    // console.log('secretHash', secretHash)
+    // console.log('pollID', pollID)
+    // console.log('numTokens', numTokens)
 
-    const receipt = await this.contract.commitVote(
-      pollID,
-      secretHash,
-      numTokens,
-      prevPollID
-    )
-    console.log('receipt', receipt)
-    return receipt
+    // const receipt = await this.contract.commitVote(
+    //   pollID,
+    //   secretHash,
+    //   numTokens,
+    //   prevPollID
+    // )
+    // console.log('receipt', receipt)
+    // return receipt
   }
 }

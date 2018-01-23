@@ -3,7 +3,7 @@ import Eth from 'ethjs'
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
-const valueUtils = {
+const valUtils = {
   randInt: (min, max) => {
     if (max === undefined) {
       max = min
@@ -65,8 +65,8 @@ const valueUtils = {
 
   multiplyByPercentage: (x, y, z = 100) => {
     const weiQuotient = valUtils.divideAndGetWei(y, z)
-    return utils.multiplyFromWei(x, weiQuotient)
+    return valUtils.multiplyFromWei(x, weiQuotient)
   },
 }
 
-export default valueUtils
+export default valUtils

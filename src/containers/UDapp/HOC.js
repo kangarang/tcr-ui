@@ -9,6 +9,7 @@ import tokenContract from '../../contracts/EIP20.json'
 import paramContract from '../../contracts/Parameterizer.json'
 
 import valUtils from '../../libs/values'
+import { getProvider, getEthjs } from '../../libs/provider'
 
 const contracts = {
   registry: registryContract,
@@ -22,25 +23,26 @@ const UDappHOC = WrappedComponent => {
     constructor(props) {
       super(props)
 
+      console.log('udapp hoc props', props)
       // const network = props.wallet.get('network')
 
       this.state = {
         registry: {
           abi: contracts.registry.abi,
-          address: contracts.registry.networks['420'].address,
+          address: contracts.registry.networks['4'].address,
         },
         fromAddress: false,
         voting: {
           abi: contracts.voting.abi,
-          address: contracts.voting.networks['420'].address,
+          address: contracts.voting.networks['4'].address,
         },
         parameterizer: {
           abi: contracts.parameterizer.abi,
-          address: contracts.parameterizer.networks['420'].address,
+          address: contracts.parameterizer.networks['4'].address,
         },
         token: {
           abi: contracts.token.abi,
-          address: contracts.token.networks['420'].address,
+          address: contracts.token.networks['4'].address,
         },
         sliderValue: '',
       }
@@ -51,14 +53,16 @@ const UDappHOC = WrappedComponent => {
     }
 
     initUDapp = async () => {
-      this.eth = await new Ethjs(
-        new Ethjs.HttpProvider('http://localhost:7545')
-      )
-      const fromAddress = (await this.eth.accounts())[0]
+      const provider = getProvider()
 
-      this.setState({
-        fromAddress,
-      })
+      if (typeof provider !== 'undefined') {
+        this.eth = getEthjs()
+        const fromAddress = (await this.eth.accounts())[0]
+
+        this.setState({
+          fromAddress,
+        })
+      }
     }
 
     handleInputChange = (method, e, index, input) => {
@@ -67,20 +71,17 @@ const UDappHOC = WrappedComponent => {
       // TODO: explain this. also, figure out a better way to handle different inputs
       if (input.type === 'bytes32' && input.name === '_secretHash') {
         // secretHash
-        const salt = valUtils.randInt(1e6, 1e8)
-        value = valUtils.getVoteSaltHash(value, salt)
+        this.salt = valUtils.randInt(1e6, 1e8)
+        console.log('salt', this.salt)
+        console.log('value', value)
+        value = valUtils.getVoteSaltHash(value, this.salt)
+        console.log('value', value)
       } else if (input.type === 'bytes32') {
         value = valUtils.getListingHash(value)
       }
+      console.log('salt', this.salt)
 
       console.log('method, value, input', method, value, input)
-
-      // const rawOutput = this.state[method.name]
-
-      // see: https://github.com/kumavis/udapp/blob/master/index.js#L340
-      // const result = EthAbi.decodeMethod(method, `0x${value}`)
-      // result.length = method.outputs.length
-      // const resultArray = [].slice.call(result)
 
       this.setState(prevState => ({
         ...prevState,
@@ -136,7 +137,7 @@ const UDappHOC = WrappedComponent => {
       console.log('exec:', method.name, args, payload)
       const txHash = await this.eth.sendTransaction(payload)
       console.log('txHash', txHash)
-      return txHash 
+      return txHash
     }
 
     render() {

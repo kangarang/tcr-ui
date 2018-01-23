@@ -27,6 +27,7 @@ import {
   selectError,
   selectAccount,
   selectAllListings,
+  selectContracts,
 } from '../../selectors'
 import methods from '../../config/methods';
 
@@ -44,7 +45,7 @@ class Challenge extends Component {
 
   componentDidMount() {
     console.log('Challenge props:', this.props)
-    this.props.onSetupEthereum('ganache')
+    this.props.onSetupEthereum()
   }
 
   selectNetwork(network) {
@@ -61,21 +62,20 @@ class Challenge extends Component {
       parameters,
       match,
       error,
+      contracts,
     } = this.props
 
     return (
       <ChallengeWrapper>
-        <Modal messages={messages.challenge} actions={methods.challenge.actions} />
-
         <UserInfo
-          network={wallet.get('network')}
           account={account}
           error={error}
-          ethBalance={wallet.get('ethBalance')}
-          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           onSelectNetwork={this.selectNetwork}
+          wallet={wallet}
+          contracts={contracts}
         />
+
+        <Modal messages={messages.challenge} actions={methods.challenge.actions} />
 
         <H2>{'Applicants ('}{candidates.size}{')'}</H2>
         <FlexContainer>
@@ -120,6 +120,7 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   parameters: selectParameters,
   wallet: selectWallet,
+  contracts: selectContracts,
   account: selectAccount,
   candidates: selectCandidates,
   listings: selectAllListings,

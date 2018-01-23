@@ -79,6 +79,7 @@ function* contractsSaga(eth, address) {
     if (token && parameterizer && registry && voting) {
       yield put(setContracts({ registry, token, parameterizer, voting }))
       yield fork(tokensAllowedSaga, registry.address)
+      yield fork(tokensAllowedSaga, voting.address)
     }
   } catch (err) {
     yield put(contractError(err))

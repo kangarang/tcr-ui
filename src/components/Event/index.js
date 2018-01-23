@@ -61,15 +61,15 @@ export default ({
 
       <Item pad={0.5} gR={1} gC={4} >
         {!latest.get('pollID') && (
-          <Button onClick={e => handleClickChallenge(e, listing)}>{'Challenge'}</Button>
+          <Button>{'Challenge'}</Button>
         )}
         {(!whitelisted && latest.get('pollID')) && (
-          <Button onClick={e => handleClickCommitVote(e, listing, latest.get('pollID'))}>
+          <Button>
             {'Commit Vote'}
           </Button>
         )}
         {(!whitelisted && latest.get('canBeWhitelisted')) && (
-          <Button onClick={e => handleClickUpdateStatus(e, listing)}>{'Update registry state'}</Button>
+          <Button>{'Update registry state'}</Button>
         )}
       </Item>
 

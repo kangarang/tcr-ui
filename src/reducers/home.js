@@ -5,6 +5,7 @@ import {
   SET_MIN_DEPOSIT,
   SET_TOKENS_ALLOWED,
   SET_CONTRACTS,
+  DELETE_LISTINGS,
   CHANGE_ITEMS,
   CONTRACT_ERROR,
   NEW_ARRAY,
@@ -115,7 +116,7 @@ function homeReducer(state = initialState, action) {
         .setIn(['wallet', 'token', 'tokenName'], fromJS(''))
         .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(''))
         .setIn(['wallet', 'token', 'tokenBalance'], fromJS(''))
-        .setIn(['wallet', 'token', 'allowances', 'registry', 'total'], fromJS(''))
+        .setIn(['wallet', 'token', 'allowances'], fromJS({}))
     case LOGIN_ERROR:
       return state.set('error', action.error)
     case SET_ETHEREUM_PROVIDER:
@@ -158,7 +159,7 @@ function homeReducer(state = initialState, action) {
           ['contracts', 'token', 'address'],
           fromJS(action.payload.token.address)
         )
-        // .set('parameters', fromJS(action.payload.parameterizer.parameters))
+    // .set('parameters', fromJS(action.payload.parameterizer.parameters))
     case SET_MIN_DEPOSIT:
       return state.setIn(
         ['parameters', 'minDeposit'],
@@ -167,7 +168,13 @@ function homeReducer(state = initialState, action) {
     case SET_TOKENS_ALLOWED:
       return state
         .setIn(
-          ['wallet', 'token', 'allowances', 'registry', 'total'],
+          [
+            'wallet',
+            'token',
+            'allowances',
+            action.payload.allowedContractAddress,
+            'total',
+          ],
           fromJS(action.payload.allowance)
         )
         .setIn(
@@ -176,6 +183,8 @@ function homeReducer(state = initialState, action) {
         )
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
+    case DELETE_LISTINGS:
+      return deleteObjectInArray(state, action.payload)
     case NEW_ARRAY:
       return replaceListings(state, action.payload)
     default:
@@ -189,9 +198,7 @@ function replaceListings(state, payload) {
 
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
-    const index = acc.findIndex(
-      ri => ri.get('listingHash') === val.listingHash
-    )
+    const index = acc.findIndex(ri => ri.get('listingHash') === val.listingHash)
 
     // New listing
     if (index === -1) {
@@ -209,6 +216,16 @@ function changeListings(state, payload) {
 
   // Replace entire List
   return state.set('listings', newListings)
+}
+
+function deleteObjectInArray(array, payload) {
+  return payload.map(pl => {
+    const index = array.findIndex(ri => ri.get('listing') === pl.listing)
+    if (index !== -1) {
+      return array.delete(index)
+    }
+    return array
+  })
 }
 
 // function updateObject(oldObject, newValues) {

@@ -173,9 +173,9 @@ class Login extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
-            <SmlDiv>{'Token:'}</SmlDiv>
+            <SmlDiv>{'Token Name:'}</SmlDiv>
             <SmlDiv>{tokenName}</SmlDiv>
-            <SmlDiv>{tokenSymbol}</SmlDiv>
+            <SmlDiv>{tokenSymbol}{' Balance:'}</SmlDiv>
             <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
           </PaddedDiv>
 

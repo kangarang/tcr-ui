@@ -31,6 +31,7 @@ import {
   CHANGE_SLIDER_VALUE,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
+  DELETE_LISTINGS,
 } from './constants'
 
 
@@ -134,6 +135,12 @@ export function applyListing(listing, deposit) {
     type: TX_APPLY,
     listing,
     deposit,
+  }
+}
+export function deleteListings(payload) {
+  return {
+    type: DELETE_LISTINGS,
+    payload,
   }
 }
 export function challengeListing(listing) {

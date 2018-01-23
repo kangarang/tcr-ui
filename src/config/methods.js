@@ -20,19 +20,12 @@ export default {
     args: ['listingHash'],
     actions: ['appWasMade', 'challenge', 'deposit', 'approve', 'allowance', 'requestVotingRights', 'withdrawVotingRights', 'updateStatus'],
   },
-  commit_vote: {
-    name: 'Commit vote',
-    heading: 'Commit voting',
-    default: 'Commit your secret vote',
-    args: ['pollID', 'secretHash', 'numTokens'],
-    actions: ['requestVotingRights', 'withdrawVotingRights', 'commitVote', 'rescueTokens'],
-  },
-  reveal_vote: {
-    name: 'Reveal vote',
-    heading: 'Reveal voting',
-    default: 'Reveal your committed vote',
-    args: ['pollID', 'salt'],
-    actions: ['revealVote', 'rescueTokens'],
+  voting: {
+    name: 'Voting',
+    heading: 'Voting',
+    default: 'Commit and reveal your secret vote',
+    args: ['pollID', 'secretHash', 'numTokens', 'salt'],
+    actions: ['requestVotingRights', 'withdrawVotingRights', 'commitVote', 'revealVote', 'rescueTokens', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition'],
   },
   activities: {
     name: 'Activities',

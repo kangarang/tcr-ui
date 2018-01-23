@@ -15,9 +15,7 @@ import Event from '../../components/Event'
 import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 
-import {
-  setupEthereum,
-} from '../../actions'
+import { setupEthereum } from '../../actions'
 
 import {
   selectError,
@@ -25,6 +23,7 @@ import {
   selectCandidates,
   selectParameters,
   selectWallet,
+  selectContracts,
 } from '../../selectors'
 
 const ApplyWrapper = styled.div`
@@ -34,57 +33,35 @@ const ApplyWrapper = styled.div`
 class Apply extends Component {
   constructor() {
     super()
-    this.state = {
-      listing: '',
-    }
   }
 
   componentDidMount() {
     console.log('Apply props:', this.props)
-    this.props.onSetupEthereum('ganache')
+    // this.props.onSetupEthereum()
   }
 
   selectNetwork(network) {
-    this.props.onSetupEthereum(network)
+    // this.props.onSetupEthereum(network)
   }
 
   render() {
-    const {
-      error,
-      account,
-      candidates,
-      parameters,
-      wallet,
-    } = this.props
+    const { error, account, parameters, contracts, wallet } = this.props
 
     return (
       <ApplyWrapper>
-        <Modal isOpen={true} messages={messages.apply} actions={methods.apply.actions} />
-
         <UserInfo
-          network={wallet.get('network')}
           account={account}
           error={error}
-          ethBalance={wallet.get('ethBalance')}
-          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           onSelectNetwork={this.selectNetwork}
+          contracts={contracts}
+          wallet={wallet}
+        />
+        <Modal
+          isOpen={true}
+          messages={messages.apply}
+          actions={methods.apply.actions}
         />
 
-        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
-        <FlexContainer>
-          {candidates.size > 0 &&
-            candidates.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
       </ApplyWrapper>
     )
   }
@@ -92,19 +69,18 @@ class Apply extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: (network) => dispatch(setupEthereum(network)),
+    onSetupEthereum: network => dispatch(setupEthereum(network)),
   }
 }
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
   account: selectAccount,
-  candidates: selectCandidates,
   parameters: selectParameters,
   wallet: selectWallet,
+  contracts: selectContracts,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
 export default compose(withConnect)(Apply)
-

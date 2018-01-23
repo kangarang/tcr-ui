@@ -42,7 +42,7 @@ class Home extends Component {
   }
   componentDidMount() {
     console.log('Home props:', this.props)
-    this.props.onSetupEthereum('ganache')
+    this.props.onSetupEthereum()
   }
 
   selectNetwork(network) {
@@ -60,6 +60,13 @@ class Home extends Component {
 
     return (
       <HomeWrapper>
+        <UserInfo
+          account={account}
+          error={error}
+          wallet={wallet}
+          contracts={contracts}
+          onSelectNetwork={this.selectNetwork}
+        />
         <Login
           execute={this.props.onExecute}
           network={wallet.get('network')}
@@ -78,22 +85,6 @@ class Home extends Component {
           tokenName={wallet.getIn(['token', 'tokenName'])}
         />
 
-        <UserInfo
-          network={wallet.get('network')}
-          account={account}
-          error={error}
-          ethBalance={wallet.get('ethBalance')}
-          tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
-          tokenName={wallet.getIn(['token', 'tokenName'])}
-          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokensAllowed={wallet.getIn([
-            'token',
-            'allowances',
-            'registry',
-            'total',
-          ])}
-          onSelectNetwork={this.selectNetwork}
-        />
       </HomeWrapper>
     )
   }

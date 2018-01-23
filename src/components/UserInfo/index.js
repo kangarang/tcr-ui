@@ -19,17 +19,7 @@ import { toEther, withCommas, trimDecimalsThree } from '../../libs/units'
 
 import iconSrc from '../../assets/icons/favicon.ico'
 
-function UserInfo({
-  account,
-  ethBalance,
-  network,
-  tokenBalance,
-  tokensAllowed,
-  tokenSymbol,
-  tokenName,
-  error,
-  onSelectNetwork,
-}) {
+function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
   return (
     <Container>
       <FlexCenteredItem gR={1} gC={1}>
@@ -43,14 +33,15 @@ function UserInfo({
       <Item gR={1} gC={3}>
         <BoldInlineText>
           {'ΞTH Balance: '}
-          {trimDecimalsThree(toEther(ethBalance))}
+          {trimDecimalsThree(toEther(wallet.get('ethBalance')))}
         </BoldInlineText>
       </Item>
 
       <Item gR={1} gC={4}>
         <BoldInlineText>
-          {`${tokenSymbol} Balance: `}
-          {tokenBalance && withCommas(tokenBalance)}
+          {`${wallet.getIn(['token', 'tokenSymbol'])} Balance: `}
+          {wallet.getIn(['token', 'tokenBalance']) &&
+            withCommas(wallet.getIn(['token', 'tokenBalance']))}
         </BoldInlineText>
       </Item>
 
@@ -68,20 +59,55 @@ function UserInfo({
       <Item gR={2} gC={3}>
         <BoldInlineText>
           {'Network: '}
-          {network === '5777'
+          {wallet.get('network') === '5777'
             ? 'Ganache'
-            : network === '420'
+            : wallet.get('network') === '420'
               ? 'Test'
-              : network === '4'
+              : wallet.get('network') === '4'
                 ? 'Rinkeby'
-                : network === '1' ? 'Main' : network}
+                : wallet.get('network') === '1'
+                  ? 'Main'
+                  : wallet.get('network')}
         </BoldInlineText>
       </Item>
 
       <Item gR={2} gC={4}>
         <BoldInlineText>
-          {`${tokenSymbol} Allowed: `}
-          {tokensAllowed && withCommas(tokensAllowed)}
+          {`Registry allowance:`}
+          {wallet.getIn([
+            'token',
+            'allowances',
+            contracts.getIn(['registry', 'address']),
+            'total',
+          ]) &&
+            withCommas(
+              wallet.getIn([
+                'token',
+                'allowances',
+                contracts.getIn(['registry', 'address']),
+                'total',
+              ])
+            )}
+        </BoldInlineText>
+      </Item>
+
+      <Item gR={3} gC={4}>
+        <BoldInlineText>
+          {'Voting allowance: '}
+          {wallet.getIn([
+            'token',
+            'allowances',
+            contracts.getIn(['voting', 'address']),
+            'total',
+          ]) &&
+            withCommas(
+              wallet.getIn([
+                'token',
+                'allowances',
+                contracts.getIn(['voting', 'address']),
+                'total',
+              ])
+            )}
         </BoldInlineText>
       </Item>
     </Container>
@@ -90,14 +116,9 @@ function UserInfo({
 
 UserInfo.propTypes = {
   account: PropTypes.string,
-  network: PropTypes.string,
+  wallet: PropTypes.object,
   onApprove: PropTypes.func,
   onSelectNetwork: PropTypes.func,
-  tokenBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  tokensAllowed: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  tokenSymbol: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  tokenName: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 }
 
 export default UserInfo

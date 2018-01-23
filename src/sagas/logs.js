@@ -1,18 +1,23 @@
 import { all, takeLatest, fork, takeEvery, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
-import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
+import { newArray, logsError, updateItems, pollLogsRequest, deleteListings } from '../actions'
 
 import { getRegistry } from '../services'
 
-import { SET_CONTRACTS, POLL_LOGS_REQUEST, SET_WALLET } from '../actions/constants'
+import {
+  SET_CONTRACTS,
+  POLL_LOGS_REQUEST,
+  SET_WALLET,
+} from '../actions/constants'
 
 import { logUtils, commonUtils } from './utils'
+import valUtils from '../libs/values'
 import { tokensAllowedSaga } from './token'
 
 import { getEthjs } from '../libs/provider'
 
-let lastReadBlockNumber = 10
+let lastReadBlockNumber = 1444681
 
 export default function* logsSaga() {
   // yield takeLatest(SET_WALLET, getFreshLogs)
@@ -30,13 +35,15 @@ function* getFreshLogs() {
   // 3. get current challenges (faceoffs) and contexts
   const registry = yield call(getRegistry)
   try {
-    // const allEvents = yield call(handleLogs, lastReadBlockNumber, 'latest')
-    const applications = yield call(handleLogs, lastReadBlockNumber, 'latest', '_Application')
+    const applications = yield call(
+      handleLogs,
+      lastReadBlockNumber,
+      'latest',
+      '_Application'
+    )
 
-    // console.log('allEvents', allEvents)
-    console.log('applications', applications)
+    // console.log('applications', applications.filter(dlg => dlg !== false))
 
-    // yield put(newArray(allEvents))
     yield put(newArray(applications))
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -62,7 +69,7 @@ function* handleLogs(sb, eb, topic) {
     )
     const rawLogs = yield call(eth.getLogs, filter)
 
-    // console.log('rawLogs', rawLogs)
+    console.log('rawLogs', rawLogs)
     if (rawLogs.length === 0) return []
 
     const decodedLogs = yield call(
@@ -71,10 +78,10 @@ function* handleLogs(sb, eb, topic) {
       registry.contract,
       rawLogs
     )
-    // console.log('decodedLogs', decodedLogs)
+    console.log('decodedLogs', decodedLogs)
 
     return yield all(
-      yield decodedLogs.map(async (dLog, ind) => {
+      (yield decodedLogs.map(async (dLog, ind) => {
         // TODO: estimate block.timestamp without having to call eth.getBlock...
         const block = await commonUtils.getBlock(eth, rawLogs[ind].blockHash)
         const txDetails = await commonUtils.getTransaction(
@@ -83,7 +90,7 @@ function* handleLogs(sb, eb, topic) {
         )
         // ...then you can get rid of block input
         return buildListing(rawLogs, registry, block, dLog, ind, txDetails)
-      })
+      })).filter(lawg => lawg !== false)
     )
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -107,7 +114,7 @@ function* handleLogs(sb, eb, topic) {
 //   transactionIndex: BN,
 //   type: 'mined',
 // }, ...]
-function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
+async function buildListing(rawLogs, registry, block, dLog, i, txDetails) {
   // This function does not scale
 
   // TODO: reduce the # of inputs & call queries
@@ -115,20 +122,20 @@ function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
   // Note: is there any other use for rawLogs input?
   // ...as of now, it's being thrown in just for the contractAddress
   // ...might have some use in checking filter topics?
+  console.log('dLog', dLog)
 
   try {
     let listingHash = dLog.listingHash
 
     // Get the listing struct from the mapping
-    const listing = yield call(
-      [registry.contract, 'listings', 'call'],
-      listingHash
-    )
+    const listing = await registry.contract.listings.call(listingHash)
+    console.log('listing', listing)
 
-    const isWhitelisted = yield call(
-      [registry.contract, 'isWhitelisted', 'call'],
-      listingHash
-    )
+    if (listing[2] === '0x0000000000000000000000000000000000000000') {
+      return false
+    }
+
+    const isWhitelisted = await registry.contract.isWhitelisted.call(listingHash)
 
     const tx = {
       hash: txDetails.hash,
@@ -155,7 +162,7 @@ function* buildListing(rawLogs, registry, block, dLog, i, txDetails) {
     return commonUtils.shapeShift(block, tx, details)
   } catch (err) {
     console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
+    throw new Error(err.message)
   }
 }
 
@@ -167,7 +174,9 @@ function* pollController() {
       // Every 8 secs:
       yield call(delay, pollInterval)
       // Dispatch: log query request
-      yield put(pollLogsRequest({ startBlock: lastReadBlockNumber, endBlock: 'latest' }))
+      yield put(
+        pollLogsRequest({ startBlock: lastReadBlockNumber, endBlock: 'latest' })
+      )
       // -> pollLogsSaga(action)
       // -> handleLogs(sb, eb, '_Application')
     } catch (err) {
@@ -184,7 +193,8 @@ function* pollLogsSaga(action) {
     const newLogs = yield call(
       handleLogs,
       action.payload.startBlock,
-      action.payload.endBlock
+      action.payload.endBlock,
+      '_Application'
     )
 
     // TODO: standardize block.timestamp
