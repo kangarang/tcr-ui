@@ -15,11 +15,7 @@ import {
   BigBoldInlineText,
 } from '../Item'
 
-import {
-  toEther,
-  withCommas,
-  trimDecimalsThree,
-} from '../../libs/units'
+import { toEther, withCommas, trimDecimalsThree } from '../../libs/units'
 
 import iconSrc from '../../assets/icons/favicon.ico'
 
@@ -29,6 +25,8 @@ function UserInfo({
   network,
   tokenBalance,
   tokensAllowed,
+  tokenSymbol,
+  tokenName,
   error,
   onSelectNetwork,
 }) {
@@ -39,7 +37,7 @@ function UserInfo({
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{`${config.spoke} Registry`}</BigBoldInlineText>
+        <BigBoldInlineText>{`${config.spokeName} Registry`}</BigBoldInlineText>
       </Item>
 
       <Item gR={1} gC={3}>
@@ -51,7 +49,7 @@ function UserInfo({
 
       <Item gR={1} gC={4}>
         <BoldInlineText>
-          {`${config.tokenSymbol} Balance: `}
+          {`${tokenSymbol} Balance: `}
           {tokenBalance && withCommas(tokenBalance)}
         </BoldInlineText>
       </Item>
@@ -73,21 +71,19 @@ function UserInfo({
           {network === '5777'
             ? 'Ganache'
             : network === '420'
-              ? network
+              ? 'Test'
               : network === '4'
                 ? 'Rinkeby'
-                : network === '1' ? 'Main'
-                  : network || 'Need MetaMask!'}
+                : network === '1' ? 'Main' : network}
         </BoldInlineText>
       </Item>
 
       <Item gR={2} gC={4}>
         <BoldInlineText>
-          {`${config.tokenSymbol} Allowed: `}
+          {`${tokenSymbol} Allowed: `}
           {tokensAllowed && withCommas(tokensAllowed)}
         </BoldInlineText>
       </Item>
-
     </Container>
   )
 }
@@ -99,6 +95,8 @@ UserInfo.propTypes = {
   onSelectNetwork: PropTypes.func,
   tokenBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   tokensAllowed: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  tokenSymbol: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  tokenName: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
 }
 

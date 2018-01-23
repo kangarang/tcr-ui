@@ -42,7 +42,7 @@ class Home extends Component {
   }
   componentDidMount() {
     console.log('Home props:', this.props)
-    this.props.onSetupEthereum('ganche')
+    this.props.onSetupEthereum('ganache')
   }
 
   selectNetwork(network) {
@@ -64,6 +64,7 @@ class Home extends Component {
           execute={this.props.onExecute}
           network={wallet.get('network')}
           networkStatus={<NetworkStatus />}
+          ns={NetworkStatus}
           ethBalance={wallet.get('ethBalance')}
           account={account}
           imgSrc={tcrWave}
@@ -72,6 +73,9 @@ class Home extends Component {
           onChange={this.handleChangeRegistryAddress}
           registryValue={this.state.registryAddress}
           registryPH={contracts.getIn(['registry', 'address'])}
+          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+          tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
+          tokenName={wallet.getIn(['token', 'tokenName'])}
         />
 
         <UserInfo
@@ -79,6 +83,8 @@ class Home extends Component {
           account={account}
           error={error}
           ethBalance={wallet.get('ethBalance')}
+          tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
+          tokenName={wallet.getIn(['token', 'tokenName'])}
           tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
           tokensAllowed={wallet.getIn([
             'token',

@@ -7,7 +7,7 @@ import H2 from '../../components/H2'
 import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
-import { trimDecimalsThree, toEther } from '../../libs/units'
+import { trimDecimalsThree, toEther, withCommas } from '../../libs/units'
 
 const Wrapper = styled.div`
   /* position: absolute;
@@ -25,6 +25,10 @@ const PaddedDiv = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+const RightPaddedDiv = styled(PaddedDiv)`
+  border: none;
+  justify-content: flex-end;
+`
 const HalfDiv = styled.div`
   display: inline-block;
   overflow: hidden;
@@ -32,10 +36,12 @@ const HalfDiv = styled.div`
   /* border: 1px solid red; */
 `
 const LrgDiv = styled(HalfDiv)`
-  width: 80%;
+  min-width: 85%;
+  margin: 0 1%;
 `
 const SmlDiv = styled(HalfDiv)`
-  width: 20%;
+  min-width: 13%;
+  margin: 0 1%;
 `
 
 const modalStyles = {
@@ -97,7 +103,9 @@ class Modal extends Component {
   }
 
   handleAfterOpen = () => {
-    console.log('open', this)
+    console.log('this.props.ns()', this.props.ns())
+    const nsState = this.props.ns().props.store.getState()
+    console.log('nsState', nsState)
   }
 
   handleRequestClose = () => {
@@ -119,6 +127,9 @@ class Modal extends Component {
       execute,
       onChange,
       registryPH,
+      tokenBalance,
+      tokenSymbol,
+      tokenName,
     } = this.props
 
     return (
@@ -167,12 +178,19 @@ class Modal extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
+            <SmlDiv>{'Token:'}</SmlDiv>
+            <SmlDiv>{tokenName}</SmlDiv>
+            <SmlDiv>{tokenSymbol}</SmlDiv>
+            <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
+          </PaddedDiv>
+
+          <RightPaddedDiv>
             <Button
               onClick={e => this.handleMainAction(e, messages.mainMethod)}
             >
               {'CONFIRM ACCOUNT '}
             </Button>
-          </PaddedDiv>
+          </RightPaddedDiv>
         </ReactModal>
 
         <Button onClick={this.handleOpenModal}>{messages.name}</Button>
