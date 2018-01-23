@@ -19,11 +19,11 @@ import {
 } from '../../actions'
 
 import {
-  selectParameters,
-  selectWallet,
   selectError,
   selectAccount,
-  selectAllListings,
+  selectCandidates,
+  selectParameters,
+  selectWallet,
 } from '../../selectors'
 
 const ApplyWrapper = styled.div`
@@ -49,16 +49,16 @@ class Apply extends Component {
 
   render() {
     const {
-      account,
       error,
-      listings,
+      account,
+      candidates,
       parameters,
       wallet,
     } = this.props
 
     return (
       <ApplyWrapper>
-        <Modal messages={messages.apply} />
+        <Modal isOpen={true} messages={messages.apply} action={'apply'} />
 
         <UserInfo
           network={wallet.get('network')}
@@ -69,6 +69,21 @@ class Apply extends Component {
           tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
           onSelectNetwork={this.selectNetwork}
         />
+
+        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
+        <FlexContainer>
+          {candidates.size > 0 &&
+            candidates.map(log => (
+              <Section key={log.get('listing')}>
+                <Event
+                  latest={log.get('latest')}
+                  owner={log.get('owner')}
+                  listing={log.get('listing')}
+                  whitelisted={log.getIn(['latest', 'whitelisted'])}
+                />
+              </Section>
+            ))}
+        </FlexContainer>
       </ApplyWrapper>
     )
   }
@@ -81,9 +96,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  account: selectAccount,
   error: selectError,
-  listings: selectAllListings,
+  account: selectAccount,
+  candidates: selectCandidates,
   parameters: selectParameters,
   wallet: selectWallet,
 })
