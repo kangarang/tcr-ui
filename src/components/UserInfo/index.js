@@ -21,7 +21,7 @@ import {
   trimDecimalsThree,
 } from '../../libs/units'
 
-import catIcon from '../../assets/icons/favicon.ico'
+import iconSrc from '../../assets/icons/favicon.ico'
 
 function UserInfo({
   account,
@@ -35,7 +35,7 @@ function UserInfo({
   return (
     <Container>
       <FlexCenteredItem gR={1} gC={1}>
-        <Img src={catIcon} alt="" />
+        <Img src={iconSrc} alt="" />
       </FlexCenteredItem>
 
       <Item gR={1} gC={2}>
@@ -73,7 +73,7 @@ function UserInfo({
           {network === '5777'
             ? 'Ganache'
             : network === '420'
-              ? 'Ganache-CLI'
+              ? network
               : network === '4'
                 ? 'Rinkeby'
                 : network === '1' ? 'Main'

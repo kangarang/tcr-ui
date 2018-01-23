@@ -1,4 +1,4 @@
-import { injectGlobal } from 'styled-components';
+import { injectGlobal } from 'styled-components'
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`
@@ -14,6 +14,9 @@ injectGlobal`
     font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
+  div {
+    box-sizing: border-box;
+  }
   /* #app {
     background-color: #fafafa;
     min-height: 100%;
@@ -28,4 +31,4 @@ injectGlobal`
   h4 {
     margin: 0;
   }
-`;
+`

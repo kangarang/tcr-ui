@@ -7,11 +7,11 @@ import { colors } from '../Colors'
 // `;
 
 const Input = styled.input`
-  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
   border: none;
-  border-bottom: 2px solid ${colors.prism};
+  border-bottom: 1px solid ${colors.prism};
   font-size: 1em;
-  padding: .75em;
-  color: white;
+  padding: .2em;
+  color: ${colors.offBlack};
 `
 export default Input;

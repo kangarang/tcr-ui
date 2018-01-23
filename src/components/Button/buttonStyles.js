@@ -27,7 +27,7 @@ const buttonStyles = css`
   &:before {
     content: '';
     position: absolute;
-    border: 2px solid ${colors.purple};
+    border: 2px solid ${colors.prism};
     border-radius: 4px;
     top: 0;
     right: 0;
