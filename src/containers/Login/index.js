@@ -10,12 +10,7 @@ import Input from '../../components/Input'
 import { trimDecimalsThree, toEther, withCommas } from '../../libs/units'
 
 const Wrapper = styled.div`
-  /* position: absolute;
-  top: 50;
-  left: 50; */
-
   padding: 1em;
-  /* border: 2px solid ${colors.darkBlue}; */
 `
 const PaddedDiv = styled.div`
   padding: 1em;
@@ -33,7 +28,6 @@ const HalfDiv = styled.div`
   display: inline-block;
   overflow: hidden;
   width: 50%;
-  /* border: 1px solid red; */
 `
 const LrgDiv = styled(HalfDiv)`
   min-width: 85%;
@@ -69,13 +63,13 @@ const modalStyles = {
   },
 }
 
-class Modal extends Component {
+class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalIsOpen: props.isOpen || false,
-      action: props.action,
+      modalIsOpen: props.isOpen,
     }
+    console.log('this', this)
   }
 
   handleOpenModal = () => {
@@ -83,6 +77,10 @@ class Modal extends Component {
     this.setState({
       modalIsOpen: true,
     })
+
+    console.log('this.props.ns()', this.props.ns())
+    const nsState = this.props.ns().props.store.getState()
+    console.log('nsState', nsState)
   }
 
   handleCloseModal = () => {
@@ -103,9 +101,6 @@ class Modal extends Component {
   }
 
   handleAfterOpen = () => {
-    console.log('this.props.ns()', this.props.ns())
-    const nsState = this.props.ns().props.store.getState()
-    console.log('nsState', nsState)
   }
 
   handleRequestClose = () => {
@@ -199,4 +194,4 @@ class Modal extends Component {
   }
 }
 
-export default Modal
+export default Login

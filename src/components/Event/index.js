@@ -31,10 +31,6 @@ export default ({
   owner,
   listing,
   whitelisted,
-
-  handleClickChallenge,
-  handleClickCommitVote,
-  handleClickUpdateStatus,
 }) => (
     <Container txHash={latest.get('txHash')}>
       <FlexCenteredItem gR={1} gC={1}>

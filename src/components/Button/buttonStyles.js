@@ -22,7 +22,6 @@ const buttonStyles = css`
 
   color: ${colors.magenta};
   background-color: ${colors.offWhite};
-  z-index: 3;
 
   &:before {
     content: '';

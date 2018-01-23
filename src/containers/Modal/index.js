@@ -48,7 +48,6 @@ class Modal extends Component {
     super(props)
     this.state = {
       modalIsOpen: props.isOpen || false,
-      action: props.action,
     }
   }
 
@@ -99,7 +98,7 @@ class Modal extends Component {
           <H2>{this.props.messages.heading}</H2>
           <ModalMessage>{this.props.messages.default}</ModalMessage>
 
-          <UDapp action={this.state.action} />
+          <UDapp actions={this.props.actions} />
         </ReactModal>
 
         <Button onClick={this.handleOpenModal}>{this.props.messages.name}</Button>

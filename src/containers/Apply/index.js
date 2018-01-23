@@ -5,7 +5,8 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 
 import Modal from '../Modal'
-import messages from '../../messages'
+import messages from '../../config/messages'
+import methods from '../../config/methods'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -58,7 +59,7 @@ class Apply extends Component {
 
     return (
       <ApplyWrapper>
-        <Modal isOpen={true} messages={messages.apply} action={'apply'} />
+        <Modal isOpen={true} messages={messages.apply} actions={methods.apply.actions} />
 
         <UserInfo
           network={wallet.get('network')}

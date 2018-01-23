@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import NetworkStatus from 'react-web3-network-status'
 
 import Login from '../Login'
-import messages from '../../messages'
+import messages from '../../config/messages'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -68,7 +68,7 @@ class Home extends Component {
           ethBalance={wallet.get('ethBalance')}
           account={account}
           imgSrc={tcrWave}
-          isOpen={false}
+          isOpen={true}
           messages={messages.login}
           onChange={this.handleChangeRegistryAddress}
           registryValue={this.state.registryAddress}

@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 
 import Modal from '../Modal'
-import messages from '../../messages'
+import messages from '../../config/messages'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -28,6 +28,7 @@ import {
   selectAccount,
   selectAllListings,
 } from '../../selectors'
+import methods from '../../config/methods';
 
 const ChallengeWrapper = styled.div`
   padding: 1em;
@@ -56,16 +57,15 @@ class Challenge extends Component {
       account,
       candidates,
       faceoffs,
-      // listings,
       whitelist,
-      // parameters,
+      parameters,
       match,
       error,
     } = this.props
 
     return (
       <ChallengeWrapper>
-        <Modal messages={messages.challenge} />
+        <Modal messages={messages.challenge} actions={methods.challenge.actions} />
 
         <UserInfo
           network={wallet.get('network')}
