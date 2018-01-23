@@ -7,17 +7,25 @@ TCRs use an intrinsic token to incentivize a community to curate and reach decen
 
 The vision of this project is to build a registry-agnostic, highly-configurable, client-side user interface to interact and transact with Ethereum TCRs
 
+---
+
 ## Articles
 
 [Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
 
 [Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
 
-## Repos
+[Continuous Token-Curated Registries: The Infinity of Lists](https://medium.com/@simondlr/continuous-token-curated-registries-the-infinity-of-lists-69024c9eb70d)
+
+[City Walls & Bo-Taoshi: Exploring the Power of Token-Curated Registries](https://medium.com/@simondlr/city-walls-bo-taoshi-exploring-the-power-of-token-curated-registries-588f208c17d5)
+
+## Resources
 
 [TCR](https://github.com/skmgoldin/tcr)
 
 [TCR (forked)](https://github.com/kangarang/tcr)
+
+[Gitter channel](https://gitter.im/Curation-Markets/Lobby)
 
 [PLCR Voting](https://github.com/ConsenSys/PLCRVoting)
 
@@ -29,12 +37,70 @@ The vision of this project is to build a registry-agnostic, highly-configurable,
 
 ## Commands
 
-**Run**
+### **Local blockchain/RPC** (optional)
 
-Start development server: `https://localhost:3000`
+[ganache-cli](https://github.com/trufflesuite/ganache-cli) - `http://localhost:7545`
+
+```
+  $ npm install -g ganache-cli
+  $ ganache-cli --port 7545 -v -b 3 -i 420 --db ~/path/to/db --mnemonic 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+
+  (flags)
+  --port:  7545
+  -v:      verbose debugging
+  -b:      mine blocks every 3 seconds
+  -i:      network_id 420
+  --db     persistent local storage
+```
+
+### **Run**
+
+Start development server: `http://localhost:3000`
 
 ```
   $ npm run dev
+```
+
+### **Deploy**
+
+Clone contracts
+
+```
+  $ git clone git@github.com:kangarang/tcr.git
+  $ cd tcr
+  $ npm install
+```
+
+Build JSON ABI artifacts
+
+(Note: only have to run once. *While ganache-cli is running*)
+
+```
+  $ npm run compile
+```
+
+Deploy contracts to local RPC
+
+```
+  $ npm run deploy-test
+```
+
+Deploy contracts to Rinkeby Test Network
+
+```
+  $ npm run deploy-rinkeby
+```
+
+Deploy contracts to Main Network
+
+```
+  $ npm run deploy-mainnet
+```
+
+Deploy UI to elastic beanstalk (ask for credentials)
+
+```
+  $ eb deploy
 ```
 
 ---
@@ -173,6 +239,7 @@ _Deposit(bytes32 listingHash, uint added, uint newTotal)
 _Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)
   -> ETH/TOKEN-related
 ```
+
 #### PLCR Voting
 ```
 PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)
@@ -228,7 +295,6 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 
 ---
 
-
 ## Workflow diagrams
 
 ![Simple overview](./src/assets/simple-overview.png)
@@ -240,10 +306,3 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 ### License
 
 This project is licensed under the MIT license, Copyright (c) 2018 Isaac Kang. For more information see `LICENSE`.
-
-
-
-
-types
-lines of code
-address / networks
