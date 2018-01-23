@@ -26,11 +26,11 @@ const App = () => (
     <Nav />
     <Switch>
       <Route exact path='/' component={Home} />
-      <Route path='/apply' component={Apply} />
-      <Route path='/challenge' component={Challenge} />
-      <Route path='/vote' component={Vote} />
-      <Route path='/activities' component={Activities} />
-      <Route path='/search' component={Search} />
+      <Route exact path='/apply' component={Apply} />
+      <Route exact path='/challenge' component={Challenge} />
+      <Route exact path='/vote' component={Vote} />
+      <Route exact path='/activities' component={Activities} />
+      <Route exact path='/search' component={Search} />
     </Switch>
   </AppWrapper>
 )
