@@ -1,11 +1,4 @@
-import {
-  call,
-  put,
-  fork,
-  // select,
-  all,
-  takeLatest,
-} from 'redux-saga/effects'
+import { call, put, fork, select, all, takeLatest } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import {
@@ -25,6 +18,7 @@ import {
   getProviderRequest,
   setEthereumProvider,
   loginError,
+  logoutSuccess,
 } from '../actions'
 
 import { tokensAllowedSaga } from './token'
@@ -32,6 +26,7 @@ import { tokensAllowedSaga } from './token'
 import { setupEthjs, getEthjs } from '../libs/provider'
 
 import loginSaga from './login'
+import { selectAccount } from '../selectors/index'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -80,6 +75,7 @@ function* contractsSaga(eth, address) {
       call(setupContract, eth, address, 'parameterizer'),
       call(setupContract, eth, address, 'voting'),
     ])
+    console.log('token', token)
     if (token && parameterizer && registry && voting) {
       yield put(setContracts({ registry, token, parameterizer, voting }))
       yield fork(tokensAllowedSaga, registry.address)
@@ -108,10 +104,21 @@ function* runPolling() {
 function* pollProvider() {
   try {
     const eth = yield call(getEthjs)
+
+    const account = yield select(selectAccount)
+    const bbnAccount = yield call(getBalBlockNet, eth, account)
+
     const address = (yield call(eth.accounts))[0]
-    const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
-    if (balanceBlockNetwork) {
+    const bbnAddress = yield call(getBalBlockNet, eth, address)
+
+    if (typeof bbnAccount === 'undefined' && bbnAddress) {
+      // login to MetaMask
+      const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
       yield put(setEthereumProvider(balanceBlockNetwork))
+      yield call(contractsSaga, eth, address)
+    } else if (bbnAccount && typeof bbnAddress === 'undefined') {
+      // logout of MetaMask
+      yield put(logoutSuccess({ account: bbnAccount.address }))
     }
   } catch (err) {
     console.log('pollProvider error', err)

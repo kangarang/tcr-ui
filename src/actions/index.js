@@ -30,6 +30,7 @@ import {
   CHANGE_ITEMS,
   CHANGE_SLIDER_VALUE,
   LOGIN_SUCCESS,
+  LOGOUT_SUCCESS,
 } from './constants'
 
 
@@ -81,6 +82,12 @@ export function logsError(logType, error) {
     type: LOGS_ERROR,
     logType,
     error,
+  }
+}
+export function logoutSuccess(payload) {
+  return {
+    type: LOGOUT_SUCCESS,
+    payload,
   }
 }
 export function loginSuccess(payload) {

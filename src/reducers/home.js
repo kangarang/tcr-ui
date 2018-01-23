@@ -10,6 +10,7 @@ import {
   NEW_ARRAY,
   SET_ETHEREUM_PROVIDER,
   LOGIN_ERROR,
+  LOGOUT_SUCCESS,
 } from '../actions/constants'
 
 // const reactState = {
@@ -50,16 +51,16 @@ const initialState = fromJS({
   },
   contracts: {
     registry: {
-      address: '0x00',
+      address: '',
     },
     token: {
-      address: '0x00',
+      address: '',
     },
     parameterizer: {
-      address: '0x00',
+      address: '',
     },
     voting: {
-      address: '0x00',
+      address: '',
     },
   },
   listings: {
@@ -106,6 +107,15 @@ function homeReducer(state = initialState, action) {
   switch (action.type) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
+    case LOGOUT_SUCCESS:
+      return state
+        .setIn(['wallet', 'address'], fromJS(''))
+        .setIn(['wallet', 'ethBalance'], fromJS(''))
+        .setIn(['wallet', 'network'], fromJS(''))
+        .setIn(['wallet', 'token', 'tokenName'], fromJS(''))
+        .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(''))
+        .setIn(['wallet', 'token', 'tokenBalance'], fromJS(''))
+        .setIn(['wallet', 'token', 'allowances', 'registry', 'total'], fromJS(''))
     case LOGIN_ERROR:
       return state.set('error', action.error)
     case SET_ETHEREUM_PROVIDER:
