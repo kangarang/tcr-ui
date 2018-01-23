@@ -13,5 +13,6 @@ const Input = styled.input`
   font-size: 1em;
   padding: .2em;
   color: ${colors.offBlack};
+  
 `
 export default Input;

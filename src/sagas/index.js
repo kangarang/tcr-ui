@@ -5,12 +5,8 @@ import {
   // select,
   all,
   takeLatest,
-  takeEvery,
 } from 'redux-saga/effects'
 // import { delay } from 'redux-saga'
-
-import ethUtil from 'ethereumjs-util'
-import sigUtil from 'eth-sig-util'
 
 import {
   GET_ETHEREUM,
@@ -18,7 +14,6 @@ import {
   // GET_ETH_PROVIDER,
   LOGIN_ERROR,
   WALLET_ERROR,
-  EXECUTE_METHOD_REQUEST,
 } from '../actions/constants'
 
 import { setupContract, setupRegistry } from '../services'
@@ -34,11 +29,13 @@ import {
 
 import { tokensAllowedSaga } from './token'
 
-import { setupEthjs, getEthjs } from '../libs/provider'
+import { setupEthjs } from '../libs/provider'
+
+import loginSaga from './login'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
-  yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
+  yield fork(loginSaga)
   // yield takeLatest(SET_WALLET, runPolling)
   // yield takeLatest(GET_ETH_PROVIDER, pollProvider)
 }
@@ -114,32 +111,3 @@ function* contractsSaga(eth, address) {
 //     yield put(contractError(err))
 //   }
 // }
-
-function* executeSaga(action) {
-  try {
-    const eth = yield call(getEthjs)
-    console.log('eth', eth)
-
-    const { account, method, network, registry } = action.payload
-
-    const text = `Registry: ${registry}\nNetwork: ${network}`
-
-    const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
-
-    const signed = yield call([eth, 'personal_sign'], msg, account)
-    console.log('Signed! Result is: ', signed)
-
-    const recovered = yield call([eth, 'personal_ecRecover'], msg, signed)
-    console.log('recovered', recovered)
-
-    if (recovered === account) {
-      console.log('Ethjs recovered the message signer')
-      yield put()
-    } else {
-      console.log('Ethjs failed to recover the message signer!')
-      console.dir({ recovered })
-    }
-  } catch (err) {
-    yield put(loginError({ type: LOGIN_ERROR, message: err.message }))
-  }
-}

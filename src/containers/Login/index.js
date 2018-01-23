@@ -17,17 +17,13 @@ const Wrapper = styled.div`
   padding: 1em;
   /* border: 2px solid ${colors.darkBlue}; */
 `
-const Close = styled.div`
-  position: absolute;
-  top: .5em;
-  right: .5em;
-  padding: 1em;
-  border: 1px solid ${colors.darkBlue};
-`
 const PaddedDiv = styled.div`
   padding: 1em;
   margin: 1em 5em;
   border: 1px solid ${colors.darkBlue};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `
 const HalfDiv = styled.div`
   display: inline-block;
@@ -96,7 +92,7 @@ class Modal extends Component {
       method: mainMethod,
       account: this.props.account,
       network: this.props.network,
-      registry: this.props.registryValue,
+      registry: this.props.registryValue || this.props.registryPH,
     })
   }
 
@@ -132,18 +128,18 @@ class Modal extends Component {
           onAfterOpen={this.handleAfterOpen}
           onRequestClose={this.handleRequestClose}
           style={modalStyles}
-          contentLabel="Notification Modal"
-          portalClassName="NotificationModalPortal"
-          overlayClassName="NotificationModal__Overlay"
-          className="NotificationModal__Content"
-          bodyOpenClassName="NotificationModal__Body--open"
+          contentLabel="Login Modal"
+          portalClassName="LoginModalPortal"
+          overlayClassName="LoginModal__Overlay"
+          className="LoginModal__Content"
+          bodyOpenClassName="LoginModal__Body--open"
           ariaHideApp={false}
           shouldFocusAfterRender={false}
           shouldCloseOnEsc={true}
           shouldReturnFocusAfterClose={true}
           role="dialog"
         >
-          <Close onClick={this.handleCloseModal}>{'X'}</Close>
+          <Button onClick={this.handleCloseModal}>{'X'}</Button>
 
           <Img src={imgSrc} alt="Token Curated Registries" />
 
@@ -153,13 +149,10 @@ class Modal extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
+            <SmlDiv>{'Network:'}</SmlDiv>
+            <SmlDiv>{networkStatus}</SmlDiv>
             <SmlDiv>{'ΞTH Balance:'}</SmlDiv>
-            <HalfDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</HalfDiv>
-          </PaddedDiv>
-
-          <PaddedDiv>
-            <HalfDiv>{'Network:'}</HalfDiv>
-            <HalfDiv>{networkStatus}</HalfDiv>
+            <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>
 
           <PaddedDiv>
@@ -173,10 +166,13 @@ class Modal extends Component {
             </LrgDiv>
           </PaddedDiv>
 
-          <PaddedDiv>{messages.default}</PaddedDiv>
-          <Button onClick={e => this.handleMainAction(e, messages.mainMethod)}>
-            {'CONFIRM ACCOUNT '}
-          </Button>
+          <PaddedDiv>
+            <Button
+              onClick={e => this.handleMainAction(e, messages.mainMethod)}
+            >
+              {'CONFIRM ACCOUNT '}
+            </Button>
+          </PaddedDiv>
         </ReactModal>
 
         <Button onClick={this.handleOpenModal}>{messages.name}</Button>

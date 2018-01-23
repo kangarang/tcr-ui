@@ -1,6 +1,7 @@
 export const CONTRACT_ERROR = 'CONTRACT_ERROR--|--Home'
 export const LOGS_ERROR = 'LOGS_ERROR--|--Home'
 export const LOGIN_ERROR = 'LOGIN_ERROR--|--Home'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS--|--Home'
 export const WALLET_ERROR = 'WALLET_ERROR--|--Home'
 export const GET_ETHEREUM = 'GET_ETHEREUM--|--Home'
 export const GET_TOKENS_ALLOWED = 'GET_TOKENS_ALLOWED--|--Home'
