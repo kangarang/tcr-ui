@@ -6,6 +6,7 @@ import UDapp from '../UDapp'
 
 import { colors } from '../../components/Colors'
 import H2 from '../../components/H2'
+import Button from '../../components/Button'
 
 const Wrapper = styled.div`
   /* position: absolute;
@@ -13,7 +14,7 @@ const Wrapper = styled.div`
   left: 50; */
 
   padding: 1em;
-  border: 2px solid ${colors.darkBlue};
+  /* border: 2px solid ${colors.darkBlue}; */
 `
 const ModalMessage = styled.div`
   padding: 0 2em 2em;
@@ -23,19 +24,22 @@ const modalStyles = {
   overlay: {
     position: 'absolute',
     top: '0',
-    left: '15vw',
-    right: '15vw',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    left: '0',
+    right: '0',
+    bottom: '0',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     border: '1px solid black',
     boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)',
-    zIndex: '5',
+    zIndex: '2',
   },
   content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    border: '1px solid red',
+    position: 'absolute',
+    top: '10vh',
+    left: '10vw',
+    right: '10vw',
+    border: `1px solid ${colors.prism}`,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    zIndex: '5',
   },
 }
 
@@ -43,7 +47,8 @@ class Modal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalIsOpen: false,
+      modalIsOpen: props.isOpen || false,
+      action: props.action,
     }
   }
 
@@ -87,7 +92,6 @@ class Modal extends Component {
           bodyOpenClassName="NotificationModal__Body--open"
           ariaHideApp={false}
           shouldFocusAfterRender={true}
-          shouldCloseOnOverlayClick={false}
           shouldCloseOnEsc={true}
           shouldReturnFocusAfterClose={true}
           role="dialog"
@@ -95,10 +99,10 @@ class Modal extends Component {
           <H2>{this.props.messages.heading}</H2>
           <ModalMessage>{this.props.messages.default}</ModalMessage>
 
-          <UDapp />
+          <UDapp action={this.state.action} />
         </ReactModal>
 
-        <div onClick={this.handleOpenModal}>UDapp Transaction Modal</div>
+        <Button onClick={this.handleOpenModal}>{this.props.messages.name}</Button>
       </Wrapper>
     )
   }

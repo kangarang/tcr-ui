@@ -11,6 +11,11 @@ export const selectError = createSelector(
 export const selectWallet = createSelector(
   selectHome, homeState => homeState.get('wallet')
 )
+export const selectContracts = createSelector(
+  selectHome, homeState =>
+    homeState.get('contracts')
+)
+
 export const selectAccount = createSelector(
   selectWallet, wallet =>
     wallet.get('address')

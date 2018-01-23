@@ -9,6 +9,7 @@ import {
   SET_WALLET,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
+  EXECUTE_METHOD_REQUEST,
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
   GET_ETH_PROVIDER,
@@ -108,6 +109,12 @@ export function setMinDeposit(minDeposit) {
 }
 
 // User interactions
+export function executeMethod(payload) {
+  return {
+    type: EXECUTE_METHOD_REQUEST,
+    payload,
+  }
+}
 export function applyListing(listing, deposit) {
   return {
     type: TX_APPLY,

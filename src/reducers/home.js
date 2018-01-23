@@ -48,6 +48,20 @@ const initialState = fromJS({
       },
     },
   },
+  contracts: {
+    registry: {
+      address: '0x00',
+    },
+    token: {
+      address: '0x00',
+    },
+    parameterizer: {
+      address: '0x00',
+    },
+    voting: {
+      address: '0x00',
+    },
+  },
   listings: {
     // listing: '',
     // owner: '',
@@ -118,6 +132,23 @@ function homeReducer(state = initialState, action) {
           ['wallet', 'token', 'totalSupply'],
           fromJS(action.payload.token.totalSupply)
         )
+        .setIn(
+          ['contracts', 'registry', 'address'],
+          fromJS(action.payload.registry.address)
+        )
+        .setIn(
+          ['contracts', 'voting', 'address'],
+          fromJS(action.payload.voting.address)
+        )
+        .setIn(
+          ['contracts', 'parameterizer', 'address'],
+          fromJS(action.payload.parameterizer.address)
+        )
+        .setIn(
+          ['contracts', 'token', 'address'],
+          fromJS(action.payload.token.address)
+        )
+        // .set('parameters', fromJS(action.payload.parameterizer.parameters))
     case SET_MIN_DEPOSIT:
       return state.setIn(
         ['parameters', 'minDeposit'],

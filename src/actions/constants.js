@@ -31,6 +31,7 @@ export const EV_TRANSFER = 'EV_TRANSFER--|--Home'
 export const EVENT_FROM_REGISTRY = 'EVENT_FROM_REGISTRY--|--Home'
 export const EVENT_FACEOFF= 'EVENT_FACEOFF--|--Home'
 export const EVENT_WHITELIST = 'EVENT_WHITELIST--|--Home'
+export const EXECUTE_METHOD_REQUEST = 'EXECUTE_METHOD_REQUEST--|--Home'
 
 export const NEW_ITEM = 'NEW_ITEM--|--Home'
 export const CHANGE_ITEM = 'CHANGE_ITEM--|--Home'

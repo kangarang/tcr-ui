@@ -52,9 +52,10 @@ class UDapp extends Component {
 
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
-  renderMethod(method, contract) {
+  renderMethod(method, contract, action = false) {
     // const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
     // const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
+
     return (
       <div key={method.name}>
         <h4>{`${method.name}`}</h4>
@@ -115,6 +116,9 @@ class UDapp extends Component {
     const registryMethodsWithArgs = registryMethods.filter(
       methodInterface => methodInterface.inputs.length > 0
     )
+    const applyMethods = registryMethodsWithArgs.filter(
+      methodInterface => methodInterface.name === 'apply'
+    )
 
     const tokenMethods = (this.props.token.abi || []).filter(
       methodInterface => methodInterface.type === 'function'
@@ -141,34 +145,51 @@ class UDapp extends Component {
           onChange={this.props.onChangeSliderValue}
         /> */}
 
-        <Methods>
-
-          REGISTRY:
-          {this.props.registry.address}
-          <div>
-            {registryMethodsWithArgs.map(
-              one => (one.constant ? false : this.renderMethod(one, 'registry'))
-            )}
-            {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
-          </div>
-
-          TOKEN:
-          {this.props.token.address}
-          <div>
-            {tokenMethodsWithArgs.map(
-              one => (one.constant ? false : this.renderMethod(one, 'token'))
-            )}
-          </div>
-
-          VOTING:
-          {this.props.voting.address}
-          <div>
-            {votingMethodsWithArgs.map(
-              one => (one.constant ? false : this.renderMethod(one, 'voting'))
-            )}
-          </div>
-
-        </Methods>
+        {this.props.action === 'apply' ? (
+          <Methods>
+            Registry:
+            {this.props.registry.address}
+            <div>
+              {applyMethods.map(
+                one =>
+                  one.constant ? false : this.renderMethod(one, 'registry', this.props.action)
+              )}
+            </div>
+            TOKEN:
+            {this.props.token.address}
+            <div>
+              {tokenMethodsWithArgs.map(
+                one => one.constant ? false : this.renderMethod(one, 'token', this.props.action)
+              )}
+            </div>
+          </Methods>
+        ) : (
+          <Methods>
+            REGISTRY:
+            {this.props.registry.address}
+            <div>
+              {registryMethodsWithArgs.map(
+                one =>
+                  one.constant ? false : this.renderMethod(one, 'registry')
+              )}
+              {/* {registryMethodsWithArgs.map((one) => this.renderMethod(one, 'registry'))} */}
+            </div>
+            TOKEN:
+            {this.props.token.address}
+            <div>
+              {tokenMethodsWithArgs.map(
+                one => (one.constant ? false : this.renderMethod(one, 'token'))
+              )}
+            </div>
+            VOTING:
+            {this.props.voting.address}
+            <div>
+              {votingMethodsWithArgs.map(
+                one => (one.constant ? false : this.renderMethod(one, 'voting'))
+              )}
+            </div>
+          </Methods>
+        )}
       </div>
     )
   }

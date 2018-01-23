@@ -1,10 +1,12 @@
+import 'babel-polyfill'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import NetworkStatus from 'react-web3-network-status'
 
-import Modal from '../Modal'
+import Login from '../Login'
 import messages from '../../messages'
 
 import H2 from '../../components/H2'
@@ -14,19 +16,17 @@ import Event from '../../components/Event'
 import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 
-import {
-  setupEthereum,
-} from '../../actions'
+import tcrWave from '../../assets/tcr-wave.jpg'
+
+import { setupEthereum, executeMethod } from '../../actions'
 
 import {
-  selectParameters,
-  selectWallet,
-  selectCandidates,
-  selectFaceoffs,
-  selectWhitelist,
   selectError,
   selectAccount,
-  selectAllListings,
+  selectCandidates,
+  selectParameters,
+  selectWallet,
+  selectContracts,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -34,38 +34,45 @@ const HomeWrapper = styled.div`
 `
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      listing: '',
+      registryAddress: ''
     }
   }
-
   componentDidMount() {
     console.log('Home props:', this.props)
-    this.props.onSetupEthereum('ganache')
+    this.props.onSetupEthereum('ganche')
   }
 
   selectNetwork(network) {
     this.props.onSetupEthereum(network)
   }
 
+  handleChangeRegistryAddress = e => {
+    this.setState({
+      registryAddress: e.target.value,
+    })
+  }
+
   render() {
-    const {
-      wallet,
-      account,
-      candidates,
-      faceoffs,
-      // listings,
-      whitelist,
-      // parameters,
-      error,
-      match,
-    } = this.props
+    const { error, account, parameters, wallet, candidates, contracts } = this.props
 
     return (
       <HomeWrapper>
-        <Modal messages={messages.home} />
+        <Login
+          execute={this.props.onExecute}
+          network={wallet.get('network')}
+          networkStatus={<NetworkStatus />}
+          ethBalance={wallet.get('ethBalance')}
+          account={account}
+          imgSrc={tcrWave}
+          isOpen={false}
+          messages={messages.login}
+          onChange={this.handleChangeRegistryAddress}
+          registryValue={this.state.registryAddress}
+          registryPH={contracts.getIn(['registry', 'address'])}
+        />
 
         <UserInfo
           network={wallet.get('network')}
@@ -73,54 +80,14 @@ class Home extends Component {
           error={error}
           ethBalance={wallet.get('ethBalance')}
           tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokensAllowed={wallet.getIn(['token', 'allowances', 'registry', 'total'])}
+          tokensAllowed={wallet.getIn([
+            'token',
+            'allowances',
+            'registry',
+            'total',
+          ])}
           onSelectNetwork={this.selectNetwork}
         />
-
-        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
-        <FlexContainer>
-          {candidates.size > 0 &&
-            candidates.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
-
-        <H2>{'Challenges ('}{faceoffs.size}{')'}</H2>
-        <FlexContainer>
-          {faceoffs.size > 0 &&
-            faceoffs.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
-
-        <H2>{'Registry ('}{whitelist.size}{')'}</H2>
-        <FlexContainer>
-          {whitelist.size > 0 &&
-            whitelist.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
       </HomeWrapper>
     )
   }
@@ -128,22 +95,20 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: (network) => dispatch(setupEthereum(network)),
+    onSetupEthereum: network => dispatch(setupEthereum(network)),
+    onExecute: payload => dispatch(executeMethod(payload)),
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  parameters: selectParameters,
-  wallet: selectWallet,
+  error: selectError,
   account: selectAccount,
   candidates: selectCandidates,
-  faceoffs: selectFaceoffs,
-  listings: selectAllListings,
-  whitelist: selectWhitelist,
-  error: selectError,
+  parameters: selectParameters,
+  wallet: selectWallet,
+  contracts: selectContracts,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
 export default compose(withConnect)(Home)
-
