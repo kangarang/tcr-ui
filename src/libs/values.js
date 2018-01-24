@@ -1,11 +1,10 @@
 import abi from 'ethereumjs-abi'
 import Eth from 'ethjs'
-import BigNumber from 'bignumber.js'
 import _ from 'lodash'
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
-const valUtils = {
+export const valUtils = {
   randInt: (min, max) => {
     if (max === undefined) {
       max = min
@@ -88,15 +87,6 @@ const valUtils = {
   multiplyByPercentage: (x, y, z = 100) => {
     const weiQuotient = valUtils.divideAndGetWei(y, z)
     return valUtils.multiplyFromWei(x, weiQuotient)
-  },
-
-  // adapted from:
-  // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/utils.ts#L68
-  getCurrentUnixTimestampSec() {
-    return new BigNumber(Date.now() / 1000).round()
-  },
-  getCurrentUnixTimestampMs() {
-    return new BigNumber(Date.now())
   },
 }
 

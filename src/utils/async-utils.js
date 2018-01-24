@@ -1,4 +1,3 @@
-
 // converts async fn to return a promise
 export const promisify = func => (...args) =>
   new Promise((resolve, reject) =>
