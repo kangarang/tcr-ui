@@ -86,8 +86,7 @@ async function buildListing(registry, block, dLog, i, txDetails) {
       return false
     }
     const listing = await registry.contract.listings.call(dLog.listingHash)
-
-    if (listing[2] === '0x0000000000000000000000000000000000000000') {
+    if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
@@ -125,7 +124,7 @@ async function buildListing(registry, block, dLog, i, txDetails) {
 
 // Timer
 function* pollController() {
-  const pollInterval = 5000
+  const pollInterval = 15000
   while (true) {
     try {
       // Every 15 secs:
@@ -161,21 +160,21 @@ function* pollLogsSaga(action) {
     )
     yield put(updateItems(newApplicationLogs))
 
-    // const newWhitelistLogs = yield call(
-    //   handleLogs,
-    //   action.payload.startBlock,
-    //   action.payload.endBlock,
-    //   '_NewDomainWhitelisted'
-    // )
-    // yield put(updateItems(newWhitelistLogs))
+    const newWhitelistLogs = yield call(
+      handleLogs,
+      action.payload.startBlock,
+      action.payload.endBlock,
+      '_NewDomainWhitelisted'
+    )
+    yield put(updateItems(newWhitelistLogs))
 
-    // const newChallengeLogs = yield call(
-    //   handleLogs,
-    //   action.payload.startBlock,
-    //   action.payload.endBlock,
-    //   '_Challenge'
-    // )
-    // yield put(updateItems(newChallengeLogs))
+    const newChallengeLogs = yield call(
+      handleLogs,
+      action.payload.startBlock,
+      action.payload.endBlock,
+      '_Challenge'
+    )
+    yield put(updateItems(newChallengeLogs))
     yield fork(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Fresh log error:', err)

@@ -153,19 +153,19 @@ class Login extends Component {
           <Img src={imgSrc} alt="Token Curated Registries" />
 
           <PaddedDiv>
-            <SmlDiv>{'Account:'}</SmlDiv>
+            <SmlDiv>{'Account: '}</SmlDiv>
             <MonoLrgDiv>{account || messages.default}</MonoLrgDiv>
           </PaddedDiv>
 
           <PaddedDiv>
-            <SmlDiv>{'Network:'}</SmlDiv>
+            <SmlDiv>{'Network: '}</SmlDiv>
             <SmlDiv>{NetworkStatus}</SmlDiv>
-            <SmlDiv>{'ΞTH Balance:'}</SmlDiv>
+            <SmlDiv>{'ΞTH Balance: '}</SmlDiv>
             <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>
 
           <PaddedDiv>
-            <SmlDiv>{'Registry:'}</SmlDiv>
+            <SmlDiv>{'Registry: '}</SmlDiv>
             <LrgDiv>
               <Input
                 placeholder={registryPH}
@@ -176,9 +176,10 @@ class Login extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
-            <SmlDiv>{'Token Name:'}</SmlDiv>
+            <SmlDiv>{'Token Name: '}</SmlDiv>
             <SmlDiv>{tokenName}</SmlDiv>
-            <SmlDiv>{tokenSymbol}{' Balance:'}</SmlDiv>
+
+            <SmlDiv>{tokenSymbol}{' Balance: '}</SmlDiv>
             <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
           </PaddedDiv>
 
@@ -186,7 +187,7 @@ class Login extends Component {
             <Button
               onClick={e => this.handleMainAction(e, messages.mainMethod)}
             >
-              {'CONFIRM ACCOUNT '}
+              {'CONFIRM ACCOUNT'}
             </Button>
           </RightPaddedDiv>
         </ReactModal>

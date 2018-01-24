@@ -88,10 +88,10 @@ function* contractsSaga(eth, address) {
 // Polling
 
 function* runPolling() {
-  const pollInterval = 5000
+  const pollInterval = 10000
   while (true) {
     try {
-      // Every 5 seconds:
+      // Every 10 seconds:
       yield call(delay, pollInterval)
       // Dispatch: check provider request
       yield put(getProviderRequest())

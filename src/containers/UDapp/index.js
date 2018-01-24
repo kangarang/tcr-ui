@@ -51,7 +51,7 @@ class UDapp extends Component {
 
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
-  renderMethod(method, contract, action = false) {
+  renderMethod(method, contract) {
     return (
       <div key={method.name}>
         <h4>{`${method.name}`}</h4>
@@ -59,7 +59,7 @@ class UDapp extends Component {
         {method.inputs.map((input, ind) => (
           <form
             key={input.name + ind}
-            onSubmit={e => this.props.hocCall(e, method, contract)}
+            // onSubmit={e => this.props.hocCall(method, contract)}
           >
             <Input
               id={input.name}
@@ -68,9 +68,8 @@ class UDapp extends Component {
             />
           </form>
         ))}
-
         {method.constant ? (
-          <Button onClick={e => this.props.hocCall(e, method, contract)}>
+          <Button onClick={e => this.props.hocCall(method, contract)}>
             {'Call'}
           </Button>
         ) : (

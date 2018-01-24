@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import { config } from '../../config'
 
 import Identicon from '../Identicon'
-// import Button from '../Button'
 import Img from '../Img'
 
 import {
@@ -60,15 +59,6 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
         <BoldInlineText>
           {'Network: '}
           {wallet.get('network')}
-          {/* {wallet.get('network') === '5777'
-            ? 'Ganache'
-            : wallet.get('network') === '420'
-              ? 'Test'
-              : wallet.get('network') === '4'
-                ? 'Rinkeby'
-                : wallet.get('network') === '1'
-                  ? 'Main'
-                  : wallet.get('network')} */}
         </BoldInlineText>
       </Item>
 
@@ -101,14 +91,12 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
             contracts.getIn(['voting', 'address']),
             'total',
           ]) &&
-            withCommas(
-              wallet.getIn([
-                'token',
-                'allowances',
-                contracts.getIn(['voting', 'address']),
-                'total',
-              ])
-            )}
+            wallet.getIn([
+              'token',
+              'allowances',
+              contracts.getIn(['voting', 'address']),
+              'total',
+            ])}
         </BoldInlineText>
       </Item>
     </Container>

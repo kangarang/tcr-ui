@@ -159,7 +159,6 @@ function homeReducer(state = initialState, action) {
           ['contracts', 'token', 'address'],
           fromJS(action.payload.token.address)
         )
-    // .set('parameters', fromJS(action.payload.parameterizer.parameters))
     case SET_MIN_DEPOSIT:
       return state.setIn(
         ['parameters', 'minDeposit'],
@@ -172,7 +171,7 @@ function homeReducer(state = initialState, action) {
             'wallet',
             'token',
             'allowances',
-            action.payload.allowedContractAddress,
+            action.payload.spender,
             'total',
           ],
           fromJS(action.payload.allowance)
@@ -195,8 +194,8 @@ function homeReducer(state = initialState, action) {
 function replaceListings(state, payload) {
   const filteredPayload = payload.reduce((acc, val) => {
     return acc.filter(a => a.listingHash !== val.listingHash)
-  }, fromJS([]))
-  return state.set('listings', filteredPayload)
+  }, [])
+  return state.set('listings', fromJS(filteredPayload))
 }
 
 function changeListings(state, payload) {

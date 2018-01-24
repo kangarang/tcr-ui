@@ -47,7 +47,7 @@ const UDappHOC = WrappedComponent => {
     }
 
     componentDidMount() {
-      setTimeout(this.initUDapp, 500)
+      this.initUDapp()
     }
 
     initUDapp = async () => {
@@ -88,26 +88,35 @@ const UDappHOC = WrappedComponent => {
           [input.name]: result,
         },
       }))
+      console.log('this.state', this.state)
     }
 
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L158
-    handleCall = async (e, method, contract) => {
-      e.preventDefault()
-      const args = Object.values(this.state[method.name])
-      const txData = EthAbi.encodeMethod(method, args)
-      const params = {
-        from: this.state.fromAddress,
-        to: this.state[contract].address,
-        data: txData,
-      }
-      const called = await this.eth.call(params)
-      const decint = parseInt(called, 'hex')
-      console.log('CALL RESULT', decint)
-      this.setState({
-        callResult: decint
+    handleCall = async (method, contract) => {
+      const args = method.inputs.map((input, ind) => {
+        return this.state[method.name][input.name]
       })
-      return decint
+      try {
+        const txData = EthAbi.encodeMethod(method, args)
+        console.log('args', args)
+        console.log('txData', txData)
+        const params = {
+          from: this.state.fromAddress,
+          to: this.state[contract].address,
+          data: txData,
+        }
+        const called = await this.eth.call(params, 'latest')
+        const decint = parseInt(called, 'hex')
+        console.log('CALL RESULT', decint)
+        this.setState({
+          callResult: decint,
+        })
+        return decint
+      } catch (err) {
+        if (args.filter(Boolean).length !== args.length) return
+        console.warn(err)
+      }
     }
 
     // adapted from:
@@ -119,8 +128,8 @@ const UDappHOC = WrappedComponent => {
       console.log('method, args, txData', method, args, txData)
       const payload = {
         from: this.state.fromAddress,
-        gas: '0x44aa20',
-        gasPrice: '0x5d21dba00',
+        gas: '0x32aa20',
+        gasPrice: '0x4021dba00',
         to: this.state[contract].address,
         data: txData,
       }
