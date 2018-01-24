@@ -11,7 +11,10 @@ injectGlobal`
   }
 
   body {
-    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    & > div {
+      font-family: 'Harmonia Sans Mono Std';
+    }
   }
 
   div {

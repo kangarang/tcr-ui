@@ -4,7 +4,7 @@ import { createLogger } from 'redux-logger';
 
 import { fromJS, Iterable } from 'immutable';
 
-import { SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
+// import { SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
 import createReducer from './reducers';
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'

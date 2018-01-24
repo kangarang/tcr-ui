@@ -24,8 +24,8 @@ class Nav extends Component {
         <NavLink strict to='/'>Home</NavLink>
         <NavLink activeStyle={styles.active} to='/challenge'>Challenge</NavLink>
         <NavLink activeStyle={styles.active} to='/vote'>Vote</NavLink>
-        <NavLink activeStyle={styles.active} to='/activities'>Activities</NavLink>
-        <NavLink activeStyle={styles.active} to='/search'>Search</NavLink>
+        <NavLink to='/'>Activities</NavLink>
+        <NavLink to='/'>Search</NavLink>
       </NavBar>
     )
   }

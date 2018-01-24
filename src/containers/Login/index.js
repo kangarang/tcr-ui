@@ -34,10 +34,6 @@ const LrgDiv = styled(HalfDiv)`
   margin: 0 1%;
   border-radius: 3px;
 `
-const MonoLrgDiv = styled(LrgDiv)`
-  font-family: monospace;
-  font-size: 1.3em;
-`
 const SmlDiv = styled(HalfDiv)`
   min-width: 13%;
   margin: 0 1%;
@@ -154,7 +150,7 @@ class Login extends Component {
 
           <PaddedDiv>
             <SmlDiv>{'Account: '}</SmlDiv>
-            <MonoLrgDiv>{account || messages.default}</MonoLrgDiv>
+            <LrgDiv>{account || messages.default}</LrgDiv>
           </PaddedDiv>
 
           <PaddedDiv>

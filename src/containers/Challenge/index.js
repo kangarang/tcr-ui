@@ -15,8 +15,6 @@ import Event from '../../components/Event'
 import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 
-import { setupEthereum } from '../../actions'
-
 import {
   selectWallet,
   selectCandidates,

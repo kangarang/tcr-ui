@@ -1,19 +1,14 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 import { colors } from '../Colors'
-
-// const Input = styled.input`
-//   outline: none;
-//   border-bottom: 1px dotted #999;
-// `;
 
 const Input = styled.input`
   width: 100%;
   box-sizing: border-box;
   border: 1px solid ${colors.prism};
   font-size: 1.3em;
-  padding: .5em;
+  padding: 0.5em;
   color: ${colors.offBlack};
   background-color: ${colors.offWhite};
-  font-family: monospace;
+  font-family: 'Harmonia Sans Mono Std', monospace;
 `
-export default Input;
+export default Input
