@@ -5,7 +5,6 @@ import Promise from 'bluebird'
 
 import abis from '../contracts'
 import { getDefaults } from './defaults'
-import { logUtils } from '../sagas/utils';
 
 export default class Registry {
   constructor(eth, account) {

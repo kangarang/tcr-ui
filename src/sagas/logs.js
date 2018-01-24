@@ -1,11 +1,11 @@
-import { all, takeLatest, fork, takeEvery, call, put } from 'redux-saga/effects'
+import { all, takeLatest, fork, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
 import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
 
-import { getRegistry } from '../services'
+import { getRegistry, getContract } from '../services'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -148,6 +148,7 @@ function* pollController() {
 function* pollLogsSaga(action) {
   const eth = yield call(getEthjs)
   const registry = yield call(getRegistry)
+  const voting = yield call(getContract, 'voting')
   try {
     lastReadBlockNumber = (yield call(eth.blockNumber)).toNumber(10)
     console.log('lastReadBlockNumber', lastReadBlockNumber)
@@ -176,6 +177,7 @@ function* pollLogsSaga(action) {
     )
     yield put(updateItems(newChallengeLogs))
     yield fork(tokensAllowedSaga, registry.address)
+    yield fork(tokensAllowedSaga, voting.address)
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))

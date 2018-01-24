@@ -14,22 +14,6 @@ import {
   LOGOUT_SUCCESS,
 } from '../actions/constants'
 
-// const reactState = {
-//   stupid_toggle_components,
-//   ethjs,
-//   ethereumProvider,
-//   HOC/formInput/votingModal/sendTransaction: {
-//     amount,
-//     vote
-//   },
-//   contracts: {
-//     registry,
-//     voting,
-//     token,
-//     parameterizer
-//   }
-// }
-
 const initialState = fromJS({
   wallet: {
     address: '',
@@ -39,14 +23,6 @@ const initialState = fromJS({
       address: '',
       tokenBalance: '',
       allowances: {
-        // registry: {
-        //   total: '',
-        //   locked: '',
-        // },
-        // voting: {
-        //   total: '',
-        //   locked: '',
-        // },
       },
     },
   },
@@ -65,23 +41,6 @@ const initialState = fromJS({
     },
   },
   listings: {
-    // listing: '',
-    // owner: '',
-    // challenger: '',
-    // latest: {
-    //   whitelisted: '',
-    //   canBeWhitelisted: '',
-    //   sender: '',
-    //   blockHash: '',
-    //   blockNumber: '',
-    //   timestamp: '',
-    //   txHash: '',
-    //   txIndex: '',
-    //   numTokens: '',
-    //   event: '',
-    //   logIndex: '',
-    //   pollID: '',
-    // },
   },
   parameters: {
     minDeposit: '',
@@ -98,10 +57,6 @@ const initialState = fromJS({
     type: false,
     message: '',
   },
-  // visiblityFilter: {
-  //   listings: ['in_application', 'in_whitelist'],
-  //   isPolling: false,
-  // },
 })
 
 function homeReducer(state = initialState, action) {
@@ -201,18 +156,14 @@ function replaceListings(state, payload) {
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
     const index = acc.findIndex(ri => ri.get('listingHash') === val.listingHash)
-    console.log('index', index)
-
     // New listing
     if (index === -1) {
       return acc.push(fromJS(val))
     }
-
     // Check to see if the event is the more recent
     if (val.latest.blockNumber > acc.getIn([index, 'latest', 'blockNumber'])) {
       return acc.setIn([index, 'latest'], fromJS(val.latest))
     }
-
     // Not unique, not more recent, return List
     return acc
   }, state.get('listings'))
@@ -230,26 +181,5 @@ function deleteObjectInArray(array, payload) {
     return array
   })
 }
-
-// function updateObject(oldObject, newValues) {
-//   return Object.assign({}, oldObject, fromJS(newValues));
-//   return oldObject.set(newValues)
-// }
-// // return updateObject(todo, {completed : !todo.completed});
-
-// function updateItemInArray(array, listing, updateItemCallback) {
-//   const updatedItems = array.map(item => {
-//     const index = array
-//       .findIndex(ri => ri.get('listing') === listing)
-//     if (index !== -1) {
-//       return item
-//     }
-//     // Use the provided callback to create an updated item
-//     const updatedItem = updateItemCallback(item);
-//     return updatedItem;
-//   });
-
-//   return updatedItems;
-// }
 
 export default homeReducer

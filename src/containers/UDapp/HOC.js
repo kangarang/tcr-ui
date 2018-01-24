@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-
+import Eth from 'ethjs'
 import EthAbi from 'ethjs-abi'
+import BlockTracker from 'eth-block-tracker'
+import Suggestor from 'eth-gas-price-suggestor'
 
 import registryContract from '../../contracts/Registry.json'
 import votingContract from '../../contracts/PLCRVoting.json'
@@ -52,8 +54,17 @@ const UDappHOC = WrappedComponent => {
 
     initUDapp = async () => {
       const provider = getProvider()
-
+      let suggestor
       if (typeof provider !== 'undefined') {
+        const blockTracker = new BlockTracker({ provider })
+        blockTracker.start()
+
+        suggestor = new Suggestor({
+          blockTracker,
+          historyLength: 15,
+          defaultPrice: 20000000000,
+        })
+
         this.eth = getEthjs()
         const fromAddress = (await this.eth.accounts())[0]
 
@@ -61,21 +72,33 @@ const UDappHOC = WrappedComponent => {
           fromAddress,
         })
       }
+
+      setInterval(async () => {
+        try {
+          const suggested = await suggestor.currentAverage()
+          console.log('suggested', suggested)
+          console.log(
+            'CURRENT SUGGESTION in GWEI: ' + Eth.fromWei(suggested, 'gwei')
+          )
+          this.setState({
+            suggested
+          })
+        } catch (e) {
+          console.log('failed: ', e)
+        }
+      }, 5000)
     }
 
-    handleInputChange = (method, e, index, input) => {
+    handleInputChange = async (e, method, input) => {
       let result = e.target.value
 
       // TODO: explain this. also, figure out a better way to handle different inputs
       if (input.name === '_secretHash') {
         this.salt = valUtils.randInt(1e6, 1e8)
         console.log('salt', this.salt)
-        result = valUtils.getVoteSaltHash(
-          e.target.value,
-          this.salt.toString(10)
-        )
+        result = valUtils.getVoteSaltHash(result, this.salt.toString(10))
       } else if (input.type === 'bytes32') {
-        result = valUtils.getListingHash(e.target.value)
+        result = valUtils.getListingHash(result)
       }
       console.log('salt', this.salt)
 
@@ -91,16 +114,17 @@ const UDappHOC = WrappedComponent => {
       console.log('this.state', this.state)
     }
 
+    getMethodArgs = method =>
+      method.inputs.map(input => this.state[method.name][input.name])
+
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L158
-    handleCall = async (method, contract) => {
-      const args = method.inputs.map((input, ind) => {
-        return this.state[method.name][input.name]
-      })
+    handleCall = async (e, method, contract) => {
+      e.preventDefault()
+      const args = await this.getMethodArgs(method)
       try {
         const txData = EthAbi.encodeMethod(method, args)
-        console.log('args', args)
-        console.log('txData', txData)
+        console.log('args, txData', args, txData)
         const params = {
           from: this.state.fromAddress,
           to: this.state[contract].address,
@@ -121,11 +145,9 @@ const UDappHOC = WrappedComponent => {
 
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L63
-    handleExecute = async (e, method, contract) => {
-      e.preventDefault()
-      const args = Object.values(this.state[method.name])
+    handleExecute = async (method, contract) => {
+      const args = this.getMethodArgs(method)
       const txData = EthAbi.encodeMethod(method, args)
-      console.log('method, args, txData', method, args, txData)
       const payload = {
         from: this.state.fromAddress,
         gas: '0x32aa20',
@@ -133,9 +155,8 @@ const UDappHOC = WrappedComponent => {
         to: this.state[contract].address,
         data: txData,
       }
-      console.log('exec:', method.name, args, payload)
       const txHash = await this.eth.sendTransaction(payload)
-      console.log('txHash', txHash)
+      console.log('TRANSACTION:', txHash)
       return txHash
     }
 
@@ -148,7 +169,6 @@ const UDappHOC = WrappedComponent => {
           hocSendTransaction={this.handleExecute}
           voting={this.state.voting}
           token={this.state.token}
-          decodedValues={this.state.decodedValues}
           callResult={this.state.callResult}
           {...this.props}
         />

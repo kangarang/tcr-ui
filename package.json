@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "6.26.0",
+    "bignumber.js": "^5.0.0",
     "blockies": "0.0.2",
     "bluebird": "3.5.1",
     "bn.js": "4.11.8",

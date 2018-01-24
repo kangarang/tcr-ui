@@ -40,8 +40,10 @@ export default class Token {
   }
 
   allowance = async (owner, spender) => {
-    const tokensAllowed = await this.contract.allowance(owner, spender)
+    const tokensAllowed = await this.contract.allowance.call(owner, spender)
+    console.log('tokensAllowed', tokensAllowed.toString(10))
     this.tokensAllowed = fromToken(tokensAllowed, this.decimalPower).toString(10)
+    console.log('this.tokensAllowed', this.tokensAllowed)
     const obj = {
       allowance: this.tokensAllowed,
       balance: this.balance

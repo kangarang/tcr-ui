@@ -59,22 +59,22 @@ class UDapp extends Component {
         {method.inputs.map((input, ind) => (
           <form
             key={input.name + ind}
-            // onSubmit={e => this.props.hocCall(method, contract)}
+            onSubmit={e => this.props.hocCall(e, method, contract)}
           >
             <Input
               id={input.name}
               placeholder={`${input.name} (${input.type})`}
-              onChange={e => this.props.hocInputChange(method, e, ind, input)}
+              onChange={e => this.props.hocInputChange(e, method, input)}
             />
           </form>
         ))}
         {method.constant ? (
-          <Button onClick={e => this.props.hocCall(method, contract)}>
+          <Button onClick={e => this.props.hocCall(e, method, contract)}>
             {'Call'}
           </Button>
         ) : (
           <Button
-            onClick={e => this.props.hocSendTransaction(e, method, contract)}
+            onClick={e => this.props.hocSendTransaction(method, contract)}
           >
             {'Send Transaction'}
           </Button>
