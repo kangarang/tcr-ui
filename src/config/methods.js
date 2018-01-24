@@ -25,7 +25,7 @@ export default {
     heading: 'Voting',
     default: 'Commit and reveal your secret vote',
     args: ['pollID', 'secretHash', 'numTokens', 'salt'],
-    actions: ['requestVotingRights', 'withdrawVotingRights', 'commitVote', 'revealVote', 'rescueTokens', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition', 'approve', 'allowance', 'balanceOf', 'transfer', 'transferFrom'],
+    actions: ['requestVotingRights', 'withdrawVotingRights', 'commitVote', 'revealVote', 'rescueTokens', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition', 'approve', 'allowance', 'balanceOf', 'transfer', 'transferFrom', 'tokenClaims', 'claimReward', 'voterReward', 'updateStatus', 'challengeCanBeResolved'],
   },
   activities: {
     name: 'Activities',
