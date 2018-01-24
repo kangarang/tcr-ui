@@ -9,7 +9,7 @@ import { getRegistry, getContract } from '../services'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
-import { logUtils } from './utils'
+import { logUtils } from '../utils/log-utils'
 import { tokensAllowedSaga } from './token'
 
 import { getEthjs } from '../libs/provider'
