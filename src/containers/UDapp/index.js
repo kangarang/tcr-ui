@@ -12,14 +12,13 @@ import Tooltip from 'rc-tooltip'
 import 'rc-slider/assets/index.css'
 import 'rc-tooltip/assets/bootstrap.css'
 
-import H1 from '../../components/H1'
 import UDappHOC from './HOC'
 
 import Button from '../../components/Button'
+import H3 from '../../components/H3'
 // import { colors } from '../../components/Colors'
 import Input from './components/Input.js'
 // import { trimDecimalsThree, toEther } from '../../libs/units'
-import { config } from '../../config/index'
 // import { changeSliderValue } from "../../actions";
 // import { selectSliderValue } from '../../selectors/udapp';
 
@@ -30,8 +29,8 @@ const styles = {
   },
 }
 
-const createSliderWithTooltip = Slider.createSliderWithTooltip
-const SliderTT = createSliderWithTooltip(Slider)
+// const createSliderWithTooltip = Slider.createSliderWithTooltip
+// const SliderTT = createSliderWithTooltip(Slider)
 const Handle = Slider.Handle
 
 const Methods = styled.div`
@@ -53,9 +52,6 @@ class UDapp extends Component {
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
   renderMethod(method, contract, action = false) {
-    // const inputs = method.inputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
-    // const outputs = method.outputs.map(arg => `${arg.type} ${arg.name}`).join(', ')
-
     return (
       <div key={method.name}>
         <h4>{`${method.name}`}</h4>
@@ -145,40 +141,32 @@ class UDapp extends Component {
           tipFormatter={value => `${value} ${config.tokenSymbol}`}
           onChange={this.props.onChangeSliderValue}
         /> */}
-
+        <H3>CALL RESULT: {this.props.callResult}</H3>
+        <div>ACCOUNT: {this.props.account}</div>
+        <br />
         <Methods>
-          {visibleRegistryMethods.length ? (
-            <span>
-              REGISTRY:
-              {this.props.registry.address}
-            </span>
-          ) : (
-            false
-          )}
+          <span>
+            {'REGISTRY: '}
+            {this.props.registry.address}
+          </span>
           <div>
-            {visibleRegistryMethods.map(one => this.renderMethod(one, 'registry'))}
+            {visibleRegistryMethods.map(one =>
+              this.renderMethod(one, 'registry')
+            )}
           </div>
 
-          {visibleTokenMethods.length ? (
-            <span>
-              TOKEN:
-              {this.props.token.address}
-            </span>
-          ) : (
-            false
-          )}
+          <span>
+            {'TOKEN: '}
+            {this.props.token.address}
+          </span>
           <div>
             {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
           </div>
 
-          {visibleVotingMethods.length ? (
-            <span>
-              VOTING:
-              {this.props.voting.address}
-            </span>
-          ) : (
-            false
-          )}
+          <span>
+            {'VOTING: '}
+            {this.props.voting.address}
+          </span>
           <div>
             {visibleVotingMethods.map(one => this.renderMethod(one, 'voting'))}
           </div>

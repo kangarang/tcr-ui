@@ -3,7 +3,6 @@ import { delay } from 'redux-saga'
 
 import {
   GET_ETHEREUM,
-  SET_WALLET,
   GET_ETH_PROVIDER,
   LOGIN_ERROR,
   WALLET_ERROR,
@@ -40,7 +39,8 @@ function* genesis(action) {
     const eth = yield call(setupEthjs, action.network)
     const address = (yield call(eth.accounts))[0]
     const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
-    if (balanceBlockNetwork) {
+
+    if (typeof balanceBlockNetwork !== 'undefined') {
       yield put(setWallet(balanceBlockNetwork))
       yield fork(contractsSaga, eth, address)
     }
@@ -64,18 +64,16 @@ function* getBalBlockNet(eth, address) {
   }
 }
 
-// Setup contracts
 
 function* contractsSaga(eth, address) {
   try {
     const registry = yield call(setupRegistry, eth, address)
-    console.log('registry', registry)
     const [token, parameterizer, voting] = yield all([
       call(setupContract, eth, address, 'token'),
       call(setupContract, eth, address, 'parameterizer'),
       call(setupContract, eth, address, 'voting'),
     ])
-    console.log('token', token)
+
     if (token && parameterizer && registry && voting) {
       yield put(setContracts({ registry, token, parameterizer, voting }))
       yield fork(tokensAllowedSaga, registry.address)
@@ -86,13 +84,14 @@ function* contractsSaga(eth, address) {
   }
 }
 
+
 // Polling
 
 function* runPolling() {
-  const pollInterval = 2000
+  const pollInterval = 5000
   while (true) {
     try {
-      // Every 2 seconds:
+      // Every 5 seconds:
       yield call(delay, pollInterval)
       // Dispatch: check provider request
       yield put(getProviderRequest())
@@ -108,9 +107,11 @@ function* pollProvider() {
 
     const account = yield select(selectAccount)
     const bbnAccount = yield call(getBalBlockNet, eth, account)
+    console.log('bbnAccount', bbnAccount)
 
     const address = (yield call(eth.accounts))[0]
     const bbnAddress = yield call(getBalBlockNet, eth, address)
+    console.log('bbnAddress', bbnAddress)
 
     if (typeof bbnAccount === 'undefined' && bbnAddress) {
       // login to MetaMask
@@ -120,6 +121,10 @@ function* pollProvider() {
     } else if (bbnAccount && typeof bbnAddress === 'undefined') {
       // logout of MetaMask
       yield put(logoutSuccess({ account: bbnAccount.address }))
+    } else if (bbnAccount.defaultAccount !== bbnAddress.defaultAccount) {
+      const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
+      yield put(setEthereumProvider(balanceBlockNetwork))
+      yield fork(contractsSaga, eth, address)
     }
   } catch (err) {
     console.log('pollProvider error', err)

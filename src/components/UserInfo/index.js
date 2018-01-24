@@ -59,7 +59,8 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
       <Item gR={2} gC={3}>
         <BoldInlineText>
           {'Network: '}
-          {wallet.get('network') === '5777'
+          {wallet.get('network')}
+          {/* {wallet.get('network') === '5777'
             ? 'Ganache'
             : wallet.get('network') === '420'
               ? 'Test'
@@ -67,7 +68,7 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
                 ? 'Rinkeby'
                 : wallet.get('network') === '1'
                   ? 'Main'
-                  : wallet.get('network')}
+                  : wallet.get('network')} */}
         </BoldInlineText>
       </Item>
 

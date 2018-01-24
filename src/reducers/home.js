@@ -193,12 +193,16 @@ function homeReducer(state = initialState, action) {
 }
 
 function replaceListings(state, payload) {
-  return state.set('listings', fromJS(payload))
+  const filteredPayload = payload.reduce((acc, val) => {
+    return acc.filter(a => a.listingHash !== val.listingHash)
+  }, fromJS([]))
+  return state.set('listings', filteredPayload)
 }
 
 function changeListings(state, payload) {
   const newListings = payload.reduce((acc, val) => {
     const index = acc.findIndex(ri => ri.get('listingHash') === val.listingHash)
+    console.log('index', index)
 
     // New listing
     if (index === -1) {

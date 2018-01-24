@@ -1,7 +1,6 @@
 import contract from 'truffle-contract'
-import abi from 'ethereumjs-abi'
-import FileSaver from 'file-saver'
-import moment from 'moment'
+// import FileSaver from 'file-saver'
+// import moment from 'moment'
 
 import abis from '../contracts'
 import { getDefaults } from './defaults'
@@ -27,10 +26,10 @@ export default class Voting {
     this.contract.requestVotingRights(votingRights)
 
   commitVote = async (pollID, account, numTokens) => {
-    const prevPollID = await this.contract.getInsertPointForNumTokens.call(
-      account,
-      numTokens
-    )
+    // const prevPollID = await this.contract.getInsertPointForNumTokens.call(
+    //   account,
+    //   numTokens
+    // )
     const salt = valUtils.randInt(1e6, 1e8)
     console.log('salt', salt)
     // const secretHash = valUtils.getVoteSaltHash(vote, salt)

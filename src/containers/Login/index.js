@@ -3,7 +3,6 @@ import ReactModal from 'react-modal'
 import styled from 'styled-components'
 
 import { colors } from '../../components/Colors'
-import H2 from '../../components/H2'
 import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
@@ -14,11 +13,12 @@ const Wrapper = styled.div`
 `
 const PaddedDiv = styled.div`
   padding: 1em;
-  margin: 1em 5em;
+  margin: 1em 4em;
   border: 1px solid ${colors.darkBlue};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 3px;
 `
 const RightPaddedDiv = styled(PaddedDiv)`
   border: none;
@@ -32,6 +32,11 @@ const HalfDiv = styled.div`
 const LrgDiv = styled(HalfDiv)`
   min-width: 85%;
   margin: 0 1%;
+  border-radius: 3px;
+`
+const MonoLrgDiv = styled(LrgDiv)`
+  font-family: monospace;
+  font-size: 1.3em;
 `
 const SmlDiv = styled(HalfDiv)`
   min-width: 13%;
@@ -116,10 +121,8 @@ class Login extends Component {
       account,
       ethBalance,
       imgSrc,
-      network,
-      networkStatus,
+      NetworkStatus,
       registryValue,
-      execute,
       onChange,
       registryPH,
       tokenBalance,
@@ -151,12 +154,12 @@ class Login extends Component {
 
           <PaddedDiv>
             <SmlDiv>{'Account:'}</SmlDiv>
-            <LrgDiv>{account || messages.default}</LrgDiv>
+            <MonoLrgDiv>{account || messages.default}</MonoLrgDiv>
           </PaddedDiv>
 
           <PaddedDiv>
             <SmlDiv>{'Network:'}</SmlDiv>
-            <SmlDiv>{networkStatus}</SmlDiv>
+            <SmlDiv>{NetworkStatus}</SmlDiv>
             <SmlDiv>{'ΞTH Balance:'}</SmlDiv>
             <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>

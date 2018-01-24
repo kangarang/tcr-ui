@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import catIcon from '../../assets/icons/favicon.ico'
+import favicon from '../../assets/icons/favicon.ico'
 
 import A from '../A'
 import Button from '../Button'
@@ -21,94 +21,67 @@ const Container = styled.div`
   grid-template-columns: 1.5fr 3fr 6fr 8fr;
   grid-template-rows: 1fr 1fr;
   grid-gap: 15px;
-  padding: .7em;
+  padding: 0.7em;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
   border-radius: 4px;
 `
 
-export default ({
-  latest,
-  owner,
-  listing,
-  whitelisted,
-}) => (
-    <Container txHash={latest.get('txHash')}>
-      <FlexCenteredItem gR={1} gC={1}>
-        <Identicon owner={latest.get('txHash')} size={6} scale={6} />
-      </FlexCenteredItem>
+export default ({ latest, owner, listing }) => (
+  <Container txHash={latest.get('txHash')}>
+    <FlexCenteredItem gR={1} gC={1}>
+      <Identicon owner={latest.get('txHash')} size={6} scale={6} />
+    </FlexCenteredItem>
 
-      {whitelisted && (
-        <FlexCenteredItem gR={1} gC={1}>
-          <Img src={catIcon} alt="" />
-        </FlexCenteredItem>
-      )}
+    <FlexCenteredItem gR={1} gC={1}>
+      <Img src={favicon} alt="" />
+    </FlexCenteredItem>
 
-      <Item pad={0.5} gR={1} gC={2}>
-        <BigBoldInlineText>
-          {listing}
-        </BigBoldInlineText>
-      </Item>
+    <Item pad={0.5} gR={1} gC={2}>
+      <BigBoldInlineText>{listing}</BigBoldInlineText>
+    </Item>
 
-      {latest.get('numTokens') && (
-        <Item pad={0.5} gR={1} gC={3}>
-          <BoldInlineText>
-            {'Deposit: '}
-            {latest.get('numTokens').toString(10)}
-            {' CATT'}
-          </BoldInlineText>
-        </Item>
-      )}
-
-      <Item pad={0.5} gR={1} gC={4} >
-        {!latest.get('pollID') && (
-          <Button>{'Challenge'}</Button>
-        )}
-        {(!whitelisted && latest.get('pollID')) && (
-          <Button>
-            {'Commit Vote'}
-          </Button>
-        )}
-        {(!whitelisted && latest.get('canBeWhitelisted')) && (
-          <Button>{'Update registry state'}</Button>
-        )}
-      </Item>
-
-      <Item pad={0.5} gR={2} gC={2}>
+    {latest.get('numTokens') && (
+      <Item pad={0.5} gR={1} gC={3}>
         <BoldInlineText>
-          {'Block number: '}
-          {latest.get('blockNumber')}
+          {'Deposit: '}
+          {latest.get('numTokens').toString(10)}
         </BoldInlineText>
       </Item>
+    )}
 
-      <Item pad={0.5} gR={2} gC={3}>
-        <BoldInlineText>
-          {'Address: '}
-          <A
-            target="_blank"
-            href={`https://rinkeby.etherscan.io/address/${owner}`}
-          >
-            {owner}
-          </A>
-        </BoldInlineText>
-      </Item>
+    <Item pad={0.5} gR={1} gC={4}>
+      {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
+    </Item>
 
-      <Item pad={0.5} gR={2} gC={4}>
-        <BoldInlineText>
-          {'Tx hash: '}
-          <A target={'_blank'} href={`https://rinkeby.etherscan.io/tx/${latest.get('txHash')}`}>
-            {latest.get('txHash')}
-          </A>
-        </BoldInlineText>
-      </Item>
+    <Item pad={0.5} gR={2} gC={2}>
+      <BoldInlineText>
+        {'Block number: '}
+        {latest.get('blockNumber')}
+      </BoldInlineText>
+    </Item>
 
-    </Container>
-  )
+    <Item pad={0.5} gR={2} gC={3}>
+      <BoldInlineText>
+        {'Address: '}
+        <A
+          target="_blank"
+          href={`https://rinkeby.etherscan.io/address/${owner}`}
+        >
+          {owner}
+        </A>
+      </BoldInlineText>
+    </Item>
 
-Event.propTypes = {
-  txHash: PropTypes.string,
-  network: PropTypes.string,
-  onApprove: PropTypes.func,
-  tokenBalance: PropTypes.string,
-  tokensAllowed: PropTypes.string,
-  ethBalance: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-}
+    <Item pad={0.5} gR={2} gC={4}>
+      <BoldInlineText>
+        {'Tx hash: '}
+        <A
+          target={'_blank'}
+          href={`https://rinkeby.etherscan.io/tx/${latest.get('txHash')}`}
+        >
+          {latest.get('txHash')}
+        </A>
+      </BoldInlineText>
+    </Item>
+  </Container>
+)

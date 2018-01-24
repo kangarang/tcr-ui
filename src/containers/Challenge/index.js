@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
 import messages from '../../config/messages'
@@ -14,42 +15,28 @@ import Event from '../../components/Event'
 import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 
-import {
-  setupEthereum,
-} from '../../actions'
+import { setupEthereum } from '../../actions'
 
 import {
-  selectParameters,
   selectWallet,
   selectCandidates,
-  selectFaceoffs,
   selectWhitelist,
   selectError,
   selectAccount,
-  selectAllListings,
   selectContracts,
 } from '../../selectors'
-import methods from '../../config/methods';
+import methods from '../../config/methods'
 
 const ChallengeWrapper = styled.div`
   padding: 1em;
 `
 
 class Challenge extends Component {
-  constructor() {
-    super()
-    this.state = {
-      listing: '',
-    }
-  }
-
   componentDidMount() {
-    console.log('Challenge props:', this.props)
-    this.props.onSetupEthereum()
-  }
-
-  selectNetwork(network) {
-    this.props.onSetupEthereum(network)
+    console.log('challenge props', this.props)
+    if (!this.props.account) {
+      this.props.history.push('/')
+    }
   }
 
   render() {
@@ -57,10 +44,7 @@ class Challenge extends Component {
       wallet,
       account,
       candidates,
-      faceoffs,
       whitelist,
-      parameters,
-      match,
       error,
       contracts,
     } = this.props
@@ -75,9 +59,17 @@ class Challenge extends Component {
           contracts={contracts}
         />
 
-        <Modal messages={messages.challenge} actions={methods.challenge.actions} />
+        <Modal
+          messages={messages.challenge}
+          account={account}
+          actions={methods.challenge.actions}
+        />
 
-        <H2>{'Applicants ('}{candidates.size}{')'}</H2>
+        <H2>
+          {'Applicants ('}
+          {candidates.size}
+          {')'}
+        </H2>
         <FlexContainer>
           {candidates.size > 0 &&
             candidates.map(log => (
@@ -92,7 +84,11 @@ class Challenge extends Component {
             ))}
         </FlexContainer>
 
-        <H2>{'Registry ('}{whitelist.size}{')'}</H2>
+        <H2>
+          {'Registry ('}
+          {whitelist.size}
+          {')'}
+        </H2>
         <FlexContainer>
           {whitelist.size > 0 &&
             whitelist.map(log => (
@@ -112,23 +108,18 @@ class Challenge extends Component {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    onSetupEthereum: (network) => dispatch(setupEthereum(network)),
-  }
+  return {}
 }
 
 const mapStateToProps = createStructuredSelector({
-  parameters: selectParameters,
   wallet: selectWallet,
   contracts: selectContracts,
   account: selectAccount,
   candidates: selectCandidates,
-  listings: selectAllListings,
   whitelist: selectWhitelist,
   error: selectError,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withConnect)(Challenge)
-
+export default compose(withConnect)(withRouter(Challenge))

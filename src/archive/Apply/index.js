@@ -31,37 +31,9 @@ const ApplyWrapper = styled.div`
 `
 
 class Apply extends Component {
-  constructor() {
-    super()
-  }
-
-  componentDidMount() {
-    console.log('Apply props:', this.props)
-    // this.props.onSetupEthereum()
-  }
-
-  selectNetwork(network) {
-    // this.props.onSetupEthereum(network)
-  }
-
   render() {
-    const { error, account, parameters, contracts, wallet } = this.props
-
     return (
       <ApplyWrapper>
-        <UserInfo
-          account={account}
-          error={error}
-          onSelectNetwork={this.selectNetwork}
-          contracts={contracts}
-          wallet={wallet}
-        />
-        <Modal
-          isOpen={true}
-          messages={messages.apply}
-          actions={methods.apply.actions}
-        />
-
       </ApplyWrapper>
     )
   }

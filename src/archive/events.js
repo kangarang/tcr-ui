@@ -16,7 +16,7 @@ import { selectEthjs, selectRegistry, makeSelectContract } from '../selectors'
 
 import {
   eventUtils,
-  commonUtils,
+  logUtils,
 } from './utils'
 import { fromNaturalUnit } from '../libs/units';
 
@@ -78,11 +78,11 @@ function* handleEvent(result) {
     return
   }
 
-  const txDetails = yield call(commonUtils.getTransaction, eth, result.transactionHash)
+  const txDetails = yield call(logUtils.getTransaction, eth, result.transactionHash)
 
   // This is faster than registry.isWhitelisted
   const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
-  const canBeWhitelisted = yield call(commonUtils.canBeWhitelisted, registry, result.args.listing)
+  const canBeWhitelisted = yield call(logUtils.canBeWhitelisted, registry, result.args.listing)
 
   if (result.event === '_Challenge' || result.event === '_NewListingWhitelisted') {
     // Send the event with the listing and pollID
@@ -110,7 +110,7 @@ function* handleEvent(result) {
       canBeWhitelisted,
     }
 
-    const item = yield call(commonUtils.shapeShift, block, tx, details)
+    const item = yield call(logUtils.shapeShift, block, tx, details)
     yield put(newItem(item))
   }
 

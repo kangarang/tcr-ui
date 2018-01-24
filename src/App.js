@@ -1,10 +1,8 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import styled from 'styled-components'
-// import NotificationSystem from 'react-notification-system'
 
 import Home from './containers/Home'
-import Apply from './containers/Apply'
 import Challenge from './containers/Challenge'
 import Vote from './containers/Vote'
 import Activities from './containers/Activities'
@@ -25,12 +23,11 @@ const App = () => (
   <AppWrapper>
     <Nav />
     <Switch>
-      <Route exact path='/' component={Home} />
-      <Route exact path='/apply' component={Apply} />
-      <Route exact path='/challenge' component={Challenge} />
-      <Route exact path='/vote' component={Vote} />
-      <Route exact path='/activities' component={Activities} />
-      <Route exact path='/search' component={Search} />
+      <Route exact path="/" component={Home}/>
+      <Route exact path="/challenge" component={Challenge} />
+      <Route exact path="/vote" component={Vote} />
+      <Route exact path="/activities" component={Activities} />
+      <Route exact path="/search" component={Search} />
     </Switch>
   </AppWrapper>
 )

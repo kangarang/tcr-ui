@@ -2,14 +2,14 @@ import {
   call,
   put,
   select,
-  // takeEvery,
+  takeEvery,
 } from 'redux-saga/effects'
 import {
   setTokensAllowed,
   contractError,
 } from '../actions'
 import {
-  // GET_TOKENS_ALLOWED,
+  GET_TOKENS_ALLOWED,
 } from '../actions/constants'
 import {
   selectAccount,
@@ -18,7 +18,7 @@ import { getContract } from '../services';
 // import { getEthjs } from '../libs/provider';
 
 export default function* tokenSaga() {
-  // yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
+  yield takeEvery(GET_TOKENS_ALLOWED, tokensAllowedSaga)
 }
 
 // Gets Token-Contract allowance

@@ -10,18 +10,9 @@ import Voting from './Voting'
 
 const Contracts = {
   registry: false,
-  token: {
-    abi: Token,
-    contract: false,
-  },
-  voting: {
-    abi: Voting,
-    contract: false,
-  },
-  parameterizer: {
-    abi: Parameterizer,
-    contract: false,
-  },
+  token: Token,
+  voting: Voting,
+  parameterizer: Parameterizer,
 }
 
 export const setupRegistry = async (eth, account) => {
@@ -29,10 +20,10 @@ export const setupRegistry = async (eth, account) => {
   return Contracts.registry
 }
 
-export const getRegistry = async () => Contracts.registry
+export const getRegistry = () => Contracts.registry
 
-export const setupContract = (eth, account, c) => {
-  Contracts[c] = new Contracts[c].abi(
+export const setupContract = async (eth, account, c) => {
+  Contracts[c] = await new Contracts[c](
     eth,
     account,
     Contracts.registry.contract,
@@ -40,4 +31,4 @@ export const setupContract = (eth, account, c) => {
   return Contracts[c]
 }
 
-export const getContract = async (c) => Contracts[c]
+export const getContract = (c) => Contracts[c]

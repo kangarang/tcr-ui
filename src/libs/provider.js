@@ -31,7 +31,7 @@ export const getProviderUrl = network => {
 }
 
 export const setupEthjs = async network => {
-  eth = new Ethjs(setProvider(network))
+  eth = await new Ethjs(setProvider(network))
   return eth
 }
 

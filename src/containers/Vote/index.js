@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import {withRouter} from "react-router-dom"
 
 import Modal from '../Modal'
 import messages from '../../config/messages'
@@ -15,18 +16,11 @@ import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 
 import {
-  setupEthereum,
-} from '../../actions'
-
-import {
   selectParameters,
   selectWallet,
-  selectCandidates,
   selectFaceoffs,
-  selectWhitelist,
   selectError,
   selectAccount,
-  selectAllListings,
   selectContracts,
 } from '../../selectors'
 import methods from '../../config/methods';
@@ -36,15 +30,11 @@ const VotingWrapper = styled.div`
 `
 
 class Voting extends Component {
-  constructor() {
-    super()
-  }
-
   componentDidMount() {
-    console.log('Voting props:', this.props)
-  }
-
-  selectNetwork(network) {
+    console.log('Voting props', this.props)
+    if (!this.props.account) {
+      this.props.history.push('/')
+    }
   }
 
   render() {
@@ -52,11 +42,7 @@ class Voting extends Component {
       wallet,
       account,
       contracts,
-      candidates,
       faceoffs,
-      whitelist,
-      parameters,
-      match,
       error,
     } = this.props
 
@@ -70,7 +56,7 @@ class Voting extends Component {
           contracts={contracts}
         />
 
-        <Modal messages={messages.voting} actions={methods.voting.actions} />
+        <Modal messages={messages.voting} account={account} actions={methods.voting.actions} />
 
         <H2>{'Challenges ('}{faceoffs.size}{')'}</H2>
         <FlexContainer>
@@ -100,7 +86,6 @@ const mapStateToProps = createStructuredSelector({
   parameters: selectParameters,
   wallet: selectWallet,
   account: selectAccount,
-  candidates: selectCandidates,
   faceoffs: selectFaceoffs,
   error: selectError,
   contracts: selectContracts,
@@ -108,5 +93,5 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withConnect)(Voting)
+export default compose(withConnect)(withRouter(Voting))
 

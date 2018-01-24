@@ -1,8 +1,8 @@
-import { call, put, all, takeEvery } from 'redux-saga/effects'
+import { call, put, takeEvery } from 'redux-saga/effects'
 
 import truffleContract from 'truffle-contract'
 import ethUtil from 'ethereumjs-util'
-import sigUtil from 'eth-sig-util'
+// import sigUtil from 'eth-sig-util'
 
 import { EXECUTE_METHOD_REQUEST, LOGIN_ERROR } from '../actions/constants'
 import ABIs from '../contracts'
@@ -22,6 +22,7 @@ function* executeSaga(action) {
     console.log('eth', eth)
 
     const { account, method, network, registry } = action.payload
+    console.log('method', method)
 
     const text = `Registry: ${registry}\nNetwork: ${network}`
 

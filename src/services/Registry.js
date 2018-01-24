@@ -5,7 +5,7 @@ import Promise from 'bluebird'
 
 import abis from '../contracts'
 import { getDefaults } from './defaults'
-import { commonUtils } from '../sagas/utils';
+import { logUtils } from '../sagas/utils';
 
 export default class Registry {
   constructor(eth, account) {
@@ -30,28 +30,6 @@ export default class Registry {
 
     // TODO: check to see that there's an allowance
     return this.contract.apply(listing, amount)
-  }
-
-  challengeListing = async (listing) => {
-    const listingHash = commonUtils.getListingHash(listing)
-    return this.contract.challenge(listingHash)
-  }
-
-  checkCall = async (fn, ...args) => {
-    const result = await this.contract[fn](...args)
-    console.log(fn, result)
-    return result
-  }
-
-  updateStatus = async (listing) => {
-    const listingHash = commonUtils.getListingHash(listing)
-    const receipt = await this.contract.updateStatus(listingHash)
-    console.log('updateStatus receipt:', receipt)
-    return receipt
-  }
-
-  sendTx = (fn, ...args) => {
-    this.contract[fn](...args)
   }
 
   filterListingAndCall = (dLogs, fn) =>

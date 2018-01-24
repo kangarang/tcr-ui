@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Ethjs from 'ethjs'
 import EthAbi from 'ethjs-abi'
 
 import registryContract from '../../contracts/Registry.json'
@@ -22,8 +21,6 @@ const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
     constructor(props) {
       super(props)
-
-      console.log('udapp hoc props', props)
       // const network = props.wallet.get('network')
 
       this.state = {
@@ -45,6 +42,7 @@ const UDappHOC = WrappedComponent => {
           address: contracts.token.networks['4'].address,
         },
         sliderValue: '',
+        callResult: '',
       }
     }
 
@@ -66,33 +64,30 @@ const UDappHOC = WrappedComponent => {
     }
 
     handleInputChange = (method, e, index, input) => {
-      let value = e.target.value
+      let result = e.target.value
 
       // TODO: explain this. also, figure out a better way to handle different inputs
-      if (input.type === 'bytes32' && input.name === '_secretHash') {
-        // secretHash
+      if (input.name === '_secretHash') {
         this.salt = valUtils.randInt(1e6, 1e8)
         console.log('salt', this.salt)
-        console.log('value', value)
-        value = valUtils.getVoteSaltHash(value, this.salt)
-        console.log('value', value)
+        result = valUtils.getVoteSaltHash(
+          e.target.value,
+          this.salt.toString(10)
+        )
       } else if (input.type === 'bytes32') {
-        value = valUtils.getListingHash(value)
+        result = valUtils.getListingHash(e.target.value)
       }
       console.log('salt', this.salt)
 
-      console.log('method, value, input', method, value, input)
+      console.log('method, result, input', method, result, input)
 
       this.setState(prevState => ({
         ...prevState,
         [method.name]: {
           ...prevState[method.name],
-          [input.name]: value,
+          [input.name]: result,
         },
-        // decodedValues: resultArray
       }))
-
-      console.log('this.state', this.state)
     }
 
     // adapted from:
@@ -101,23 +96,18 @@ const UDappHOC = WrappedComponent => {
       e.preventDefault()
       const args = Object.values(this.state[method.name])
       const txData = EthAbi.encodeMethod(method, args)
-      console.log('method', method)
-      console.log('txData', txData)
-      const params = [
-        {
-          from: this.state.fromAddress,
-          to: this.state[contract].address,
-          data: txData,
-        },
-      ]
-      const payload = {
-        method: 'eth_call',
-        params,
+      const params = {
+        from: this.state.fromAddress,
+        to: this.state[contract].address,
+        data: txData,
       }
-      console.log('exec:', method.name, args, payload)
-      const called = await this.eth.call(params[0])
-      console.log('call result:', called)
-      return called
+      const called = await this.eth.call(params)
+      const decint = parseInt(called, 'hex')
+      console.log('CALL RESULT', decint)
+      this.setState({
+        callResult: decint
+      })
+      return decint
     }
 
     // adapted from:
@@ -150,6 +140,7 @@ const UDappHOC = WrappedComponent => {
           voting={this.state.voting}
           token={this.state.token}
           decodedValues={this.state.decodedValues}
+          callResult={this.state.callResult}
           {...this.props}
         />
       )

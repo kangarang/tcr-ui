@@ -8,13 +8,10 @@ import NetworkStatus from 'react-web3-network-status'
 
 import Login from '../Login'
 import messages from '../../config/messages'
+import methods from '../../config/methods'
+import Modal from '../Modal'
 
-import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
-
-import Event from '../../components/Event'
-import FlexContainer from '../../components/FlexContainer'
-import Section from '../../components/Section'
 
 import tcrWave from '../../assets/tcr-wave.jpg'
 
@@ -23,8 +20,6 @@ import { setupEthereum, executeMethod } from '../../actions'
 import {
   selectError,
   selectAccount,
-  selectCandidates,
-  selectParameters,
   selectWallet,
   selectContracts,
 } from '../../selectors'
@@ -45,10 +40,6 @@ class Home extends Component {
     this.props.onSetupEthereum()
   }
 
-  selectNetwork(network) {
-    this.props.onSetupEthereum(network)
-  }
-
   handleChangeRegistryAddress = e => {
     this.setState({
       registryAddress: e.target.value,
@@ -56,7 +47,7 @@ class Home extends Component {
   }
 
   render() {
-    const { error, account, parameters, wallet, candidates, contracts } = this.props
+    const { error, account, wallet, contracts } = this.props
 
     return (
       <HomeWrapper>
@@ -65,17 +56,17 @@ class Home extends Component {
           error={error}
           wallet={wallet}
           contracts={contracts}
-          onSelectNetwork={this.selectNetwork}
         />
+
         <Login
           execute={this.props.onExecute}
           network={wallet.get('network')}
-          networkStatus={<NetworkStatus />}
+          NetworkStatus={<NetworkStatus />}
           ns={NetworkStatus}
           ethBalance={wallet.get('ethBalance')}
           account={account}
           imgSrc={tcrWave}
-          isOpen={true}
+          isOpen={false}
           messages={messages.login}
           onChange={this.handleChangeRegistryAddress}
           registryValue={this.state.registryAddress}
@@ -83,6 +74,14 @@ class Home extends Component {
           tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
           tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
           tokenName={wallet.getIn(['token', 'tokenName'])}
+        />
+
+        <Modal
+          isOpen={false}
+          messages={messages.apply}
+          actions={methods.apply.actions}
+          contracts={contracts}
+          account={account}
         />
 
       </HomeWrapper>
@@ -100,8 +99,6 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   error: selectError,
   account: selectAccount,
-  candidates: selectCandidates,
-  parameters: selectParameters,
   wallet: selectWallet,
   contracts: selectContracts,
 })
