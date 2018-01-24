@@ -1,6 +1,7 @@
 import abi from 'ethereumjs-abi'
 import Eth from 'ethjs'
 import BigNumber from 'bignumber.js'
+import _ from 'lodash'
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
@@ -14,6 +15,30 @@ const valUtils = {
       throw new TypeError('All args should have been numbers')
     }
     return Math.floor(Math.random() * (max - min + 1) + min)
+  },
+
+  toUnitAmount: (amount, decimals) => {
+    if (!_.isNumber(amount)) return false
+    if (!_.isNumber(decimals)) return false
+    const aUnit = BN(10).pow(decimals)
+    const unit = amount.div(aUnit)
+    return unit
+  },
+
+  toNaturalUnitAmount: (amount, decimals) => {
+    if (!_.isNumber(amount)) return false
+    if (!_.isNumber(decimals)) return false
+    const unit = BN(10).pow(decimals)
+    const naturalUnitAmount = amount.times(unit)
+    const hasDecimals = naturalUnitAmount.decimalPlaces() !== 0
+    if (hasDecimals) {
+      throw new Error(
+        `Invalid natural unit amount: ${amount.toString(
+          10
+        )} - Too many decimal places!`
+      )
+    }
+    return naturalUnitAmount
   },
 
   // returns the solidity-sha3 output for vote hashing

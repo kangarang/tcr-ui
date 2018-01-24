@@ -3,38 +3,6 @@ import ethUtil from 'ethereumjs-util'
 import abi from 'ethereumjs-abi'
 import _ from 'lodash'
 import jsSHA3 from 'js-sha3'
-// import { normalize, schema } from 'normalizr'
-
-// const log = new schema.Entity('logs')
-// const transaction = new schema.Entity('transactions', {
-//   logs: [log],
-// })
-// const block = new schema.Entity('blocks', {
-//   transactions: [transaction],
-// })
-// const originalData = {
-//   block: {
-//     number: '11248',
-//     timestamp: '',
-//   },
-//   transactions: [
-//     {
-//       logsbloom: [
-//         {
-//           logIndex: '0',
-//           data: '0x',
-//         },
-//         {
-//           logIndex: '2',
-//           data: '0x',
-//         },
-//       ],
-//       txHash: '0x',
-//       txIndex: '0',
-//     },
-//   ],
-// }
-// const normalizedData = normalize(originalData, block)
 
 const TOPIC_LENGTH = 32
 
