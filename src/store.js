@@ -17,7 +17,7 @@ const stateTransformer = (state) => {
 };
 
 const logger = createLogger({
-  predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
+  // predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
   collapsed: (getState, action, logEntry) => !action.error,
   stateTransformer,
 });

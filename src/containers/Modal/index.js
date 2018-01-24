@@ -85,10 +85,10 @@ class Modal extends Component {
           onRequestClose={this.handleRequestClose}
           style={modalStyles}
           contentLabel="Notification Modal"
-          portalClassName="NotificationModalPortal"
+          // portalClassName="NotificationModalPortal"
           overlayClassName="NotificationModal__Overlay"
           className="NotificationModal__Content"
-          bodyOpenClassName="NotificationModal__Body--open"
+          // bodyOpenClassName="NotificationModal__Body--open"
           ariaHideApp={false}
           shouldFocusAfterRender={true}
           shouldCloseOnEsc={true}
@@ -98,7 +98,7 @@ class Modal extends Component {
           <H2>{this.props.messages.heading}</H2>
           <ModalMessage>{this.props.messages.default}</ModalMessage>
 
-          <UDapp actions={this.props.actions} />
+          <UDapp actions={this.props.actions} account={this.props.account} />
         </ReactModal>
 
         <Button onClick={this.handleOpenModal}>{this.props.messages.name}</Button>
