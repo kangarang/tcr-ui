@@ -4,13 +4,14 @@ import EthAbi from 'ethjs-abi'
 import BlockTracker from 'eth-block-tracker'
 import Suggestor from 'eth-gas-price-suggestor'
 
-import registryContract from '../../contracts/Registry.json'
-import votingContract from '../../contracts/PLCRVoting.json'
-import tokenContract from '../../contracts/EIP20.json'
-import paramContract from '../../contracts/Parameterizer.json'
+import registryContract from '../../abis/Registry.json'
+import votingContract from '../../abis/PLCRVoting.json'
+import tokenContract from '../../abis/EIP20.json'
+import paramContract from '../../abis/Parameterizer.json'
 
-import valUtils from '../../libs/values'
 import { getProvider, getEthjs } from '../../libs/provider'
+import valUtils from '../../utils/value_utils'
+import vote_utils from '../../utils/vote_utils';
 
 const contracts = {
   registry: registryContract,
@@ -27,20 +28,20 @@ const UDappHOC = WrappedComponent => {
       this.state = {
         registry: {
           abi: contracts.registry.abi,
-          address: contracts.registry.networks['4'].address,
+          address: contracts.registry.networks['420'].address,
         },
         fromAddress: false,
         voting: {
           abi: contracts.voting.abi,
-          address: contracts.voting.networks['4'].address,
+          address: contracts.voting.networks['420'].address,
         },
         parameterizer: {
           abi: contracts.parameterizer.abi,
-          address: contracts.parameterizer.networks['4'].address,
+          address: contracts.parameterizer.networks['420'].address,
         },
         token: {
           abi: contracts.token.abi,
-          address: contracts.token.networks['4'].address,
+          address: contracts.token.networks['420'].address,
         },
         sliderValue: '',
         callResult: '',
@@ -96,9 +97,9 @@ const UDappHOC = WrappedComponent => {
       if (input.name === '_secretHash') {
         this.salt = valUtils.randInt(1e6, 1e8)
         console.log('salt', this.salt)
-        result = valUtils.getVoteSaltHash(result, this.salt.toString(10))
+        result = vote_utils.getVoteSaltHash(result, this.salt.toString(10))
       } else if (input.type === 'bytes32') {
-        result = valUtils.getListingHash(result)
+        result = vote_utils.getListingHash(result)
       }
       console.log('salt', this.salt)
 
@@ -131,8 +132,11 @@ const UDappHOC = WrappedComponent => {
           data: txData,
         }
         const called = await this.eth.call(params, 'latest')
-        const decint = parseInt(called, 'hex')
+        console.log('called', called)
+        const decint = parseInt(called, 0)
+        const hexint = parseInt(called, 'hex')
         console.log('CALL RESULT', decint)
+        console.log('CALL RESULT', hexint)
         this.setState({
           callResult: decint,
         })
@@ -150,7 +154,7 @@ const UDappHOC = WrappedComponent => {
       const txData = EthAbi.encodeMethod(method, args)
       const payload = {
         from: this.state.fromAddress,
-        gas: 250000,
+        gas: 300000,
         gasPrice: this.state.suggested,
         to: this.state[contract].address,
         data: txData,

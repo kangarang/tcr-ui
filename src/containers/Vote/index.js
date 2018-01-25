@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import {withRouter} from "react-router-dom"
+import { withRouter } from 'react-router-dom'
 
 import Modal from '../Modal'
 import messages from '../../config/messages'
@@ -23,8 +23,8 @@ import {
   selectAccount,
   selectContracts,
 } from '../../selectors'
-import methods from '../../config/methods';
-import { handleActionClick } from '../../actions/index';
+import methods from '../../config/methods'
+import { handleActionClick } from '../../actions/index'
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -57,9 +57,17 @@ class Voting extends Component {
           contracts={contracts}
         />
 
-        <Modal messages={messages.voting} account={account} actions={methods.voting.actions} />
+        <Modal
+          messages={messages.voting}
+          account={account}
+          actions={methods.voting.actions}
+        />
 
-        <H2>{'Challenges ('}{faceoffs.size}{')'}</H2>
+        <H2>
+          {'Challenges ('}
+          {faceoffs.size}
+          {')'}
+        </H2>
         <FlexContainer>
           {faceoffs.size > 0 &&
             faceoffs.map(log => (
@@ -81,7 +89,7 @@ class Voting extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onHandleClick: (p) => dispatch(handleActionClick('commitVote', p))
+    onHandleClick: p => dispatch(handleActionClick(p)),
   }
 }
 
@@ -97,4 +105,3 @@ const mapStateToProps = createStructuredSelector({
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
 export default compose(withConnect)(withRouter(Voting))
-

@@ -1,7 +1,7 @@
 import contract from 'truffle-contract'
 import Promise from 'bluebird'
 
-import abis from '../contracts'
+import abis from '../abis'
 import { getDefaults } from './defaults'
 
 export default class Registry {
