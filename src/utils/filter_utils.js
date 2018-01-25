@@ -9,6 +9,7 @@ const TOPIC_LENGTH = 32
 export const filterUtils = {
   getFilter: async (address, eventName, indexFilterValues, abi, blockRange) => {
     const eventAbi = _.find(abi, { name: eventName })
+    console.log('eventAbi', eventAbi)
     const eventSignature = filterUtils.getEventSignatureFromAbiByName(
       eventAbi,
       eventName
@@ -16,11 +17,12 @@ export const filterUtils = {
     const topicForEventSignature = ethUtil.addHexPrefix(
       jsSHA3.keccak256(eventSignature)
     )
-    const topicsForIndexedArgs = filterUtils.getTopicsForIndexedArgs(
-      eventAbi,
-      indexFilterValues
-    )
-    const topics = [topicForEventSignature, ...topicsForIndexedArgs]
+    // const topicsForIndexedArgs = filterUtils.getTopicsForIndexedArgs(
+    //   eventAbi,
+    //   indexFilterValues
+    // )
+    // const topics = [topicForEventSignature, ...topicsForIndexedArgs]
+    const topics = [topicForEventSignature]
     let filter = {
       address,
       topics,
