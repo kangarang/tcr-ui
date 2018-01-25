@@ -1,8 +1,6 @@
 import contract from 'truffle-contract'
 import Promise from 'bluebird'
 
-// import { toToken } from '../libs/units'
-
 import abis from '../contracts'
 import { getDefaults } from './defaults'
 
@@ -12,7 +10,7 @@ export default class Registry {
   }
 
   setupRegistry = async (eth, account) => {
-    const RegistryContract = contract(abis.Registry)
+    const RegistryContract = contract(abis.registry)
     RegistryContract.setProvider(eth.currentProvider)
     RegistryContract.defaults(getDefaults(account))
 
@@ -20,15 +18,6 @@ export default class Registry {
     this.address = this.contract.address
 
     return this
-  }
-
-  applyListing = async (listing, amount, tokenDecimalPower) => {
-    // For tokens with decimals...
-    // const gTokens = toToken(amount, tokenDecimalPower)
-    // return this.contract.apply(listing, gTokens.toString(10))
-
-    // TODO: check to see that there's an allowance
-    return this.contract.apply(listing, amount)
   }
 
   filterListingAndCall = (dLogs, fn) =>

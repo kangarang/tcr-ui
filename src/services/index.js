@@ -1,34 +1,28 @@
-// import Registry from '../contracts/Registry.json'
-// import Token from '../contracts/EIP20.json'
-// import Parameterizer from '../contracts/Parameterizer.json'
-// import Voting from '../contracts/PLCRVoting.json'
-
 import Registry from './Registry'
-import Token from './Token'
-import Parameterizer from './Parameterizer'
-import Voting from './Voting'
+import Token from './ContractFactory'
+import Parameterizer from './ContractFactory'
+import Voting from './ContractFactory'
 
-const Contracts = {
-  registry: false,
+export const Contracts = {
+  registry: Registry,
   token: Token,
   voting: Voting,
   parameterizer: Parameterizer,
 }
 
 export const setupRegistry = async (eth, account) => {
-  Contracts.registry = await new Registry(eth, account)
+  Contracts.registry = await new Contracts.registry(eth, account)
   return Contracts.registry
 }
-
-export const getRegistry = () => Contracts.registry
-
 export const setupContract = async (eth, account, c) => {
   Contracts[c] = await new Contracts[c](
     eth,
     account,
     Contracts.registry.contract,
+    c,
   )
   return Contracts[c]
 }
 
+export const getRegistry = () => Contracts.registry
 export const getContract = (c) => Contracts[c]

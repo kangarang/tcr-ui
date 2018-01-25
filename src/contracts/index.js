@@ -4,5 +4,8 @@ import Parameterizer from './Parameterizer.json'
 import EIP20 from './EIP20.json'
 
 export default {
-  Registry, PLCRVoting, Parameterizer, EIP20,
+  registry: Registry,
+  voting: PLCRVoting,
+  parameterizer: Parameterizer,
+  token: EIP20,
 }
