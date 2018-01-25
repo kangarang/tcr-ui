@@ -13,8 +13,8 @@ export const getProvider = () => {
   return Ethjs.HttpProvider(`http://localhost:${config.PROVIDER_PORT}`)
 }
 
-export const setupEthjs = async () => {
-  eth = await new Ethjs(getProvider())
+export const setupEthjs = () => {
+  eth = new Ethjs(getProvider())
   return eth
 }
 

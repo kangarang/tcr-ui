@@ -26,24 +26,23 @@ const UDappHOC = WrappedComponent => {
       super(props)
 
       this.state = {
+        fromAddress: false,
         registry: {
           abi: contracts.registry.abi,
-          address: contracts.registry.networks['420'].address,
+          address: contracts.registry.networks[props.networkId].address,
         },
-        fromAddress: false,
         voting: {
           abi: contracts.voting.abi,
-          address: contracts.voting.networks['420'].address,
+          address: contracts.voting.networks[props.networkId].address,
         },
         parameterizer: {
           abi: contracts.parameterizer.abi,
-          address: contracts.parameterizer.networks['420'].address,
+          address: contracts.parameterizer.networks[props.networkId].address,
         },
         token: {
           abi: contracts.token.abi,
-          address: contracts.token.networks['420'].address,
+          address: contracts.token.networks[props.networkId].address,
         },
-        sliderValue: '',
         callResult: '',
       }
     }
@@ -134,7 +133,7 @@ const UDappHOC = WrappedComponent => {
         const called = await this.eth.call(params, 'latest')
         console.log('called', called)
         const decint = parseInt(called, 0)
-        const hexint = parseInt(called, 'hex')
+        const hexint = parseInt(called, 16)
         console.log('CALL RESULT', decint)
         console.log('CALL RESULT', hexint)
         this.setState({
@@ -152,13 +151,16 @@ const UDappHOC = WrappedComponent => {
     handleExecute = async (method, contract) => {
       const args = this.getMethodArgs(method)
       const txData = EthAbi.encodeMethod(method, args)
+      const nonce = await this.eth.getTransactionCount(this.state.fromAddress)
       const payload = {
         from: this.state.fromAddress,
-        gas: 300000,
-        gasPrice: this.state.suggested,
+        gas: 450000,
+        gasPrice: this.state.suggested || 25000000000,
         to: this.state[contract].address,
         data: txData,
+        nonce,
       }
+      console.log('payload', payload)
       const txHash = await this.eth.sendTransaction(payload)
       console.log('TRANSACTION:', txHash)
       return txHash

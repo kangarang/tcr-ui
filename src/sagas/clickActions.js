@@ -24,6 +24,10 @@ function* clickSaga(action) {
       account
     )
     console.log('votingRights', votingRights)
+    if (votingRights.toNumber(10) < 10) {
+      console.log('\nNOT ENOUGH VOTING RIGHTS')
+      return false
+    }
     const parameters = (yield select(selectParameters)).toJS()
     console.log('parameters', parameters)
     const receipt = yield call(

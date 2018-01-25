@@ -5,10 +5,10 @@ import { selectAccount } from '../selectors'
 import { getContract } from '../services'
 
 export default function* tokenSaga() {
-  yield takeLatest(GET_TOKENS_ALLOWED, tokensAllowedSaga)
+  yield takeLatest(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
 }
 
-export function* tokensAllowedSaga(spender) {
+export function* updateTokenBalancesSaga(spender) {
   const address = yield select(selectAccount)
   const token = yield call(getContract, 'token')
   const voting = yield call(getContract, 'voting')

@@ -118,7 +118,7 @@ class Login extends Component {
       account,
       ethBalance,
       imgSrc,
-      NetworkStatus,
+      // NetworkStatus,
       registryValue,
       onChange,
       registryPH,

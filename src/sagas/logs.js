@@ -9,7 +9,7 @@ import { getRegistry, getContract } from '../services'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
-import { tokensAllowedSaga } from './token'
+import { updateTokenBalancesSaga } from './token'
 
 import { getEthjs } from '../libs/provider'
 
@@ -31,11 +31,12 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '_Application'
+      '_Application',
+      registry
     )
 
     yield put(newArray(applications))
-    yield fork(tokensAllowedSaga, registry.address)
+    yield fork(updateTokenBalancesSaga, registry.address)
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))
@@ -45,21 +46,20 @@ function* getFreshLogs() {
   yield fork(pollController)
 }
 
-function* handleLogs(sb, eb, topic) {
+function* handleLogs(sb, eb, topic, contract) {
   try {
     const eth = yield call(getEthjs)
-    const registry = yield call(getRegistry)
 
-    const blockRange = {
+    const blockRange = yield {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
     }
     const filter = yield call(
       filterUtils.getFilter,
-      registry.address,
+      contract.address,
       topic,
       [],
-      registry.contract.abi,
+      contract.contract.abi,
       blockRange
     )
     console.log('filter', filter)
@@ -67,7 +67,7 @@ function* handleLogs(sb, eb, topic) {
     const rawLogs = yield call(eth.getLogs, filter)
     console.log('rawLogs', rawLogs)
 
-    const decoder = yield call(EthAbi.logDecoder, registry.contract.abi)
+    const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
     console.log('decodedLogs', decodedLogs, decodedLogs.length)
 
@@ -78,7 +78,7 @@ function* handleLogs(sb, eb, topic) {
           eth,
           rawLogs[ind].transactionHash
         )
-        return buildListing(registry, block, dLog, ind, txDetails)
+        return buildListing(contract, block, dLog, ind, txDetails)
       })).filter(lawg => lawg !== false)
     )
   } catch (err) {
@@ -87,13 +87,13 @@ function* handleLogs(sb, eb, topic) {
   }
 }
 
-async function buildListing(registry, block, dLog, i, txDetails) {
+async function buildListing(contract, block, dLog, i, txDetails) {
   try {
     // Get the listing struct from the mapping
     if (!dLog.listingHash) {
       return false
     }
-    const listing = await registry.contract.listings.call(dLog.listingHash)
+    const listing = await contract.contract.listings.call(dLog.listingHash)
     if (
       !listing ||
       listing[2] === '0x0000000000000000000000000000000000000000'
@@ -166,35 +166,13 @@ function* pollLogsSaga(action) {
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
-      ''
+      '',
+      registry,
     )
+    console.log('newLogs', newLogs)
     yield put(updateItems(newLogs))
-
-    // const newApplicationLogs = yield call(
-    //   handleLogs,
-    //   action.payload.startBlock,
-    //   action.payload.endBlock,
-    //   '_Application'
-    // )
-    // yield put(updateItems(newApplicationLogs))
-
-    // const newWhitelistLogs = yield call(
-    //   handleLogs,
-    //   action.payload.startBlock,
-    //   action.payload.endBlock,
-    //   '_NewListingWhitelisted'
-    // )
-    // yield put(updateItems(newWhitelistLogs))
-
-    // const newChallengeLogs = yield call(
-    //   handleLogs,
-    //   action.payload.startBlock,
-    //   action.payload.endBlock,
-    //   '_Challenge'
-    // )
-    // yield put(updateItems(newChallengeLogs))
-    yield fork(tokensAllowedSaga, registry.address)
-    yield fork(tokensAllowedSaga, voting.address)
+    yield fork(updateTokenBalancesSaga, registry.address)
+    yield fork(updateTokenBalancesSaga, voting.address)
   } catch (err) {
     console.log('Fresh log error:', err)
     yield put(logsError('logs error', err))

@@ -20,7 +20,7 @@ import {
   logoutSuccess,
 } from '../actions'
 
-import { tokensAllowedSaga } from './token'
+import { updateTokenBalancesSaga } from './token'
 
 import { setupEthjs, getEthjs } from '../libs/provider'
 
@@ -78,8 +78,8 @@ function* contractsSaga(eth, address) {
 
     if (token && parameterizer && registry && voting) {
       yield put(setContracts({ registry, token, parameterizer, voting }))
-      yield fork(tokensAllowedSaga, registry.address)
-      yield fork(tokensAllowedSaga, voting.address)
+      yield fork(updateTokenBalancesSaga, registry.address)
+      yield fork(updateTokenBalancesSaga, voting.address)
     }
   } catch (err) {
     yield put(contractError(err))
