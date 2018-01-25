@@ -82,6 +82,7 @@ class Home extends Component {
           actions={methods.apply.actions}
           contracts={contracts}
           account={account}
+          networkId={wallet.get('network')}
         />
 
       </HomeWrapper>

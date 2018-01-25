@@ -23,7 +23,6 @@ const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
     constructor(props) {
       super(props)
-      // const network = props.wallet.get('network')
 
       this.state = {
         registry: {
@@ -78,10 +77,11 @@ const UDappHOC = WrappedComponent => {
           const suggested = await suggestor.currentAverage()
           console.log('suggested', suggested)
           console.log(
-            'CURRENT SUGGESTION in GWEI: ' + Eth.fromWei(suggested, 'gwei')
+            'CURRENT SUGGESTION in GWEI: ' +
+              Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
           )
           this.setState({
-            suggested
+            suggested,
           })
         } catch (e) {
           console.log('failed: ', e)
@@ -150,8 +150,8 @@ const UDappHOC = WrappedComponent => {
       const txData = EthAbi.encodeMethod(method, args)
       const payload = {
         from: this.state.fromAddress,
-        gas: '0x32aa20',
-        gasPrice: '0x4021dba00',
+        gas: 250000,
+        gasPrice: this.state.suggested,
         to: this.state[contract].address,
         data: txData,
       }

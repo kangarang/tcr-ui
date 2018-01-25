@@ -5,12 +5,12 @@ import ethUtil from 'ethereumjs-util'
 // import sigUtil from 'eth-sig-util'
 
 import { EXECUTE_METHOD_REQUEST, LOGIN_ERROR } from '../actions/constants'
-import ABIs from '../contracts'
 
 import { loginError, loginSuccess } from '../actions'
 
 import { getEthjs } from '../libs/provider'
 import { getDefaults } from '../services/defaults'
+import { getRegistry } from '../services/index';
 
 export default function* rootLoginSaga() {
   yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
@@ -34,6 +34,8 @@ function* executeSaga(action) {
     const recovered = yield call([eth, 'personal_ecRecover'], msg, signed)
     console.log('recovered', recovered)
 
+    const regContract = yield call(getRegistry)
+
     if (recovered === account) {
       console.log('Ethjs recovered the message signer')
       console.log('Checking if deployed...')
@@ -41,7 +43,7 @@ function* executeSaga(action) {
         checkIfDeployed,
         eth,
         account,
-        ABIs.Registry,
+        regContract.contract,
         registry
       )
       console.log('deployed', deployed)

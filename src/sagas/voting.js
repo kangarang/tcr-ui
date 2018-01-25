@@ -33,7 +33,7 @@ function* commitSaga(payload) {
     yield call(token.approve, voting.address, payload.amount)
     yield call(voting.requestVotingRights, payload.amount)
 
-    const receipt = yield call(voting.commitVote, payload.pollID, account, payload.amount)
+    const receipt = yield call(voting.commitVote, payload.pollID, payload.voteOption, account, payload.amount)
     console.log('receipt', receipt)
   } catch (err) {
     console.log('Commit vote error:', err)

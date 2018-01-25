@@ -13,6 +13,7 @@ import {
   GET_TOKENS_ALLOWED,
   SET_TOKENS_ALLOWED,
   GET_ETH_PROVIDER,
+  CLICK_ACTION_REQUEST,
   // SET_LOGS,
   POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
@@ -140,6 +141,12 @@ export function applyListing(listing, deposit) {
 export function deleteListings(payload) {
   return {
     type: DELETE_LISTINGS,
+    payload,
+  }
+}
+export function handleActionClick(payload) {
+  return {
+    type: CLICK_ACTION_REQUEST,
     payload,
   }
 }

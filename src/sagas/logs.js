@@ -9,11 +9,11 @@ import { getRegistry, getContract } from '../services'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
-import { logUtils } from '../utils/log-utils'
+import { logUtils } from '../utils/log_utils'
 import { tokensAllowedSaga } from './token'
 
 import { getEthjs } from '../libs/provider'
-import topics from '../libs/topics'
+import { filterUtils } from '../utils/filter_utils';
 
 let lastReadBlockNumber = 1638476
 
@@ -33,7 +33,6 @@ function* getFreshLogs() {
     )
 
     yield put(newArray(applications))
-    // yield put(updateItems(applications))
     yield fork(tokensAllowedSaga, registry.address)
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -49,17 +48,17 @@ function* handleLogs(sb, eb, topic) {
     const eth = yield call(getEthjs)
     const registry = yield call(getRegistry)
 
-    const filter = {
+    const blockRange = {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
-      address: registry.address,
-      topics: topics[topic],
     }
+    const filter = yield call(filterUtils.getFilter, registry.address, topic, [], registry.contract.abi, blockRange)
+    console.log('filter', filter)
 
     const rawLogs = yield call(eth.getLogs, filter)
     console.log('rawLogs', rawLogs)
 
-    const decoder = yield call([EthAbi, 'logDecoder'], registry.contract.abi)
+    const decoder = yield call(EthAbi.logDecoder, registry.contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
     console.log('decodedLogs', decodedLogs, decodedLogs.length)
 
@@ -89,8 +88,6 @@ async function buildListing(registry, block, dLog, i, txDetails) {
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
-
-    console.log('listing', listing)
 
     const isWhitelisted =
       dLog._eventName === '_NewListingWhitelisted' ||
@@ -124,7 +121,7 @@ async function buildListing(registry, block, dLog, i, txDetails) {
 
 // Timer
 function* pollController() {
-  const pollInterval = 15000
+  const pollInterval = 5000
   while (true) {
     try {
       // Every 15 secs:
@@ -165,7 +162,7 @@ function* pollLogsSaga(action) {
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
-      '_NewDomainWhitelisted'
+      '_NewListingWhitelisted'
     )
     yield put(updateItems(newWhitelistLogs))
 

@@ -24,6 +24,7 @@ import {
   selectContracts,
 } from '../../selectors'
 import methods from '../../config/methods';
+import { handleActionClick } from '../../actions/index';
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -44,6 +45,7 @@ class Voting extends Component {
       contracts,
       faceoffs,
       error,
+      onHandleClick,
     } = this.props
 
     return (
@@ -51,7 +53,6 @@ class Voting extends Component {
         <UserInfo
           account={account}
           error={error}
-          onSelectNetwork={this.selectNetwork}
           wallet={wallet}
           contracts={contracts}
         />
@@ -68,6 +69,7 @@ class Voting extends Component {
                   owner={log.get('owner')}
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
+                  handleClick={onHandleClick}
                 />
               </Section>
             ))}
@@ -79,6 +81,7 @@ class Voting extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
+    onHandleClick: (p) => dispatch(handleActionClick('commitVote', p))
   }
 }
 

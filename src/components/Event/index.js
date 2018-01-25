@@ -25,7 +25,7 @@ const Container = styled.div`
   border-radius: 4px;
 `
 
-export default ({ latest, owner, listing }) => (
+export default ({ latest, owner, listing, whitelisted, handleClick }) => (
   <Container txHash={latest.get('txHash')}>
     <FlexCenteredItem gR={1} gC={1}>
       <Identicon owner={latest.get('txHash')} size={6} scale={6} />
@@ -50,6 +50,7 @@ export default ({ latest, owner, listing }) => (
 
     <Item pad={0.5} gR={1} gC={4}>
       {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
+      {latest.get('pollID') && <Button onClick={(e) => handleClick(latest.get('pollID'))}>{'Commit Vote'}</Button>}
     </Item>
 
     <Item pad={0.5} gR={2} gC={2}>

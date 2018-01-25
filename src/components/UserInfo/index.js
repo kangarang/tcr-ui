@@ -19,6 +19,20 @@ import { toEther, withCommas, trimDecimalsThree } from '../../libs/units'
 import iconSrc from '../../assets/icons/favicon.ico'
 
 function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
+  const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
+  const tokenSymbol = wallet.getIn(['token', 'tokenSymbol'])
+  const votingAllowance = wallet.getIn([
+    'token',
+    'allowances',
+    contracts.getIn(['voting', 'address']),
+    'total',
+  ])
+  const registryAllowance = wallet.getIn([
+    'token',
+    'allowances',
+    contracts.getIn(['registry', 'address']),
+    'total',
+  ])
   return (
     <Container>
       <FlexCenteredItem gR={1} gC={1}>
@@ -39,8 +53,7 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
       <Item gR={1} gC={4}>
         <BoldInlineText>
           {`${wallet.getIn(['token', 'tokenSymbol'])} Balance: `}
-          {wallet.getIn(['token', 'tokenBalance']) &&
-            withCommas(wallet.getIn(['token', 'tokenBalance']))}
+          {tokenBalance && withCommas(tokenBalance)}
         </BoldInlineText>
       </Item>
 
@@ -64,39 +77,15 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
 
       <Item gR={2} gC={4}>
         <BoldInlineText>
-          {`Registry allowance:`}
-          {wallet.getIn([
-            'token',
-            'allowances',
-            contracts.getIn(['registry', 'address']),
-            'total',
-          ]) &&
-            withCommas(
-              wallet.getIn([
-                'token',
-                'allowances',
-                contracts.getIn(['registry', 'address']),
-                'total',
-              ])
-            )}
+          {`Registry allowance: `}
+          {registryAllowance && withCommas(registryAllowance)}
         </BoldInlineText>
       </Item>
 
       <Item gR={3} gC={4}>
         <BoldInlineText>
           {'Voting allowance: '}
-          {wallet.getIn([
-            'token',
-            'allowances',
-            contracts.getIn(['voting', 'address']),
-            'total',
-          ]) &&
-            wallet.getIn([
-              'token',
-              'allowances',
-              contracts.getIn(['voting', 'address']),
-              'total',
-            ])}
+          {votingAllowance && withCommas(votingAllowance)}
         </BoldInlineText>
       </Item>
     </Container>

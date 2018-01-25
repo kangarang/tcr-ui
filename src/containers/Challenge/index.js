@@ -58,6 +58,7 @@ class Challenge extends Component {
         />
 
         <Modal
+          isOpen={false}
           messages={messages.challenge}
           account={account}
           actions={methods.challenge.actions}

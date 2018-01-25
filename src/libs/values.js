@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
-export const valUtils = {
+const valUtils = {
   randInt: (min, max) => {
     if (max === undefined) {
       max = min
