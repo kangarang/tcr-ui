@@ -1,4 +1,3 @@
-import abi from 'ethereumjs-abi'
 import Eth from 'ethjs'
 import _ from 'lodash'
 
@@ -38,37 +37,6 @@ const valUtils = {
       )
     }
     return naturalUnitAmount
-  },
-
-  // returns the solidity-sha3 output for vote hashing
-  getVoteSaltHash: (vote, salt) =>
-    `0x${abi.soliditySHA3(['uint', 'uint'], [vote, salt]).toString('hex')}`,
-
-  getListingHash: listing =>
-    `0x${abi.soliditySHA3(['string'], [listing]).toString('hex')}`,
-
-  // returns the solidity-sha3 output for VoteMap indexing
-  getIndexHash: (account, pollID, atr) => {
-    const hash = `0x${abi
-      .soliditySHA3(['address', 'uint', 'string'], [account, pollID, atr])
-      .toString('hex')}`
-    return hash
-  },
-
-  getReceiptValue: (receipt, arg) => receipt.logs[0].args[arg],
-  // returns poll instance
-  getPoll: (voting, pollID) => voting.pollMap.call(pollID),
-  getPollIDFromReceipt: receipt => valUtils.getReceiptValue(receipt, 'pollID'),
-  getVotesFor: async (voting, pollID) => {
-    const poll = await valUtils.getPoll(voting, pollID)
-    return poll[3]
-  },
-  getUnstakedDeposit: async (registry, listingHash) => {
-    // get the struct in the mapping
-    const listing = await registry.listings.call(listingHash)
-    // get the unstaked deposit amount from the listing struct
-    const unstakedDeposit = await listing[3]
-    return unstakedDeposit.toString()
   },
 
   divideAndGetWei: (numerator, denominator) => {

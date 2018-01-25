@@ -1,6 +1,6 @@
 import abi from 'ethereumjs-abi'
 
-export const logUtils = {
+const logUtils = {
   getBlock: async (eth, hash) => eth.getBlockByHash(hash, false),
   getTransaction: async (eth, hash) => eth.getTransactionByHash(hash),
 
@@ -33,3 +33,5 @@ export const logUtils = {
     },
   }),
 }
+
+export default logUtils

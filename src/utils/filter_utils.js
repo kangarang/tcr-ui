@@ -4,11 +4,23 @@ import jsSHA3 from 'js-sha3'
 
 const TOPIC_LENGTH = 32
 
-// adapted from: 
+// adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
-export const filterUtils = {
+const filterUtils = {
   getFilter: async (address, eventName, indexFilterValues, abi, blockRange) => {
-    const eventAbi = _.find(abi, { name: eventName })
+    let eventAbi
+    if (!eventName) {
+      const filter = {
+        address: address,
+        topics: [],
+      }
+      return {
+        ...blockRange,
+        ...filter
+      }
+    } else {
+      eventAbi = _.find(abi, { name: eventName })
+    }
     console.log('eventAbi', eventAbi)
     const eventSignature = filterUtils.getEventSignatureFromAbiByName(
       eventAbi,
@@ -17,12 +29,11 @@ export const filterUtils = {
     const topicForEventSignature = ethUtil.addHexPrefix(
       jsSHA3.keccak256(eventSignature)
     )
-    // const topicsForIndexedArgs = filterUtils.getTopicsForIndexedArgs(
-    //   eventAbi,
-    //   indexFilterValues
-    // )
-    // const topics = [topicForEventSignature, ...topicsForIndexedArgs]
-    const topics = [topicForEventSignature]
+    const topicsForIndexedArgs = filterUtils.getTopicsForIndexedArgs(
+      eventAbi,
+      indexFilterValues
+    )
+    const topics = [topicForEventSignature, ...topicsForIndexedArgs]
     let filter = {
       address,
       topics,
@@ -91,3 +102,5 @@ export const filterUtils = {
     return true
   },
 }
+
+export default filterUtils
