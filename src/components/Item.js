@@ -4,13 +4,14 @@ import { colors } from './Colors'
 export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 12fr 6fr 6fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
   grid-gap: 15px;
   margin: 1em;
   padding: .7em;
   background-color: rgba(0, 0, 0, 0.1);
   color: ${colors.offBlack};
   border: 2px solid ${colors.prism};
+  border-radius: 4px;
 `
 export const Item = styled.div`
   display: flex;

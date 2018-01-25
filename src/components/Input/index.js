@@ -2,13 +2,14 @@ import styled from 'styled-components'
 import { colors } from '../Colors'
 
 const Input = styled.input`
-  width: 100%;
+  width: 95%;
   box-sizing: border-box;
   border: 1px solid ${colors.prism};
-  font-size: 1.3em;
-  padding: 0.5em;
+  font-size: 1em;
+  padding: .3em;
+  margin: 3px 5px;
   color: ${colors.offBlack};
   background-color: ${colors.offWhite};
-  font-family: 'Harmonia Sans Mono Std', monospace;
+  font-family: 'Iosevka';
 `
 export default Input

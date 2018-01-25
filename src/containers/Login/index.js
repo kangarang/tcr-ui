@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   padding: 1em;
 `
 const PaddedDiv = styled.div`
-  padding: 1em;
+  padding: .7em;
   margin: 1em 4em;
   border: 1px solid ${colors.darkBlue};
   display: flex;
@@ -33,6 +33,7 @@ const LrgDiv = styled(HalfDiv)`
   min-width: 85%;
   margin: 0 1%;
   border-radius: 3px;
+  font-family: 'Iosevka';
 `
 const SmlDiv = styled(HalfDiv)`
   min-width: 13%;
@@ -47,6 +48,8 @@ const modalStyles = {
     right: '0',
     bottom: '0',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    border: '1px solid black',
+    boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)',
     zIndex: '2',
   },
   content: {
@@ -68,9 +71,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalIsOpen: props.isOpen,
+      modalIsOpen: true,
     }
-    console.log('this', this)
   }
 
   handleOpenModal = () => {
@@ -101,8 +103,7 @@ class Login extends Component {
     })
   }
 
-  handleAfterOpen = () => {
-  }
+  handleAfterOpen = () => {}
 
   handleRequestClose = () => {
     console.log('close', this)
@@ -144,7 +145,7 @@ class Login extends Component {
           shouldReturnFocusAfterClose={true}
           role="dialog"
         >
-          <Button onClick={this.handleCloseModal}>{'X'}</Button>
+          {/* <Button onClick={this.handleCloseModal}>{'X'}</Button> */}
 
           <Img src={imgSrc} alt="Token Curated Registries" />
 
@@ -156,7 +157,7 @@ class Login extends Component {
           <PaddedDiv>
             <SmlDiv>{'Network: '}</SmlDiv>
             <SmlDiv>{NetworkStatus}</SmlDiv>
-            <SmlDiv>{'ΞTH Balance: '}</SmlDiv>
+            <SmlDiv>{'ETH Balance: '}</SmlDiv>
             <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>
 
@@ -175,7 +176,10 @@ class Login extends Component {
             <SmlDiv>{'Token Name: '}</SmlDiv>
             <SmlDiv>{tokenName}</SmlDiv>
 
-            <SmlDiv>{tokenSymbol}{' Balance: '}</SmlDiv>
+            <SmlDiv>
+              {tokenSymbol}
+              {' Balance: '}
+            </SmlDiv>
             <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
           </PaddedDiv>
 
