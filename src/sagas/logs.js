@@ -9,13 +9,15 @@ import { getRegistry, getContract } from '../services'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
-import { logUtils } from '../utils/log_utils'
 import { tokensAllowedSaga } from './token'
 
 import { getEthjs } from '../libs/provider'
-import { filterUtils } from '../utils/filter_utils';
 
-let lastReadBlockNumber = 1638476
+import logUtils from '../utils/log_utils'
+import filterUtils from '../utils/filter_utils'
+
+let lastReadBlockNumber = 10
+// let lastReadBlockNumber = 1638476
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
@@ -52,7 +54,14 @@ function* handleLogs(sb, eb, topic) {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
     }
-    const filter = yield call(filterUtils.getFilter, registry.address, topic, [], registry.contract.abi, blockRange)
+    const filter = yield call(
+      filterUtils.getFilter,
+      registry.address,
+      topic,
+      [],
+      registry.contract.abi,
+      blockRange
+    )
     console.log('filter', filter)
 
     const rawLogs = yield call(eth.getLogs, filter)
@@ -85,7 +94,10 @@ async function buildListing(registry, block, dLog, i, txDetails) {
       return false
     }
     const listing = await registry.contract.listings.call(dLog.listingHash)
-    if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
+    if (
+      !listing ||
+      listing[2] === '0x0000000000000000000000000000000000000000'
+    ) {
       return false
     }
 
@@ -150,29 +162,37 @@ function* pollLogsSaga(action) {
     lastReadBlockNumber = (yield call(eth.blockNumber)).toNumber(10)
     console.log('lastReadBlockNumber', lastReadBlockNumber)
     console.log('action', action)
-    const newApplicationLogs = yield call(
+    const newLogs = yield call(
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
-      '_Application'
+      ''
     )
-    yield put(updateItems(newApplicationLogs))
+    yield put(updateItems(newLogs))
 
-    const newWhitelistLogs = yield call(
-      handleLogs,
-      action.payload.startBlock,
-      action.payload.endBlock,
-      '_NewListingWhitelisted'
-    )
-    yield put(updateItems(newWhitelistLogs))
+    // const newApplicationLogs = yield call(
+    //   handleLogs,
+    //   action.payload.startBlock,
+    //   action.payload.endBlock,
+    //   '_Application'
+    // )
+    // yield put(updateItems(newApplicationLogs))
 
-    const newChallengeLogs = yield call(
-      handleLogs,
-      action.payload.startBlock,
-      action.payload.endBlock,
-      '_Challenge'
-    )
-    yield put(updateItems(newChallengeLogs))
+    // const newWhitelistLogs = yield call(
+    //   handleLogs,
+    //   action.payload.startBlock,
+    //   action.payload.endBlock,
+    //   '_NewListingWhitelisted'
+    // )
+    // yield put(updateItems(newWhitelistLogs))
+
+    // const newChallengeLogs = yield call(
+    //   handleLogs,
+    //   action.payload.startBlock,
+    //   action.payload.endBlock,
+    //   '_Challenge'
+    // )
+    // yield put(updateItems(newChallengeLogs))
     yield fork(tokensAllowedSaga, registry.address)
     yield fork(tokensAllowedSaga, voting.address)
   } catch (err) {

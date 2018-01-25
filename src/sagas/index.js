@@ -25,11 +25,13 @@ import { tokensAllowedSaga } from './token'
 import { setupEthjs, getEthjs } from '../libs/provider'
 
 import signinSaga from './signin'
+import clickActionSaga from './clickActions'
 import { selectAccount } from '../selectors/index'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield fork(signinSaga)
+  yield fork(clickActionSaga)
   yield fork(runPolling)
   yield takeLatest(GET_ETH_PROVIDER, pollProvider)
 }

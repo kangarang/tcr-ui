@@ -21,6 +21,12 @@ import iconSrc from '../../assets/icons/favicon.ico'
 function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
   const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
   const tokenSymbol = wallet.getIn(['token', 'tokenSymbol'])
+  const votingRights = wallet.getIn([
+    'token',
+    'allowances',
+    contracts.getIn(['voting', 'address']),
+    'votingRights',
+  ])
   const votingAllowance = wallet.getIn([
     'token',
     'allowances',
@@ -77,15 +83,22 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
 
       <Item gR={2} gC={4}>
         <BoldInlineText>
-          {`Registry allowance: `}
+          {`Registry Allowance: `}
           {registryAllowance && withCommas(registryAllowance)}
         </BoldInlineText>
       </Item>
 
       <Item gR={3} gC={4}>
         <BoldInlineText>
-          {'Voting allowance: '}
+          {'Voting Allowance: '}
           {votingAllowance && withCommas(votingAllowance)}
+        </BoldInlineText>
+      </Item>
+
+      <Item gR={4} gC={4}>
+        <BoldInlineText>
+          {'Voting Rights: '}
+          {votingRights && withCommas(votingRights)}
         </BoldInlineText>
       </Item>
     </Container>

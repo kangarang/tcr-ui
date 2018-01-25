@@ -11,10 +11,15 @@ export default function* tokenSaga() {
 export function* tokensAllowedSaga(spender) {
   const address = yield select(selectAccount)
   const token = yield call(getContract, 'token')
+  const voting = yield call(getContract, 'voting')
   try {
     // TODO: use udapp instead
     const { allowance, balance } = yield call(token.allowance, address, spender)
-    yield put(setTokensAllowed({ spender, allowance, balance }))
+    const votingRights = yield call(
+      [voting.contract, 'voteTokenBalance', 'call'],
+      address
+    )
+    yield put(setTokensAllowed({ spender, allowance, balance, votingRights }))
   } catch (err) {
     console.log('Allowance error:', err)
     yield put(contractError(err))

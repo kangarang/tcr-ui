@@ -50,7 +50,15 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
 
     <Item pad={0.5} gR={1} gC={4}>
       {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
-      {latest.get('pollID') && <Button onClick={(e) => handleClick(latest.get('pollID'))}>{'Commit Vote'}</Button>}
+      {latest.get('pollID') && (
+        <Button
+          onClick={e =>
+            handleClick({ method: 'commitVote', listing, pollID: latest.get('pollID') })
+          }
+        >
+          {'Commit Vote'}
+        </Button>
+      )}
     </Item>
 
     <Item pad={0.5} gR={2} gC={2}>

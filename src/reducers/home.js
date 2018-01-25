@@ -110,6 +110,7 @@ function homeReducer(state = initialState, action) {
           ['contracts', 'parameterizer', 'address'],
           fromJS(action.payload.parameterizer.address)
         )
+        .set('parameters', fromJS(action.payload.parameterizer.parameters))
         .setIn(
           ['contracts', 'token', 'address'],
           fromJS(action.payload.token.address)
@@ -121,6 +122,16 @@ function homeReducer(state = initialState, action) {
       )
     case SET_TOKENS_ALLOWED:
       return state
+        .setIn(
+          [
+            'wallet',
+            'token',
+            'allowances',
+            action.payload.spender,
+            'votingRights',
+          ],
+          fromJS(action.payload.votingRights)
+        )
         .setIn(
           [
             'wallet',

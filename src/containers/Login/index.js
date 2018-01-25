@@ -81,9 +81,9 @@ class Login extends Component {
       modalIsOpen: true,
     })
 
-    console.log('this.props.ns()', this.props.ns())
-    const nsState = this.props.ns().props.store.getState()
-    console.log('nsState', nsState)
+    // console.log('this.props.ns()', this.props.ns())
+    // const nsState = this.props.ns().props.store.getState()
+    // console.log('nsState', nsState)
   }
 
   handleCloseModal = () => {
@@ -156,7 +156,7 @@ class Login extends Component {
 
           <PaddedDiv>
             <SmlDiv>{'Network: '}</SmlDiv>
-            <SmlDiv>{NetworkStatus}</SmlDiv>
+            {/* <SmlDiv>{NetworkStatus}</SmlDiv> */}
             <SmlDiv>{'ETH Balance: '}</SmlDiv>
             <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>
