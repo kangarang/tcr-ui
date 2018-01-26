@@ -90,11 +90,10 @@ function* handleLogs(sb, eb, topic, contract) {
 async function buildListing(contract, block, dLog, i, txDetails) {
   try {
     // Get the listing struct from the mapping
-    if (!dLog.listingHash || dLog.data === '420420') {
+    if (!dLog.listingHash) {
       return false
     }
     const listing = await contract.contract.listings.call(dLog.listingHash)
-    console.log('listing', listing)
     if (
       !listing ||
       listing[2] === '0x0000000000000000000000000000000000000000'
@@ -102,9 +101,10 @@ async function buildListing(contract, block, dLog, i, txDetails) {
       return false
     }
 
-    const isWhitelisted = listing[1]
-      // dLog._eventName === '_NewListingWhitelisted' ||
-      // dLog._eventName === '_ChallengeFailed'
+    // const isWhitelisted = listing[1]
+    const isWhitelisted =
+      dLog._eventName === '_NewListingWhitelisted' ||
+      dLog._eventName === '_ChallengeFailed'
 
     const tx = {
       hash: txDetails.hash,
@@ -115,7 +115,7 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     }
 
     const details = {
-      listingString: dLog.data ? dLog.data : false,
+      listingString: dLog.data,
       listingHash: dLog.listingHash,
       unstakedDeposit: listing[3] ? listing[3].toString(10) : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,

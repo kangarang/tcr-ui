@@ -52,7 +52,7 @@
     "web3-provider-engine": "13.4.0"
   },
   "scripts": {
-    "start": "npm run build && node server.js",
+    "start:prod": "npm run build && node server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

@@ -100,10 +100,9 @@ const UDappHOC = WrappedComponent => {
       ) {
         data = e.target.value
       } else if (input.name === '_listingHash') {
-        // data = this.state[method.name]._data
-        data = ''
+        data = this.state[method.name]._data
       } else {
-        data = ''
+        // data = 'test name'
       }
 
       // TODO: explain this. also, figure out a better way to handle different inputs
@@ -113,6 +112,7 @@ const UDappHOC = WrappedComponent => {
         result = vote_utils.getVoteSaltHash(result, this.salt.toString(10))
       } else if (input.type === 'bytes32') {
         result = vote_utils.getListingHash(result)
+        // data = result
       }
       console.log('salt', this.salt)
 

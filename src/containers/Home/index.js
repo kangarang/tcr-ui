@@ -24,6 +24,7 @@ import {
   selectContracts,
   selectECRecovered,
   selectServices,
+  selectCandidates,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -49,7 +50,7 @@ class Home extends Component {
   }
 
   render() {
-    const { error, account, wallet, contracts, ecRecovered } = this.props
+    const { error, account, wallet, contracts, candidates, ecRecovered } = this.props
 
     return (
       <HomeWrapper>
@@ -89,6 +90,26 @@ class Home extends Component {
           account={account}
           networkId={wallet.get('network')}
         />
+
+        {/* <H2>
+          {'Applicants ('}
+          {candidates.size}
+          {')'}
+        </H2>
+        <FlexContainer>
+          {candidates.size > 0 &&
+            candidates.map(log => (
+              <Section key={log.get('listing')}>
+                <Event
+                  latest={log.get('latest')}
+                  owner={log.get('owner')}
+                  listing={log.get('listing')}
+                  whitelisted={log.getIn(['latest', 'whitelisted'])}
+                />
+              </Section>
+            ))}
+        </FlexContainer> */}
+
       </HomeWrapper>
     )
   }
@@ -106,6 +127,7 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   wallet: selectWallet,
   contracts: selectContracts,
+  candidates: selectCandidates,
   ecRecovered: selectECRecovered,
   services: selectServices,
 })
