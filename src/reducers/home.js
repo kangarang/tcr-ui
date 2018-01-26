@@ -17,7 +17,7 @@ import {
 const initialState = fromJS({
   wallet: {
     address: '',
-    network: '',
+    network: '4',
     ethBalance: '',
     token: {
       address: '',

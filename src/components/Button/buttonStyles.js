@@ -5,9 +5,11 @@ const buttonStyles = css`
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  box-shadow: 0 0 1px transparent;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.18);
   padding: .7em .75em;
   outline: 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.20);
+  letter-spacing: 1.5px;
 
   text-decoration: none;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +23,8 @@ const buttonStyles = css`
   font-size: 14px;
 
   color: ${colors.magenta};
-  background-color: ${colors.offWhite};
+  background-color: hsl(192,17%,99%);
+  /* background-color: ${colors.offWhite}; */
 
   &:before {
     content: '';

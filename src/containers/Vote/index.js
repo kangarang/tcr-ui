@@ -61,6 +61,7 @@ class Voting extends Component {
           messages={messages.voting}
           account={account}
           actions={methods.voting.actions}
+          networkId={wallet.get('network')}
         />
 
         <H2>

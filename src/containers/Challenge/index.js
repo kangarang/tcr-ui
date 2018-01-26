@@ -62,6 +62,7 @@ class Challenge extends Component {
           messages={messages.challenge}
           account={account}
           actions={methods.challenge.actions}
+          networkId={wallet.get('network')}
         />
 
         <H2>

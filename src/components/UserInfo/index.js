@@ -20,7 +20,6 @@ import iconSrc from '../../assets/icons/favicon.ico'
 
 function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
   const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
-  // const tokenSymbol = wallet.getIn(['token', 'tokenSymbol'])
   const votingRights = wallet.getIn([
     'token',
     'allowances',

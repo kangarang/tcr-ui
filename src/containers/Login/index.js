@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   padding: 1em;
 `
 const PaddedDiv = styled.div`
-  padding: .7em;
+  padding: 0.7em;
   margin: 1em 4em;
   border: 1px solid ${colors.darkBlue};
   display: flex;
@@ -48,18 +48,16 @@ const modalStyles = {
     right: '0',
     bottom: '0',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    border: '1px solid black',
-    boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)',
     zIndex: '2',
   },
   content: {
     position: 'absolute',
     padding: '3em',
-    top: '10vh',
+    top: '5vh',
     left: '10vw',
     right: '10vw',
-    margin: '0 auto',
     maxWidth: '800px',
+    margin: '0 auto',
     backgroundColor: `${colors.offWhite}`,
     boxShadow: '0 0 20px 10px rgba(0, 0, 0, 0.2)',
     zIndex: '5',
@@ -118,7 +116,7 @@ class Login extends Component {
       account,
       ethBalance,
       imgSrc,
-      // NetworkStatus,
+      NetworkStatus,
       registryValue,
       onChange,
       registryPH,
@@ -128,72 +126,72 @@ class Login extends Component {
     } = this.props
 
     return (
-      <Wrapper>
-        <ReactModal
-          isOpen={this.state.modalIsOpen}
-          onAfterOpen={this.handleAfterOpen}
-          onRequestClose={this.handleRequestClose}
-          style={modalStyles}
-          contentLabel="Login Modal"
-          portalClassName="LoginModalPortal"
-          overlayClassName="LoginModal__Overlay"
-          className="LoginModal__Content"
-          bodyOpenClassName="LoginModal__Body--open"
-          ariaHideApp={false}
-          shouldFocusAfterRender={false}
-          shouldCloseOnEsc={true}
-          shouldReturnFocusAfterClose={true}
-          role="dialog"
-        >
-          {/* <Button onClick={this.handleCloseModal}>{'X'}</Button> */}
+        <Wrapper>
+          <ReactModal
+            isOpen={this.state.modalIsOpen}
+            onAfterOpen={this.handleAfterOpen}
+            onRequestClose={this.handleRequestClose}
+            style={modalStyles}
+            contentLabel="Login Modal"
+            portalClassName="LoginModalPortal"
+            overlayClassName="LoginModal__Overlay"
+            className="LoginModal__Content"
+            bodyOpenClassName="LoginModal__Body--open"
+            ariaHideApp={false}
+            shouldFocusAfterRender={false}
+            shouldCloseOnEsc={true}
+            shouldReturnFocusAfterClose={true}
+            role="dialog"
+          >
+            {/* <Button onClick={this.handleCloseModal}>{'X'}</Button> */}
 
-          <Img src={imgSrc} alt="Token Curated Registries" />
+            <Img src={imgSrc} alt="Token Curated Registries" />
 
-          <PaddedDiv>
-            <SmlDiv>{'Account: '}</SmlDiv>
-            <LrgDiv>{account || messages.default}</LrgDiv>
-          </PaddedDiv>
+            <PaddedDiv>
+              <SmlDiv>{'Account: '}</SmlDiv>
+              <LrgDiv>{account || messages.default}</LrgDiv>
+            </PaddedDiv>
 
-          <PaddedDiv>
-            <SmlDiv>{'Network: '}</SmlDiv>
-            {/* <SmlDiv>{NetworkStatus}</SmlDiv> */}
-            <SmlDiv>{'ETH Balance: '}</SmlDiv>
-            <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
-          </PaddedDiv>
+            <PaddedDiv>
+              <SmlDiv>{'Network: '}</SmlDiv>
+              <SmlDiv>{NetworkStatus}</SmlDiv>
+              <SmlDiv>{'ETH Balance: '}</SmlDiv>
+              <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
+            </PaddedDiv>
 
-          <PaddedDiv>
-            <SmlDiv>{'Registry: '}</SmlDiv>
-            <LrgDiv>
-              <Input
-                placeholder={registryPH}
-                value={registryValue || registryPH}
-                onChange={onChange}
-              />
-            </LrgDiv>
-          </PaddedDiv>
+            <PaddedDiv>
+              <SmlDiv>{'Registry: '}</SmlDiv>
+              <LrgDiv>
+                <Input
+                  placeholder={registryPH}
+                  value={registryValue || registryPH}
+                  onChange={onChange}
+                />
+              </LrgDiv>
+            </PaddedDiv>
 
-          <PaddedDiv>
-            <SmlDiv>{'Token Name: '}</SmlDiv>
-            <SmlDiv>{tokenName}</SmlDiv>
+            <PaddedDiv>
+              <SmlDiv>{'Token Name: '}</SmlDiv>
+              <SmlDiv>{tokenName}</SmlDiv>
 
-            <SmlDiv>
-              {tokenSymbol}
-              {' Balance: '}
-            </SmlDiv>
-            <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
-          </PaddedDiv>
+              <SmlDiv>
+                {tokenSymbol}
+                {' Balance: '}
+              </SmlDiv>
+              <SmlDiv>{tokenBalance && withCommas(tokenBalance)}</SmlDiv>
+            </PaddedDiv>
 
-          <RightPaddedDiv>
-            <Button
-              onClick={e => this.handleMainAction(e, messages.mainMethod)}
-            >
-              {'CONFIRM ACCOUNT'}
-            </Button>
-          </RightPaddedDiv>
-        </ReactModal>
+            <RightPaddedDiv>
+              <Button
+                onClick={e => this.handleMainAction(e, messages.mainMethod)}
+              >
+                {'CONFIRM ACCOUNT'}
+              </Button>
+            </RightPaddedDiv>
+          </ReactModal>
 
-        <Button onClick={this.handleOpenModal}>{messages.name}</Button>
-      </Wrapper>
+          <Button onClick={this.handleOpenModal}>{messages.name}</Button>
+        </Wrapper>
     )
   }
 }

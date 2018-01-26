@@ -15,6 +15,13 @@ import './global-styles'
 const Wrapper = styled.div`
   background-color: ${colors.offWhite};
 `
+export const TopBar = styled.div`
+  position: absolute;
+  background: linear-gradient(to right, ${colors.prism}, ${colors.darkBlue});
+  height: 6px;
+  width: 100%;
+  z-index: 9;
+`
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,6 +33,7 @@ const AppWrapper = styled.div`
 `
 const App = () => (
   <Wrapper>
+    <TopBar />
     <AppWrapper>
       <Nav />
       <Switch>

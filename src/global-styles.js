@@ -1,4 +1,5 @@
 import { injectGlobal } from 'styled-components'
+import { colors } from './components/Colors';
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`

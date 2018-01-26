@@ -10,7 +10,7 @@ const Container = styled.div`
   overflow: hidden;
 `
 const Image = styled.img`
-  width: 80%;
+  width: 70%;
 `
 function Img(props) {
   return (

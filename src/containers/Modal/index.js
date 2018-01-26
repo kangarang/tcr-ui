@@ -6,6 +6,7 @@ import UDapp from '../UDapp'
 import { colors } from '../../components/Colors'
 import H2 from '../../components/H2'
 import Button from '../../components/Button'
+import { TopBar } from '../../App'
 
 const Wrapper = styled.div`
   padding: 1em;
@@ -28,11 +29,13 @@ const modalStyles = {
   },
   content: {
     position: 'absolute',
-    top: '10vh',
-    left: '10vw',
-    right: '10vw',
+    top: '5vh',
+    left: '15vw',
+    right: '15vw',
+    maxWidth: '800px',
     border: `1px solid ${colors.prism}`,
     backgroundColor: 'rgba(255, 255, 255, 1)',
+    boxShadow: '0 0 20px 10px rgba(0, 0, 0, 0.2)',
     zIndex: '5',
     borderRadius: '6px',
   },
@@ -90,14 +93,20 @@ class Modal extends Component {
           shouldReturnFocusAfterClose={true}
           role="dialog"
         >
+          <TopBar />
           <H2>{this.props.messages.heading}</H2>
           <ModalMessage>{this.props.messages.default}</ModalMessage>
 
-          <UDapp networkId={this.props.networkId} actions={this.props.actions} account={this.props.account} />
-
+          <UDapp
+            contracts={this.props.contracts}
+            networkId={this.props.networkId}
+            actions={this.props.actions}
+            account={this.props.account}
+            {...this.props}
+          />
         </ReactModal>
 
-        <Button onClick={this.handleOpenModal}>{'U D A P P'}</Button>
+        <Button onClick={this.handleOpenModal}>{'UDAPP'}</Button>
       </Wrapper>
     )
   }

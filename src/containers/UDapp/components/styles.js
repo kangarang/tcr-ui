@@ -20,6 +20,7 @@ const buttonStyles = css`
   background-color: ${colors.offWhite};
   border: 2px solid ${colors.purple};
   border-radius: 4px;
+  overflow: hidden;
 `
 
 export default buttonStyles
