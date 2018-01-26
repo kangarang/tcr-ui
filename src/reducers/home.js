@@ -65,7 +65,7 @@ const initialState = fromJS({
     type: false,
     message: '',
   },
-  ecRecovered: true,
+  ecRecovered: false,
 })
 
 function homeReducer(state = initialState, action) {
@@ -73,7 +73,7 @@ function homeReducer(state = initialState, action) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
     case LOGIN_SUCCESS:
-      return state.set('ecRecovered', fromJS(false))
+      return state.set('ecRecovered', fromJS(true))
     case LOGOUT_SUCCESS:
       return state
         .setIn(['wallet', 'address'], fromJS(''))

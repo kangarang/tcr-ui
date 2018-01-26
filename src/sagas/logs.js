@@ -79,7 +79,7 @@ function* handleLogs(sb, eb, topic, contract) {
           rawLogs[ind].transactionHash
         )
         return buildListing(contract, block, dLog, ind, txDetails)
-      })).filter(lawg => lawg !== false)
+      })).filter(lawg => (lawg !== false))
     )
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -90,10 +90,11 @@ function* handleLogs(sb, eb, topic, contract) {
 async function buildListing(contract, block, dLog, i, txDetails) {
   try {
     // Get the listing struct from the mapping
-    if (!dLog.listingHash) {
+    if (!dLog.listingHash || dLog.data === '420420') {
       return false
     }
     const listing = await contract.contract.listings.call(dLog.listingHash)
+    console.log('listing', listing)
     if (
       !listing ||
       listing[2] === '0x0000000000000000000000000000000000000000'
@@ -101,9 +102,9 @@ async function buildListing(contract, block, dLog, i, txDetails) {
       return false
     }
 
-    const isWhitelisted =
-      dLog._eventName === '_NewListingWhitelisted' ||
-      dLog._eventName === '_ChallengeFailed'
+    const isWhitelisted = listing[1]
+      // dLog._eventName === '_NewListingWhitelisted' ||
+      // dLog._eventName === '_ChallengeFailed'
 
     const tx = {
       hash: txDetails.hash,

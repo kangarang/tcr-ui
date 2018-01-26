@@ -9,7 +9,7 @@ export const fromToken = (wToken, decimalPower) => bigTen(wToken).div(decimalPow
 
 // sending txns convert TO natural unit
 // 1,000,000 -> 1,000,000,000,000,000
-export const toNineToken = (smallToken) => bigTen(smallToken).mul(decimalConversion(9))
+export const toBigToken = (smallToken, decimals) => bigTen(smallToken).mul(decimalConversion(decimals))
 // convert FROM natural unit
 // (reading logs or an event)
 export const fromNaturalUnit = (naturalUnit, decimals) => bigTen(naturalUnit, decimals).div(decimalConversion(decimals))

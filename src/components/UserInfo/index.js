@@ -14,7 +14,16 @@ import {
   BigBoldInlineText,
 } from '../Item'
 
-import { toEther, withCommas, trimDecimalsThree } from '../../libs/units'
+import {
+  toEther,
+  withCommas,
+  trimDecimalsThree,
+  fromToken,
+  toToken,
+  bigTen,
+  fromNaturalUnit,
+  toBigToken,
+} from '../../libs/units'
 
 import iconSrc from '../../assets/icons/favicon.ico'
 
@@ -82,20 +91,20 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
 
       <Item gR={2} gC={3}>
         <BoldInlineText>
-            {'Registry: '}
-            {contracts.getIn(['registry', 'address'])}
+          {'Registry: '}
+          {contracts.getIn(['registry', 'address'])}
         </BoldInlineText>
       </Item>
       <Item gR={1} gC={3}>
         <BoldInlineText>
-            {'Token: '}
-            {contracts.getIn(['token', 'address'])}
+          {'Token: '}
+          {contracts.getIn(['token', 'address'])}
         </BoldInlineText>
       </Item>
       <Item gR={3} gC={3}>
         <BoldInlineText>
-            {'Voting: '}
-            {contracts.getIn(['voting', 'address'])}
+          {'Voting: '}
+          {contracts.getIn(['voting', 'address'])}
         </BoldInlineText>
       </Item>
 

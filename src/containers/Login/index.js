@@ -134,7 +134,7 @@ class Login extends Component {
     return (
       <Wrapper>
         <ReactModal
-          isOpen={ecRecovered || this.state.modalIsOpen}
+          isOpen={!ecRecovered || this.state.modalIsOpen}
           // isOpen={false}
           onAfterOpen={this.handleAfterOpen}
           onRequestClose={this.handleRequestClose}

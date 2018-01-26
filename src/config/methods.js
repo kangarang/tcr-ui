@@ -11,7 +11,7 @@ export default {
     heading: 'Apply',
     default: 'Apply for a listing in the Registry.',
     args: ['listingHash', 'deposit', 'data'],
-    actions: ['apply', 'deposit', 'withdraw', 'appWasMade'],
+    actions: ['apply', 'deposit', 'withdraw', 'appWasMade', 'approve', 'allowance'],
   },
   challenge: {
     name: 'Challenge',

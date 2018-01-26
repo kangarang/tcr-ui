@@ -43,14 +43,22 @@ class UDapp extends Component {
 
         {method.inputs.map((input, ind) => (
           <form
-            key={input.name + ind}
+            key={input.name + ind + method.name}
             onSubmit={e => this.props.hocCall(e, method, contract)}
           >
-            <Input
-              id={input.name}
-              placeholder={`${input.name} (${input.type})`}
-              onChange={e => this.props.hocInputChange(e, method, input)}
-            />
+            {input.name !== '_data' ? (
+              <Input
+                id={input.name}
+                placeholder={
+                  input.name === '_voter'
+                    ? `${this.props.account}`
+                    : `${input.name} (${input.type})`
+                }
+                onChange={e => this.props.hocInputChange(e, method, input)}
+              />
+            ) : (
+              false
+            )}
           </form>
         ))}
         {method.constant ? (
@@ -104,7 +112,6 @@ class UDapp extends Component {
 
     return (
       <div style={styles.container}>
-        <H3>ACCOUNT: {this.props.account}</H3>
         <Methods>
           <div>
             {visibleRegistryMethods.map(one =>

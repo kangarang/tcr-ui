@@ -34,7 +34,7 @@ class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      registryAddress: ''
+      registryAddress: '',
     }
   }
   componentDidMount() {
@@ -53,30 +53,32 @@ class Home extends Component {
 
     return (
       <HomeWrapper>
+        {!ecRecovered && (
+          <Login
+            execute={this.props.onExecute}
+            network={wallet.get('network')}
+            NetworkStatus={<NetworkStatus />}
+            ns={NetworkStatus}
+            ethBalance={wallet.get('ethBalance')}
+            account={account}
+            imgSrc={tcrWave}
+            isOpen={false}
+            messages={messages.login}
+            onChange={this.handleChangeRegistryAddress}
+            registryValue={this.state.registryAddress}
+            registryPH={contracts.getIn(['registry', 'address'])}
+            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+            tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
+            tokenName={wallet.getIn(['token', 'tokenName'])}
+            ecRecovered={ecRecovered}
+          />
+        )}
+
         <UserInfo
           account={account}
           error={error}
           wallet={wallet}
           contracts={contracts}
-        />
-
-        <Login
-          execute={this.props.onExecute}
-          network={wallet.get('network')}
-          // NetworkStatus={<NetworkStatus />}
-          ns={NetworkStatus}
-          ethBalance={wallet.get('ethBalance')}
-          account={account}
-          imgSrc={tcrWave}
-          isOpen={false}
-          messages={messages.login}
-          onChange={this.handleChangeRegistryAddress}
-          registryValue={this.state.registryAddress}
-          registryPH={contracts.getIn(['registry', 'address'])}
-          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-          tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
-          tokenName={wallet.getIn(['token', 'tokenName'])}
-          ecRecovered={ecRecovered}
         />
 
         <Modal
@@ -87,7 +89,6 @@ class Home extends Component {
           account={account}
           networkId={wallet.get('network')}
         />
-
       </HomeWrapper>
     )
   }

@@ -30,7 +30,7 @@ const modalStyles = {
     top: '5vh',
     left: '15vw',
     right: '15vw',
-    maxWidth: '800px',
+    maxWidth: '1300px',
     margin: '0 auto',
     backgroundColor: `${colors.greyBg}`,
     boxShadow: '0 0 20px 10px rgba(0, 0, 0, 0.2)',
@@ -99,6 +99,11 @@ class Modal extends Component {
           ) : (
             false
           )}
+          {this.props.messages.instructions ? (
+          <ModalMessage>{this.props.messages.instructions}</ModalMessage>
+          ) : (
+            false
+          )}
 
           <UDapp
             contracts={this.props.contracts}
@@ -109,7 +114,7 @@ class Modal extends Component {
           />
         </ReactModal>
 
-        <Button onClick={this.handleOpenModal}>{'UDAPP'}</Button>
+        <Button onClick={this.handleOpenModal}>{`UDAPP - ${this.props.messages.name}`}</Button>
       </Wrapper>
     )
   }

@@ -11,7 +11,7 @@ import paramContract from '../../abis/Parameterizer.json'
 
 import { getProvider, getEthjs } from '../../libs/provider'
 import valUtils from '../../utils/value_utils'
-import vote_utils from '../../utils/vote_utils';
+import vote_utils from '../../utils/vote_utils'
 
 const contracts = {
   registry: registryContract,
@@ -44,7 +44,7 @@ const UDappHOC = WrappedComponent => {
           address: contracts.token.networks[props.networkId].address,
         },
         callResult: '',
-        currentMethod: ''
+        currentMethod: '',
       }
     }
 
@@ -77,13 +77,13 @@ const UDappHOC = WrappedComponent => {
         try {
           const suggested = await suggestor.currentAverage()
           console.log('suggested', suggested)
-          console.log(
-            'CURRENT SUGGESTION in GWEI: ' +
-              Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
-          )
-          this.setState({
-            suggested,
-          })
+          // console.log(
+          //   'CURRENT SUGGESTION in GWEI: ' +
+          //     Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
+          // )
+          // this.setState({
+          //   suggested,
+          // })
         } catch (e) {
           console.log('failed: ', e)
         }
@@ -92,6 +92,19 @@ const UDappHOC = WrappedComponent => {
 
     handleInputChange = async (e, method, input) => {
       let result = e.target.value
+      let data
+
+      if (
+        input.name === '_listingHash' &&
+        (method.name === 'apply' || method.name === 'challenge')
+      ) {
+        data = e.target.value
+      } else if (input.name === '_listingHash') {
+        // data = this.state[method.name]._data
+        data = ''
+      } else {
+        data = ''
+      }
 
       // TODO: explain this. also, figure out a better way to handle different inputs
       if (input.name === '_secretHash') {
@@ -110,8 +123,9 @@ const UDappHOC = WrappedComponent => {
         [method.name]: {
           ...prevState[method.name],
           [input.name]: result,
+          _data: data,
         },
-        currentMethod: method.name
+        currentMethod: method.name,
       }))
       console.log('this.state', this.state)
     }
@@ -138,7 +152,7 @@ const UDappHOC = WrappedComponent => {
         const hexint = parseInt(called, 16)
         console.log('CALL RESULT', decint)
         console.log('CALL RESULT', hexint)
-        const cr = ((decint === 0) ? 'false' : (decint === 1) ? 'true': decint)
+        const cr = decint === 0 ? 'false' : decint === 1 ? 'true' : decint
         this.setState({
           callResult: cr,
         })
