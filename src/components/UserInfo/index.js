@@ -21,7 +21,6 @@ import {
   fromToken,
   toToken,
   bigTen,
-  fromNaturalUnit,
   toBigToken,
 } from '../../libs/units'
 

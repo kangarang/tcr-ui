@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Eth from 'ethjs'
 import EthAbi from 'ethjs-abi'
 import BlockTracker from 'eth-block-tracker'
-import Suggestor from 'eth-gas-price-suggestor'
+// import Suggestor from 'eth-gas-price-suggestor'
 
 import registryContract from '../../abis/Registry.json'
 import votingContract from '../../abis/PLCRVoting.json'
@@ -54,16 +54,16 @@ const UDappHOC = WrappedComponent => {
 
     initUDapp = async () => {
       const provider = getProvider()
-      let suggestor
+      // let suggestor
       if (typeof provider !== 'undefined') {
-        const blockTracker = new BlockTracker({ provider })
-        blockTracker.start()
+        // const blockTracker = new BlockTracker({ provider })
+        // blockTracker.start()
 
-        suggestor = new Suggestor({
-          blockTracker,
-          historyLength: 15,
-          defaultPrice: 20000000000,
-        })
+        // suggestor = new Suggestor({
+        //   blockTracker,
+        //   historyLength: 15,
+        //   defaultPrice: 20000000000,
+        // })
 
         this.eth = getEthjs()
         const fromAddress = (await this.eth.accounts())[0]
@@ -75,8 +75,8 @@ const UDappHOC = WrappedComponent => {
 
       setInterval(async () => {
         try {
-          const suggested = await suggestor.currentAverage()
-          console.log('suggested', suggested)
+          // const suggested = await suggestor.currentAverage()
+          // console.log('suggested', suggested)
           // console.log(
           //   'CURRENT SUGGESTION in GWEI: ' +
           //     Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
@@ -100,9 +100,9 @@ const UDappHOC = WrappedComponent => {
       ) {
         data = e.target.value
       } else if (input.name === '_listingHash') {
-        data = this.state[method.name]._data
+        data = vote_utils.getListingHash(result)
       } else {
-        // data = 'test name'
+        data = this.state[method.name]._data
       }
 
       // TODO: explain this. also, figure out a better way to handle different inputs
@@ -112,7 +112,6 @@ const UDappHOC = WrappedComponent => {
         result = vote_utils.getVoteSaltHash(result, this.salt.toString(10))
       } else if (input.type === 'bytes32') {
         result = vote_utils.getListingHash(result)
-        // data = result
       }
       console.log('salt', this.salt)
 
