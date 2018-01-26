@@ -4,9 +4,10 @@ import { colors } from '../Colors'
 const Input = styled.input`
   width: 95%;
   box-sizing: border-box;
-  border: 1px solid ${colors.prism};
+  border: ${(props) => props.noBorder ? `none` : `1px solid ${colors.prism}`};
+  /* border: none; */
   font-size: 1em;
-  padding: .3em;
+  /* padding: .3em; */
   margin: 3px 5px;
   color: ${colors.offBlack};
   background-color: ${colors.offWhite};

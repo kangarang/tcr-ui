@@ -12,7 +12,6 @@ class ContractFactory {
 
   initContract = async (eth, account, registry, c) => {
     const Contract = contract(abis[c])
-    console.log('c', c)
     Contract.setProvider(eth.currentProvider)
     Contract.defaults(getDefaults(account))
 
@@ -55,6 +54,7 @@ class ContractFactory {
       )).toString(10)
       this.parameters.voteQuorum = (await this.contract.get('voteQuorum')).toString(10)
       this.parameters.pVoteQuorum = (await this.contract.get('pVoteQuorum')).toString(10)
+      this.votingRights = ''
     } else if (c === 'token') {
       this.name = await this.contract.name.call()
       this.decimals = await this.contract.decimals.call()

@@ -52,7 +52,6 @@ class Challenge extends Component {
         <UserInfo
           account={account}
           error={error}
-          onSelectNetwork={this.selectNetwork}
           wallet={wallet}
           contracts={contracts}
         />

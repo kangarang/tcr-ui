@@ -22,6 +22,8 @@ import {
   selectAccount,
   selectWallet,
   selectContracts,
+  selectECRecovered,
+  selectServices,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -47,7 +49,7 @@ class Home extends Component {
   }
 
   render() {
-    const { error, account, wallet, contracts } = this.props
+    const { error, account, wallet, contracts, ecRecovered } = this.props
 
     return (
       <HomeWrapper>
@@ -61,7 +63,7 @@ class Home extends Component {
         <Login
           execute={this.props.onExecute}
           network={wallet.get('network')}
-          NetworkStatus={<NetworkStatus />}
+          // NetworkStatus={<NetworkStatus />}
           ns={NetworkStatus}
           ethBalance={wallet.get('ethBalance')}
           account={account}
@@ -74,6 +76,7 @@ class Home extends Component {
           tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
           tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
           tokenName={wallet.getIn(['token', 'tokenName'])}
+          ecRecovered={ecRecovered}
         />
 
         <Modal
@@ -102,6 +105,8 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   wallet: selectWallet,
   contracts: selectContracts,
+  ecRecovered: selectECRecovered,
+  services: selectServices,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

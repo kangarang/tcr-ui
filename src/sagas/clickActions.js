@@ -6,7 +6,7 @@ import voteUtils from '../utils/vote_utils'
 import { selectAccount, selectParameters } from '../selectors'
 
 export default function* root() {
-  yield takeLatest(CLICK_ACTION_REQUEST, clickSaga)
+  // yield takeLatest(CLICK_ACTION_REQUEST, clickSaga)
 }
 
 function* clickSaga(action) {

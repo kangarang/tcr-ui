@@ -3,6 +3,7 @@ import { setTokensAllowed, contractError } from '../actions'
 import { GET_TOKENS_ALLOWED } from '../actions/constants'
 import { selectAccount } from '../selectors'
 import { getContract } from '../services'
+import { fromToken } from '../libs/units'
 
 export default function* tokenSaga() {
   yield takeLatest(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
@@ -19,7 +20,16 @@ export function* updateTokenBalancesSaga(spender) {
       [voting.contract, 'voteTokenBalance', 'call'],
       address
     )
-    yield put(setTokensAllowed({ spender, allowance, balance, votingRights }))
+    const tokenVotingRights = fromToken(votingRights, token.decimalPower)
+    yield put(
+      setTokensAllowed({
+        spender,
+        allowance,
+        balance,
+        votingRights,
+        tokenVotingRights,
+      })
+    )
   } catch (err) {
     console.log('Allowance error:', err)
     yield put(contractError(err))

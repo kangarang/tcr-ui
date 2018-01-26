@@ -9,7 +9,7 @@ import Input from '../../components/Input'
 
 const styles = {
   container: {
-    padding: '0 1em',
+    padding: '0 2em 2em',
     overflow: 'hidden',
   },
 }
@@ -24,6 +24,10 @@ const Methods = styled.div`
     display: flex;
     flex-flow: row wrap;
     overflow: hidden;
+
+    & > div {
+      min-width: 30%;
+    }
   }
 `
 class UDapp extends Component {
@@ -60,6 +64,9 @@ class UDapp extends Component {
             {'Send Transaction'}
           </Button>
         )}
+        {method.constant && this.props.currentMethod === method.name
+          ? ` -> ${this.props.callResult}`
+          : false}
         <br />
         <br />
       </div>
@@ -97,33 +104,21 @@ class UDapp extends Component {
 
     return (
       <div style={styles.container}>
-        <H3>CALL RESULT: {this.props.callResult}</H3>
-        <div>ACCOUNT: {this.props.account}</div>
+        <H3>ACCOUNT: {this.props.account}</H3>
         <Methods>
-          <span>
-            <hr />
-            {'REGISTRY: '}
-            {this.props.registry.address}
-          </span>
           <div>
             {visibleRegistryMethods.map(one =>
               this.renderMethod(one, 'registry')
             )}
           </div>
-
           <span>
             <hr />
-            {'TOKEN: '}
-            {this.props.token.address}
           </span>
           <div>
             {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
           </div>
-
           <span>
             <hr />
-            {'VOTING: '}
-            {this.props.voting.address}
           </span>
           <div>
             {visibleVotingMethods.map(one => this.renderMethod(one, 'voting'))}

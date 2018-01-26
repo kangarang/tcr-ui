@@ -13,11 +13,11 @@ const buttonStyles = css`
   user-select: none;
   cursor: pointer;
 
-  font-size: 14px;
+  font-size: 1em;
   font-weight: bold;
 
   color: ${colors.magenta};
-  background-color: ${colors.offWhite};
+  background-color: ${colors.greyBg};
   border: 2px solid ${colors.purple};
   border-radius: 4px;
   overflow: hidden;

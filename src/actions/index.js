@@ -33,6 +33,7 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
   DELETE_LISTINGS,
+  SET_CUSTOM_METHODS,
 } from './constants'
 
 
@@ -165,6 +166,12 @@ export function commitVote(listing, pollID, amount) {
   }
 }
 
+export function setCustomMethods(payload) {
+  return {
+    type: SET_CUSTOM_METHODS,
+    payload,
+  }
+}
 // Token actions
 export function requestApproval(amount) {
   return {

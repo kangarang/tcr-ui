@@ -22,9 +22,7 @@ const modalStyles = {
     left: '0',
     right: '0',
     bottom: '0',
-    backgroundColor: 'rgba(150, 150, 150, 0.7)',
-    border: '1px solid black',
-    boxShadow: '6px 6px 6px rgba(0, 0, 0, .2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     zIndex: '2',
   },
   content: {
@@ -33,11 +31,12 @@ const modalStyles = {
     left: '15vw',
     right: '15vw',
     maxWidth: '800px',
-    border: `1px solid ${colors.prism}`,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    margin: '0 auto',
+    backgroundColor: `${colors.greyBg}`,
     boxShadow: '0 0 20px 10px rgba(0, 0, 0, 0.2)',
     zIndex: '5',
-    borderRadius: '6px',
+    borderRadius: '10px',
+    overflow: 'hidden',
   },
 }
 
@@ -45,12 +44,12 @@ class Modal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalIsOpen: props.isOpen || false,
+      modalIsOpen: props.isOpen,
     }
   }
 
   handleOpenModal = () => {
-    console.log('open modal event')
+    console.log('Open UDAPP MODAL!')
     this.setState({
       modalIsOpen: true,
     })
@@ -88,14 +87,18 @@ class Modal extends Component {
           className="NotificationModal__Content"
           bodyOpenClassName="NotificationModal__Body--open"
           ariaHideApp={false}
-          shouldFocusAfterRender={true}
+          shouldFocusAfterRender={false}
           shouldCloseOnEsc={true}
           shouldReturnFocusAfterClose={true}
           role="dialog"
         >
           <TopBar />
           <H2>{this.props.messages.heading}</H2>
+          {this.props.messages.default ? (
           <ModalMessage>{this.props.messages.default}</ModalMessage>
+          ) : (
+            false
+          )}
 
           <UDapp
             contracts={this.props.contracts}

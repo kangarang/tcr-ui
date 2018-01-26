@@ -13,8 +13,9 @@ export default {
   },
   apply: {
     name: 'Apply',
-    heading: 'Apply modal heading',
-    default: 'To apply you must approve the Registry smart contract to transfer your tokens. Enter the amount of tokens you would like to approve and enable for registry transactions',
+    heading: 'Apply',
+    default: '',
+    error: 'To apply you must approve the Registry smart contract to transfer your tokens. Enter the amount of tokens you would like to approve and enable for registry transactions',
   },
   challenge: {
     name: 'Challenge',

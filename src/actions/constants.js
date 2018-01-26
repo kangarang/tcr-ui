@@ -11,6 +11,7 @@ export const SET_METHOD_ARGS = 'SET_METHOD_ARGS--|--UDapp'
 export const CHANGE_SLIDER_VALUE = 'CHANGE_SLIDER_VALUE--|--UDapp'
 
 export const SET_ETHEREUM_PROVIDER = 'SET_ETHEREUM_PROVIDER--|--Home'
+export const SET_CUSTOM_METHODS = 'SET_CUSTOM_METHODS--|--Home'
 export const CLICK_ACTION_REQUEST = 'CLICK_ACTION_REQUEST--|--Home'
 export const SET_WALLET = 'SET_WALLET--|--Home'
 export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'

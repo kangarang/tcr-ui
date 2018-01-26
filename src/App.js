@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   background-color: ${colors.offWhite};
 `
 export const TopBar = styled.div`
-  position: absolute;
+  position: relative;
   background: linear-gradient(to right, ${colors.prism}, ${colors.darkBlue});
   height: 6px;
   width: 100%;

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { colors } from '../Colors'
 
 const Container = styled.div`
   display: flex;
@@ -8,14 +9,27 @@ const Container = styled.div`
   justify-content: center;
   height: 100%;
   overflow: hidden;
+  margin: 15px;
+`
+const Wrapper = styled.div`
+  width: 70%;
+  background: ${colors.blue2};
 `
 const Image = styled.img`
-  width: 70%;
+  mix-blend-mode: multiply;
+  filter: greyscale(100%);
+  width: 100%;
 `
 function Img(props) {
   return (
     <Container>
-      <Image className={props.className} src={props.src} alt={props.alt} />
+      {props.wrapper ? (
+        <Wrapper>
+          <Image className={props.className} src={props.src} alt={props.alt} />
+        </Wrapper>
+      ) : (
+        <Image className={props.className} src={props.src} alt={props.alt} />
+      )}
     </Container>
   )
 }

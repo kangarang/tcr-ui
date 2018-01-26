@@ -9,4 +9,14 @@ export const colors = {
   orange: '#ffaf36',
   turquoise: '#4be5ce',
   prism: '#15afba',
+  darkRed: '#9A4540',
+  paleBlue: '#5C8ED4',
+  greyText: '#929292',
+  blackBg: '#121214',
+  blue3: '#406394',
+  blue2: '#A4BEE7',
+  blue1: '#98A4D2',
+  greyBg: '#E8EAEA',
+  seafoamBg: '#A5C4BE',
+  yellowBg: '#EFEFD3'
 }

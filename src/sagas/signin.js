@@ -24,7 +24,7 @@ function* executeSaga(action) {
     const { account, method, network, registry } = action.payload
     console.log('method', method)
 
-    const text = `Registry: ${registry}\nNetwork: ${network}`
+    const text = `Account:\n${account || 'You need MetaMask!'}\n\nRegistry:\n${registry || 'No registry'}\n\nNetwork: ${network || 'Unlock MetaMask!'}`
 
     const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
 

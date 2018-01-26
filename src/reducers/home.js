@@ -12,6 +12,7 @@ import {
   SET_ETHEREUM_PROVIDER,
   LOGIN_ERROR,
   LOGOUT_SUCCESS,
+  LOGIN_SUCCESS,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -20,10 +21,18 @@ const initialState = fromJS({
     network: '4',
     ethBalance: '',
     token: {
+      decimals: '',
       address: '',
       tokenBalance: '',
-      allowances: {
-      },
+      allowances: {},
+    },
+  },
+  services: {
+    parameterizer: {
+      votingRights: '0',
+    },
+    token: {
+      decimalPower: '0',
     },
   },
   contracts: {
@@ -40,8 +49,7 @@ const initialState = fromJS({
       address: '',
     },
   },
-  listings: {
-  },
+  listings: {},
   parameters: {
     minDeposit: '',
     appExpiry: '',
@@ -57,12 +65,15 @@ const initialState = fromJS({
     type: false,
     message: '',
   },
+  ecRecovered: true,
 })
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
+    case LOGIN_SUCCESS:
+      return state.set('ecRecovered', fromJS(false))
     case LOGOUT_SUCCESS:
       return state
         .setIn(['wallet', 'address'], fromJS(''))
@@ -91,6 +102,10 @@ function homeReducer(state = initialState, action) {
           fromJS(action.payload.token.name)
         )
         .setIn(
+          ['wallet', 'token', 'decimals'],
+          fromJS(action.payload.token.decimals)
+        )
+        .setIn(
           ['wallet', 'token', 'tokenSymbol'],
           fromJS(action.payload.token.symbol)
         )
@@ -111,6 +126,11 @@ function homeReducer(state = initialState, action) {
           fromJS(action.payload.parameterizer.address)
         )
         .set('parameters', fromJS(action.payload.parameterizer.parameters))
+        .setIn(['services', 'token'], fromJS(action.payload.token))
+        .setIn(
+          ['services', 'parameterizer'],
+          fromJS(action.payload.parameterizer)
+        )
         .setIn(
           ['contracts', 'token', 'address'],
           fromJS(action.payload.token.address)
@@ -133,13 +153,7 @@ function homeReducer(state = initialState, action) {
           fromJS(action.payload.votingRights)
         )
         .setIn(
-          [
-            'wallet',
-            'token',
-            'allowances',
-            action.payload.spender,
-            'total',
-          ],
+          ['wallet', 'token', 'allowances', action.payload.spender, 'total'],
           fromJS(action.payload.allowance)
         )
         .setIn(

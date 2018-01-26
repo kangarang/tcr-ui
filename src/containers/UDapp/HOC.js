@@ -44,6 +44,7 @@ const UDappHOC = WrappedComponent => {
           address: contracts.token.networks[props.networkId].address,
         },
         callResult: '',
+        currentMethod: ''
       }
     }
 
@@ -110,6 +111,7 @@ const UDappHOC = WrappedComponent => {
           ...prevState[method.name],
           [input.name]: result,
         },
+        currentMethod: method.name
       }))
       console.log('this.state', this.state)
     }
@@ -136,10 +138,11 @@ const UDappHOC = WrappedComponent => {
         const hexint = parseInt(called, 16)
         console.log('CALL RESULT', decint)
         console.log('CALL RESULT', hexint)
+        const cr = ((decint === 0) ? 'false' : (decint === 1) ? 'true': decint)
         this.setState({
-          callResult: decint,
+          callResult: cr,
         })
-        return decint
+        return cr
       } catch (err) {
         if (args.filter(Boolean).length !== args.length) return
         console.warn(err)
@@ -176,6 +179,7 @@ const UDappHOC = WrappedComponent => {
           voting={this.state.voting}
           token={this.state.token}
           callResult={this.state.callResult}
+          currentMethod={this.state.currentMethod}
           {...this.props}
         />
       )
