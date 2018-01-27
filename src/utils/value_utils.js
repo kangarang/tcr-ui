@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
-const valUtils = {
+const value_utils = {
   // bigNumberToBN(value) {
   //   return BN(value)
   // },
@@ -19,11 +19,16 @@ const valUtils = {
   },
 
   toUnitAmount: (amount, decimals) => {
-    if (!_.isNumber(amount)) return false
-    if (!_.isNumber(decimals)) return false
-    const aUnit = BN(10).pow(decimals)
-    const unit = amount.div(aUnit)
-    return unit
+    // if (!_.isNumber(amount)) return false
+    // if (!_.isNumber(decimals)) return false
+    // console.log('decimals', decimals)
+    // console.log('amount', amount)
+    // const decimalPower = BN(10).pow(BN(18))
+    // console.log('decimalPower', decimalPower.toString(10))
+    // const unit = BN(amount).div(decimalPower)
+    // console.log('unit')
+    // return unit
+    return amount
   },
 
   toNaturalUnitAmount: (amount, decimals) => {
@@ -56,9 +61,9 @@ const valUtils = {
   },
 
   multiplyByPercentage: (x, y, z = 100) => {
-    const weiQuotient = valUtils.divideAndGetWei(y, z)
-    return valUtils.multiplyFromWei(x, weiQuotient)
+    const weiQuotient = value_utils.divideAndGetWei(y, z)
+    return value_utils.multiplyFromWei(x, weiQuotient)
   },
 }
 
-export default valUtils
+export default value_utils

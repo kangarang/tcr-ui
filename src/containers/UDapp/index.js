@@ -47,12 +47,15 @@ class UDapp extends Component {
             onSubmit={e => this.props.hocCall(e, method, contract)}
           >
             {input.name !== '_data' ? (
+              // TODO: enable so that the defaultValue actually works without
+              // ...having to re-input
               <Input
                 id={input.name}
-                placeholder={
-                  input.name === '_voter'
+                placeholder={`${input.name} (${input.type})`}
+                defaultValue={
+                  input.name === '_voter' || input.name === '_owner'
                     ? `${this.props.account}`
-                    : `${input.name} (${input.type})`
+                    : ``
                 }
                 onChange={e => this.props.hocInputChange(e, method, input)}
               />

@@ -54,7 +54,7 @@ class Home extends Component {
 
     return (
       <HomeWrapper>
-        {!ecRecovered && (
+        {ecRecovered && (
           <Login
             execute={this.props.onExecute}
             network={wallet.get('network')}

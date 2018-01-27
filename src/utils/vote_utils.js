@@ -1,7 +1,7 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
 import saveFile from './file_utils'
-import valUtils from './value_utils'
+import value_utils from './value_utils'
 
 const vote_utils = {
   getEndDateString: (endDate) => moment.unix(endDate).format('YYYY-MM-DD_HH-mm-ss'),
@@ -42,7 +42,7 @@ const vote_utils = {
       account,
       numTokens
     )
-    const salt = valUtils.randInt(1e6, 1e8)
+    const salt = value_utils.randInt(1e6, 1e8)
     const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
 
     const pollStruct = await plcr.pollMap.call(pollID)

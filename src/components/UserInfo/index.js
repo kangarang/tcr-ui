@@ -127,6 +127,18 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
           {votingRights && withCommas(votingRights)}
         </BoldInlineText>
       </Item>
+      <Item gR={5} gC={4}>
+        <BoldInlineText>
+          {'Voting Balance: '}
+          {/* {votingBalance && withCommas(votingBalance)} */}
+        </BoldInlineText>
+      </Item>
+      <Item gR={6} gC={4}>
+        <BoldInlineText>
+          {'Locked Tokens: '}
+          {/* {lockedTokens && withCommas(lockedTokens)} */}
+        </BoldInlineText>
+      </Item>
     </Container>
   )
 }
