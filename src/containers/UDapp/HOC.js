@@ -94,10 +94,7 @@ const UDappHOC = WrappedComponent => {
       let result = e.target.value
       let data
 
-      if (
-        input.name === '_listingHash' &&
-        (method.name === 'apply' || method.name === 'challenge')
-      ) {
+      if (method.name === 'apply' || method.name === 'challenge') {
         data = e.target.value
       } else if (input.name === '_listingHash') {
         data = vote_utils.getListingHash(result)
