@@ -36,6 +36,7 @@
     "react-router-redux": "5.0.0-alpha.9",
     "react-scripts": "1.0.17",
     "react-web3-network-status": "1.0.0",
+    "recompose": "0.26.0",
     "redux": "3.7.2",
     "redux-immutable": "4.0.0",
     "redux-logger": "3.0.6",
