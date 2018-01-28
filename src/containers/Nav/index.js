@@ -23,7 +23,6 @@ class Nav extends Component {
     return (
       <NavBar>
         <NavLink to="/"></NavLink>
-        <NavLink to="/"></NavLink>
         <NavLink strict to="/">
           Home
         </NavLink>
@@ -32,6 +31,9 @@ class Nav extends Component {
         </NavLink>
         <NavLink activeStyle={styles.active} to="/vote">
           Vote
+        </NavLink>
+        <NavLink activeStyle={styles.active} to="/search">
+          Registry
         </NavLink>
       </NavBar>
     )

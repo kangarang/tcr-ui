@@ -14,16 +14,11 @@ export function* updateTokenBalancesSaga(spender) {
   const token = yield call(getContract, 'token')
   const voting = yield call(getContract, 'voting')
   try {
-    // TODO: set up this function after you set up the txn conversions
     let { allowance, balance } = yield call(token.allowance, address, spender)
     let votingRights = yield call(
       [voting.contract, 'voteTokenBalance', 'call'],
       address
     )
-
-    // TODO: set up these helpers after you set up the txn conversions
-    allowance = value_utils.toUnitAmount(allowance, token.decimals)
-    balance = value_utils.toUnitAmount(balance, token.decimals)
 
     yield put(
       setTokensAllowed({
