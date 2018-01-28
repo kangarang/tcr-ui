@@ -49,21 +49,27 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
     )}
 
     <Item pad={0.5} gR={1} gC={4}>
-      {/* {!latest.get('pollID') && <Button>{'Challenge'}</Button>} */}
+      {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
       <BoldInlineText>
-        {!latest.get('pollID') && !whitelisted
-          ? 'This listing has not been challenged yet'
-          : whitelisted &&
-            'Whitelisted on block number: ' + latest.get('blockNumber')}
-        {latest.get('pollID') && ('Poll ID: ' + latest.get('pollID'))
-        // <Button
-        //   onClick={e =>
-        //     handleClick({ method: 'commitVote', listing, pollID: latest.get('pollID') })
-        //   }
-        // >
-        //   {'Commit Vote'}
-        // </Button>
-        }
+        {!latest.get('pollID') && !whitelisted ? (
+          'This listing has not been challenged yet'
+        ) : whitelisted ? (
+          'Whitelisted on block number: ' + latest.get('blockNumber')
+        ) : latest.get('event') === '_Challenge' ? (
+          <Button
+            onClick={e =>
+              handleClick({
+                method: 'commitVote',
+                listing,
+                pollID: latest.get('pollID'),
+              })
+            }
+          >
+            {'Commit Vote for Poll: ' + latest.get('pollID')}
+          </Button>
+        ) : (
+          ''
+        )}
       </BoldInlineText>
     </Item>
 
@@ -83,9 +89,9 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         >
           {owner}
         </A>
-        <br/>
-        <br/>
-        {latest.get('pollID') && ('Challenger: ' + latest.get('sender'))}
+        <br />
+        <br />
+        {latest.get('pollID') && 'Challenger: ' + latest.get('sender')}
       </BoldInlineText>
     </Item>
 

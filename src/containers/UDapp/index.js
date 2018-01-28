@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { List } from 'immutable'
 
 import UDappHOC from './HOC'
 
@@ -32,7 +33,9 @@ const Methods = styled.div`
 `
 class UDapp extends Component {
   // TODO: use props to determine rendering
-  componentWillReceiveProps(newProps) {}
+  componentWillReceiveProps(newProps) {
+    console.log('UDAPP newProps', newProps)
+  }
 
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
@@ -53,9 +56,12 @@ class UDapp extends Component {
                 id={input.name}
                 placeholder={`${input.name} (${input.type})`}
                 defaultValue={
-                  input.name === '_voter' || input.name === '_owner'
-                    ? `${this.props.account}`
-                    : ``
+                  List.isList(this.props.actions)
+                    ? // : `${this.props.customArgs}`
+                      'custom argssss'
+                    : input.name === '_voter' || input.name === '_owner'
+                      ? `${this.props.account}`
+                      : ''
                 }
                 onChange={e => this.props.hocInputChange(e, method, input)}
               />

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
+import { List } from 'immutable'
 import UDapp from '../UDapp'
 
 import { colors } from '../../components/Colors'
@@ -45,6 +46,15 @@ class Modal extends Component {
     super(props)
     this.state = {
       modalIsOpen: props.isOpen,
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    console.log('newProps', newProps)
+    if (List.isList(newProps.actions) && !List.isList(this.props.actions)) {
+      this.setState({
+        modalIsOpen: true,
+      })
     }
   }
 
@@ -95,26 +105,24 @@ class Modal extends Component {
           <TopBar />
           <H2>{this.props.messages.heading}</H2>
           {this.props.messages.default ? (
-          <ModalMessage>{this.props.messages.default}</ModalMessage>
+            <ModalMessage>{this.props.messages.default}</ModalMessage>
           ) : (
             false
           )}
           {this.props.messages.instructions ? (
-          <ModalMessage>{this.props.messages.instructions}</ModalMessage>
+            <ModalMessage>{this.props.messages.instructions}</ModalMessage>
           ) : (
             false
           )}
 
           <UDapp
-            contracts={this.props.contracts}
-            networkId={this.props.networkId}
-            actions={this.props.actions}
-            account={this.props.account}
             {...this.props}
           />
         </ReactModal>
 
-        <Button onClick={this.handleOpenModal}>{`UDAPP - ${this.props.messages.name}`}</Button>
+        <Button onClick={this.handleOpenModal}>{`UDAPP - ${
+          this.props.messages.name
+        }`}</Button>
       </Wrapper>
     )
   }

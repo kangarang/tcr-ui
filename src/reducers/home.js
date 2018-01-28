@@ -13,6 +13,7 @@ import {
   LOGIN_ERROR,
   LOGOUT_SUCCESS,
   LOGIN_SUCCESS,
+  SELECT_CUSTOM_METHODS,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -66,12 +67,15 @@ const initialState = fromJS({
     message: '',
   },
   ecRecovered: false,
+  customMethods: [],
 })
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
+    case SELECT_CUSTOM_METHODS:
+      return state.set('customMethods', fromJS(action.payload.customMethods))
     case LOGIN_SUCCESS:
       return state.set('ecRecovered', fromJS(true))
     case LOGOUT_SUCCESS:

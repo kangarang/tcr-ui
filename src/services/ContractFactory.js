@@ -4,6 +4,7 @@ import { getDefaults } from './defaults'
 
 import { decimalConversion, fromToken } from '../libs/units'
 import voteUtils from '../utils/vote_utils'
+import value_utils from '../utils/value_utils'
 
 class ContractFactory {
   constructor(eth, account, registry, c) {
@@ -71,28 +72,28 @@ class ContractFactory {
       this.symbol = await this.contract.symbol.call()
       this.totalSupply = await this.contract.totalSupply.call()
       this.decimalPower = decimalConversion(this.decimals)
+
       const tokenBalance = await this.contract.balanceOf(account)
-      console.log('tokenBalance', tokenBalance)
-      console.log('natural unit balance:', tokenBalance.toString(10))
-      // TODO: centralize this logic
-      // this.balance = fromToken(tokenBalance, this.decimalPower).toString(10)
-      this.balance = tokenBalance
+      this.balance = value_utils.toUnitAmount(tokenBalance, this.decimalPower).toString(10)
     }
     return
   }
 
+  // TODO: either user udapp for this or figure out a more uniform solution
   allowance = async (owner, spender) => {
+    const naturalUnitBalance = await this.contract.balanceOf(owner)
+    this.balance = value_utils.toUnitAmount(naturalUnitBalance, this.decimalPower).toString(10)
+
     const tokensAllowed = await this.contract.allowance.call(owner, spender)
     console.log('tokensAllowed', tokensAllowed.toString(10))
-    // TODO: centralize this logic
-    // this.tokensAllowed = fromToken(tokensAllowed, this.decimalPower).toString(10)
-    this.tokensAllowed = tokensAllowed
+
+    this.tokensAllowed = value_utils.toUnitAmount(tokensAllowed, this.decimalPower).toString(10)
     console.log('this.tokensAllowed', this.tokensAllowed)
-    const obj = {
+
+    return {
       allowance: this.tokensAllowed,
       balance: this.balance,
     }
-    return obj
   }
 }
 

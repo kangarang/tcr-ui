@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import { List } from 'immutable'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
@@ -22,6 +23,7 @@ import {
   selectError,
   selectAccount,
   selectContracts,
+  selectCustomMethods,
 } from '../../selectors'
 import methods from '../../config/methods'
 import { handleActionClick } from '../../actions/index'
@@ -38,6 +40,11 @@ class Voting extends Component {
     }
   }
 
+  handleClick = e => {
+    console.log('e', e)
+    this.props.onHandleClick(e)
+  }
+
   render() {
     const {
       wallet,
@@ -46,7 +53,9 @@ class Voting extends Component {
       faceoffs,
       error,
       onHandleClick,
+      customMethods,
     } = this.props
+    console.log('faceoffs', faceoffs)
 
     return (
       <VotingWrapper>
@@ -60,8 +69,15 @@ class Voting extends Component {
         <Modal
           messages={messages.voting}
           account={account}
-          actions={methods.voting.actions}
+          actions={
+            List.isList(this.props.actions) && customMethods.size === 0
+              ? methods.voting.actions
+              : !List.isList(this.props.actions) && customMethods.size > 0
+                ? customMethods
+                : methods.voting.actions
+          }
           networkId={wallet.get('network')}
+          onHandleClick={onHandleClick}
         />
 
         <H2>
@@ -78,7 +94,7 @@ class Voting extends Component {
                   owner={log.get('owner')}
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
-                  handleClick={onHandleClick}
+                  handleClick={this.handleClick}
                 />
               </Section>
             ))}
@@ -101,6 +117,7 @@ const mapStateToProps = createStructuredSelector({
   faceoffs: selectFaceoffs,
   error: selectError,
   contracts: selectContracts,
+  customMethods: selectCustomMethods,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

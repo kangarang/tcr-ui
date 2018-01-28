@@ -20,6 +20,10 @@ export const selectContracts = createSelector(
     homeState.get('contracts')
 )
 
+export const selectCustomMethods = createSelector(
+  selectHome, homeState =>
+    homeState.get('customMethods')
+)
 export const selectServices = createSelector(
   selectHome, homeState =>
     homeState.get('services')

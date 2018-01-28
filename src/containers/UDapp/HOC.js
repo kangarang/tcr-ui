@@ -151,6 +151,12 @@ const UDappHOC = WrappedComponent => {
         }
       }
 
+      if (inputNames.includes('_value')) {
+        const indexOfValue = inputNames.indexOf('_value')
+        const actualValue = value_utils.toNaturalUnitAmount(args[indexOfValue], 18)
+        args[indexOfValue] = actualValue.toString(10)
+      }
+
       if (inputNames.includes('_secretHash')) {
         const indexOfSecretHash = inputNames.indexOf('_secretHash')
         const salt = value_utils.randInt(1e6, 1e8)
@@ -223,6 +229,7 @@ const UDappHOC = WrappedComponent => {
     }
 
     render() {
+      console.log('this.props', this.props)
       return (
         <WrappedComponent
           registry={this.state.registry}
