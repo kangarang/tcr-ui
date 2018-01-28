@@ -26,7 +26,7 @@ const value_utils = {
     // const decimalPower = BN(10).pow(BN(18))
     // console.log('decimalPower', decimalPower.toString(10))
     // const unit = BN(amount).div(decimalPower)
-    // console.log('unit')
+    // console.log('unit', unit.toString())
     // return unit
     return amount
   },
@@ -35,7 +35,7 @@ const value_utils = {
     if (!_.isNumber(amount)) return false
     if (!_.isNumber(decimals)) return false
     const unit = BN(10).pow(decimals)
-    const naturalUnitAmount = amount.times(unit)
+    const naturalUnitAmount = amount.mul(unit)
     const hasDecimals = naturalUnitAmount.decimalPlaces() !== 0
     if (hasDecimals) {
       throw new Error(

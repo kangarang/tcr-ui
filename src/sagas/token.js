@@ -14,6 +14,7 @@ export function* updateTokenBalancesSaga(spender) {
   const token = yield call(getContract, 'token')
   const voting = yield call(getContract, 'voting')
   try {
+    // TODO: set up this function after you set up the txn conversions
     let { allowance, balance } = yield call(token.allowance, address, spender)
     let votingRights = yield call(
       [voting.contract, 'voteTokenBalance', 'call'],

@@ -157,7 +157,7 @@ Calls:
 
 // token-related
   .determineReward(uint _challengeID) -> BN
-  .tokenClaims(uint _challengeID, address _address) -> BN
+  .tokenClaims(uint _challengeID, address _address) -> Boolean
 
 // voting-related
   .challenges(uint _challengeID) -> Challenge struct (Array)

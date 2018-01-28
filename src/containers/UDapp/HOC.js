@@ -135,27 +135,19 @@ const UDappHOC = WrappedComponent => {
       }
     }
 
+    // inputNames:  ["_listingHash", "_amount", "_data"]
+    // args:        ["fdsaf", "123", undefined]
     checkInputs = (inputNames, args) => {
-      // inputNames:  ["_listingHash", "_amount", "_data"]
-      // args:        ["fdsaf", "123", undefined]
-
       if (inputNames.includes('_listingHash')) {
-        const indexOfListingHash = inputNames.indexOf('_listingHash')
-        // get the str value
-        const listingString = args[indexOfListingHash]
-        // "fdsaf"
-
         console.log('Inputs require bytes32. Auto-hashing...')
-        const listingHash = vote_utils.getListingHash(listingString)
-        // '0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d'
-
-        args[indexOfListingHash] = listingHash
-        // args: ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", undefined]
+        const indexOfListingHash = inputNames.indexOf('_listingHash')
+        const listingString = args[indexOfListingHash] // "fdsaf"
+        const listingHash = vote_utils.getListingHash(listingString) // '0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d'
+        args[indexOfListingHash] = listingHash // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", undefined]
 
         if (inputNames.includes('_data')) {
           const indexOfData = inputNames.indexOf('_data')
-          args[args.length - 1] = listingString
-          // args: ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", "fdsaf"]
+          args[args.length - 1] = listingString // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", "fdsaf"]
         }
       }
 
@@ -164,12 +156,12 @@ const UDappHOC = WrappedComponent => {
         const salt = value_utils.randInt(1e6, 1e8)
         console.log('SALT SALT SALT: ', salt)
         const secretHash = vote_utils.getVoteSaltHash(args[indexOfSecretHash], salt.toString(10))
+        alert('SALT: ' + salt)
         args[indexOfSecretHash] = secretHash
     // const pollStruct = await plcr.pollMap.call(pollID)
 
     // const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
     // const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
-    window.alert('SALT:', salt)
 
     // const json = {
     //   listing,
@@ -219,6 +211,12 @@ const UDappHOC = WrappedComponent => {
         nonce,
       }
       console.log('Tx Payload: ', payload)
+
+      // TODO:
+      // instructions
+      // warnings
+      // verifications
+
       const txHash = await this.eth.sendTransaction(payload)
       console.log('TRANSACTION:', txHash)
       return txHash

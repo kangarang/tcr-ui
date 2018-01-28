@@ -199,7 +199,7 @@ function changeListings(state, payload) {
 
 function deleteObjectInArray(array, payload) {
   return payload.map(pl => {
-    const index = array.findIndex(ri => ri.get('listing') === pl.listing)
+    const index = array.findIndex(ri => (ri.get('listingHash') === pl.listingHash || ri.get('listingHash') === pl.listing))
     if (index !== -1) {
       return array.delete(index)
     }

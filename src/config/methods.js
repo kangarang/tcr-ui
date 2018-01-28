@@ -1,3 +1,7 @@
+const allTokenActions = ['approve', 'allowance', 'balanceOf', 'transfer', 'transferFrom']
+
+const allVotingActions = ['requestVotingRights', 'withdrawVotingRights', 'rescueTokens', 'rescueTokens', 'commitVote', 'revealVote', 'startPoll', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition']
+
 export default {
   home: {
     name: 'Home',
@@ -11,21 +15,21 @@ export default {
     heading: 'Apply',
     default: 'Apply for a listing in the Registry.',
     args: ['listingHash', 'deposit', 'data'],
-    actions: ['apply', 'deposit', 'withdraw', 'appWasMade', 'approve', 'allowance'],
+    actions: [...allTokenActions, 'apply', 'deposit', 'withdraw', 'appWasMade'],
   },
   challenge: {
     name: 'Challenge',
     heading: 'Challenge',
     default: 'Challenge a listing. min_deposit will be transferred from your account.',
     args: ['listingHash'],
-    actions: ['appWasMade', 'challenge', 'deposit', 'approve', 'allowance', 'requestVotingRights', 'withdrawVotingRights', 'updateStatus', 'isWhitelisted', 'canBeWhitelisted'],
+    actions: [...allTokenActions, 'appWasMade', 'challenge', 'deposit', 'requestVotingRights', 'withdrawVotingRights', 'updateStatus', 'isWhitelisted', 'canBeWhitelisted'],
   },
   voting: {
     name: 'Voting',
     heading: 'Voting',
     default: 'Commit and reveal your secret vote',
     args: ['pollID', 'secretHash', 'numTokens', 'salt'],
-    actions: ['requestVotingRights', 'withdrawVotingRights', 'commitVote', 'revealVote', 'rescueTokens', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition', 'approve', 'allowance', 'balanceOf', 'transfer', 'transferFrom', 'tokenClaims', 'claimReward', 'voterReward', 'updateStatus', 'challengeCanBeResolved'],
+    actions: [...allVotingActions, ...allTokenActions, 'tokenClaims', 'claimReward', 'voterReward', 'updateStatus', 'challengeCanBeResolved'],
   },
   activities: {
     name: 'Activities',

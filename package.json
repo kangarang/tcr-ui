@@ -9,6 +9,7 @@
     "bluebird": "3.5.1",
     "bn.js": "4.11.8",
     "eth-block-tracker": "2.3.0",
+    "eth-gas-price-suggestor": "^1.0.2",
     "eth-query": "2.1.2",
     "eth-sig-util": "1.4.2",
     "ethereumjs-abi": "0.6.5",

@@ -3,7 +3,7 @@ import abis from '../abis'
 import { getDefaults } from './defaults'
 
 import { decimalConversion, fromToken } from '../libs/units'
-import voteUtils from '../utils/vote_utils';
+import voteUtils from '../utils/vote_utils'
 
 class ContractFactory {
   constructor(eth, account, registry, c) {
@@ -14,8 +14,10 @@ class ContractFactory {
     const Contract = contract(abis[c])
     Contract.setProvider(eth.currentProvider)
     Contract.defaults(getDefaults(account))
+    console.log('registry', registry)
 
     this.address = await registry[c].call()
+    console.log('address', this.address)
     this.contract = await Contract.at(this.address)
     this.parameters = {}
 
@@ -26,11 +28,15 @@ class ContractFactory {
 
   params = async (c, account) => {
     if (c === 'parameterizer') {
-      this.parameters.minDeposit = (await this.contract.get('minDeposit')).toString(10)
-      this.parameters.pMinDeposit = (await this.contract.get('pMinDeposit')).toString(10)
-      this.parameters.applyStageLen = (await this.contract.get('applyStageLen')).toString(
-        10
-      )
+      this.parameters.minDeposit = (await this.contract.get(
+        'minDeposit'
+      )).toString(10)
+      this.parameters.pMinDeposit = (await this.contract.get(
+        'pMinDeposit'
+      )).toString(10)
+      this.parameters.applyStageLen = (await this.contract.get(
+        'applyStageLen'
+      )).toString(10)
       this.parameters.pApplyStageLen = (await this.contract.get(
         'pApplyStageLen'
       )).toString(10)
@@ -52,8 +58,12 @@ class ContractFactory {
       this.parameters.pDispensationPct = (await this.contract.get(
         'pDispensationPct'
       )).toString(10)
-      this.parameters.voteQuorum = (await this.contract.get('voteQuorum')).toString(10)
-      this.parameters.pVoteQuorum = (await this.contract.get('pVoteQuorum')).toString(10)
+      this.parameters.voteQuorum = (await this.contract.get(
+        'voteQuorum'
+      )).toString(10)
+      this.parameters.pVoteQuorum = (await this.contract.get(
+        'pVoteQuorum'
+      )).toString(10)
       this.votingRights = ''
     } else if (c === 'token') {
       this.name = await this.contract.name.call()
@@ -64,7 +74,9 @@ class ContractFactory {
       const tokenBalance = await this.contract.balanceOf(account)
       console.log('tokenBalance', tokenBalance)
       console.log('natural unit balance:', tokenBalance.toString(10))
-      this.balance = fromToken(tokenBalance, this.decimalPower).toString(10)
+      // TODO: centralize this logic
+      // this.balance = fromToken(tokenBalance, this.decimalPower).toString(10)
+      this.balance = tokenBalance
     }
     return
   }
@@ -72,11 +84,13 @@ class ContractFactory {
   allowance = async (owner, spender) => {
     const tokensAllowed = await this.contract.allowance.call(owner, spender)
     console.log('tokensAllowed', tokensAllowed.toString(10))
-    this.tokensAllowed = fromToken(tokensAllowed, this.decimalPower).toString(10)
+    // TODO: centralize this logic
+    // this.tokensAllowed = fromToken(tokensAllowed, this.decimalPower).toString(10)
+    this.tokensAllowed = tokensAllowed
     console.log('this.tokensAllowed', this.tokensAllowed)
     const obj = {
       allowance: this.tokensAllowed,
-      balance: this.balance
+      balance: this.balance,
     }
     return obj
   }
