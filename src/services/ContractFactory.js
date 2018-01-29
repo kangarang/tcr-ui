@@ -2,8 +2,7 @@ import contract from 'truffle-contract'
 import abis from '../abis'
 import { getDefaults } from './defaults'
 
-import { decimalConversion, fromToken } from '../libs/units'
-import voteUtils from '../utils/vote_utils'
+import { decimalConversion } from '../libs/units'
 import value_utils from '../utils/value_utils'
 
 class ContractFactory {

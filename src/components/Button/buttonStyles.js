@@ -10,24 +10,26 @@ const buttonStyles = css`
   text-shadow: 0 1px 2px rgba(0,0,0,0.20);
   letter-spacing: 1.5px;
 
-  -webkit-font-smoothing: antialiased;
+  /* -webkit-font-smoothing: antialiased;
   -webkit-touch-callout: none;
   -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0); */
   user-select: none;
   cursor: pointer;
 
   font-weight: bold;
   font-size: 14px;
 
-  color: ${colors.magenta};
-  background-color: hsl(192,17%,99%);
-  /* background-color: ${colors.offWhite}; */
+  /* color: ${colors.magenta}; */
+  color: hsl(192,17%,99%);
+  /* background-color: hsl(192,17%,99%); */
+  background: linear-gradient(${colors.prism}, ${colors.blue3});
+  /*  hsl(208, 100%, 100%), hsl(194, 100%, 80%) */
   border-radius: 4px;
 
   &:before {
-    content: '';
-    position: absolute;
+    /* content: ''; */
+    /* position: absolute;
     border: 2px solid ${colors.prism};
     border-radius: 4px;
     top: 0;
@@ -37,14 +39,14 @@ const buttonStyles = css`
     -webkit-transition-property: top, right, bottom, left;
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
-    transition-property: top, right, bottom, left;
+    transition-property: top, right, bottom, left; */
   }
 
   &:hover:before, &:focus:before, &:active:before {
-    top: -2px;
+    /* top: -2px;
     right: -2px;
     bottom: -2px;
-    left: -2px;
+    left: -2px; */
   }
 `
 

@@ -3,6 +3,7 @@ import ReactModal from 'react-modal'
 import styled from 'styled-components'
 
 import { colors } from '../../components/Colors'
+import Icon from '../../components/Icon'
 import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
@@ -134,7 +135,7 @@ class Login extends Component {
     return (
       <Wrapper>
         <ReactModal
-          isOpen={!ecRecovered || this.state.modalIsOpen}
+          isOpen={ecRecovered || this.state.modalIsOpen}
           // isOpen={false}
           onAfterOpen={this.handleAfterOpen}
           onRequestClose={this.handleRequestClose}
@@ -154,11 +155,13 @@ class Login extends Component {
           <Img wrapper={true} src={imgSrc} alt="Token Curated Registries" />
 
           <PaddedDiv>
+            <Icon iconName="user" />
             <SmlBoldDiv>{'Account: '}</SmlBoldDiv>
             <LrgDiv>{account || messages.default}</LrgDiv>
           </PaddedDiv>
 
           <PaddedDiv>
+            <Icon iconName="globe" />
             <SmlBoldDiv>{'Network: '}</SmlBoldDiv>
             <SmlDiv>{NetworkStatus}</SmlDiv>
             <SmlBoldDiv>{'ETH Balance: '}</SmlBoldDiv>
@@ -166,6 +169,7 @@ class Login extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
+              <Icon iconName="trendingUp" />
             <SmlBoldDiv>{'Registry: '}</SmlBoldDiv>
             <LrgDiv>
               <Input
@@ -178,6 +182,7 @@ class Login extends Component {
           </PaddedDiv>
 
           <PaddedDiv>
+            <Icon iconName="zap" />
             <SmlBoldDiv>{'Token Name: '}</SmlBoldDiv>
             <SmlDiv>{tokenName}</SmlDiv>
 
@@ -192,7 +197,7 @@ class Login extends Component {
             <Button
               onClick={e => this.handleMainAction(e, messages.mainMethod)}
             >
-              {'Confirm Account'}
+              {'CONFIRM ACCOUNT'}
             </Button>
           </RightPaddedDiv>
         </ReactModal>

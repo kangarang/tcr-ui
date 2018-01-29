@@ -18,7 +18,6 @@ import Section from '../../components/Section'
 import {
   selectWallet,
   selectCandidates,
-  selectWhitelist,
   selectError,
   selectAccount,
   selectContracts,
@@ -42,7 +41,6 @@ class Challenge extends Component {
       wallet,
       account,
       candidates,
-      whitelist,
       error,
       contracts,
     } = this.props
@@ -82,25 +80,6 @@ class Challenge extends Component {
               </Section>
             ))}
         </FlexContainer>
-
-        <H2>
-          {'Registry ('}
-          {whitelist.size}
-          {')'}
-        </H2>
-        <FlexContainer>
-          {whitelist.size > 0 &&
-            whitelist.map(log => (
-              <Section key={log.get('listing')}>
-                <Event
-                  latest={log.get('latest')}
-                  owner={log.get('owner')}
-                  listing={log.get('listing')}
-                  whitelisted={log.getIn(['latest', 'whitelisted'])}
-                />
-              </Section>
-            ))}
-        </FlexContainer>
       </ChallengeWrapper>
     )
   }
@@ -115,7 +94,6 @@ const mapStateToProps = createStructuredSelector({
   contracts: selectContracts,
   account: selectAccount,
   candidates: selectCandidates,
-  whitelist: selectWhitelist,
   error: selectError,
 })
 

@@ -12,6 +12,7 @@ export const Container = styled.div`
   color: ${colors.offBlack};
   border: 2px solid ${colors.prism};
   border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.18);
 `
 export const Item = styled.div`
   display: flex;

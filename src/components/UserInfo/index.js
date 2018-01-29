@@ -18,10 +18,6 @@ import {
   toEther,
   withCommas,
   trimDecimalsThree,
-  fromToken,
-  toToken,
-  bigTen,
-  toBigToken,
 } from '../../libs/units'
 
 import iconSrc from '../../assets/icons/favicon.ico'
@@ -66,7 +62,7 @@ function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
       <Item gR={1} gC={4}>
         <BoldInlineText>
           {`${wallet.getIn(['token', 'tokenSymbol'])} Balance: `}
-          {tokenBalance && withCommas(tokenBalance)}
+          {tokenBalance && withCommas(trimDecimalsThree(tokenBalance))}
         </BoldInlineText>
       </Item>
 

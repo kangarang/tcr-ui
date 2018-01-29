@@ -40,7 +40,6 @@ class Search extends Component {
     const {
       wallet,
       account,
-      candidates,
       whitelist,
       error,
       contracts,

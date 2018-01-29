@@ -1,5 +1,5 @@
 import Eth from 'ethjs'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 export const BN = small => new Eth.BN(small.toString(10), 10)
 
@@ -19,14 +19,10 @@ const value_utils = {
   },
 
   toUnitAmount: (amount, decimals) => {
-    // if (!_.isNumber(amount)) return false
-    // if (!_.isNumber(decimals)) return false
-    console.log('decimals', decimals)
-    console.log('amount', amount)
+    // if (!_.isNumber(amount)) console.log('amount', amount)
+    // if (!_.isNumber(decimals)) console.log('decimals', decimals)
     const decimalPower = BN(10).pow(BN(18))
-    console.log('decimalPower', decimalPower.toString(10))
-    const unit = BN(amount).div(decimalPower)
-    console.log('unit', unit.toString())
+    const unit = amount.div(decimalPower)
     return unit
   },
 

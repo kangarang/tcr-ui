@@ -1,10 +1,8 @@
-import { call, put, fork, select, all, takeLatest } from 'redux-saga/effects'
+import { put, select, takeLatest } from 'redux-saga/effects'
 import { CLICK_ACTION_REQUEST } from '../actions/constants'
-import { getContract } from '../services'
-import voteUtils from '../utils/vote_utils'
 
 import { selectCustomMethods } from '../actions'
-import { selectAccount, selectParameters } from '../selectors'
+import { selectParameters } from '../selectors'
 
 export default function* rootUserActionSaga() {
   yield takeLatest(CLICK_ACTION_REQUEST, clickSaga)

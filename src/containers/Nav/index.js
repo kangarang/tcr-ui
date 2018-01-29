@@ -4,12 +4,11 @@ import NavLink from './NavLink'
 import { colors } from '../../components/Colors'
 
 const NavBar = styled.div`
-  align-self: flex-end;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
-  width: 60vw;
   padding: 1.5em;
+  background-color: white;
 `
 const styles = {
   active: {

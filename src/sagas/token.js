@@ -3,7 +3,6 @@ import { setTokensAllowed, contractError } from '../actions'
 import { GET_TOKENS_ALLOWED } from '../actions/constants'
 import { selectAccount } from '../selectors'
 import { getContract } from '../services'
-import value_utils from '../utils/value_utils';
 
 export default function* tokenSaga() {
   yield takeLatest(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
