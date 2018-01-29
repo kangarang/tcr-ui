@@ -31,16 +31,16 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       <Identicon owner={latest.get('txHash')} size={6} scale={6} />
     </FlexCenteredItem>
 
-    <FlexCenteredItem gR={1} gC={1}>
+    <FlexCenteredItem gR={whitelisted ? 1 : 2} gC={1}>
       <Img src={favicon} alt="" />
     </FlexCenteredItem>
 
-    <Item pad={0.5} gR={1} gC={2}>
+    <Item gR={1} gC={2}>
       <BigBoldInlineText>{listing}</BigBoldInlineText>
     </Item>
 
     {latest.get('numTokens') && (
-      <Item pad={0.5} gR={1} gC={3}>
+      <Item gR={1} gC={3}>
         <BoldInlineText>
           {'Deposit: '}
           {latest.get('numTokens').toString(10)}
@@ -48,7 +48,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       </Item>
     )}
 
-    <Item pad={0.5} gR={1} gC={4}>
+    <Item gR={1} gC={4}>
       {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
       <BoldInlineText>
         {!latest.get('pollID') && !whitelisted ? (
@@ -73,16 +73,16 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       </BoldInlineText>
     </Item>
 
-    <Item pad={0.5} gR={2} gC={2}>
+    <Item gR={2} gC={2}>
       <BoldInlineText>
         {'Block number: '}
         {latest.get('blockNumber')}
       </BoldInlineText>
     </Item>
 
-    <Item pad={0.5} gR={2} gC={3}>
+    <Item gR={2} gC={3}>
       <BoldInlineText>
-        {'Address: '}
+        {'Applicant address: '}
         <A
           target="_blank"
           href={`https://rinkeby.etherscan.io/address/${owner}`}
@@ -95,9 +95,9 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       </BoldInlineText>
     </Item>
 
-    <Item pad={0.5} gR={2} gC={4}>
+    <Item gR={2} gC={4}>
       <BoldInlineText>
-        {'Tx hash: '}
+        {'Transaction: '}
         <A
           target={'_blank'}
           href={`https://rinkeby.etherscan.io/tx/${latest.get('txHash')}`}

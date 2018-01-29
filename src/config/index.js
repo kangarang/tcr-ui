@@ -1,4 +1,4 @@
 export const config = {
-  spokeName: 'Team TCRs',
+  spokeName: 'ConsenSys Ad Tech',
   PROVIDER_PORT: '8545',
 }

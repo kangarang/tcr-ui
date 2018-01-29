@@ -11,6 +11,6 @@ const Input = styled.input`
   margin: 3px 5px;
   color: ${colors.offBlack};
   background-color: ${colors.offWhite};
-  font-family: 'Iosevka';
+  font-family: 'Iosevka', monospace;
 `
 export default Input

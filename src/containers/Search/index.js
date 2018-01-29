@@ -56,7 +56,7 @@ class Search extends Component {
 
         <Modal
           isOpen={false}
-          messages={messages.challenge}
+          messages={messages.search}
           account={account}
           actions={methods.challenge.actions}
           networkId={wallet.get('network')}

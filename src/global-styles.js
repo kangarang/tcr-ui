@@ -10,6 +10,7 @@ injectGlobal`
       line-height: 1.5em;
       color: ${colors.offBlack};
       font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
     }
   }
 

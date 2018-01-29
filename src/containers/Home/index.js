@@ -29,7 +29,7 @@ import {
   selectContracts,
   selectECRecovered,
   selectServices,
-  selectCandidates,
+  selectWhitelist,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -60,7 +60,7 @@ class Home extends Component {
       account,
       wallet,
       contracts,
-      candidates,
+      whitelist,
       ecRecovered,
     } = this.props
 
@@ -102,16 +102,17 @@ class Home extends Component {
             contracts={contracts}
             account={account}
             networkId={wallet.get('network')}
+            wallet={wallet}
           />
 
           <H2>
-          {'Applicants ('}
-          {candidates.size}
+          {'Registry ('}
+          {whitelist.size}
           {')'}
           </H2>
           <FlexContainer>
-          {candidates.size > 0 &&
-            candidates.map(log => (
+          {whitelist.size > 0 &&
+            whitelist.map(log => (
               <Section key={log.get('listing')}>
               <Event
               latest={log.get('latest')}
@@ -140,7 +141,7 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   wallet: selectWallet,
   contracts: selectContracts,
-  candidates: selectCandidates,
+  whitelist: selectWhitelist,
   ecRecovered: selectECRecovered,
   services: selectServices,
 })

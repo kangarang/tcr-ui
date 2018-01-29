@@ -4,7 +4,7 @@ const allActions = {
     getters: ['commitPeriodActive', 'revealPeriodActive', 'pollEnded', 'pollExists', 'isPassed', 'hasBeenRevealed', 'getInsertPointForNumTokens', 'getNumTokens', 'getNumPassingTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance'],
     all: ['requestVotingRights', 'withdrawVotingRights', 'rescueTokens', 'rescueTokens', 'commitVote', 'revealVote', 'startPoll', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition']
   },
-  token: ['approve', 'transfer'],
+  token: ['approve', 'transfer', 'allowance'],
   registry: {
     apply: ['apply', 'deposit', 'appWasMade'],
     challenge: ['challenge'],
@@ -19,14 +19,14 @@ export default {
     heading: 'Home methods',
     default: 'login',
     args: ['spender', 'owner', 'amount'],
-    actions: ['approve', 'allowance', 'balanceOf', 'transfer', 'transferFrom'],
+    actions: ['approve', 'allowance', 'balanceOf', 'transfer'],
   },
   apply: {
     name: 'Apply',
     heading: 'Apply',
     default: 'Apply for a listing in the Registry.',
     args: ['listingHash', 'deposit', 'data'],
-    actions: [...allActions.token, 'apply', 'deposit', 'withdraw', 'appWasMade', ...allActions.voting.setters],
+    actions: [...allActions.token, 'apply', 'deposit', 'appWasMade', ...allActions.voting.setters],
   },
   challenge: {
     name: 'Challenge',

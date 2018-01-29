@@ -147,7 +147,7 @@ const UDappHOC = WrappedComponent => {
 
         if (inputNames.includes('_data')) {
           const indexOfData = inputNames.indexOf('_data')
-          args[args.length - 1] = listingString // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", "fdsaf"]
+          args[indexOfData] = listingString // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", "fdsaf"]
         }
       }
 

@@ -18,5 +18,14 @@ export const colors = {
   blue1: '#98A4D2',
   greyBg: '#E8EAEA',
   seafoamBg: '#A5C4BE',
-  yellowBg: '#EFEFD3'
+  yellowBg: '#EFEFD3',
+  neonYellow: '#FFFF00',
+  palletOne: {
+    grey: '#343838',
+    blue4: '#005F6B',
+    blue3: '#008C9E',
+    blue2: '#00B4CC',
+    blue1: '#00DFFC'
+  }
+
 }

@@ -44,6 +44,6 @@ export default props => {
     // >
     //   <path style={styles.path} d={icons.globe} />
     // </svg>
-    <img src={icons[props.iconName]} style={styles.img} />
+    <img src={icons[props.iconName]} alt={props.iconName} style={styles.img} />
   )
 }

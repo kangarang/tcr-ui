@@ -7,10 +7,39 @@ import UDappHOC from './HOC'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 
+import {
+  BoldInlineText,
+} from '../../components/Item'
+import { withCommas, trimDecimalsThree } from '../../libs/units'
+
+const BigContainer = styled.div`
+  display: grid;
+  grid-gap: 15px;
+  grid-template-columns: 1fr;
+`
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 5px;
+  border: 3px solid #${props => props.bgColor && props.bgColor.slice(-6)};
+  border-radius: 4px;
+`
+export const Item = styled.div`
+  padding: 0.7em;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
 const styles = {
   container: {
     padding: '0 2em 2em',
     overflow: 'hidden',
+  },
+  udappMethod: {
+    width: '33%',
   },
 }
 
@@ -40,15 +69,8 @@ class UDapp extends Component {
   // https://github.com/kumavis/udapp/blob/master/index.js#L310
   renderMethod(method, contract) {
     return (
-      <div key={method.name}>
-      {/* <OneThird> */}
-
+      <div key={method.name} style={styles.udappMethod}>
         <h4>{`${method.name}`}</h4>
-      {/* </OneThird>
-      <TwoThirds>
-
-      </TwoThirds> */}
-
         {method.inputs.map((input, ind) => (
           <form
             key={input.name + ind + method.name}
@@ -77,13 +99,13 @@ class UDapp extends Component {
         ))}
         {method.constant ? (
           <Button onClick={e => this.props.hocCall(e, method, contract)}>
-            {'Call'}
+            {'CALL'}
           </Button>
         ) : (
           <Button
             onClick={e => this.props.hocSendTransaction(method, contract)}
           >
-            {'Send Transaction'}
+            {'SEND TXN'}
           </Button>
         )}
         {method.constant && this.props.currentMethod === method.name
@@ -98,8 +120,32 @@ class UDapp extends Component {
   // adapted from:
   // https://github.com/kumavis/udapp/blob/master/index.js#L205
   render() {
-    console.log('UDAPP props:', this.props)
-
+    const tokenBalance =
+      this.props.wallet && this.props.wallet.getIn(['token', 'tokenBalance'])
+    const votingRights =
+      this.props.wallet &&
+      this.props.wallet.getIn([
+        'token',
+        'allowances',
+        this.props.voting.address,
+        'votingRights',
+      ])
+    const votingAllowance =
+      this.props.wallet &&
+      this.props.wallet.getIn([
+        'token',
+        'allowances',
+        this.props.voting.address,
+        'total',
+      ])
+    const registryAllowance =
+      this.props.wallet &&
+      this.props.wallet.getIn([
+        'token',
+        'allowances',
+        this.props.registry.address,
+        'total',
+      ])
     const registryMethodsWithArgs = (this.props.registry.abi || []).filter(
       methodInterface =>
         methodInterface.type === 'function' && methodInterface.inputs.length > 0
@@ -128,27 +174,78 @@ class UDapp extends Component {
       <div style={styles.container}>
         <Methods>
           <div>
-            <div>{'ACCOUNT: ' + this.props.account}</div>
-            <div>{'REGISTRY: ' + this.props.registry.address}</div>
-            <div>{'TOKEN: ' + this.props.token.address}</div>
-            <div>{'VOTING: ' + this.props.voting.address}</div>
-          </div>
-          <span>
-            <hr />
-          </span>
-          <div>
-            {visibleRegistryMethods.map(one =>
-              this.renderMethod(one, 'registry')
-            )}
-          </div>
-          <div>
-            {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
-          </div>
-          <span>
-            <hr />
-          </span>
-          <div>
-            {visibleVotingMethods.map(one => this.renderMethod(one, 'voting'))}
+            <BigContainer>
+              <Container bgColor={this.props.token.address}>
+                <Item gR={1}>
+                  <BoldInlineText>
+                    {'Token Balance: '}
+                    {tokenBalance &&
+                      withCommas(trimDecimalsThree(tokenBalance))}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={2}>
+                  {visibleTokenMethods.map(one =>
+                    this.renderMethod(one, 'token')
+                  )}
+                </Item>
+              </Container>
+
+              <Container bgColor={this.props.registry.address}>
+                <Item gR={1}>
+                  <BoldInlineText>
+                    {'REGISTRY: ' + this.props.registry.address}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={2}>
+                  <BoldInlineText>
+                    {`Allowance: `}
+                    {registryAllowance && withCommas(registryAllowance)}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={3}>
+                  {visibleRegistryMethods.map(one =>
+                    this.renderMethod(one, 'registry')
+                  )}
+                </Item>
+              </Container>
+
+              <Container bgColor={this.props.voting.address}>
+                <Item gR={1}>
+                  <BoldInlineText>
+                    {'VOTING: ' + this.props.voting.address}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={2}>
+                  <BoldInlineText>
+                    {'Allowance: '}
+                    {votingAllowance && withCommas(votingAllowance)}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={3}>
+                  <BoldInlineText>
+                    {'Voting Rights: '}
+                    {votingRights && withCommas(votingRights)}
+                  </BoldInlineText>
+                </Item>
+                <Item gR={4}>
+                  {visibleVotingMethods.map(one =>
+                    this.renderMethod(one, 'voting')
+                  )}
+                </Item>
+              </Container>
+            </BigContainer>
+            {/* <Item gR={5} gC={4}>
+        <BoldInlineText>
+          {'Voting Balance: '}
+          {votingBalance && withCommas(votingBalance)}
+        </BoldInlineText>
+      </Item>
+      <Item gR={6} gC={4}>
+        <BoldInlineText>
+          {'Locked Tokens: '}
+          {lockedTokens && withCommas(lockedTokens)}
+        </BoldInlineText>
+      </Item> */}
           </div>
         </Methods>
       </div>

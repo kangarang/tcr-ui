@@ -3,9 +3,9 @@ import { colors } from './Colors'
 
 export const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 6fr 6fr 4fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  grid-gap: 20px;
+  grid-template-columns: 1fr 5fr 2fr 3fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 5px;
   margin: 1em;
   padding: .7em;
   background-color: rgba(0, 0, 0, 0.1);

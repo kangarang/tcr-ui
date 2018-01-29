@@ -12,6 +12,9 @@ const Container = styled.div`
   margin: 15px;
 `
 const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 70%;
   background: ${colors.blue2};
 `
