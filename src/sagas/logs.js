@@ -15,6 +15,7 @@ import { getEthjs } from '../libs/provider'
 
 import logUtils from '../utils/log_utils'
 import filterUtils from '../utils/filter_utils'
+import value_utils from '../utils/value_utils'
 
 let lastReadBlockNumber = 10
 // let lastReadBlockNumber = 1638476
@@ -44,6 +45,54 @@ function* getFreshLogs() {
 
   // init polling
   yield fork(pollController)
+}
+
+// Timer
+function* pollController() {
+  const pollInterval = 5000
+  while (true) {
+    try {
+      // Every 15 secs:
+      yield call(delay, pollInterval)
+      // Dispatch: log query request
+      yield put(
+        pollLogsRequest({
+          startBlock: lastReadBlockNumber,
+          endBlock: 'latest',
+        })
+      )
+      // -> pollLogsSaga(action)
+      // -> handleLogs(sb, eb, '_Application')
+    } catch (err) {
+      console.log('Polling Log Saga error', err)
+      yield put(logsError('polling logs error', err))
+    }
+  }
+}
+
+function* pollLogsSaga(action) {
+  const eth = yield call(getEthjs)
+  const registry = yield call(getRegistry)
+  const voting = yield call(getContract, 'voting')
+  try {
+    lastReadBlockNumber = (yield call(eth.blockNumber)).toNumber(10)
+    console.log('lastReadBlockNumber', lastReadBlockNumber)
+    console.log('action', action)
+    const newLogs = yield call(
+      handleLogs,
+      action.payload.startBlock,
+      action.payload.endBlock,
+      '',
+      registry,
+    )
+    console.log('newLogs', newLogs)
+    yield put(updateItems(newLogs))
+    yield fork(updateTokenBalancesSaga, registry.address)
+    yield fork(updateTokenBalancesSaga, voting.address)
+  } catch (err) {
+    console.log('Fresh log error:', err)
+    yield put(logsError('logs error', err))
+  }
 }
 
 function* handleLogs(sb, eb, topic, contract) {
@@ -118,7 +167,7 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     const details = {
       listingString: dLog.data,
       listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3] ? listing[3].toString(10) : false,
+      unstakedDeposit: listing[3] ? value_utils.toUnitAmount(listing[3], 18) : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
       index: i,
       eventName: dLog._eventName,
@@ -130,53 +179,5 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     return logUtils.shapeShift(block, tx, details)
   } catch (err) {
     throw new Error(err.message)
-  }
-}
-
-// Timer
-function* pollController() {
-  const pollInterval = 5000
-  while (true) {
-    try {
-      // Every 15 secs:
-      yield call(delay, pollInterval)
-      // Dispatch: log query request
-      yield put(
-        pollLogsRequest({
-          startBlock: lastReadBlockNumber,
-          endBlock: 'latest',
-        })
-      )
-      // -> pollLogsSaga(action)
-      // -> handleLogs(sb, eb, '_Application')
-    } catch (err) {
-      console.log('Polling Log Saga error', err)
-      yield put(logsError('polling logs error', err))
-    }
-  }
-}
-
-function* pollLogsSaga(action) {
-  const eth = yield call(getEthjs)
-  const registry = yield call(getRegistry)
-  const voting = yield call(getContract, 'voting')
-  try {
-    lastReadBlockNumber = (yield call(eth.blockNumber)).toNumber(10)
-    console.log('lastReadBlockNumber', lastReadBlockNumber)
-    console.log('action', action)
-    const newLogs = yield call(
-      handleLogs,
-      action.payload.startBlock,
-      action.payload.endBlock,
-      '',
-      registry,
-    )
-    console.log('newLogs', newLogs)
-    yield put(updateItems(newLogs))
-    yield fork(updateTokenBalancesSaga, registry.address)
-    yield fork(updateTokenBalancesSaga, voting.address)
-  } catch (err) {
-    console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
   }
 }

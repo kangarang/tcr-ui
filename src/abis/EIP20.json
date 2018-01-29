@@ -3390,7 +3390,7 @@
         }
       },
       "links": {},
-      "address": "0xb5bd5b8fd5c35f10865c8ff6bd83449e5581743c"
+      "address": "0xaf5a2e09a0777b2e169a0d428bcfb6d6afd7ffeb"
     },
     "420": {
       "events": {
@@ -3444,5 +3444,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-28T03:40:44.362Z"
+  "updatedAt": "2018-01-29T18:26:40.474Z"
 }

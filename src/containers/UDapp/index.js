@@ -5,7 +5,6 @@ import { List } from 'immutable'
 import UDappHOC from './HOC'
 
 import Button from '../../components/Button'
-import H3 from '../../components/H3'
 import Input from '../../components/Input'
 
 const styles = {
@@ -42,7 +41,13 @@ class UDapp extends Component {
   renderMethod(method, contract) {
     return (
       <div key={method.name}>
+      {/* <OneThird> */}
+
         <h4>{`${method.name}`}</h4>
+      {/* </OneThird>
+      <TwoThirds>
+
+      </TwoThirds> */}
 
         {method.inputs.map((input, ind) => (
           <form
@@ -123,13 +128,19 @@ class UDapp extends Component {
       <div style={styles.container}>
         <Methods>
           <div>
-            {visibleRegistryMethods.map(one =>
-              this.renderMethod(one, 'registry')
-            )}
+            <div>{'ACCOUNT: ' + this.props.account}</div>
+            <div>{'REGISTRY: ' + this.props.registry.address}</div>
+            <div>{'TOKEN: ' + this.props.token.address}</div>
+            <div>{'VOTING: ' + this.props.voting.address}</div>
           </div>
           <span>
             <hr />
           </span>
+          <div>
+            {visibleRegistryMethods.map(one =>
+              this.renderMethod(one, 'registry')
+            )}
+          </div>
           <div>
             {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
           </div>

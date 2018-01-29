@@ -106,7 +106,7 @@ const UDappHOC = WrappedComponent => {
       e.preventDefault()
       const args = await this.getMethodArgs(method)
       const inputNames = method.inputs.map(inp => inp.name)
-      const newArgs = this.checkInputs(inputNames, args)
+      const newArgs = this.checkInputs(inputNames, args, method.name)
 
       try {
         const txData = EthAbi.encodeMethod(method, newArgs)
@@ -137,7 +137,7 @@ const UDappHOC = WrappedComponent => {
 
     // inputNames:  ["_listingHash", "_amount", "_data"]
     // args:        ["fdsaf", "123", undefined]
-    checkInputs = (inputNames, args) => {
+    checkInputs = (inputNames, args, methodName) => {
       if (inputNames.includes('_listingHash')) {
         console.log('Inputs require bytes32. Auto-hashing...')
         const indexOfListingHash = inputNames.indexOf('_listingHash')
@@ -151,6 +151,16 @@ const UDappHOC = WrappedComponent => {
         }
       }
 
+      if (inputNames.includes('_amount')) {
+        const indexOfAmount = inputNames.indexOf('_amount')
+        const actualAmount = value_utils.toNaturalUnitAmount(args[indexOfAmount], 18)
+        args[indexOfAmount] = actualAmount.toString(10)
+      }
+      if (inputNames.includes('_numTokens' && (methodName === 'requestVotingRights' || methodName === 'withdrawVotingRights'))) {
+        const indexOfNumTokens = inputNames.indexOf('_numTokens')
+        const actualNumTokens = value_utils.toNaturalUnitAmount(args[indexOfNumTokens], 18)
+        args[indexOfNumTokens] = actualNumTokens.toString(10)
+      }
       if (inputNames.includes('_value')) {
         const indexOfValue = inputNames.indexOf('_value')
         const actualValue = value_utils.toNaturalUnitAmount(args[indexOfValue], 18)
@@ -203,7 +213,7 @@ const UDappHOC = WrappedComponent => {
       const inputNames = method.inputs.map(inp => inp.name)
       console.log('inputNames', inputNames)
 
-      const finalArgs = this.checkInputs(inputNames, args)
+      const finalArgs = this.checkInputs(inputNames, args, method.name)
       console.log('finalArgs', finalArgs)
 
       const txData = EthAbi.encodeMethod(method, finalArgs)
