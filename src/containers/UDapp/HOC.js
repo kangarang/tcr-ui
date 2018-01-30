@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Eth from 'ethjs'
+// import Eth from 'ethjs'
 import EthAbi from 'ethjs-abi'
 // import BlockTracker from 'eth-block-tracker'
 // import Suggestor from 'eth-gas-price-suggestor'
@@ -7,7 +7,7 @@ import EthAbi from 'ethjs-abi'
 import abis from '../../abis'
 
 import { getProvider, getEthjs } from '../../libs/provider'
-import value_utils, { BN } from '../../utils/value_utils'
+import value_utils from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
@@ -44,7 +44,7 @@ const UDappHOC = WrappedComponent => {
 
     initUDapp = async () => {
       const provider = getProvider()
-      let suggestor
+      // let suggestor
       if (typeof provider !== 'undefined') {
         // const blockTracker = new BlockTracker({ provider })
         // blockTracker.start()

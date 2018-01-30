@@ -60,6 +60,7 @@ class Search extends Component {
           account={account}
           actions={methods.challenge.actions}
           networkId={wallet.get('network')}
+          wallet={wallet}
         />
 
         <H2>
