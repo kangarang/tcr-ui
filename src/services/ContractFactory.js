@@ -30,12 +30,12 @@ class ContractFactory {
     Contract.setProvider(eth.currentProvider)
     Contract.defaults(getDefaults(account))
     // if (typeof Contract.currentProvider.sendAsync !== 'function') {
-      // Contract.currentProvider.sendAsync = function() {
-      //   return Contract.currentProvider.send.apply(
-      //     Contract.currentProvider,
-      //     arguments
-      //   )
-      // }
+    // Contract.currentProvider.sendAsync = function() {
+    //   return Contract.currentProvider.send.apply(
+    //     Contract.currentProvider,
+    //     arguments
+    //   )
+    // }
     // }
     console.log('registry', registry)
     this.address = await registry[c].call()
@@ -83,16 +83,15 @@ class ContractFactory {
 
   // TODO: either user udapp for this or figure out a more uniform solution
   allowance = async (owner, spender) => {
-    // const naturalUnitBalance = (await this.contract.balanceOf(owner))
-    // this.balance = value_utils.toUnitAmount(naturalUnitBalance, this.decimalPower).toString(10)
+    const tokenBalance = await this.contract.balanceOf.call(account)
+    this.balance = value_utils
+      .toUnitAmount(tokenBalance, this.decimalPower)
+      .toString(10)
 
     const tokensAllowed = await this.contract.allowance.call(owner, spender)
-    // console.log('tokensAllowed', tokensAllowed.toString(10))
-
     this.tokensAllowed = value_utils
       .toUnitAmount(tokensAllowed, this.decimalPower)
       .toString(10)
-    // console.log('this.tokensAllowed', this.tokensAllowed)
 
     return {
       allowance: this.tokensAllowed,
