@@ -14,7 +14,7 @@ import {
   BigBoldInlineText,
 } from './Item'
 
-import { toEther, withCommas, trimDecimalsThree } from '../libs/units'
+import { toEther, withCommas, trimDecimalsThree } from '../utils/value_utils'
 
 import iconSrc from '../assets/icons/favicon.ico'
 

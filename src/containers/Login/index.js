@@ -7,7 +7,7 @@ import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import TopBar from '../../components/TopBar'
-import { trimDecimalsThree, toEther, withCommas } from '../../libs/units'
+import { trimDecimalsThree, toEther, withCommas } from '../../utils/value_utils'
 
 const Wrapper = styled.div`
   padding: 1em;

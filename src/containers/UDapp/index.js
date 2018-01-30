@@ -8,7 +8,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 
 import { BoldInlineText } from '../../components/Item'
-import { withCommas, trimDecimalsThree } from '../../libs/units'
+import { withCommas, trimDecimalsThree } from '../../utils/value_utils'
 
 const BigContainer = styled.div`
   display: grid;

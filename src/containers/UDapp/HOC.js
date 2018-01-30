@@ -119,9 +119,7 @@ const UDappHOC = WrappedComponent => {
         const hexint = parseInt(called, 16)
         console.log('CALL (dec):', decint)
         console.log('CALL (hex):', hexint)
-
         const cr = decint === 0 ? 'false' : decint === 1 ? 'true' : decint
-
         this.setState({
           callResult: cr,
         })
@@ -206,7 +204,6 @@ const UDappHOC = WrappedComponent => {
         //   return receipt
         // }
       }
-
       return args
     }
 
