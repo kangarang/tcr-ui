@@ -16,4 +16,6 @@ firebase.json
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
+.ebextensions
+
 package-lock.json
