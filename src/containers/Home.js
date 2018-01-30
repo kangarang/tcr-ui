@@ -1,10 +1,9 @@
-import 'babel-polyfill'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import NetworkStatus from 'react-web3-network-status'
+// import NetworkStatus from 'react-web3-network-status'
 
 import Login from './Login'
 import messages from '../messages'
@@ -75,7 +74,7 @@ class Home extends Component {
             <Login
               execute={this.props.onExecute}
               network={wallet.get('network')}
-              NetworkStatus={<NetworkStatus />}
+              // NetworkStatus={<NetworkStatus />}
               // ns={NetworkStatus}
               ethBalance={wallet.get('ethBalance')}
               account={account}
