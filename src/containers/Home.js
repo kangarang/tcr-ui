@@ -7,8 +7,8 @@ import styled from 'styled-components'
 import NetworkStatus from 'react-web3-network-status'
 
 import Login from './Login'
-import messages from '../config/messages'
-import methods from '../config/methods'
+import messages from '../messages'
+import methods from '../methods'
 import Modal from './Modal'
 
 import H2 from '../components/H2'

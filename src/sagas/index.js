@@ -9,7 +9,7 @@ import { setWallet, contractError, setContracts, getProviderRequest, loginError 
 
 import { updateTokenBalancesSaga } from './token'
 
-import { setupEthjs } from '../libs/provider'
+import { setupEthjs } from '../utils/provider_utils'
 
 import signinSaga from './signin'
 

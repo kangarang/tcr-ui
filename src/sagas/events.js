@@ -18,7 +18,6 @@ import {
   eventUtils,
   logUtils,
 } from './utils'
-import { fromNaturalUnit } from '../libs/units';
 
 export default function* eventsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventChannels)
@@ -101,7 +100,7 @@ function* handleEvent(result) {
     }
     const details = {
       listing: result.args.listing,
-      unstakedDeposit: result.args.deposit ? fromNaturalUnit(result.args.deposit).toString(10) : '?',
+      unstakedDeposit: result.args.deposit.toString(10),
       pollID: result.args.pollID && result.args.pollID,
       index: result.logIndex,
       eventName: result.event,

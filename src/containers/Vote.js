@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 import Modal from './Modal'
-import messages from '../config/messages'
+import messages from '../messages'
 
 import H2 from '../components/H2'
 import FlexContainer from '../components/FlexContainer'
@@ -24,7 +24,7 @@ import {
   selectContracts,
   selectCustomMethods,
 } from '../selectors'
-import methods from '../config/methods'
+import methods from '../methods'
 import { handleActionClick } from '../actions'
 
 const VotingWrapper = styled.div`

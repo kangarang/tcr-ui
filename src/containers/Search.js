@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 import Modal from './Modal'
-import messages from '../config/messages'
+import messages from '../messages'
 
 import H2 from '../components/H2'
 import UserInfo from '../components/UserInfo'
@@ -22,7 +22,7 @@ import {
   selectAccount,
   selectContracts,
 } from '../selectors'
-import methods from '../config/methods'
+import methods from '../methods'
 
 const SearchWrapper = styled.div`
   padding: 1em;
