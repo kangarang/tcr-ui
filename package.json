@@ -6,8 +6,6 @@
     "node": "8.9.3",
     "npm": "5.5.1"
   },
-  "dependencies": {
-  },
   "scripts": {
     "start": "node server.js",
     "start:prod": "npm run build && node server.js",
