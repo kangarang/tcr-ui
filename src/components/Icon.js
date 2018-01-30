@@ -7,7 +7,7 @@ import user from '../assets/icons/user.svg'
 import xCircle from '../assets/icons/x-circle.svg'
 import trendingUp from '../assets/icons/trending-up.svg'
 import zap from '../assets/icons/zap.svg'
-import {colors} from '../colors'
+import { colors } from '../colors'
 
 const icons = {
   globe,
@@ -29,8 +29,8 @@ export default props => {
       fill: props.color,
     },
     img: {
-      backgroundColor: `${colors.blue1}`
-    }
+      backgroundColor: `${colors.blue1}`,
+    },
   }
 
   return (

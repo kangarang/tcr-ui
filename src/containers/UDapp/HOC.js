@@ -45,21 +45,21 @@ const UDappHOC = WrappedComponent => {
       // const provider = getProvider()
       // let suggestor
       // if (typeof provider !== 'undefined') {
-        // const blockTracker = new BlockTracker({ provider })
-        // blockTracker.start()
+      // const blockTracker = new BlockTracker({ provider })
+      // blockTracker.start()
 
-        // suggestor = new Suggestor({
-        //   blockTracker,
-        //   historyLength: 15,
-        //   defaultPrice: 20000000000,
-        // })
+      // suggestor = new Suggestor({
+      //   blockTracker,
+      //   historyLength: 15,
+      //   defaultPrice: 20000000000,
+      // })
 
-        this.eth = this.props.ethjs
-        const fromAddress = (await this.eth.accounts())[0]
+      this.eth = this.props.ethjs
+      const fromAddress = (await this.eth.accounts())[0]
 
-        this.setState({
-          fromAddress,
-        })
+      this.setState({
+        fromAddress,
+      })
       // }
 
       // setInterval(async () => {
@@ -157,9 +157,18 @@ const UDappHOC = WrappedComponent => {
         const actualValue = value_utils.toNaturalUnitAmount(args[indexOfValue], 18)
         args[indexOfValue] = actualValue.toString(10)
       }
-      if (inputNames.includes('_numTokens' && (methodName === 'requestVotingRights' || methodName === 'withdrawVotingRights'))) {
+      if (
+        inputNames.includes(
+          '_numTokens' &&
+            (methodName === 'requestVotingRights' ||
+              methodName === 'withdrawVotingRights')
+        )
+      ) {
         const indexOfNumTokens = inputNames.indexOf('_numTokens')
-        const actualNumTokens = value_utils.toNaturalUnitAmount(args[indexOfNumTokens], 18)
+        const actualNumTokens = value_utils.toNaturalUnitAmount(
+          args[indexOfNumTokens],
+          18
+        )
         args[indexOfNumTokens] = actualNumTokens.toString(10)
       }
 
@@ -167,32 +176,35 @@ const UDappHOC = WrappedComponent => {
         const indexOfSecretHash = inputNames.indexOf('_secretHash')
         const salt = value_utils.randInt(1e6, 1e8)
         console.log('SALT SALT SALT: ', salt)
-        const secretHash = vote_utils.getVoteSaltHash(args[indexOfSecretHash], salt.toString(10))
+        const secretHash = vote_utils.getVoteSaltHash(
+          args[indexOfSecretHash],
+          salt.toString(10)
+        )
         alert('SALT: ' + salt)
         args[indexOfSecretHash] = secretHash
-    // const pollStruct = await plcr.pollMap.call(pollID)
+        // const pollStruct = await plcr.pollMap.call(pollID)
 
-    // const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
-    // const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
+        // const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
+        // const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
 
-    // const json = {
-    //   listing,
-    //   voteOption,
-    //   salt: salt.toString(10),
-    //   pollID,
-    //   pollStruct,
-    //   commitEndDateString,
-    //   revealEndDateString,
-    //   secretHash,
-    // }
+        // const json = {
+        //   listing,
+        //   voteOption,
+        //   salt: salt.toString(10),
+        //   pollID,
+        //   pollStruct,
+        //   commitEndDateString,
+        //   revealEndDateString,
+        //   secretHash,
+        // }
 
-    // const listingUnderscored = listing.replace('.', '_')
-    // const filename = `${listingUnderscored}--pollID_${pollID}--commitEnd_${commitEndDateString}--commitVote.json`
+        // const listingUnderscored = listing.replace('.', '_')
+        // const filename = `${listingUnderscored}--pollID_${pollID}--commitEnd_${commitEndDateString}--commitVote.json`
 
-    // if (receipt.receipt.status !== '0x0') {
-    //   saveFile(json, filename)
-    //   return receipt
-    // }
+        // if (receipt.receipt.status !== '0x0') {
+        //   saveFile(json, filename)
+        //   return receipt
+        // }
       }
 
       return args

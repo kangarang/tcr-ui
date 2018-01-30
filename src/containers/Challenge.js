@@ -41,12 +41,7 @@ class Challenge extends Component {
 
     return (
       <ChallengeWrapper>
-        <UserInfo
-          account={account}
-          error={error}
-          wallet={wallet}
-          contracts={contracts}
-        />
+        <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
 
         <Modal
           isOpen={false}

@@ -37,22 +37,11 @@ class Search extends Component {
   }
 
   render() {
-    const {
-      wallet,
-      account,
-      whitelist,
-      error,
-      contracts,
-    } = this.props
+    const { wallet, account, whitelist, error, contracts } = this.props
 
     return (
       <SearchWrapper>
-        <UserInfo
-          account={account}
-          error={error}
-          wallet={wallet}
-          contracts={contracts}
-        />
+        <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
 
         <Modal
           isOpen={false}

@@ -122,10 +122,7 @@ function* handleLogs(sb, eb, topic, contract) {
     return yield all(
       (yield decodedLogs.map(async (dLog, ind) => {
         const block = await logUtils.getBlock(ethjs, rawLogs[ind].blockHash)
-        const txDetails = await logUtils.getTransaction(
-          ethjs,
-          rawLogs[ind].transactionHash
-        )
+        const txDetails = await logUtils.getTransaction(ethjs, rawLogs[ind].transactionHash)
         return buildListing(contract, block, dLog, ind, txDetails)
       })).filter(lawg => lawg !== false)
     )
@@ -143,17 +140,13 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     }
     const listing = await contract.contract.listings.call(dLog.listingHash)
     console.log('listing', listing)
-    if (
-      !listing ||
-      listing[2] === '0x0000000000000000000000000000000000000000'
-    ) {
+    if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
     // const isWhitelisted = listing[1]
     const isWhitelisted =
-      dLog._eventName === '_NewListingWhitelisted' ||
-      dLog._eventName === '_ChallengeFailed'
+      dLog._eventName === '_NewListingWhitelisted' || dLog._eventName === '_ChallengeFailed'
 
     const tx = {
       hash: txDetails.hash,
@@ -166,9 +159,7 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     const details = {
       listingString: dLog.data,
       listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3]
-        ? value_utils.toUnitAmount(listing[3], 18)
-        : false,
+      unstakedDeposit: listing[3] ? value_utils.toUnitAmount(listing[3], 18) : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
       index: i,
       eventName: dLog._eventName,

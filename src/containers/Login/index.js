@@ -194,9 +194,7 @@ class Login extends Component {
           </PaddedDiv>
 
           <RightPaddedDiv>
-            <Button
-              onClick={e => this.handleMainAction(e, messages.mainMethod)}
-            >
+            <Button onClick={e => this.handleMainAction(e, messages.mainMethod)}>
               {'CONFIRM ACCOUNT'}
             </Button>
           </RightPaddedDiv>

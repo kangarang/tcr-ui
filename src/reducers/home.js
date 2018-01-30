@@ -68,7 +68,7 @@ const initialState = fromJS({
   },
   ecRecovered: false,
   customMethods: [],
-  ethjs: {}
+  ethjs: {},
 })
 
 function homeReducer(state = initialState, action) {
@@ -104,18 +104,9 @@ function homeReducer(state = initialState, action) {
         .set('ethjs', fromJS(action.payload.ethjs))
     case SET_CONTRACTS:
       return state
-        .setIn(
-          ['wallet', 'token', 'tokenName'],
-          fromJS(action.payload.token.name)
-        )
-        .setIn(
-          ['wallet', 'token', 'decimals'],
-          fromJS(action.payload.token.decimals)
-        )
-        .setIn(
-          ['wallet', 'token', 'tokenSymbol'],
-          fromJS(action.payload.token.symbol)
-        )
+        .setIn(['wallet', 'token', 'tokenName'], fromJS(action.payload.token.name))
+        .setIn(['wallet', 'token', 'decimals'], fromJS(action.payload.token.decimals))
+        .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(action.payload.token.symbol))
         .setIn(
           ['wallet', 'token', 'totalSupply'],
           fromJS(action.payload.token.totalSupply)
@@ -124,49 +115,28 @@ function homeReducer(state = initialState, action) {
           ['contracts', 'registry', 'address'],
           fromJS(action.payload.registry.address)
         )
-        .setIn(
-          ['contracts', 'voting', 'address'],
-          fromJS(action.payload.voting.address)
-        )
+        .setIn(['contracts', 'voting', 'address'], fromJS(action.payload.voting.address))
         .setIn(
           ['contracts', 'parameterizer', 'address'],
           fromJS(action.payload.parameterizer.address)
         )
         .set('parameters', fromJS(action.payload.parameterizer.parameters))
         .setIn(['services', 'token'], fromJS(action.payload.token))
-        .setIn(
-          ['services', 'parameterizer'],
-          fromJS(action.payload.parameterizer)
-        )
-        .setIn(
-          ['contracts', 'token', 'address'],
-          fromJS(action.payload.token.address)
-        )
+        .setIn(['services', 'parameterizer'], fromJS(action.payload.parameterizer))
+        .setIn(['contracts', 'token', 'address'], fromJS(action.payload.token.address))
     case SET_MIN_DEPOSIT:
-      return state.setIn(
-        ['parameters', 'minDeposit'],
-        fromJS(action.minDeposit)
-      )
+      return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
     case SET_TOKENS_ALLOWED:
       return state
         .setIn(
-          [
-            'wallet',
-            'token',
-            'allowances',
-            action.payload.spender,
-            'votingRights',
-          ],
+          ['wallet', 'token', 'allowances', action.payload.spender, 'votingRights'],
           fromJS(action.payload.votingRights)
         )
         .setIn(
           ['wallet', 'token', 'allowances', action.payload.spender, 'total'],
           fromJS(action.payload.allowance)
         )
-        .setIn(
-          ['wallet', 'token', 'tokenBalance'],
-          fromJS(action.payload.balance)
-        )
+        .setIn(['wallet', 'token', 'tokenBalance'], fromJS(action.payload.balance))
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
     case DELETE_LISTINGS:
@@ -206,7 +176,10 @@ function changeListings(state, payload) {
 
 function deleteObjectInArray(array, payload) {
   return payload.map(pl => {
-    const index = array.findIndex(ri => (ri.get('listingHash') === pl.listingHash || ri.get('listingHash') === pl.listing))
+    const index = array.findIndex(
+      ri =>
+        ri.get('listingHash') === pl.listingHash || ri.get('listingHash') === pl.listing
+    )
     if (index !== -1) {
       return array.delete(index)
     }

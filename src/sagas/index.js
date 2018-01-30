@@ -1,41 +1,21 @@
-import {
-  call,
-  put,
-  fork,
-  all,
-  spawn,
-  takeLatest,
-} from 'redux-saga/effects'
+import { call, put, fork, all, spawn, takeLatest } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
-import {
-  GET_ETHEREUM,
-  GET_ETH_PROVIDER,
-  LOGIN_ERROR,
-  WALLET_ERROR,
-} from '../actions/constants'
+import { GET_ETHEREUM, GET_ETH_PROVIDER, LOGIN_ERROR, WALLET_ERROR } from '../actions/constants'
 
 import { setupContract, setupRegistry } from '../services'
 
-import {
-  setWallet,
-  contractError,
-  setContracts,
-  getProviderRequest,
-  loginError,
-} from '../actions'
+import { setWallet, contractError, setContracts, getProviderRequest, loginError } from '../actions'
 
 import { updateTokenBalancesSaga } from './token'
 
 import { setupEthjs } from '../libs/provider'
 
 import signinSaga from './signin'
-import userActionSaga from './userActionSaga'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield fork(signinSaga)
-  yield fork(userActionSaga)
   yield fork(runPolling)
   yield takeLatest(GET_ETH_PROVIDER, pollProvider)
 }

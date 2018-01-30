@@ -52,6 +52,7 @@
     "truffle-contract": "3.0.1"
   },
   "scripts": {
+    "start": "node server.js",
     "start:prod": "npm run build && node server.js",
     "dev": "react-scripts start",
     "build": "react-scripts build",

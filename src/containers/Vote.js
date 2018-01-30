@@ -58,12 +58,7 @@ class Voting extends Component {
 
     return (
       <VotingWrapper>
-        <UserInfo
-          account={account}
-          error={error}
-          wallet={wallet}
-          contracts={contracts}
-        />
+        <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
 
         <Modal
           messages={messages.voting}

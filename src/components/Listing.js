@@ -8,12 +8,7 @@ import Button from './Button'
 import Identicon from './Identicon'
 import Img from './Img'
 
-import {
-  Item,
-  FlexCenteredItem,
-  BoldInlineText,
-  BigBoldInlineText,
-} from './Item'
+import { Item, FlexCenteredItem, BoldInlineText, BigBoldInlineText } from './Item'
 
 const Container = styled.div`
   display: grid;
@@ -83,10 +78,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
     <Item gR={2} gC={3}>
       <BoldInlineText>
         {'Applicant address: '}
-        <A
-          target="_blank"
-          href={`https://rinkeby.etherscan.io/address/${owner}`}
-        >
+        <A target="_blank" href={`https://rinkeby.etherscan.io/address/${owner}`}>
           {owner}
         </A>
         <br />

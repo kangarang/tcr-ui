@@ -7,9 +7,7 @@ import UDappHOC from './HOC'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 
-import {
-  BoldInlineText,
-} from '../../components/Item'
+import { BoldInlineText } from '../../components/Item'
 import { withCommas, trimDecimalsThree } from '../../libs/units'
 
 const BigContainer = styled.div`
@@ -98,13 +96,9 @@ class UDapp extends Component {
           </form>
         ))}
         {method.constant ? (
-          <Button onClick={e => this.props.hocCall(e, method, contract)}>
-            {'CALL'}
-          </Button>
+          <Button onClick={e => this.props.hocCall(e, method, contract)}>{'CALL'}</Button>
         ) : (
-          <Button
-            onClick={e => this.props.hocSendTransaction(method, contract)}
-          >
+          <Button onClick={e => this.props.hocSendTransaction(method, contract)}>
             {'SEND TXN'}
           </Button>
         )}
@@ -132,12 +126,7 @@ class UDapp extends Component {
       ])
     const votingAllowance =
       this.props.wallet &&
-      this.props.wallet.getIn([
-        'token',
-        'allowances',
-        this.props.voting.address,
-        'total',
-      ])
+      this.props.wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])
     const registryAllowance =
       this.props.wallet &&
       this.props.wallet.getIn([
@@ -150,8 +139,8 @@ class UDapp extends Component {
       methodInterface =>
         methodInterface.type === 'function' && methodInterface.inputs.length > 0
     )
-    const visibleRegistryMethods = registryMethodsWithArgs.filter(
-      methodInterface => this.props.actions.includes(methodInterface.name)
+    const visibleRegistryMethods = registryMethodsWithArgs.filter(methodInterface =>
+      this.props.actions.includes(methodInterface.name)
     )
 
     const tokenMethodsWithArgs = (this.props.token.abi || []).filter(
@@ -179,14 +168,11 @@ class UDapp extends Component {
                 <Item gR={1}>
                   <BoldInlineText>
                     {'Token Balance: '}
-                    {tokenBalance &&
-                      withCommas(trimDecimalsThree(tokenBalance))}
+                    {tokenBalance && withCommas(trimDecimalsThree(tokenBalance))}
                   </BoldInlineText>
                 </Item>
                 <Item gR={2}>
-                  {visibleTokenMethods.map(one =>
-                    this.renderMethod(one, 'token')
-                  )}
+                  {visibleTokenMethods.map(one => this.renderMethod(one, 'token'))}
                 </Item>
               </Container>
 
@@ -203,9 +189,7 @@ class UDapp extends Component {
                   </BoldInlineText>
                 </Item>
                 <Item gR={3}>
-                  {visibleRegistryMethods.map(one =>
-                    this.renderMethod(one, 'registry')
-                  )}
+                  {visibleRegistryMethods.map(one => this.renderMethod(one, 'registry'))}
                 </Item>
               </Container>
 
@@ -228,9 +212,7 @@ class UDapp extends Component {
                   </BoldInlineText>
                 </Item>
                 <Item gR={4}>
-                  {visibleVotingMethods.map(one =>
-                    this.renderMethod(one, 'voting')
-                  )}
+                  {visibleVotingMethods.map(one => this.renderMethod(one, 'voting'))}
                 </Item>
               </Container>
             </BigContainer>

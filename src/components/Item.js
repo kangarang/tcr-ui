@@ -7,20 +7,20 @@ export const Container = styled.div`
   grid-template-rows: 1fr 1fr;
   grid-gap: 5px;
   margin: 1em;
-  padding: .7em;
+  padding: 0.7em;
   background-color: rgba(0, 0, 0, 0.1);
   color: ${colors.offBlack};
   border: 2px solid ${colors.prism};
   border-radius: 4px;
-  box-shadow: 0px 2px 4px rgba(0,0,0,0.18);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.18);
 `
 export const Item = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  grid-row: ${(props) => props.gR};
-  grid-column: ${(props) => props.gC};
-  /* padding: ${(props) => props.pad && props.pad + 'em'}; */
+  grid-row: ${props => props.gR};
+  grid-column: ${props => props.gC};
+  /* padding: ${props => props.pad && props.pad + 'em'}; */
   overflow: hidden;
   text-overflow: ellipsis;
 `

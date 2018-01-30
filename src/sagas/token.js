@@ -12,12 +12,10 @@ export function* updateTokenBalancesSaga(spender) {
   const address = yield select(selectAccount)
   const token = yield call(getContract, 'token')
   const voting = yield call(getContract, 'voting')
+
   try {
     let { allowance, balance } = yield call(token.allowance, address, spender)
-    let votingRights = yield call(
-      [voting.contract, 'voteTokenBalance', 'call'],
-      address
-    )
+    let votingRights = yield call([voting.contract, 'voteTokenBalance', 'call'], address)
 
     yield put(
       setTokensAllowed({
