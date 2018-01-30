@@ -37,13 +37,7 @@ class Challenge extends Component {
   }
 
   render() {
-    const {
-      wallet,
-      account,
-      candidates,
-      error,
-      contracts,
-    } = this.props
+    const { wallet, account, candidates, error, contracts } = this.props
 
     return (
       <ChallengeWrapper>
@@ -60,6 +54,7 @@ class Challenge extends Component {
           account={account}
           actions={methods.challenge.actions}
           networkId={wallet.get('network')}
+          wallet={wallet}
         />
 
         <H2>

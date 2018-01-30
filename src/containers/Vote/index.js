@@ -78,6 +78,7 @@ class Voting extends Component {
           }
           networkId={wallet.get('network')}
           onHandleClick={onHandleClick}
+          wallet={wallet}
         />
 
         <H2>

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import Eth from 'ethjs'
 import EthAbi from 'ethjs-abi'
-import BlockTracker from 'eth-block-tracker'
-import Suggestor from 'eth-gas-price-suggestor'
+// import BlockTracker from 'eth-block-tracker'
+// import Suggestor from 'eth-gas-price-suggestor'
 
 import abis from '../../abis'
 
 import { getProvider, getEthjs } from '../../libs/provider'
-import value_utils from '../../utils/value_utils'
+import value_utils, { BN } from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
@@ -46,14 +46,14 @@ const UDappHOC = WrappedComponent => {
       const provider = getProvider()
       let suggestor
       if (typeof provider !== 'undefined') {
-        const blockTracker = new BlockTracker({ provider })
-        blockTracker.start()
+        // const blockTracker = new BlockTracker({ provider })
+        // blockTracker.start()
 
-        suggestor = new Suggestor({
-          blockTracker,
-          historyLength: 15,
-          defaultPrice: 20000000000,
-        })
+        // suggestor = new Suggestor({
+        //   blockTracker,
+        //   historyLength: 15,
+        //   defaultPrice: 20000000000,
+        // })
 
         this.eth = getEthjs()
         const fromAddress = (await this.eth.accounts())[0]
@@ -63,21 +63,21 @@ const UDappHOC = WrappedComponent => {
         })
       }
 
-      setInterval(async () => {
-        try {
-          const suggested = await suggestor.currentAverage()
-          console.log('suggested', suggested)
-          console.log(
-            'CURRENT SUGGESTION in GWEI: ' +
-              Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
-          )
-          this.setState({
-            suggested,
-          })
-        } catch (e) {
-          console.log('failed: ', e)
-        }
-      }, 5000)
+      // setInterval(async () => {
+      //   try {
+      //     const suggested = await suggestor.currentAverage()
+      //     console.log('suggested', suggested)
+      //     console.log(
+      //       'CURRENT SUGGESTION in GWEI: ' +
+      //         Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
+      //     )
+      //     this.setState({
+      //       suggested,
+      //     })
+      //   } catch (e) {
+      //     console.log('failed: ', e)
+      //   }
+      // }, 5000)
     }
 
     handleInputChange = async (e, method, input) => {
@@ -117,7 +117,7 @@ const UDappHOC = WrappedComponent => {
         }
         const called = await this.eth.call(params, 'latest')
 
-        const decint = parseInt(called, 0)
+        const decint = parseInt(called, 10)
         const hexint = parseInt(called, 16)
 
         console.log('CALL (dec):', decint)

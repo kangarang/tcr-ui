@@ -9,7 +9,7 @@ const allActions = {
     apply: ['apply', 'deposit', 'appWasMade'],
     challenge: ['challenge'],
     getters: ['appWasMade', 'isWhitelisted', 'canBeWhitelisted', 'challengeCanBeResolved', 'voterReward'],
-    setters: ['updateStatus', 'claimReward']
+    setters: ['updateStatus', 'claimReward', 'apply', 'deposit', 'appWasMade']
   }
 }
   
@@ -26,7 +26,7 @@ export default {
     heading: 'Apply',
     default: 'Apply for a listing in the Registry.',
     args: ['listingHash', 'deposit', 'data'],
-    actions: [...allActions.token, 'apply', 'deposit', 'appWasMade', ...allActions.voting.setters],
+    actions: [...allActions.token, 'apply', 'deposit', ...allActions.voting.setters, ...allActions.registry.getters],
   },
   challenge: {
     name: 'Challenge',
@@ -40,7 +40,7 @@ export default {
     heading: 'Voting',
     default: 'Commit and reveal your secret vote',
     args: ['pollID', 'secretHash', 'numTokens', 'salt'],
-    actions: [...allActions.voting.getters, ...allActions.voting.setters, ...allActions.token, ...allActions.registry.setters],
+    actions: [...allActions.voting.getters, ...allActions.voting.setters, ...allActions.token, ...allActions.registry.setters, ...allActions.registry.getters],
   },
   activities: {
     name: 'Activities',
