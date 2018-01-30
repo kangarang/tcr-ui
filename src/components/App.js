@@ -2,25 +2,19 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import styled from 'styled-components'
 
-import Nav from './containers/Nav'
-import Home from './containers/Home'
-import Challenge from './containers/Challenge'
-import Vote from './containers/Vote'
-import Activities from './containers/Activities'
-import Search from './containers/Search'
+import { colors } from '../colors'
 
-import { colors } from './components/Colors'
-import './global-styles'
+import Nav from './Nav'
+import Home from '../containers/Home'
+import Challenge from '../containers/Challenge'
+import Vote from '../containers/Vote'
+import Activities from '../containers/Activities'
+import Search from '../containers/Search'
+import TopBar from './TopBar'
+import '../global-styles'
 
 const Wrapper = styled.div`
   background-color: ${colors.offWhite};
-`
-export const TopBar = styled.div`
-  position: relative;
-  background: linear-gradient(to right, ${colors.prism}, ${colors.darkBlue});
-  height: 10px;
-  width: 100%;
-  z-index: 9;
 `
 const AppWrapper = styled.div`
   display: flex;

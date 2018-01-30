@@ -3,16 +3,15 @@ import { call, select, put, takeEvery } from 'redux-saga/effects'
 import truffleContract from 'truffle-contract'
 import ethUtil from 'ethereumjs-util'
 
-import { EXECUTE_METHOD_REQUEST, LOGIN_ERROR } from '../actions/constants'
+import { LOGIN_ERROR, EXECUTE_METHOD_REQUEST } from '../actions/constants'
 
 import { loginError, loginSuccess } from '../actions'
 
-import { getDefaults } from '../services/defaults'
 import { getRegistry } from '../services/index'
 import { selectEthjs } from '../selectors/index'
 
 export default function* rootLoginSaga() {
-  // yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
+  yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
 }
 
 function* executeSaga(action) {

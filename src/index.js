@@ -5,10 +5,11 @@ import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory'
 import { ThemeProvider } from 'styled-components'
 
+import { colors } from './colors';
+
 import configureStore from './store'
-import App from './App'
+import App from './components/App'
 import registerServiceWorker from './registerServiceWorker'
-import { colors } from './components/Colors';
 
 const initialState = {}
 const history = createHistory()

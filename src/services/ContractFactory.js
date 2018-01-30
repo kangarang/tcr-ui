@@ -83,7 +83,7 @@ class ContractFactory {
 
   // TODO: either user udapp for this or figure out a more uniform solution
   allowance = async (owner, spender) => {
-    const tokenBalance = await this.contract.balanceOf.call(account)
+    const tokenBalance = await this.contract.balanceOf.call(owner)
     this.balance = value_utils
       .toUnitAmount(tokenBalance, this.decimalPower)
       .toString(10)

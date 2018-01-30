@@ -2,7 +2,6 @@ import {
   call,
   put,
   fork,
-  select,
   all,
   spawn,
   takeLatest,
@@ -23,9 +22,7 @@ import {
   contractError,
   setContracts,
   getProviderRequest,
-  setEthereumProvider,
   loginError,
-  logoutSuccess,
 } from '../actions'
 
 import { updateTokenBalancesSaga } from './token'
@@ -34,7 +31,7 @@ import { setupEthjs } from '../libs/provider'
 
 import signinSaga from './signin'
 import userActionSaga from './userActionSaga'
-import { selectAccount, selectEthjs } from '../selectors/index'
+
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield fork(signinSaga)
@@ -109,9 +106,9 @@ function* runPolling() {
 
 function* pollProvider() {
   try {
-    const ethjs = yield select(selectEthjs)
-    const account = yield select(selectAccount)
-    const bbnAccount = yield call(getBalBlockNet, ethjs, account)
+    // const ethjs = yield select(selectEthjs)
+    // const account = yield select(selectAccount)
+    // const bbnAccount = yield call(getBalBlockNet, ethjs, account)
     // if (typeof bbnAccount === 'undefined' && bbnAddress) {
     //   // login to MetaMask
     //   const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, address)

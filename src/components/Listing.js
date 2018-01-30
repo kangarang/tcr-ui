@@ -1,19 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import favicon from '../../assets/icons/favicon.ico'
+import favicon from '../assets/icons/favicon.ico'
 
-import A from '../A'
-import Button from '../Button'
-import Identicon from '../Identicon'
-import Img from '../Img'
+import A from './A'
+import Button from './Button'
+import Identicon from './Identicon'
+import Img from './Img'
 
 import {
   Item,
   FlexCenteredItem,
   BoldInlineText,
   BigBoldInlineText,
-} from '../Item'
+} from './Item'
 
 const Container = styled.div`
   display: grid;

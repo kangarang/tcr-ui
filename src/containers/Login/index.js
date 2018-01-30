@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
 
-import { colors } from '../../components/Colors'
+import { colors } from '../../colors'
 import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
-import { TopBar } from '../../App'
+import TopBar from '../../components/TopBar'
 import { trimDecimalsThree, toEther, withCommas } from '../../libs/units'
 
 const Wrapper = styled.div`
@@ -44,19 +44,6 @@ const SmlDiv = styled(HalfDiv)`
 const SmlBoldDiv = styled(SmlDiv)`
   font-weight: bold;
 `
-// const ModalContent = css`
-//   position: absolute;
-//   top: 5vh;
-//   left: 5vw;
-//   right: 5vw;
-//   max-width: 900px;
-//   margin: 0 auto;
-//   background-color: ${colors.neonYellow};
-//   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.2);
-//   z-index: 5;
-//   border-radius: 6px;
-//   overflow: hidden;
-// `
 
 const modalStyles = {
   overlay: {
@@ -135,7 +122,7 @@ class Login extends Component {
       account,
       ethBalance,
       imgSrc,
-      NetworkStatus,
+      // NetworkStatus,
       registryValue,
       onChange,
       registryPH,

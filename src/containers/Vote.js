@@ -6,15 +6,14 @@ import { List } from 'immutable'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import Modal from '../Modal'
-import messages from '../../config/messages'
+import Modal from './Modal'
+import messages from '../config/messages'
 
-import H2 from '../../components/H2'
-import UserInfo from '../../components/UserInfo'
-
-import Event from '../../components/Event'
-import FlexContainer from '../../components/FlexContainer'
-import Section from '../../components/Section'
+import H2 from '../components/H2'
+import FlexContainer from '../components/FlexContainer'
+import Listing from '../components/Listing'
+import Section from '../components/Section'
+import UserInfo from '../components/UserInfo'
 
 import {
   selectParameters,
@@ -24,9 +23,9 @@ import {
   selectAccount,
   selectContracts,
   selectCustomMethods,
-} from '../../selectors'
-import methods from '../../config/methods'
-import { handleActionClick } from '../../actions/index'
+} from '../selectors'
+import methods from '../config/methods'
+import { handleActionClick } from '../actions'
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -90,7 +89,7 @@ class Voting extends Component {
           {faceoffs.size > 0 &&
             faceoffs.map(log => (
               <Section key={log.get('listing')}>
-                <Event
+                <Listing
                   latest={log.get('latest')}
                   owner={log.get('owner')}
                   listing={log.get('listing')}

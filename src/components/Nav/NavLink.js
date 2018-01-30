@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
-import { colors } from '../../components/Colors';
+import { colors } from '../../colors'
 
 const NavLinkWrapper = styled.div`
   display: flex;
@@ -16,6 +16,6 @@ const NavLinkWrapper = styled.div`
 
 export default props => (
   <NavLinkWrapper>
-    <NavLink activeClassName='selected' {...props} />
+    <NavLink activeClassName="selected" {...props} />
   </NavLinkWrapper>
 )

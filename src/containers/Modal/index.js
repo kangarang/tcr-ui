@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
 import { List } from 'immutable'
-import UDapp from '../UDapp'
 
-import { colors } from '../../components/Colors'
+import { colors } from '../../colors'
+
 import H2 from '../../components/H2'
 import Button from '../../components/Button'
-import { TopBar } from '../../App'
+import TopBar from '../../components/TopBar'
+
+import UDapp from '../UDapp'
 
 const Wrapper = styled.div`
   padding: 1em;

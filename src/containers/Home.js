@@ -6,21 +6,21 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import NetworkStatus from 'react-web3-network-status'
 
-import Login from '../Login'
-import messages from '../../config/messages'
-import methods from '../../config/methods'
-import Modal from '../Modal'
+import Login from './Login'
+import messages from '../config/messages'
+import methods from '../config/methods'
+import Modal from './Modal'
 
-import H2 from '../../components/H2'
+import H2 from '../components/H2'
 
-import Event from '../../components/Event'
-import FlexContainer from '../../components/FlexContainer'
-import Section from '../../components/Section'
-import UserInfo from '../../components/UserInfo'
+import Listing from '../components/Listing'
+import FlexContainer from '../components/FlexContainer'
+import Section from '../components/Section'
+import UserInfo from '../components/UserInfo'
 
-import tcrWave from '../../assets/tcr-wave.jpg'
+import tcrWave from '../assets/tcr-wave.jpg'
 
-import { setupEthereum, executeMethod } from '../../actions'
+import { setupEthereum, executeMethod } from '../actions'
 
 import {
   selectError,
@@ -31,7 +31,7 @@ import {
   selectServices,
   selectWhitelist,
   selectEthjs,
-} from '../../selectors'
+} from '../selectors'
 
 const HomeWrapper = styled.div`
   padding: 1em;
@@ -111,22 +111,22 @@ class Home extends Component {
           />
 
           <H2>
-          {'Registry ('}
-          {whitelist.size}
-          {')'}
+            {'Registry ('}
+            {whitelist.size}
+            {')'}
           </H2>
           <FlexContainer>
-          {whitelist.size > 0 &&
-            whitelist.map(log => (
-              <Section key={log.get('listing')}>
-              <Event
-              latest={log.get('latest')}
-              owner={log.get('owner')}
-              listing={log.get('listing')}
-              whitelisted={log.getIn(['latest', 'whitelisted'])}
-              />
-              </Section>
-            ))}
+            {whitelist.size > 0 &&
+              whitelist.map(log => (
+                <Section key={log.get('listing')}>
+                  <Listing
+                    latest={log.get('latest')}
+                    owner={log.get('owner')}
+                    listing={log.get('listing')}
+                    whitelisted={log.getIn(['latest', 'whitelisted'])}
+                  />
+                </Section>
+              ))}
           </FlexContainer>
         </HomeWrapper>
       </div>

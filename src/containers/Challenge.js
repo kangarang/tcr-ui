@@ -5,15 +5,15 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import Modal from '../Modal'
-import messages from '../../config/messages'
+import Modal from './Modal'
+import messages from '../config/messages'
 
-import H2 from '../../components/H2'
-import UserInfo from '../../components/UserInfo'
+import H2 from '../components/H2'
+import UserInfo from '../components/UserInfo'
 
-import Event from '../../components/Event'
-import FlexContainer from '../../components/FlexContainer'
-import Section from '../../components/Section'
+import Listing from '../components/Listing'
+import FlexContainer from '../components/FlexContainer'
+import Section from '../components/Section'
 
 import {
   selectWallet,
@@ -21,8 +21,8 @@ import {
   selectError,
   selectAccount,
   selectContracts,
-} from '../../selectors'
-import methods from '../../config/methods'
+} from '../selectors'
+import methods from '../config/methods'
 
 const ChallengeWrapper = styled.div`
   padding: 1em;
@@ -66,7 +66,7 @@ class Challenge extends Component {
           {candidates.size > 0 &&
             candidates.map(log => (
               <Section key={log.get('listing')}>
-                <Event
+                <Listing
                   latest={log.get('latest')}
                   owner={log.get('owner')}
                   listing={log.get('listing')}

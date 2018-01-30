@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import NavLink from './NavLink'
-// import { colors } from '../../components/Colors'
 
 const NavBar = styled.div`
   display: grid;

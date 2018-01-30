@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-// import Eth from 'ethjs'
 import EthAbi from 'ethjs-abi'
+// import Eth from 'ethjs'
 // import BlockTracker from 'eth-block-tracker'
 // import Suggestor from 'eth-gas-price-suggestor'
 
 import abis from '../../abis'
 
-import { getProvider } from '../../libs/provider'
 import value_utils from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
 
@@ -116,10 +115,8 @@ const UDappHOC = WrappedComponent => {
           data: txData,
         }
         const called = await this.eth.call(params, 'latest')
-
         const decint = parseInt(called, 10)
         const hexint = parseInt(called, 16)
-
         console.log('CALL (dec):', decint)
         console.log('CALL (hex):', hexint)
 
@@ -128,7 +125,6 @@ const UDappHOC = WrappedComponent => {
         this.setState({
           callResult: cr,
         })
-        return cr
       } catch (err) {
         if (args.filter(Boolean).length !== args.length) return
         console.warn(err)
@@ -156,15 +152,15 @@ const UDappHOC = WrappedComponent => {
         const actualAmount = value_utils.toNaturalUnitAmount(args[indexOfAmount], 18)
         args[indexOfAmount] = actualAmount.toString(10)
       }
-      if (inputNames.includes('_numTokens' && (methodName === 'requestVotingRights' || methodName === 'withdrawVotingRights'))) {
-        const indexOfNumTokens = inputNames.indexOf('_numTokens')
-        const actualNumTokens = value_utils.toNaturalUnitAmount(args[indexOfNumTokens], 18)
-        args[indexOfNumTokens] = actualNumTokens.toString(10)
-      }
       if (inputNames.includes('_value')) {
         const indexOfValue = inputNames.indexOf('_value')
         const actualValue = value_utils.toNaturalUnitAmount(args[indexOfValue], 18)
         args[indexOfValue] = actualValue.toString(10)
+      }
+      if (inputNames.includes('_numTokens' && (methodName === 'requestVotingRights' || methodName === 'withdrawVotingRights'))) {
+        const indexOfNumTokens = inputNames.indexOf('_numTokens')
+        const actualNumTokens = value_utils.toNaturalUnitAmount(args[indexOfNumTokens], 18)
+        args[indexOfNumTokens] = actualNumTokens.toString(10)
       }
 
       if (inputNames.includes('_secretHash')) {
@@ -239,7 +235,6 @@ const UDappHOC = WrappedComponent => {
     }
 
     render() {
-      console.log('this.props', this.props)
       return (
         <WrappedComponent
           registry={this.state.registry}

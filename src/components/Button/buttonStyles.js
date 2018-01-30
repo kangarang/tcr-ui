@@ -1,9 +1,9 @@
 import { css } from 'styled-components'
-import { colors } from '../Colors'
+import { colors } from '../../colors'
 
 const buttonStyles = css`
   display: inline-block;
-  padding: .7em 1.4em;
+  padding: 0.7em 1.4em;
   outline: 0;
   user-select: none;
   cursor: pointer;

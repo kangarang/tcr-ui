@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { config } from '../../config'
+import { config } from '../config'
 
-import Identicon from '../Identicon'
-import Img from '../Img'
+import Identicon from './Identicon'
+import Img from './Img'
 
 import {
   Container,
@@ -12,11 +12,11 @@ import {
   FlexCenteredItem,
   BoldInlineText,
   BigBoldInlineText,
-} from '../Item'
+} from './Item'
 
-import { toEther, withCommas, trimDecimalsThree } from '../../libs/units'
+import { toEther, withCommas, trimDecimalsThree } from '../libs/units'
 
-import iconSrc from '../../assets/icons/favicon.ico'
+import iconSrc from '../assets/icons/favicon.ico'
 
 function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
   const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
