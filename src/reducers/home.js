@@ -68,6 +68,7 @@ const initialState = fromJS({
   },
   ecRecovered: false,
   customMethods: [],
+  ethjs: {}
 })
 
 function homeReducer(state = initialState, action) {
@@ -94,11 +95,13 @@ function homeReducer(state = initialState, action) {
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
+        .set('ethjs', fromJS(action.payload.ethjs))
     case SET_WALLET:
       return state
         .setIn(['wallet', 'address'], fromJS(action.payload.address))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
+        .set('ethjs', fromJS(action.payload.ethjs))
     case SET_CONTRACTS:
       return state
         .setIn(

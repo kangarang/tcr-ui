@@ -10,9 +10,30 @@ export default class Registry {
   }
 
   setupRegistry = async (eth, account) => {
+    // const RegistryContract = eth.contract(abis.registry.abi, abis.registry.bytecode, {
+    //   from: account,
+    //   gas: 450000,
+    //   gasPrice: 25000000000,
+    // })
+
+    // this.contract = await RegistryContract.at(abis.registry.networks[network].address)
+    // this.address = this.contract.address
+    // console.log('this.contract', this.contract)
+
+    // return this
+
+    // truffle-contract
     const RegistryContract = contract(abis.registry)
     RegistryContract.setProvider(eth.currentProvider)
     RegistryContract.defaults(getDefaults(account))
+    // if (typeof RegistryContract.currentProvider.sendAsync !== 'function') {
+      // RegistryContract.currentProvider.sendAsync = function() {
+      //   return RegistryContract.currentProvider.send.apply(
+      //     RegistryContract.currentProvider,
+      //     arguments
+      //   )
+      // }
+    // }
 
     this.contract = await RegistryContract.deployed()
     this.address = this.contract.address

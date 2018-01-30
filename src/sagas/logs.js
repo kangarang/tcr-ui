@@ -1,4 +1,4 @@
-import { all, takeLatest, fork, call, put } from 'redux-saga/effects'
+import { all, select, takeLatest, fork, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
@@ -11,11 +11,10 @@ import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
 import { updateTokenBalancesSaga } from './token'
 
-import { getEthjs } from '../libs/provider'
-
 import logUtils from '../utils/log_utils'
 import filterUtils from '../utils/filter_utils'
 import value_utils from '../utils/value_utils'
+import { selectEthjs } from '../selectors/index'
 
 let lastReadBlockNumber = 10
 // let lastReadBlockNumber = 1638476
@@ -71,11 +70,11 @@ function* pollController() {
 }
 
 function* pollLogsSaga(action) {
-  const eth = yield call(getEthjs)
+  const ethjs = yield select(selectEthjs)
   const registry = yield call(getRegistry)
   const voting = yield call(getContract, 'voting')
   try {
-    lastReadBlockNumber = (yield call(eth.blockNumber)).toNumber(10)
+    lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
     console.log('lastReadBlockNumber', lastReadBlockNumber)
     console.log('action', action)
     const newLogs = yield call(
@@ -83,7 +82,7 @@ function* pollLogsSaga(action) {
       action.payload.startBlock,
       action.payload.endBlock,
       '',
-      registry,
+      registry
     )
     console.log('newLogs', newLogs)
     yield put(updateItems(newLogs))
@@ -97,7 +96,7 @@ function* pollLogsSaga(action) {
 
 function* handleLogs(sb, eb, topic, contract) {
   try {
-    const eth = yield call(getEthjs)
+    const ethjs = yield select(selectEthjs)
 
     const blockRange = yield {
       fromBlock: new Eth.BN(sb),
@@ -113,7 +112,7 @@ function* handleLogs(sb, eb, topic, contract) {
     )
     console.log('filter', filter)
 
-    const rawLogs = yield call(eth.getLogs, filter)
+    const rawLogs = yield call(ethjs.getLogs, filter)
     console.log('rawLogs', rawLogs)
 
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
@@ -122,13 +121,13 @@ function* handleLogs(sb, eb, topic, contract) {
 
     return yield all(
       (yield decodedLogs.map(async (dLog, ind) => {
-        const block = await logUtils.getBlock(eth, rawLogs[ind].blockHash)
+        const block = await logUtils.getBlock(ethjs, rawLogs[ind].blockHash)
         const txDetails = await logUtils.getTransaction(
-          eth,
+          ethjs,
           rawLogs[ind].transactionHash
         )
         return buildListing(contract, block, dLog, ind, txDetails)
-      })).filter(lawg => (lawg !== false))
+      })).filter(lawg => lawg !== false)
     )
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -167,7 +166,9 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     const details = {
       listingString: dLog.data,
       listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3] ? value_utils.toUnitAmount(listing[3], 18) : false,
+      unstakedDeposit: listing[3]
+        ? value_utils.toUnitAmount(listing[3], 18)
+        : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
       index: i,
       eventName: dLog._eventName,

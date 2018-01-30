@@ -50,7 +50,7 @@ class Modal extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log('newProps', newProps)
+    console.log('Modal newProps', newProps)
     if (List.isList(newProps.actions) && !List.isList(this.props.actions)) {
       this.setState({
         modalIsOpen: true,

@@ -30,6 +30,7 @@ import {
   selectECRecovered,
   selectServices,
   selectWhitelist,
+  selectEthjs,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -43,9 +44,10 @@ class Home extends Component {
       registryAddress: '',
     }
   }
+
   componentDidMount() {
-    console.log('Home props:', this.props)
     this.props.onSetupEthereum()
+    console.log('Home props:', this.props)
   }
 
   handleChangeRegistryAddress = e => {
@@ -61,13 +63,15 @@ class Home extends Component {
       wallet,
       contracts,
       whitelist,
+      ethjs,
       ecRecovered,
     } = this.props
+    console.log('this', this)
 
     return (
       <div>
         <HomeWrapper>
-          {!ecRecovered && (
+          {ecRecovered && (
             <Login
               execute={this.props.onExecute}
               network={wallet.get('network')}
@@ -103,6 +107,7 @@ class Home extends Component {
             account={account}
             networkId={wallet.get('network')}
             wallet={wallet}
+            ethjs={ethjs}
           />
 
           <H2>
@@ -144,6 +149,7 @@ const mapStateToProps = createStructuredSelector({
   whitelist: selectWhitelist,
   ecRecovered: selectECRecovered,
   services: selectServices,
+  ethjs: selectEthjs,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

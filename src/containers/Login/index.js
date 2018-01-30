@@ -176,7 +176,7 @@ class Login extends Component {
           <PaddedDiv>
             {/* <Icon iconName="globe" /> */}
             <SmlBoldDiv>{'Network: '}</SmlBoldDiv>
-            <SmlDiv>{NetworkStatus}</SmlDiv>
+            {/* <SmlDiv>{NetworkStatus}</SmlDiv> */}
             <SmlBoldDiv>{'ETH Balance: '}</SmlBoldDiv>
             <SmlDiv>{trimDecimalsThree(toEther(ethBalance)) || '0'}</SmlDiv>
           </PaddedDiv>

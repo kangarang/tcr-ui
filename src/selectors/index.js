@@ -29,6 +29,11 @@ export const selectServices = createSelector(
     homeState.get('services')
 )
 
+export const selectEthjs = createSelector(
+  selectHome, homeState =>
+    homeState.get('ethjs')
+)
+
 export const selectService = (service) => createSelector(
   [selectHome, selectServices], (homeState, services) =>
     homeState.getIn([services, service])

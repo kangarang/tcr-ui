@@ -1,37 +1,38 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { call, select, put, takeEvery } from 'redux-saga/effects'
 
 import truffleContract from 'truffle-contract'
 import ethUtil from 'ethereumjs-util'
-// import sigUtil from 'eth-sig-util'
 
 import { EXECUTE_METHOD_REQUEST, LOGIN_ERROR } from '../actions/constants'
 
 import { loginError, loginSuccess } from '../actions'
 
-import { getEthjs } from '../libs/provider'
 import { getDefaults } from '../services/defaults'
-import { getRegistry } from '../services/index';
+import { getRegistry } from '../services/index'
+import { selectEthjs } from '../selectors/index'
 
 export default function* rootLoginSaga() {
-  yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
+  // yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
 }
 
 function* executeSaga(action) {
   try {
-    const eth = yield call(getEthjs)
-    console.log('eth', eth)
+    const ethjs = yield select(selectEthjs)
+    console.log('ethjs', ethjs)
 
     const { account, method, network, registry } = action.payload
     console.log('method', method)
 
-    const text = `Account:\n${account || 'You need MetaMask!'}\n\nRegistry:\n${registry || 'No registry'}\n\nNetwork: ${network || 'Unlock MetaMask!'}`
+    const text = `Account:\n${account ||
+      'You need MetaMask!'}\n\nRegistry:\n${registry ||
+      'No registry'}\n\nNetwork: ${network || 'Unlock MetaMask!'}`
 
     const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
 
-    const signed = yield call([eth, 'personal_sign'], msg, account)
+    const signed = yield call([ethjs, 'personal_sign'], msg, account)
     console.log('Signed! Result is: ', signed)
 
-    const recovered = yield call([eth, 'personal_ecRecover'], msg, signed)
+    const recovered = yield call([ethjs, 'personal_ecRecover'], msg, signed)
     console.log('recovered', recovered)
 
     const regContract = yield call(getRegistry)
@@ -41,7 +42,7 @@ function* executeSaga(action) {
       console.log('Checking if deployed...')
       const deployed = yield call(
         checkIfDeployed,
-        eth,
+        ethjs,
         account,
         regContract.contract,
         registry
@@ -60,10 +61,18 @@ function* executeSaga(action) {
   }
 }
 
-async function checkIfDeployed(eth, account, contract, address) {
+async function checkIfDeployed(ethjs, account, contract, address) {
   const Contract = truffleContract(contract)
-  Contract.setProvider(eth.currentProvider)
-  Contract.defaults(getDefaults(account))
+  Contract.setProvider(ethjs.currentProvider)
+  if (typeof Contract.currentProvider.sendAsync !== 'function') {
+    Contract.currentProvider.sendAsync = function() {
+      return Contract.currentProvider.send.apply(
+        Contract.currentProvider,
+        arguments
+      )
+    }
+  }
+  // Contract.defaults(getDefaults(account))
 
   try {
     const c = await Contract.at(address)

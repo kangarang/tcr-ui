@@ -1,4 +1,12 @@
-import { call, put, fork, select, all, takeLatest } from 'redux-saga/effects'
+import {
+  call,
+  put,
+  fork,
+  select,
+  all,
+  spawn,
+  takeLatest,
+} from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import {
@@ -22,11 +30,11 @@ import {
 
 import { updateTokenBalancesSaga } from './token'
 
-import { setupEthjs, getEthjs } from '../libs/provider'
+import { setupEthjs } from '../libs/provider'
 
 import signinSaga from './signin'
 import userActionSaga from './userActionSaga'
-import { selectAccount } from '../selectors/index'
+import { selectAccount, selectEthjs } from '../selectors/index'
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
   yield fork(signinSaga)
@@ -35,56 +43,53 @@ export default function* rootSaga() {
   yield takeLatest(GET_ETH_PROVIDER, pollProvider)
 }
 
-function* genesis(action) {
+function* genesis() {
   try {
-    const eth = yield call(setupEthjs, action.network)
-    const address = (yield call(eth.accounts))[0]
-    const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
+    const ethjs = yield call(setupEthjs)
+    const address = (yield call(ethjs.accounts))[0]
+    console.log('address', address)
+    const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, address)
 
     if (typeof balanceBlockNetwork !== 'undefined') {
       yield put(setWallet(balanceBlockNetwork))
-      yield fork(contractsSaga, eth, address)
+      yield spawn(contractsSaga, ethjs, address)
     }
   } catch (err) {
     yield put(loginError({ type: LOGIN_ERROR, message: err.message }))
   }
 }
 
-function* getBalBlockNet(eth, address) {
+function* getBalBlockNet(ethjs, address) {
   try {
     if (address) {
       const [blockNumber, ethBalance, network] = yield all([
-        call(eth.blockNumber),
-        call(eth.getBalance, address),
-        call(eth.net_version),
+        call(ethjs.blockNumber),
+        call(ethjs.getBalance, address),
+        call(ethjs.net_version),
       ])
-      return yield { blockNumber, ethBalance, network, address }
+      return yield { blockNumber, ethBalance, network, address, ethjs }
     }
   } catch (err) {
     yield put(loginError({ type: WALLET_ERROR, message: err.message }))
   }
 }
 
-
-function* contractsSaga(eth, address) {
+function* contractsSaga(ethjs, address) {
   try {
-    const registry = yield call(setupRegistry, eth, address)
-    const [token, parameterizer, voting] = yield all([
-      call(setupContract, eth, address, 'token'),
-      call(setupContract, eth, address, 'parameterizer'),
-      call(setupContract, eth, address, 'voting'),
-    ])
+    const registry = yield call(setupRegistry, ethjs, address)
 
-    if (token && parameterizer && registry && voting) {
-      yield put(setContracts({ registry, token, parameterizer, voting }))
-      yield fork(updateTokenBalancesSaga, registry.address)
-      yield fork(updateTokenBalancesSaga, voting.address)
-    }
+    const [token, parameterizer, voting] = yield all([
+      call(setupContract, ethjs, address, registry, 'token'),
+      call(setupContract, ethjs, address, registry, 'parameterizer'),
+      call(setupContract, ethjs, address, registry, 'voting'),
+    ])
+    yield put(setContracts({ registry, token, parameterizer, voting }))
+    yield fork(updateTokenBalancesSaga, registry.address)
+    yield fork(updateTokenBalancesSaga, voting.address)
   } catch (err) {
     yield put(contractError(err))
   }
 }
-
 
 // Polling
 
@@ -104,29 +109,22 @@ function* runPolling() {
 
 function* pollProvider() {
   try {
-    const eth = yield call(getEthjs)
-
+    const ethjs = yield select(selectEthjs)
     const account = yield select(selectAccount)
-    const bbnAccount = yield call(getBalBlockNet, eth, account)
-    console.log('bbnAccount', bbnAccount)
-
-    const address = (yield call(eth.accounts))[0]
-    const bbnAddress = yield call(getBalBlockNet, eth, address)
-    console.log('bbnAddress', bbnAddress)
-
-    if (typeof bbnAccount === 'undefined' && bbnAddress) {
-      // login to MetaMask
-      const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
-      yield put(setEthereumProvider(balanceBlockNetwork))
-      yield call(contractsSaga, eth, address)
-    } else if (bbnAccount && typeof bbnAddress === 'undefined') {
-      // logout of MetaMask
-      yield put(logoutSuccess({ account: bbnAccount.address }))
-    } else if (bbnAccount.defaultAccount !== bbnAddress.defaultAccount) {
-      const balanceBlockNetwork = yield call(getBalBlockNet, eth, address)
-      yield put(setEthereumProvider(balanceBlockNetwork))
-      yield fork(contractsSaga, eth, address)
-    }
+    const bbnAccount = yield call(getBalBlockNet, ethjs, account)
+    // if (typeof bbnAccount === 'undefined' && bbnAddress) {
+    //   // login to MetaMask
+    //   const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, address)
+    //   yield put(setEthereumProvider(balanceBlockNetwork))
+    //   yield call(contractsSaga, ethjs, address)
+    // } else if (bbnAccount && typeof bbnAddress === 'undefined') {
+    //   // logout of MetaMask
+    //   yield put(logoutSuccess({ account: bbnAccount.address }))
+    // } else if (bbnAccount.defaultAccount !== bbnAddress.defaultAccount) {
+    //   const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, address)
+    //   yield put(setEthereumProvider(balanceBlockNetwork))
+    //   yield fork(contractsSaga, ethjs, address)
+    // }
   } catch (err) {
     console.log('pollProvider error', err)
     yield put(contractError(err))

@@ -6,7 +6,7 @@ import EthAbi from 'ethjs-abi'
 
 import abis from '../../abis'
 
-import { getProvider, getEthjs } from '../../libs/provider'
+import { getProvider } from '../../libs/provider'
 import value_utils from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
 
@@ -43,9 +43,9 @@ const UDappHOC = WrappedComponent => {
     }
 
     initUDapp = async () => {
-      const provider = getProvider()
+      // const provider = getProvider()
       // let suggestor
-      if (typeof provider !== 'undefined') {
+      // if (typeof provider !== 'undefined') {
         // const blockTracker = new BlockTracker({ provider })
         // blockTracker.start()
 
@@ -55,13 +55,13 @@ const UDappHOC = WrappedComponent => {
         //   defaultPrice: 20000000000,
         // })
 
-        this.eth = getEthjs()
+        this.eth = this.props.ethjs
         const fromAddress = (await this.eth.accounts())[0]
 
         this.setState({
           fromAddress,
         })
-      }
+      // }
 
       // setInterval(async () => {
       //   try {

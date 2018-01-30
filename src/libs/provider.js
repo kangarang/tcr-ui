@@ -1,8 +1,6 @@
 import Ethjs from 'ethjs'
 import { config } from '../config'
 
-let eth
-
 export const getProvider = () => {
   if (
     typeof window.web3 !== 'undefined' &&
@@ -14,8 +12,5 @@ export const getProvider = () => {
 }
 
 export const setupEthjs = () => {
-  eth = new Ethjs(getProvider())
-  return eth
+  return new Ethjs(getProvider())
 }
-
-export const getEthjs = () => eth
