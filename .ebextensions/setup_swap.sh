@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Add 2GB swap
 SWAPFILE=/var/swapfile
 SWAP_MEGABYTES=2048
 

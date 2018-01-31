@@ -12,7 +12,6 @@ src/*/keys.js
 firebase.json
 
 package-lock.json
-.ebextensions
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
