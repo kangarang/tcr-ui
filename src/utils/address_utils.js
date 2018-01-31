@@ -1,4 +1,4 @@
-import jsSHA3 from 'js-sha3'
+// import jsSHA3 from 'js-sha3'
 
 // see:
 // https://github.com/0xProject/0x.js/blob/development/packages/utils/src/address_utils.ts
@@ -7,24 +7,24 @@ const BASIC_ADDRESS_REGEX = /^(0x)?[0-9a-f]{40}$/i
 const SAME_CASE_ADDRESS_REGEX = /^(0x)?([0-9a-f]{40}|[0-9A-F]{40})$/
 
 export const addressUtils = {
-  isChecksumAddress: address => {
-    // Check each case
-    const unprefixedAddress = address.replace('0x', '')
-    const addressHash = jsSHA3.keccak256(unprefixedAddress.toLowerCase())
+  // isChecksumAddress: address => {
+  //   // Check each case
+  //   const unprefixedAddress = address.replace('0x', '')
+  //   const addressHash = jsSHA3.keccak256(unprefixedAddress.toLowerCase())
 
-    for (let i = 0; i < 40; i++) {
-      // The nth letter should be uppercase if the nth digit of casemap is 1
-      if (
-        (parseInt(addressHash[i], 16) > 7 &&
-          unprefixedAddress[i].toUpperCase() !== unprefixedAddress[i]) ||
-        (parseInt(addressHash[i], 16) <= 7 &&
-          unprefixedAddress[i].toLowerCase() !== unprefixedAddress[i])
-      ) {
-        return false
-      }
-    }
-    return true
-  },
+  //   for (let i = 0; i < 40; i++) {
+  //     // The nth letter should be uppercase if the nth digit of casemap is 1
+  //     if (
+  //       (parseInt(addressHash[i], 16) > 7 &&
+  //         unprefixedAddress[i].toUpperCase() !== unprefixedAddress[i]) ||
+  //       (parseInt(addressHash[i], 16) <= 7 &&
+  //         unprefixedAddress[i].toLowerCase() !== unprefixedAddress[i])
+  //     ) {
+  //       return false
+  //     }
+  //   }
+  //   return true
+  // },
 
   isAddress: address => {
     if (!BASIC_ADDRESS_REGEX.test(address)) {
@@ -35,8 +35,9 @@ export const addressUtils = {
       return true
     } else {
       // Otherwise check each case
-      const isValidChecksummedAddress = addressUtils.isChecksumAddress(address)
-      return isValidChecksummedAddress
+      // const isValidChecksummedAddress = addressUtils.isChecksumAddress(address)
+      // return isValidChecksummedAddress
+      return false
     }
   },
 }

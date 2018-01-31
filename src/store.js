@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 
 import { fromJS, Iterable } from 'immutable';
 
@@ -11,22 +11,22 @@ import logSaga from './sagas/logs'
 
 const sagaMiddleware = createSagaMiddleware();
 
-const stateTransformer = (state) => {
-  if (Iterable.isIterable(state)) return state.toJS();
-  return state;
-};
+// const stateTransformer = (state) => {
+//   if (Iterable.isIterable(state)) return state.toJS();
+//   return state;
+// };
 
-const logger = createLogger({
-  // predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
-  collapsed: (getState, action, logEntry) => !action.error,
-  stateTransformer,
-});
+// const logger = createLogger({
+//   // predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
+//   collapsed: (getState, action, logEntry) => !action.error,
+//   stateTransformer,
+// });
 
 
 export default function configureStore(initialState = {}) {
   const middlewares = [
     sagaMiddleware,
-    logger,
+    // logger,
   ];
 
   const enhancers = [
