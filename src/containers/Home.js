@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import NetworkStatus from 'react-web3-network-status'
+// import NetworkStatus from 'react-web3-network-status'
 
 import Login from './Login'
 import messages from '../messages'
