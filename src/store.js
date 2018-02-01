@@ -1,37 +1,31 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import createSagaMiddleware from 'redux-saga';
-// import { createLogger } from 'redux-logger';
+import { createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+import { createLogger } from 'redux-logger'
 
-import { fromJS, Iterable } from 'immutable';
+import { fromJS, Iterable } from 'immutable'
 
-// import { SET_TOKENS_ALLOWED, GET_TOKENS_ALLOWED } from './actions/constants'
-import createReducer from './reducers';
+import { GET_TOKENS_ALLOWED } from './actions/constants'
+import createReducer from './reducers'
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'
 
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware()
 
-// const stateTransformer = (state) => {
-//   if (Iterable.isIterable(state)) return state.toJS();
-//   return state;
-// };
+const stateTransformer = state => {
+  if (Iterable.isIterable(state)) return state.toJS()
+  return state
+}
 
-// const logger = createLogger({
-//   // predicate: (getState, action) => action.type !== SET_TOKENS_ALLOWED && action.type !== GET_TOKENS_ALLOWED,
-//   collapsed: (getState, action, logEntry) => !action.error,
-//   stateTransformer,
-// });
-
+const logger = createLogger({
+  predicate: (getState, action) => action.type !== GET_TOKENS_ALLOWED,
+  collapsed: (getState, action, logEntry) => !action.error,
+  stateTransformer,
+})
 
 export default function configureStore(initialState = {}) {
-  const middlewares = [
-    sagaMiddleware,
-    // logger,
-  ];
+  const middlewares = [sagaMiddleware, logger]
 
-  const enhancers = [
-    applyMiddleware(...middlewares),
-  ];
+  const enhancers = [applyMiddleware(...middlewares)]
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   /* eslint-disable no-underscore-dangle */
@@ -40,19 +34,19 @@ export default function configureStore(initialState = {}) {
     typeof window === 'object' &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      : compose;
+      : compose
   /* eslint-enable */
 
   const store = createStore(
     createReducer(),
     fromJS(initialState),
     composeEnhancers(...enhancers)
-  );
+  )
 
   // Extensions
   // store.runSaga = sagaMiddleware.run(rootSaga);
-  sagaMiddleware.run(rootSaga);
-  sagaMiddleware.run(logSaga);
+  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(logSaga)
   // store.injectedReducers = {}; // Reducer registry
   // store.injectedSagas = {}; // Saga registry
 
@@ -64,5 +58,5 @@ export default function configureStore(initialState = {}) {
   //   });
   // }
 
-  return store;
+  return store
 }

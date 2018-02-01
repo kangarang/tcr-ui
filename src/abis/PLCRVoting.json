@@ -14606,23 +14606,15 @@
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
   "networks": {
-    "4": {
-      "events": {},
-      "links": {
-        "DLL": "0x702ef6972e855d57a1203ee013017fe589e818db",
-        "AttributeStore": "0x8ae1961a5f7a45b24782527c4f162b928184e3c2"
-      },
-      "address": "0x9c7200575c1595cdc4e7a30feb61fafe0edcc381"
-    },
     "420": {
       "events": {},
       "links": {
         "DLL": "0x7acb85f56bb9ed4da016b0054570121a8673af2f",
-        "AttributeStore": "0xee5aa77ca7394a114439cfda4f46dd2a7298ce79"
+        "AttributeStore": "0x53f22fbae01646c88ec8afefa5a92094a0a89add"
       },
-      "address": "0x53f22fbae01646c88ec8afefa5a92094a0a89add"
+      "address": "0x450fd04378dd4f683a81ce83cc4e5a69c02e616a"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-29T18:26:40.490Z"
+  "updatedAt": "2018-02-01T01:13:05.787Z"
 }

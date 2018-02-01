@@ -20,7 +20,6 @@ class Nav extends Component {
   render() {
     return (
       <NavBar>
-        <NavLink to="/"></NavLink>
         <NavLink strict to="/">
           Home
         </NavLink>
@@ -29,6 +28,9 @@ class Nav extends Component {
         </NavLink>
         <NavLink activeStyle={styles.active} to="/vote">
           Vote
+        </NavLink>
+        <NavLink activeStyle={styles.active} to="/activities">
+          Activities
         </NavLink>
         <NavLink activeStyle={styles.active} to="/search">
           Registry

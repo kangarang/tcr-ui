@@ -64,6 +64,7 @@ function* contractsSaga(ethjs, address) {
     yield fork(updateTokenBalancesSaga, registry.address)
     yield fork(updateTokenBalancesSaga, voting.address)
   } catch (err) {
+    console.log('err', err)
     yield put(contractError(err))
   }
 }
