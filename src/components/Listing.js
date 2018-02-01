@@ -44,7 +44,15 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
     )}
 
     <Item gR={1} gC={4}>
-      {!latest.get('pollID') && <Button>{'Challenge'}</Button>}
+      {!latest.get('pollID') && (
+        <Button
+          onClick={e =>
+            handleClick({ method: 'challenge', context: { listing, latest } })
+          }
+        >
+          {'Challenge'}
+        </Button>
+      )}
       <BoldInlineText>
         {!latest.get('pollID') && !whitelisted ? (
           'This listing has not been challenged yet'
@@ -55,8 +63,10 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
             onClick={e =>
               handleClick({
                 method: 'commitVote',
-                listing,
-                pollID: latest.get('pollID'),
+                context: {
+                  listing,
+                  latest,
+                },
               })
             }
           >

@@ -3,12 +3,12 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-// import NetworkStatus from 'react-web3-network-status'
+import NetworkStatus from 'react-web3-network-status'
 
 import Login from './Login'
 import messages from '../messages'
 import methods from '../methods'
-import Modal from './Modal'
+import UDapp from './UDapp'
 
 import H2 from '../components/H2'
 
@@ -19,7 +19,7 @@ import UserInfo from '../components/UserInfo'
 
 import tcrWave from '../assets/tcr-wave.jpg'
 
-import { setupEthereum, executeMethod } from '../actions'
+import { setupEthereum, sendTransaction } from '../actions'
 
 import {
   selectError,
@@ -27,9 +27,9 @@ import {
   selectWallet,
   selectContracts,
   selectECRecovered,
-  selectServices,
   selectWhitelist,
   selectEthjs,
+  selectRequest,
 } from '../selectors'
 
 const HomeWrapper = styled.div`
@@ -64,8 +64,9 @@ class Home extends Component {
       whitelist,
       ethjs,
       ecRecovered,
+      request,
     } = this.props
-    console.log('this', this)
+    console.log('HOME: ', this)
 
     return (
       <div>
@@ -96,9 +97,11 @@ class Home extends Component {
             error={error}
             wallet={wallet}
             contracts={contracts}
+            request={request}
+            {...this.props}
           />
 
-          <Modal
+          <UDapp
             isOpen={false}
             messages={messages.apply}
             actions={methods.apply.actions}
@@ -107,6 +110,7 @@ class Home extends Component {
             networkId={wallet.get('network')}
             wallet={wallet}
             ethjs={ethjs}
+            {...this.props}
           />
 
           <H2>
@@ -136,7 +140,7 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
-    onExecute: payload => dispatch(executeMethod(payload)),
+    handleSendTransaction: payload => dispatch(sendTransaction(payload)),
   }
 }
 
@@ -147,8 +151,8 @@ const mapStateToProps = createStructuredSelector({
   contracts: selectContracts,
   whitelist: selectWhitelist,
   ecRecovered: selectECRecovered,
-  services: selectServices,
   ethjs: selectEthjs,
+  request: selectRequest,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

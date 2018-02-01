@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import EthAbi from 'ethjs-abi'
-// import Eth from 'ethjs'
-// import BlockTracker from 'eth-block-tracker'
-// import Suggestor from 'eth-gas-price-suggestor'
 
 import abis from '../../abis'
 
@@ -37,48 +34,6 @@ const UDappHOC = WrappedComponent => {
       }
     }
 
-    componentDidMount() {
-      this.initUDapp()
-    }
-
-    initUDapp = async () => {
-      // const provider = getProvider()
-      // let suggestor
-      // if (typeof provider !== 'undefined') {
-      // const blockTracker = new BlockTracker({ provider })
-      // blockTracker.start()
-
-      // suggestor = new Suggestor({
-      //   blockTracker,
-      //   historyLength: 15,
-      //   defaultPrice: 20000000000,
-      // })
-
-      this.eth = this.props.ethjs
-      const fromAddress = (await this.eth.accounts())[0]
-
-      this.setState({
-        fromAddress,
-      })
-      // }
-
-      // setInterval(async () => {
-      //   try {
-      //     const suggested = await suggestor.currentAverage()
-      //     console.log('suggested', suggested)
-      //     console.log(
-      //       'CURRENT SUGGESTION in GWEI: ' +
-      //         Eth.fromWei(new Eth.BN(suggested, 10), 'gwei')
-      //     )
-      //     this.setState({
-      //       suggested,
-      //     })
-      //   } catch (e) {
-      //     console.log('failed: ', e)
-      //   }
-      // }, 5000)
-    }
-
     handleInputChange = async (e, method, input) => {
       const methName = method.name
       const inputName = input.name
@@ -93,7 +48,6 @@ const UDappHOC = WrappedComponent => {
         },
         currentMethod: methName,
       }))
-      console.log('this.state', this.state)
     }
 
     getMethodArgs = method =>
@@ -110,21 +64,21 @@ const UDappHOC = WrappedComponent => {
       try {
         const txData = EthAbi.encodeMethod(method, newArgs)
         const params = {
-          from: this.state.fromAddress,
+          from: this.props.account,
           to: this.state[contract].address,
           data: txData,
         }
-        const called = await this.eth.call(params, 'latest')
+        const called = await this.props.ethjs.call(params, 'latest')
         const decint = parseInt(called, 10)
         const hexint = parseInt(called, 16)
         console.log('CALL (dec):', decint)
         console.log('CALL (hex):', hexint)
-        const cr = decint === 0 ? 'false' : decint === 1 ? 'true' : decint
+        const cr = hexint === 0 ? 'false' : hexint === 1 ? 'true' : decint
         this.setState({
           callResult: cr,
         })
       } catch (err) {
-        if (args.filter(Boolean).length !== args.length) return
+        // if (args.filter(Boolean).length !== args.length) return
         console.warn(err)
       }
     }
@@ -180,67 +134,16 @@ const UDappHOC = WrappedComponent => {
         )
         alert('SALT: ' + salt)
         args[indexOfSecretHash] = secretHash
-        // const pollStruct = await plcr.pollMap.call(pollID)
-
-        // const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
-        // const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
-
-        // const json = {
-        //   listing,
-        //   voteOption,
-        //   salt: salt.toString(10),
-        //   pollID,
-        //   pollStruct,
-        //   commitEndDateString,
-        //   revealEndDateString,
-        //   secretHash,
-        // }
-
-        // const listingUnderscored = listing.replace('.', '_')
-        // const filename = `${listingUnderscored}--pollID_${pollID}--commitEnd_${commitEndDateString}--commitVote.json`
-
-        // if (receipt.receipt.status !== '0x0') {
-        //   saveFile(json, filename)
-        //   return receipt
-        // }
       }
       return args
     }
 
-    // adapted from:
-    // https://github.com/kumavis/udapp/blob/master/index.js#L63
-    handleExecute = async (method, contract) => {
-      console.log('method', method)
-
+    handleExecute = async (e, method, contract) => {
+      e.preventDefault()
       const args = this.getMethodArgs(method)
-      console.log('args', args)
-
       const inputNames = method.inputs.map(inp => inp.name)
-      console.log('inputNames', inputNames)
-
       const finalArgs = this.checkInputs(inputNames, args, method.name)
-      console.log('finalArgs', finalArgs)
-
-      const txData = EthAbi.encodeMethod(method, finalArgs)
-      const nonce = await this.eth.getTransactionCount(this.state.fromAddress)
-      const payload = {
-        from: this.state.fromAddress,
-        gas: 450000,
-        gasPrice: this.state.suggested || 25000000000,
-        to: this.state[contract].address,
-        data: txData,
-        nonce,
-      }
-      console.log('Tx Payload: ', payload)
-
-      // TODO:
-      // instructions
-      // warnings
-      // verifications
-
-      const txHash = await this.eth.sendTransaction(payload)
-      console.log('TRANSACTION:', txHash)
-      return txHash
+      this.props.handleSendTransaction({ method, finalArgs, contract, type: 'ethjs' })
     }
 
     render() {

@@ -20,13 +20,17 @@ export const selectContracts = createSelector(
     homeState.get('contracts')
 )
 
+export const selectContract = (c) => createSelector(
+  selectContracts, contracts =>
+  contracts.get(c)
+)
+export const selectRequest = createSelector(
+  selectHome, homeState =>
+    homeState.get('request')
+)
 export const selectCustomMethods = createSelector(
   selectHome, homeState =>
     homeState.get('customMethods')
-)
-export const selectServices = createSelector(
-  selectHome, homeState =>
-    homeState.get('services')
 )
 
 export const selectEthjs = createSelector(
@@ -34,10 +38,6 @@ export const selectEthjs = createSelector(
     homeState.get('ethjs')
 )
 
-export const selectService = (service) => createSelector(
-  [selectHome, selectServices], (homeState, services) =>
-    homeState.getIn([services, service])
-)
 export const selectAccount = createSelector(
   selectWallet, wallet =>
     wallet.get('address')

@@ -18,7 +18,7 @@ import { toEther, withCommas, trimDecimalsThree } from '../utils/value_utils'
 
 import iconSrc from '../assets/icons/favicon.ico'
 
-function UserInfo({ account, wallet, contracts, error, onSelectNetwork }) {
+function UserInfo({ account, wallet, error, onSelectNetwork }) {
   const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
   return (
     <Container>

@@ -200,7 +200,7 @@ class Login extends Component {
           </RightPaddedDiv>
         </ReactModal>
 
-        {/* <Button onClick={this.handleOpenModal}>{messages.name}</Button> */}
+        <Button onClck={this.handleOpenModal}>{messages.name}</Button>
       </Wrapper>
     )
   }

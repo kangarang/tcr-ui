@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import Modal from './Modal'
+import UDapp from './UDapp'
 import messages from '../messages'
 
 import H2 from '../components/H2'
@@ -21,6 +21,7 @@ import {
   selectError,
   selectAccount,
   selectContracts,
+  selectEthjs,
 } from '../selectors'
 import methods from '../methods'
 
@@ -37,19 +38,20 @@ class Search extends Component {
   }
 
   render() {
-    const { wallet, account, whitelist, error, contracts } = this.props
+    const { wallet, account, whitelist, ethjs, error, contracts } = this.props
 
     return (
       <SearchWrapper>
         <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
 
-        <Modal
+        <UDapp
           isOpen={false}
           messages={messages.search}
           account={account}
           actions={methods.challenge.actions}
           networkId={wallet.get('network')}
           wallet={wallet}
+          ethjs={ethjs}
         />
 
         <H2>
@@ -75,9 +77,6 @@ class Search extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {}
-}
 
 const mapStateToProps = createStructuredSelector({
   wallet: selectWallet,
@@ -85,8 +84,9 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   whitelist: selectWhitelist,
   error: selectError,
+  ethjs: selectEthjs,
 })
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
+const withConnect = connect(mapStateToProps)
 
 export default compose(withConnect)(withRouter(Search))

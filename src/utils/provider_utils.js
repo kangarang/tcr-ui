@@ -1,16 +1,37 @@
 import Ethjs from 'ethjs'
-import { config } from '../config'
 
-export const getProvider = () => {
+let provider
+let ethjs
+
+export function setProvider() {
   if (
     typeof window.web3 !== 'undefined' &&
     typeof window.web3.currentProvider !== 'undefined'
   ) {
-    return window.web3.currentProvider
+    // metamask
+    provider = window.web3.currentProvider
+    return provider
   }
-  return Ethjs.HttpProvider(`http://localhost:${config.PROVIDER_PORT}`)
+  // ganache-cli
+  provider = Ethjs.HttpProvider(`http://localhost:8545`)
+  return provider
 }
 
-export const setupEthjs = () => {
-  return new Ethjs(getProvider())
+export function getCurrentProvider() {
+  if (typeof provider !== 'undefined') {
+    return provider
+  }
+  return new Error('provider not set yet')
+}
+
+export function setEthjs() {
+  ethjs = new Ethjs(setProvider())
+  return ethjs
+}
+
+export function getEthjs() {
+  if (typeof ethjs !== 'undefined') {
+    return ethjs
+  }
+  return new Error('ethjs not set yet')
 }

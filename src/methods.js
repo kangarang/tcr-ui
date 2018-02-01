@@ -8,7 +8,7 @@ const allActions = {
   registry: {
     apply: ['apply', 'deposit', 'appWasMade'],
     challenge: ['challenge'],
-    getters: ['appWasMade', 'isWhitelisted', 'canBeWhitelisted', 'challengeCanBeResolved', 'voterReward'],
+    getters: ['appWasMade', 'isWhitelisted', 'canBeWhitelisted', 'updateStatus', 'challengeCanBeResolved', 'voterReward'],
     setters: ['updateStatus', 'claimReward', 'apply', 'deposit', 'appWasMade']
   }
 }
@@ -33,7 +33,14 @@ export default {
     heading: 'Challenge',
     default: 'Challenge a listing. min_deposit will be transferred from your account.',
     args: ['listingHash'],
-    actions: [...allActions.token, ...allActions.registry.challenge, ...allActions.voting.setters],
+    actions: [...allActions.token, ...allActions.registry.challenge],
+  },
+  commitVote: {
+    name: 'Commit Vote',
+    heading: 'Voting',
+    default: 'Commit and reveal your secret vote',
+    args: ['pollID', 'secretHash', 'numTokens', 'salt'],
+    actions: ['commitVote', ...allActions.voting.getters, ...allActions.registry.getters],
   },
   voting: {
     name: 'Voting',

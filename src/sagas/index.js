@@ -9,7 +9,7 @@ import { setWallet, contractError, setContracts, getProviderRequest, loginError 
 
 import { updateTokenBalancesSaga } from './token'
 
-import { setupEthjs } from '../utils/provider_utils'
+import { setEthjs } from '../utils/provider_utils'
 
 import signinSaga from './signin'
 
@@ -22,7 +22,7 @@ export default function* rootSaga() {
 
 function* genesis() {
   try {
-    const ethjs = yield call(setupEthjs)
+    const ethjs = yield call(setEthjs)
     const address = (yield call(ethjs.accounts))[0]
     console.log('address', address)
     const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, address)

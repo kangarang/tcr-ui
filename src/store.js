@@ -8,6 +8,7 @@ import { GET_TOKENS_ALLOWED } from './actions/constants'
 import createReducer from './reducers'
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'
+import udappSaga from './sagas/udapp'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -47,6 +48,7 @@ export default function configureStore(initialState = {}) {
   // store.runSaga = sagaMiddleware.run(rootSaga);
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)
+  sagaMiddleware.run(udappSaga)
   // store.injectedReducers = {}; // Reducer registry
   // store.injectedSagas = {}; // Saga registry
 

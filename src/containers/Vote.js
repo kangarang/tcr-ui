@@ -6,7 +6,7 @@ import { List } from 'immutable'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import Modal from './Modal'
+import UDapp from './UDapp'
 import messages from '../messages'
 
 import H2 from '../components/H2'
@@ -22,10 +22,11 @@ import {
   selectError,
   selectAccount,
   selectContracts,
-  selectCustomMethods,
+  selectEthjs,
+  selectRequest,
 } from '../selectors'
 import methods from '../methods'
-import { handleActionClick } from '../actions'
+import { sendTransaction, sendTransactionRequest } from '../actions'
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -41,7 +42,12 @@ class Voting extends Component {
 
   handleClick = e => {
     console.log('e', e)
-    this.props.onHandleClick(e)
+    this.props.onSendTransactionRequest(e)
+  }
+
+  handleSendTransaction = (e) => {
+    console.log('confirm txn:', e)
+    this.props.onSendTransaction(e)
   }
 
   render() {
@@ -52,27 +58,29 @@ class Voting extends Component {
       faceoffs,
       error,
       onHandleClick,
-      customMethods,
+      ethjs,
+      request,
     } = this.props
     console.log('faceoffs', faceoffs)
+
+    const reqMeth = request.get('method') ? request.get('method') : 'home'
+    console.log('reqMeth', reqMeth)
+
+    const customMethods = methods[reqMeth].actions || []
 
     return (
       <VotingWrapper>
         <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
 
-        <Modal
+        <UDapp
+          isOpen={request.get('method').length > 0}
           messages={messages.voting}
           account={account}
-          actions={
-            List.isList(this.props.actions) && customMethods.size === 0
-              ? methods.voting.actions
-              : !List.isList(this.props.actions) && customMethods.size > 0
-                ? customMethods
-                : methods.voting.actions
-          }
+          actions={customMethods}
           networkId={wallet.get('network')}
           onHandleClick={onHandleClick}
-          wallet={wallet}
+          handleSendTransaction={this.handleSendTransaction}
+          {...this.props}
         />
 
         <H2>
@@ -90,6 +98,7 @@ class Voting extends Component {
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
                   handleClick={this.handleClick}
+                  ethjs={ethjs}
                 />
               </Section>
             ))}
@@ -101,7 +110,8 @@ class Voting extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onHandleClick: p => dispatch(handleActionClick(p)),
+    onSendTransactionRequest: (e) => dispatch(sendTransactionRequest(e)),
+    onSendTransaction: (e) => dispatch(sendTransaction(e)),
   }
 }
 
@@ -112,7 +122,8 @@ const mapStateToProps = createStructuredSelector({
   faceoffs: selectFaceoffs,
   error: selectError,
   contracts: selectContracts,
-  customMethods: selectCustomMethods,
+  ethjs: selectEthjs,
+  request: selectRequest,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

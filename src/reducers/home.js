@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import abis from '../abis'
 
 import {
   SET_WALLET,
@@ -14,12 +15,13 @@ import {
   LOGOUT_SUCCESS,
   LOGIN_SUCCESS,
   SELECT_CUSTOM_METHODS,
+  SEND_TRANSACTION_REQUESTED,
 } from '../actions/constants'
 
 const initialState = fromJS({
   wallet: {
     address: '',
-    network: '4',
+    network: '420',
     ethBalance: '',
     token: {
       decimals: '',
@@ -28,26 +30,22 @@ const initialState = fromJS({
       allowances: {},
     },
   },
-  services: {
-    parameterizer: {
-      votingRights: '0',
-    },
-    token: {
-      decimalPower: '0',
-    },
-  },
   contracts: {
     registry: {
       address: '',
+      abi: abis.registry.abi,
     },
     token: {
       address: '',
+      abi: abis.token.abi,
     },
     parameterizer: {
       address: '',
+      abi: abis.parameterizer.abi,
     },
     voting: {
       address: '',
+      abi: abis.voting.abi,
     },
   },
   listings: {},
@@ -69,6 +67,10 @@ const initialState = fromJS({
   ecRecovered: false,
   customMethods: [],
   ethjs: {},
+  request: {
+    method: '',
+    context: {},
+  }
 })
 
 function homeReducer(state = initialState, action) {
@@ -77,6 +79,9 @@ function homeReducer(state = initialState, action) {
       return state.setIn(['error', 'type'], true)
     case SELECT_CUSTOM_METHODS:
       return state.set('customMethods', fromJS(action.payload.customMethods))
+    case SEND_TRANSACTION_REQUESTED:
+      return state
+      .set('request', fromJS(action.payload))
     case LOGIN_SUCCESS:
       return state.set('ecRecovered', fromJS(true))
     case LOGOUT_SUCCESS:
@@ -112,10 +117,13 @@ function homeReducer(state = initialState, action) {
           fromJS(action.payload.token.totalSupply)
         )
         .setIn(
-          ['contracts', 'registry', 'address'],
-          fromJS(action.payload.registry.address)
+          ['contracts', 'registry'],
+          fromJS(action.payload.registry)
         )
-        .setIn(['contracts', 'voting', 'address'], fromJS(action.payload.voting.address))
+        .setIn(
+          ['contracts', 'voting'],
+          fromJS(action.payload.voting)
+        )
         .setIn(
           ['contracts', 'parameterizer', 'address'],
           fromJS(action.payload.parameterizer.address)
@@ -170,6 +178,10 @@ function changeListings(state, payload) {
     return acc
   }, state.get('listings'))
 
+  const listings = state.get('listings')
+  if (newListings.isSubset(listings)) {
+    return state
+  }
   // Replace entire List
   return state.set('listings', newListings)
 }
