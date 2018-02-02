@@ -1,65 +1,84 @@
-const allActions = {
-  voting: {
-    setters: ['commitVote', 'revealVote', 'requestVotingRights', 'withdrawVotingRights', 'rescueTokens'],
-    getters: ['commitPeriodActive', 'revealPeriodActive', 'pollEnded', 'pollExists', 'isPassed', 'hasBeenRevealed', 'getInsertPointForNumTokens', 'getNumTokens', 'getNumPassingTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance'],
-    all: ['requestVotingRights', 'withdrawVotingRights', 'rescueTokens', 'rescueTokens', 'commitVote', 'revealVote', 'startPoll', 'getLockedTokens', 'getInsertPointForNumTokens', 'getNumPassingTokens', 'getNumTokens', 'getTotalNumberOfTokensForWinningOption', 'voteTokenBalance', 'commitPeriodActive', 'getCommitHash', 'getLastNode', 'hasBeenRevealed', 'isExpired', 'isPassed', 'pollEnded', 'pollExists', 'pollMap', 'revealPeriodActive', 'validPosition']
-  },
-  token: ['approve', 'transfer', 'allowance'],
-  registry: {
-    apply: ['apply', 'deposit', 'appWasMade'],
-    challenge: ['challenge'],
-    getters: ['appWasMade', 'isWhitelisted', 'canBeWhitelisted', 'updateStatus', 'challengeCanBeResolved', 'voterReward'],
-    setters: ['updateStatus', 'claimReward', 'apply', 'deposit', 'appWasMade']
-  }
+const actions = {
+  voting: [
+    'requestVotingRights',
+    'withdrawVotingRights',
+    'rescueTokens',
+    'rescueTokens',
+    'commitVote',
+    'revealVote',
+    'startPoll',
+    'getLockedTokens',
+    'getInsertPointForNumTokens',
+    'getNumPassingTokens',
+    'getNumTokens',
+    'getTotalNumberOfTokensForWinningOption',
+    'voteTokenBalance',
+    'commitPeriodActive',
+    'getCommitHash',
+    'getLastNode',
+    'hasBeenRevealed',
+    'isExpired',
+    'isPassed',
+    'pollEnded',
+    'pollExists',
+    'pollMap',
+    'revealPeriodActive',
+    'validPosition',
+  ],
+  token: ['approve', 'transfer', 'allowance', 'balanceOf'],
+  registry: [
+    'apply',
+    'deposit',
+    'challenge',
+    'appWasMade',
+    'isWhitelisted',
+    'canBeWhitelisted',
+    'updateStatus',
+    'challengeCanBeResolved',
+    'voterReward',
+    'updateStatus',
+    'claimReward',
+    'apply',
+    'deposit',
+    'appWasMade',
+  ],
 }
-  
+
 export default {
-  home: {
-    name: 'Home',
-    heading: 'Home methods',
-    default: 'login',
-    args: ['spender', 'owner', 'amount'],
-    actions: ['approve', 'allowance', 'balanceOf', 'transfer'],
-  },
   apply: {
     name: 'Apply',
     heading: 'Apply',
     default: 'Apply for a listing in the Registry.',
-    args: ['listingHash', 'deposit', 'data'],
-    actions: [...allActions.token, 'apply', 'deposit', ...allActions.voting.setters, ...allActions.registry.getters],
+    actions: ['apply', 'approve'],
   },
   challenge: {
     name: 'Challenge',
     heading: 'Challenge',
     default: 'Challenge a listing. min_deposit will be transferred from your account.',
-    args: ['listingHash'],
-    actions: [...allActions.token, ...allActions.registry.challenge],
+    actions: ['challenge', 'approve'],
   },
   commitVote: {
     name: 'Commit Vote',
     heading: 'Voting',
-    default: 'Commit and reveal your secret vote',
-    args: ['pollID', 'secretHash', 'numTokens', 'salt'],
-    actions: ['commitVote', ...allActions.voting.getters, ...allActions.registry.getters],
+    default: 'Commit your secret vote',
+    actions: ['approve', 'requestVotingRights', 'commitVote'],
   },
-  voting: {
+  revealVote: {
+    name: 'Reveal Vote',
+    heading: 'Voting',
+    default: 'Reveal your secret vote',
+    actions: ['revealVote'],
+  },
+  vote: {
     name: 'Voting',
     heading: 'Voting',
     default: 'Commit and reveal your secret vote',
-    args: ['pollID', 'secretHash', 'numTokens', 'salt'],
-    actions: [...allActions.voting.getters, ...allActions.voting.setters, ...allActions.token, ...allActions.registry.setters, ...allActions.registry.getters],
-  },
-  activities: {
-    name: 'Activities',
-    heading: 'Your current activities',
-    default: 'Your current activities',
-    actions: [],
+    actions: ['voterReward', 'canBeWhitelisted', 'determineReward', 'tokenClaims', 'challengeCanBeResolved', 'updateStatus', 'withdrawVotingRights', 'rescueTokens', 'commitVote', 'revealVote'],
   },
   search: {
     name: 'Search',
     heading: 'Search modal heading',
     default: 'Type the name of a listing to check its registry status',
-    args: ['listingHash'],
-    actions: [],
+    actions: ['isWhitelisted'],
   },
 }

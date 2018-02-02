@@ -5,21 +5,22 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 // import NetworkStatus from 'react-web3-network-status'
 
-import Login from './Login'
-import messages from '../messages'
-import methods from '../methods'
-import UDapp from './UDapp'
+import Login from '../Login'
+import messages from '../../messages'
+import translate from '../../translations'
+import methods from '../../methods'
+import UDapp from '../UDapp'
 
-import H2 from '../components/H2'
+import H2 from '../../components/H2'
 
-import Listing from '../components/Listing'
-import FlexContainer from '../components/FlexContainer'
-import Section from '../components/Section'
-import UserInfo from '../components/UserInfo'
+import Listing from '../../components/Listing'
+import FlexContainer from '../../components/FlexContainer'
+import Section from '../../components/Section'
+import UserInfo from '../../components/UserInfo'
 
-import tcrWave from '../assets/tcr-wave.jpg'
+import tcrWave from '../../assets/tcr-wave.jpg'
 
-import { setupEthereum, sendTransaction } from '../actions'
+import { setupEthereum, sendTransactionRequest, sendTransaction } from '../../actions'
 
 import {
   selectError,
@@ -30,7 +31,7 @@ import {
   selectWhitelist,
   selectEthjs,
   selectRequest,
-} from '../selectors'
+} from '../../selectors'
 
 const HomeWrapper = styled.div`
   padding: 1em;
@@ -55,6 +56,20 @@ class Home extends Component {
     })
   }
 
+  handleSendTransaction = e => {
+    console.log('confirm txn:', e)
+    this.props.onSendTransaction(e)
+  }
+
+  handleClick = e => {
+    console.log('handle challenge click', e)
+    this.props.onSendTransactionRequest(e)
+  }
+
+  handleLogin() {
+    console.log('login')
+  }
+
   render() {
     const {
       error,
@@ -66,14 +81,16 @@ class Home extends Component {
       ecRecovered,
       request,
     } = this.props
-    console.log('HOME: ', this)
+
+    const reqMeth = request.get('method') ? request.get('method') : 'apply'
+    const customMethods = methods[reqMeth].actions || []
 
     return (
       <div>
         <HomeWrapper>
           {ecRecovered && (
             <Login
-              execute={this.props.onExecute}
+              execute={this.handleLogin}
               network={wallet.get('network')}
               // NetworkStatus={<NetworkStatus />}
               // ns={NetworkStatus}
@@ -92,24 +109,14 @@ class Home extends Component {
             />
           )}
 
-          <UserInfo
-            account={account}
-            error={error}
-            wallet={wallet}
-            contracts={contracts}
-            request={request}
-            {...this.props}
-          />
+          <UserInfo {...this.props} />
 
           <UDapp
             isOpen={false}
             messages={messages.apply}
-            actions={methods.apply.actions}
-            contracts={contracts}
-            account={account}
+            actions={customMethods}
             networkId={wallet.get('network')}
-            wallet={wallet}
-            ethjs={ethjs}
+            handleSendTransaction={this.handleSendTransaction}
             {...this.props}
           />
 
@@ -127,6 +134,7 @@ class Home extends Component {
                     owner={log.get('owner')}
                     listing={log.get('listing')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
+                    handleClick={this.handleClick}
                   />
                 </Section>
               ))}
@@ -140,7 +148,8 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
-    handleSendTransaction: payload => dispatch(sendTransaction(payload)),
+    onSendTransactionRequest: e => dispatch(sendTransactionRequest(e)),
+    onSendTransaction: payload => dispatch(sendTransaction(payload)),
   }
 }
 

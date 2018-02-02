@@ -2,66 +2,70 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import { List } from 'immutable'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import UDapp from './UDapp'
-import messages from '../messages'
+import UDapp from '../UDapp'
+import messages from '../../messages'
 
-import H2 from '../components/H2'
-import UserInfo from '../components/UserInfo'
-
-import Listing from '../components/Listing'
-import FlexContainer from '../components/FlexContainer'
-import Section from '../components/Section'
+import H2 from '../../components/H2'
+import FlexContainer from '../../components/FlexContainer'
+import Listing from '../../components/Listing'
+import Section from '../../components/Section'
+import UserInfo from '../../components/UserInfo'
 
 import {
+  selectParameters,
   selectWallet,
-  selectCandidates,
+  selectFaceoffs,
   selectError,
   selectAccount,
   selectContracts,
   selectEthjs,
   selectRequest,
-} from '../selectors'
-import methods from '../methods'
-import { sendTransactionRequest, sendTransaction } from '../actions/index';
+} from '../../selectors'
+import methods from '../../methods'
+import { sendTransaction, sendTransactionRequest } from '../../actions'
 
-const ChallengeWrapper = styled.div`
+const VotingWrapper = styled.div`
   padding: 1em;
 `
 
-class Challenge extends Component {
-
+class Voting extends Component {
   componentDidMount() {
-    console.log('challenge props', this.props)
+    console.log('Voting props', this.props)
     if (!this.props.account) {
       this.props.history.push('/')
     }
   }
 
-  handleClick = (e) => {
-    console.log('handle challenge click', e)
+  handleClick = e => {
+    console.log('e', e)
     this.props.onSendTransactionRequest(e)
   }
 
-  handleSendTransaction = (e) => {
+  handleSendTransaction = e => {
     console.log('confirm txn:', e)
     this.props.onSendTransaction(e)
   }
+
   render() {
-    const { wallet, account, candidates, ethjs, error, contracts, request } = this.props
-    const reqMeth = request.get('method') ? request.get('method') : 'home'
+    const { wallet, faceoffs, error, ethjs, request } = this.props
+    console.log('faceoffs', faceoffs)
+
+    const reqMeth = request.get('method') ? request.get('method') : 'vote'
     console.log('reqMeth', reqMeth)
+
     const customMethods = methods[reqMeth].actions || []
+
     return (
-      <ChallengeWrapper>
-        <UserInfo account={account} error={error} wallet={wallet} contracts={contracts} />
+      <VotingWrapper>
+        <UserInfo {...this.props} />
 
         <UDapp
           isOpen={request.get('method').length > 0}
-          messages={messages.challenge}
-          account={account}
+          messages={messages.voting}
           actions={customMethods}
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
@@ -69,13 +73,13 @@ class Challenge extends Component {
         />
 
         <H2>
-          {'Applicants ('}
-          {candidates.size}
+          {'Challenges ('}
+          {faceoffs.size}
           {')'}
         </H2>
         <FlexContainer>
-          {candidates.size > 0 &&
-            candidates.map(log => (
+          {faceoffs.size > 0 &&
+            faceoffs.map(log => (
               <Section key={log.get('listing')}>
                 <Listing
                   latest={log.get('latest')}
@@ -83,32 +87,34 @@ class Challenge extends Component {
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
                   handleClick={this.handleClick}
+                  ethjs={ethjs}
                 />
               </Section>
             ))}
         </FlexContainer>
-      </ChallengeWrapper>
+      </VotingWrapper>
     )
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSendTransactionRequest: (e) => dispatch(sendTransactionRequest(e)),
-    onSendTransaction: (e) => dispatch(sendTransaction(e)),
+    onSendTransactionRequest: e => dispatch(sendTransactionRequest(e)),
+    onSendTransaction: e => dispatch(sendTransaction(e)),
   }
 }
 
 const mapStateToProps = createStructuredSelector({
+  parameters: selectParameters,
   wallet: selectWallet,
-  contracts: selectContracts,
   account: selectAccount,
-  candidates: selectCandidates,
+  faceoffs: selectFaceoffs,
   error: selectError,
+  contracts: selectContracts,
   ethjs: selectEthjs,
   request: selectRequest,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withConnect)(withRouter(Challenge))
+export default compose(withConnect)(withRouter(Voting))

@@ -144,9 +144,6 @@ Transactions:
 // token-related
   .claimReward(uint _challengeID, uint _salt)
 
-// voting-related
-  .voterReward(address _address, uint _challengeID, uint _salt)
-
 Calls:
 // registry-related
   .appWasMade(bytes32 _listingHash) -> Boolean
@@ -163,6 +160,7 @@ Calls:
   .challenges(uint _challengeID) -> Challenge struct (Array)
   .challengeExists(bytes32 _listingHash) -> Boolean
   .challengeCanBeResolved(bytes32 _listingHash) -> Boolean
+  .voterReward(address _address, uint _challengeID, uint _salt)
 ```
 
 #### PLCR Voting
