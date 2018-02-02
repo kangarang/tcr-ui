@@ -1,0 +1,46 @@
+{
+  "code": "en",
+  "data": {
+    "tx_Approve": "Approve tokens for address",
+    "tx_Transfer": "Transfer tokens",
+
+    "tx_Apply": "Apply a listing with name and deposit",
+    "tx_Challenge": "Challenge a listing application",
+    "tx_Exit": "Remove your listing from the registry",
+    "tx_Deposit": "Increase your deposit",
+    "tx_Withdraw": "Decrease your deposit",
+    "tx_UpdateStatus":
+      "Update a listing's status to the registry, or resolve a challenge if one exists",
+    "tx_ClaimReward": "Claim voter reward for a challenge",
+
+    "call_AppWasMade": "Check to see if an application was made",
+    "call_CanBeWhitelisted": "Check to see if an application can be whitelisted",
+    "call_IsWhitelisted": "Check to see if a listing is registered",
+    "call_DetermineReward":
+      "Check to see how many tokens are awarded to the winning party of a challenge",
+    "call_TokenClaims": "Check to see if a voter has claimed their reward",
+    "call_ChallengeExists": "Check to see if a challenge exists",
+    "call_ChallengeCanBeResolved": "Check to see if a challenge can be resolved",
+    "call_VoterReward":
+      "Check to see how many tokens you will be awarded for a challenge",
+
+    "tx_RequestVotingRights": "Transfer tokens to the voting contract",
+    "tx_WithdrawVotingRights": "Transfer tokens from the voting contract",
+    "tx_RescueTokens":
+      "Rescue tokens from a poll that you committed in, but did not reveal in",
+    "tx_CommitVote": "Commit a vote for this challenge",
+    "tx_RevealVote": "Reveal a vote for this challenge",
+
+    "call_VoteTokenBalance": "Get the number of tokens that you have transferred to the voting contract",
+    "call_GetLockedTokens": "Get the number of tokens that are currently locked in the voting contract. Includes all tokens associated with challenges with committed and not-revealed votes.",
+    "call_PollExists": "Check to see if a challenge exists",
+    "call_CommitPeriodActive": "Check to see if the commit period is active",
+    "call_RevealPeriodActive": "Check to see if the reveal period is active",
+    "call_GetNumTokens": "Get the number of tokens associated with a voter who voted in a poll",
+    "call_PollEnded": "Check to see if a poll has ended",
+    "call_IsPassed": "Check to see if the applicant won a challenge",
+    "call_HasBeenRevealed": "Check to see if a voter has revealed for a poll",
+    "call_GetNumPassingTokens": "Get the number of tokens that you voted, if you were in the majority_bloc of a poll",
+    "call_GetTotalNumberOfTokensForWinningOption": "Get the total number of tokens that are awarded to the majority_bloc of a poll"
+  }
+}
