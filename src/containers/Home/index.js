@@ -31,7 +31,6 @@ import {
   selectEthjs,
   selectRequest,
   selectPrerequisites,
-  selectCustomMethods,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -43,6 +42,7 @@ class Home extends Component {
     super(props)
     this.state = {
       registryAddress: '',
+      openModal: false
     }
   }
 
@@ -54,6 +54,12 @@ class Home extends Component {
   handleChangeRegistryAddress = e => {
     this.setState({
       registryAddress: e.target.value,
+    })
+  }
+
+  handleOpenUDapp = e => {
+    this.props.onSendTransactionRequest({
+      method: e,
     })
   }
 
@@ -70,6 +76,9 @@ class Home extends Component {
   handleClick = e => {
     console.log('handle home click', e)
     this.props.onSendTransactionRequest(e)
+    this.setState({
+      openModal: true,
+    })
   }
 
   handleLogin() {
@@ -86,7 +95,10 @@ class Home extends Component {
       request,
     } = this.props
 
-    const reqMeth = request.get('method') ? request.get('method') : 'apply'
+    const reqMeth =
+      request.get('method') && !request.get('context')
+        ? 'apply'
+        : request.get('method') ? request.get('method') : 'apply'
     const customMethods = methods[reqMeth].actions || []
     const customWarnings = methods[reqMeth].warning || []
 
@@ -117,13 +129,15 @@ class Home extends Component {
           <UserInfo {...this.props} />
 
           <UDapp
-            isOpen={false}
+            isOpen={this.state.openModal}
             messages={messages.apply}
+            defaultMethods={methods.apply.actions}
             actions={customMethods}
             warnings={customWarnings}
             networkId={wallet.get('network')}
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
+            onOpenUDapp={this.handleOpenUDapp}
             {...this.props}
           />
 
@@ -171,7 +185,6 @@ const mapStateToProps = createStructuredSelector({
   ethjs: selectEthjs,
   request: selectRequest,
   prerequisites: selectPrerequisites,
-  customMethods: selectCustomMethods,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

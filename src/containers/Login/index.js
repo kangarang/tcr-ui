@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
-import styled from 'styled-components'
 
 import { colors } from '../../colors'
 import Img from '../../components/Img'
@@ -9,41 +8,7 @@ import Input from '../../components/Input'
 import TopBar from '../../components/TopBar'
 import { trimDecimalsThree, toEther, withCommas } from '../../utils/value_utils'
 
-const Wrapper = styled.div`
-  padding: 1em;
-`
-const PaddedDiv = styled.div`
-  padding: 1em;
-  margin: 0 2em;
-  border-bottom: 1px solid ${colors.darkBlue};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${colors.offWhite};
-  box-sizing: border-box;
-`
-const RightPaddedDiv = styled(PaddedDiv)`
-  border: none;
-  justify-content: flex-end;
-`
-const HalfDiv = styled.div`
-  display: inline-block;
-  overflow: hidden;
-  width: 50%;
-`
-const LrgDiv = styled(HalfDiv)`
-  min-width: 80%;
-  margin: 0 1%;
-  border-radius: 3px;
-  font-family: 'Iosevka', monospace;
-`
-const SmlDiv = styled(HalfDiv)`
-  min-width: 17%;
-  margin: 0 1%;
-`
-const SmlBoldDiv = styled(SmlDiv)`
-  font-weight: bold;
-`
+import { Wrapper, PaddedDiv, RightPaddedDiv, LrgDiv, SmlDiv, SmlBoldDiv} from './components/StyledLoginComponents'
 
 const modalStyles = {
   overlay: {

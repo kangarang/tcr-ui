@@ -2,7 +2,7 @@ import React from 'react'
 import Input from '../../../components/Input'
 import H3 from '../../../components/H3'
 import Button from '../../../components/Button'
-import translate from '../../../translations/index'
+import translate, { translateRaw } from '../../../translations/index'
 import styled from 'styled-components'
 
 const styles = {
@@ -40,11 +40,12 @@ const Method = props => {
           }
         >
           {input.name !== '_data' ? (
-            // TODO: enable so that the defaultValue actually works without
-            // ...having to re-input
             <Input
               id={input.name}
-              placeholder={`${input.name} (${input.type})`}
+              placeholder={
+                translateRaw(`input${input.name}`)
+                // `${input.name} (${input.type})`
+              }
               defaultValue={
                 input.name === '_voter' || input.name === '_owner'
                   ? `${props.account}`
@@ -64,7 +65,11 @@ const Method = props => {
           {'CALL'}
         </Button>
       ) : (
-        <Button onClick={e => props.hocSendTransaction(e, props.method, props.contract)}>
+        <Button
+          onClick={e =>
+            props.hocSendTransaction(e, props.method, props.contract)
+          }
+        >
           {'SEND TXN'}
         </Button>
       )}

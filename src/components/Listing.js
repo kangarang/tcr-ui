@@ -2,13 +2,19 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Button from './Button'
+import A from './A'
 import Identicon from './Identicon'
 
-import { Item, FlexCenteredItem, BoldInlineText, BigBoldInlineText } from './Item'
+import {
+  Item,
+  FlexCenteredItem,
+  BoldInlineText,
+  BigBoldInlineText,
+} from './Item'
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 2fr 2fr 6fr 6fr;
+  grid-template-columns: 1.5fr 2fr 4fr 4fr 4fr;
   grid-gap: 15px;
   padding: 0.7em;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
@@ -25,6 +31,36 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       <BigBoldInlineText>{listing}</BigBoldInlineText>
     </Item>
 
+    <Item gC={3}>
+      <BoldInlineText>
+        {'Applicant address: '}
+        <A
+          target="_blank"
+          href={`https://rinkeby.etherscan.io/address/${owner}`}
+        >
+          {owner}
+        </A>
+      </BoldInlineText>
+    </Item>
+
+    <Item gC={4}>
+      <BoldInlineText>
+        {latest.get('pollID') && (
+          <span>
+            {'Challenger: '}
+            <A
+              target="_blank"
+              href={`https://rinkeby.etherscan.io/address/${latest.get(
+                'sender'
+              )}`}
+            >
+              {latest.get('sender')}
+            </A>
+          </span>
+        )}
+      </BoldInlineText>
+    </Item>
+    {/* 
     {latest.get('numTokens') && (
       <Item gC={3}>
         <BoldInlineText>
@@ -33,13 +69,12 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         </BoldInlineText>
       </Item>
     )}
-
     <Item gC={4}>
       <BoldInlineText>
         {'Block number: '}
         {latest.get('blockNumber')}
       </BoldInlineText>
-    </Item>
+    </Item> */}
 
     <Item gC={5}>
       {!latest.get('pollID') && (
@@ -76,18 +111,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       </BoldInlineText>
     </Item>
 
-{/* 
-    <Item gC={7}>
-      <BoldInlineText>
-        {'Applicant address: '}
-        <A target="_blank" href={`https://rinkeby.etherscan.io/address/${owner}`}>
-          {owner}
-        </A>
-        <br />
-        <br />
-        {latest.get('pollID') && 'Challenger: ' + latest.get('sender')}
-      </BoldInlineText>
-    </Item>
+    {/* 
     <Item gC={6}>
       <BoldInlineText>
         {'Transaction: '}

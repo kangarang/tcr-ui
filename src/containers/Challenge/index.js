@@ -32,6 +32,12 @@ const ChallengeWrapper = styled.div`
 `
 
 class Challenge extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      openModal: false,
+    }
+  }
   componentDidMount() {
     console.log('challenge props', this.props)
     if (!this.props.account) {
@@ -39,9 +45,22 @@ class Challenge extends Component {
     }
   }
 
+  handleOpenUDapp = e => {
+    console.log('e', e)
+    this.props.onSendTransactionRequest({
+      method: e,
+    })
+    this.setState({
+      openModal: true,
+    })
+  }
+
   handleClick = (e) => {
     console.log('handle challenge click', e)
     this.props.onSendTransactionRequest(e)
+    this.setState({
+      openModal: true,
+    })
   }
 
   handleCall = e => {
@@ -56,7 +75,10 @@ class Challenge extends Component {
   
   render() {
     const { wallet, candidates, request } = this.props
-    const reqMeth = request.get('method') ? request.get('method') : 'challenge'
+    const reqMeth =
+      request.get('method') && !request.get('context')
+        ? 'challenge'
+        : request.get('method') ? request.get('method') : 'challenge'
     const customMethods = methods[reqMeth].actions || []
     const customWarnings = methods[reqMeth].warning || []
 
@@ -65,13 +87,15 @@ class Challenge extends Component {
         <UserInfo {...this.props} />
 
         <UDapp
-          isOpen={false}
+          isOpen={this.state.openModal}
           messages={messages.challenge}
           actions={customMethods}
+          defaultMethods={methods.challenge.actions}
           warnings={customWarnings}
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
           handleCall={this.handleCall}
+          onOpenUDapp={this.handleOpenUDapp}
           {...this.props}
         />
 

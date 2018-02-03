@@ -18,9 +18,9 @@ export const Item = styled.div`
   padding: 0.7em;
   display: flex;
   flex-flow: row wrap;
+  /* justify-content: center;
+  align-items: flex-start; */
   justify-content: flex-start;
-  /* justify-content: center; */
-  /* align-items: flex-start; */
   align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
