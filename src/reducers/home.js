@@ -20,7 +20,7 @@ import {
 
 const initialState = fromJS({
   wallet: {
-    address: '',
+    account: '',
     network: '420',
     ethBalance: '',
     token: {
@@ -73,7 +73,7 @@ const initialState = fromJS({
   },
   prerequisites: {},
   udappMethods: [],
-})
+ })
 
 function homeReducer(state = initialState, action) {
   if (action.type === SEND_TRANSACTION_REQUESTED) {
@@ -83,15 +83,15 @@ function homeReducer(state = initialState, action) {
   switch (action.type) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
-    case SET_CUSTOM_METHODS:
-      return state.set('customMethods', fromJS(action.payload.customMethods))
+    // case SET_CUSTOM_METHODS:
+    //   return state.set('customMethods', fromJS(action.payload.customMethods))
     case SEND_TRANSACTION_REQUESTED:
       return state.set('request', fromJS(action.payload))
     case LOGIN_SUCCESS:
       return state.set('ecRecovered', fromJS(true))
     case LOGOUT_SUCCESS:
       return state
-        .setIn(['wallet', 'address'], fromJS(''))
+        .setIn(['wallet', 'account'], fromJS(''))
         .setIn(['wallet', 'ethBalance'], fromJS(''))
         .setIn(['wallet', 'network'], fromJS(''))
         .setIn(['wallet', 'token', 'tokenName'], fromJS(''))
@@ -102,13 +102,13 @@ function homeReducer(state = initialState, action) {
       return state.set('error', action.error)
     case SET_ETHEREUM_PROVIDER:
       return state
-        .setIn(['wallet', 'address'], fromJS(action.payload.address))
+        .setIn(['wallet', 'account'], fromJS(action.payload.account))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
         .set('ethjs', fromJS(action.payload.ethjs))
     case SET_WALLET:
       return state
-        .setIn(['wallet', 'address'], fromJS(action.payload.address))
+        .setIn(['wallet', 'account'], fromJS(action.payload.account))
         .setIn(['wallet', 'ethBalance'], fromJS(action.payload.ethBalance))
         .setIn(['wallet', 'network'], fromJS(action.payload.network))
         .set('ethjs', fromJS(action.payload.ethjs))

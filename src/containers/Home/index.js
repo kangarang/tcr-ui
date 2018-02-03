@@ -25,7 +25,7 @@ import {
   selectError,
   selectAccount,
   selectWallet,
-  selectContracts,
+  selectAllContracts,
   selectECRecovered,
   selectWhitelist,
   selectEthjs,
@@ -105,7 +105,7 @@ class Home extends Component {
     return (
       <div>
         <HomeWrapper>
-          {ecRecovered && (
+          {/* {ecRecovered && (
             <Login
               execute={this.handleLogin}
               network={wallet.get('network')}
@@ -124,7 +124,7 @@ class Home extends Component {
               tokenName={wallet.getIn(['token', 'tokenName'])}
               ecRecovered={ecRecovered}
             />
-          )}
+          )} */}
 
           <UserInfo {...this.props} />
 
@@ -179,7 +179,7 @@ const mapStateToProps = createStructuredSelector({
   error: selectError,
   account: selectAccount,
   wallet: selectWallet,
-  contracts: selectContracts,
+  contracts: selectAllContracts,
   whitelist: selectWhitelist,
   ecRecovered: selectECRecovered,
   ethjs: selectEthjs,

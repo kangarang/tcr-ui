@@ -5,8 +5,6 @@ import Eth from 'ethjs'
 
 import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
 
-import { selectContract } from '../selectors'
-
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
 import { updateTokenBalancesSaga } from './token'
@@ -14,7 +12,7 @@ import { updateTokenBalancesSaga } from './token'
 import logUtils from '../utils/log_utils'
 import filterUtils from '../utils/filter_utils'
 import value_utils from '../utils/value_utils'
-import { selectEthjs, selectNetwork } from '../selectors/index'
+import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
 
 let lastReadBlockNumber = 10
 // let lastReadBlockNumber = 1638476
@@ -26,7 +24,7 @@ export default function* logsSaga() {
 
 function* getFreshLogs() {
   try {
-    const registry = yield select(selectContract('registry'))
+    const registry = yield select(selectRegistry)
     const applications = yield call(
       handleLogs,
       lastReadBlockNumber,
@@ -78,8 +76,8 @@ function* pollController() {
 
 function* pollLogsSaga(action) {
   const ethjs = yield select(selectEthjs)
-  const registry = yield select(selectContract('registry'))
-  const voting = yield select(selectContract('voting'))
+  const registry = yield select(selectRegistry)
+  const voting = yield select(selectVoting)
   try {
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
     const newLogs = yield call(

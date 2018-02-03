@@ -21,7 +21,7 @@ import {
   selectCandidates,
   selectError,
   selectAccount,
-  selectContracts,
+  selectAllContracts,
   selectEthjs,
   selectRequest,
 } from '../../selectors'
@@ -133,7 +133,7 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   wallet: selectWallet,
-  contracts: selectContracts,
+  contracts: selectAllContracts,
   account: selectAccount,
   candidates: selectCandidates,
   error: selectError,

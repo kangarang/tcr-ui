@@ -21,7 +21,7 @@ import {
   selectFaceoffs,
   selectError,
   selectAccount,
-  selectContracts,
+  selectAllContracts,
   selectEthjs,
   selectRequest,
 } from '../../selectors'
@@ -129,7 +129,7 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   faceoffs: selectFaceoffs,
   error: selectError,
-  contracts: selectContracts,
+  contracts: selectAllContracts,
   ethjs: selectEthjs,
   request: selectRequest,
 })
