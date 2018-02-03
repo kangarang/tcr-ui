@@ -18,7 +18,7 @@ export const Item = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  grid-row: ${props => props.gR};
+  grid-row: ${props => props.gr && props.gR};
   grid-column: ${props => props.gC};
   /* padding: ${props => props.pad && props.pad + 'em'}; */
   overflow: hidden;

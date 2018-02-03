@@ -1,21 +1,44 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
+import EthAbi from 'ethjs-abi'
 import { setTokensAllowed, contractError } from '../actions'
 import { GET_TOKENS_ALLOWED } from '../actions/constants'
-import { selectAccount } from '../selectors'
-import { getContract } from '../services'
+import {
+  selectAccount,
+  selectParameters,
+  selectContract,
+  // selectAbi,
+  selectEthjs,
+} from '../selectors'
+import value_utils from '../utils/value_utils'
+// import { getMethodAbi } from '../utils/filter_utils'
 
 export default function* tokenSaga() {
   yield takeLatest(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
 }
 
 export function* updateTokenBalancesSaga(spender) {
-  const address = yield select(selectAccount)
-  const token = yield call(getContract, 'token')
-  const voting = yield call(getContract, 'voting')
+  console.log('spender', spender)
+  const owner = yield select(selectAccount)
+  const token = yield select(selectContract('token'))
+  const voting = yield select(selectContract('voting'))
 
   try {
-    let { allowance, balance } = yield call(token.allowance, address, spender)
-    let votingRights = yield call([voting.contract, 'voteTokenBalance', 'call'], address)
+    const tokenBalance = yield call(token.contract.balanceOf.call, owner)
+    const tokensAllowed = yield call(token.contract.allowance.call, owner, spender)
+    const votingRights = yield call(voting.contract.voteTokenBalance.call, owner)
+    const balance = value_utils
+      .toUnitAmount(tokenBalance, token.decimalPower)
+      .toString(10)
+
+    const allowance = value_utils
+      .toUnitAmount(tokensAllowed, token.decimalPower)
+      .toString(10)
+
+    const parameters = yield select(selectParameters)
+
+    const minDeposit = parameters.get('minDeposit')
+
+    const prerequisites = allowance < minDeposit
 
     yield put(
       setTokensAllowed({
@@ -23,6 +46,7 @@ export function* updateTokenBalancesSaga(spender) {
         allowance,
         balance,
         votingRights,
+        prerequisites,
       })
     )
   } catch (err) {
@@ -30,3 +54,20 @@ export function* updateTokenBalancesSaga(spender) {
     yield put(contractError(err))
   }
 }
+
+// function* allowanceSaga(owner, spender) {
+//   const ethjs = yield select(selectEthjs)
+//   const token = yield select(selectContract('token'))
+//   const boABI = yield call(getMethodAbi, token.address, 'balanceOf', token.contract.abi)
+//   const txData = yield call(EthAbi.encodeMethod, boABI, [owner])
+//   const payload = {
+//     from: account,
+//     to: token.address,
+//     data: txData,
+//   }
+//   const tokenBalance = yield call(ethjs.call, payload, 'latest')
+
+//   const balance = value_utils
+//     .toUnitAmount(BN(tokenBalance), token.decimalPower)
+//     .toString(10)
+// }

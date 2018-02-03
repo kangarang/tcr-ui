@@ -7,8 +7,7 @@ import { LOGIN_ERROR, EXECUTE_METHOD_REQUEST } from '../actions/constants'
 
 import { loginError, loginSuccess } from '../actions'
 
-import { getRegistry } from '../services/index'
-import { selectEthjs } from '../selectors/index'
+import { selectEthjs, selectContract } from '../selectors/index'
 
 export default function* rootLoginSaga() {
   yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
@@ -33,7 +32,7 @@ function* executeSaga(action) {
     const recovered = yield call([ethjs, 'personal_ecRecover'], msg, signed)
     console.log('recovered', recovered)
 
-    const regContract = yield call(getRegistry)
+    const regContract = yield select(selectContract('registry'))
 
     if (recovered === account) {
       console.log('Ethjs recovered the message signer')

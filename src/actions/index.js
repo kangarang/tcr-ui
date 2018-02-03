@@ -33,9 +33,10 @@ import {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
   DELETE_LISTINGS,
-  SELECT_CUSTOM_METHODS,
+  SET_CUSTOM_METHODS,
   SEND_TRANSACTION_REQUESTED,
   SEND_TRANSACTION,
+  CALL_REQUESTED,
 } from './constants'
 
 
@@ -127,6 +128,12 @@ export function setMinDeposit(minDeposit) {
   }
 }
 
+export function callRequested(payload) {
+  return {
+    type: CALL_REQUESTED,
+    payload,
+  }
+}
 export function sendTransaction(payload) {
   return {
     type: SEND_TRANSACTION,
@@ -139,9 +146,9 @@ export function sendTransactionRequest(payload) {
     payload,
   }
 }
-export function selectCustomMethods(payload) {
+export function setCustomMethods(payload) {
   return {
-    type: SELECT_CUSTOM_METHODS,
+    type: SET_CUSTOM_METHODS,
     payload,
   }
 }

@@ -1,11 +1,22 @@
 import { call, put, fork, all, spawn, takeLatest } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
-import { GET_ETHEREUM, GET_ETH_PROVIDER, LOGIN_ERROR, WALLET_ERROR } from '../actions/constants'
+import {
+  GET_ETHEREUM,
+  GET_ETH_PROVIDER,
+  LOGIN_ERROR,
+  WALLET_ERROR,
+} from '../actions/constants'
 
-import { setupContract, setupRegistry } from '../services'
+import { setupContract, setupRegistry } from '../libs/contracts'
 
-import { setWallet, contractError, setContracts, getProviderRequest, loginError } from '../actions'
+import {
+  setWallet,
+  contractError,
+  setContracts,
+  getProviderRequest,
+  loginError,
+} from '../actions'
 
 import { updateTokenBalancesSaga } from './token'
 
@@ -55,12 +66,44 @@ function* contractsSaga(ethjs, address) {
   try {
     const registry = yield call(setupRegistry, ethjs, address)
 
-    const [token, parameterizer, voting] = yield all([
-      call(setupContract, ethjs, address, registry, 'token'),
-      call(setupContract, ethjs, address, registry, 'parameterizer'),
-      call(setupContract, ethjs, address, registry, 'voting'),
+    let [token, parameterizer, voting] = yield all([
+      call(setupContract, ethjs, address, registry.contract, 'token'),
+      call(setupContract, ethjs, address, registry.contract, 'parameterizer'),
+      call(setupContract, ethjs, address, registry.contract, 'voting'),
     ])
-    yield put(setContracts({ registry, token, parameterizer, voting }))
+    const [
+      minDeposit,
+      applyStageLen,
+      commitStageLen,
+      revealStageLen,
+      dispensationPct,
+      tokenName,
+      tokenDecimals,
+      tokenSymbol,
+    ] = yield all([
+      call(parameterizer.contract.get, 'minDeposit'),
+      call(parameterizer.contract.get, 'applyStageLen'),
+      call(parameterizer.contract.get, 'commitStageLen'),
+      call(parameterizer.contract.get, 'revealStageLen'),
+      call(parameterizer.contract.get, 'dispensationPct'),
+      call(token.contract.name.call),
+      call(token.contract.decimals.call),
+      call(token.contract.symbol.call),
+    ])
+
+    const parameters = {
+      minDeposit: minDeposit.toString(10),
+      applyStageLen: applyStageLen.toString(10),
+      commitStageLen: commitStageLen.toString(10),
+      revealStageLen: revealStageLen.toString(10),
+      dispensationPct: dispensationPct.toString(10),
+    }
+
+    token.symbol = tokenSymbol
+    token.name = tokenName
+    token.decimals = tokenDecimals
+
+    yield put(setContracts({ registry, token, parameterizer, voting, parameters }))
     yield fork(updateTokenBalancesSaga, registry.address)
     yield fork(updateTokenBalancesSaga, voting.address)
   } catch (err) {

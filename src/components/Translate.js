@@ -10,7 +10,7 @@ export default ({ translationKey }) => {
       containerProps={{ 'data-I10n-key': translationKey }}
       escapeHtml={true}
       unwrapDisallowed={true}
-      allowedTypes={['Text', 'Link', 'Emph', 'Strong', 'Code']}
+      // allowedTypes={['Text', 'Link', 'Emph', 'Strong', 'Code']}
       source={source}
     />
   )

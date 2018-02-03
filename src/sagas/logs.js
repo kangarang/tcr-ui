@@ -5,7 +5,7 @@ import Eth from 'ethjs'
 
 import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
 
-import { getRegistry, getContract } from '../services'
+import { selectContract } from '../selectors'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -14,7 +14,7 @@ import { updateTokenBalancesSaga } from './token'
 import logUtils from '../utils/log_utils'
 import filterUtils from '../utils/filter_utils'
 import value_utils from '../utils/value_utils'
-import { selectEthjs } from '../selectors/index'
+import { selectEthjs, selectNetwork } from '../selectors/index'
 
 let lastReadBlockNumber = 10
 // let lastReadBlockNumber = 1638476
@@ -26,7 +26,7 @@ export default function* logsSaga() {
 
 function* getFreshLogs() {
   try {
-    const registry = yield call(getRegistry)
+    const registry = yield select(selectContract('registry'))
     const applications = yield call(
       handleLogs,
       lastReadBlockNumber,
@@ -39,7 +39,8 @@ function* getFreshLogs() {
     yield fork(updateTokenBalancesSaga, registry.address)
   } catch (err) {
     console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
+    throw new Error(err.message)
+    // yield put(logsError('logs error', err))
   }
 
   // init polling
@@ -48,7 +49,13 @@ function* getFreshLogs() {
 
 // Timer
 function* pollController() {
-  const pollInterval = 5000
+  const network = yield select(selectNetwork)
+  let pollInterval = 15000
+
+  if (network === '420') {
+    pollInterval = 5000 // 2 seconds for localhost:8545
+  }
+
   while (true) {
     try {
       // Every 15 secs:
@@ -64,19 +71,17 @@ function* pollController() {
       // -> handleLogs(sb, eb, '_Application')
     } catch (err) {
       console.log('Polling Log Saga error', err)
-      yield put(logsError('polling logs error', err))
+      // yield put(logsError('polling logs error', err))
     }
   }
 }
 
 function* pollLogsSaga(action) {
   const ethjs = yield select(selectEthjs)
-  const registry = yield call(getRegistry)
-  const voting = yield call(getContract, 'voting')
+  const registry = yield select(selectContract('registry'))
+  const voting = yield select(selectContract('voting'))
   try {
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
-    console.log('lastReadBlockNumber', lastReadBlockNumber)
-    console.log('action', action)
     const newLogs = yield call(
       handleLogs,
       action.payload.startBlock,
@@ -84,13 +89,15 @@ function* pollLogsSaga(action) {
       '',
       registry
     )
-    console.log('newLogs', newLogs)
-    yield put(updateItems(newLogs))
-    yield fork(updateTokenBalancesSaga, registry.address)
-    yield fork(updateTokenBalancesSaga, voting.address)
+    if (newLogs.length) {
+      console.log(newLogs.length, 'newLogs', newLogs)
+      yield put(updateItems(newLogs))
+      yield fork(updateTokenBalancesSaga, registry.address)
+      yield fork(updateTokenBalancesSaga, voting.address)
+    }
   } catch (err) {
     console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
+    // yield put(logsError('logs error', err))
   }
 }
 
@@ -98,7 +105,7 @@ function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
 
-    const blockRange = yield {
+    const blockRange = {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
     }
@@ -110,19 +117,21 @@ function* handleLogs(sb, eb, topic, contract) {
       contract.contract.abi,
       blockRange
     )
-    console.log('filter', filter)
 
     const rawLogs = yield call(ethjs.getLogs, filter)
-    console.log('rawLogs', rawLogs)
-
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
-    console.log('decodedLogs', decodedLogs, decodedLogs.length)
+    if (decodedLogs.length) {
+      console.log('decodedLogs', decodedLogs)
+    }
 
     return yield all(
       (yield decodedLogs.map(async (dLog, ind) => {
         const block = await logUtils.getBlock(ethjs, rawLogs[ind].blockHash)
-        const txDetails = await logUtils.getTransaction(ethjs, rawLogs[ind].transactionHash)
+        const txDetails = await logUtils.getTransaction(
+          ethjs,
+          rawLogs[ind].transactionHash
+        )
         return buildListing(contract, block, dLog, ind, txDetails)
       })).filter(lawg => lawg !== false)
     )
@@ -139,14 +148,14 @@ async function buildListing(contract, block, dLog, i, txDetails) {
       return false
     }
     const listing = await contract.contract.listings.call(dLog.listingHash)
-    console.log('listing', listing)
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
     // const isWhitelisted = listing[1]
     const isWhitelisted =
-      dLog._eventName === '_NewListingWhitelisted' || dLog._eventName === '_ChallengeFailed'
+      dLog._eventName === '_NewListingWhitelisted' ||
+      dLog._eventName === '_ChallengeFailed'
 
     const tx = {
       hash: txDetails.hash,

@@ -15,6 +15,14 @@ export const selectECRecovered = createSelector(
   selectHome, homeState =>
     homeState.get('ecRecovered')
 )
+export const selectPrerequisites = createSelector(
+  selectHome, homeState =>
+    homeState.get('prerequisites')
+)
+export const selectNetwork = createSelector(
+  selectHome, homeState =>
+    homeState.getIn(['wallet', 'network'])
+)
 export const selectContracts = createSelector(
   selectHome, homeState =>
     homeState.get('contracts')
@@ -28,9 +36,17 @@ export const selectRequest = createSelector(
   selectHome, homeState =>
     homeState.get('request')
 )
+export const selectUDappMethods = createSelector(
+  selectHome, homeState => homeState.get('udappMethods')
+)
+export const selectAbi = (contract) => createSelector(
+  [selectHome, selectContracts], (homeState, contracts) => contracts.getIn([contract, 'abi'])
+)
+
 export const selectCustomMethods = createSelector(
-  selectHome, homeState =>
-    homeState.get('customMethods')
+  [selectUDappMethods, selectRequest],
+  (udappMethods, requestedMethods) =>
+    udappMethods.filter(meth => meth.name === requestedMethods.get('method'))
 )
 
 export const selectEthjs = createSelector(
