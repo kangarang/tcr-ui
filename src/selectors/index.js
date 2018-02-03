@@ -44,9 +44,11 @@ export const selectAbi = (contract) => createSelector(
 )
 
 export const selectCustomMethods = createSelector(
-  [selectUDappMethods, selectRequest],
-  (udappMethods, requestedMethods) =>
-    udappMethods.filter(meth => meth.name === requestedMethods.get('method'))
+  selectHome, homeState =>
+    homeState.get('customMethods')
+  // [selectUDappMethods, selectRequest],
+  // (udappMethods, requestedMethods) =>
+  //   udappMethods.filter(meth => meth.name === requestedMethods.get('method'))
 )
 
 export const selectEthjs = createSelector(

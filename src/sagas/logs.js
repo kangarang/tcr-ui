@@ -53,7 +53,7 @@ function* pollController() {
   let pollInterval = 15000
 
   if (network === '420') {
-    pollInterval = 5000 // 2 seconds for localhost:8545
+    pollInterval = 2000 // 2 seconds for localhost:8545
   }
 
   while (true) {

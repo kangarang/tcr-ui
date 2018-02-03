@@ -126,10 +126,6 @@ function homeReducer(state = initialState, action) {
           ['wallet', 'token', 'tokenSymbol'],
           fromJS(action.payload.token.symbol)
         )
-        .setIn(
-          ['wallet', 'token', 'totalSupply'],
-          fromJS(action.payload.token.totalSupply)
-        )
         .setIn(['contracts', 'token'], fromJS(action.payload.token))
         .setIn(['contracts', 'registry'], fromJS(action.payload.registry))
         .setIn(['contracts', 'voting'], fromJS(action.payload.voting))

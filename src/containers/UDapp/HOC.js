@@ -73,7 +73,7 @@ const UDappHOC = WrappedComponent => {
 
     // adapted from:
     // https://github.com/kumavis/udapp/blob/master/index.js#L158
-    handleCall = async (e, method, contract) => {
+    handleHOCCall = async (e, method, contract) => {
       e.preventDefault()
       const args = await this.getMethodArgs(method)
       const inputNames = method.inputs.map(inp => inp.name)
@@ -136,7 +136,7 @@ const UDappHOC = WrappedComponent => {
       return args
     }
 
-    handleExecute = async (e, method, contract) => {
+    handleHOCSendTransaction = async (e, method, contract) => {
       e.preventDefault()
       const args = this.getMethodArgs(method)
       const inputNames = method.inputs.map(inp => inp.name)
@@ -147,10 +147,10 @@ const UDappHOC = WrappedComponent => {
     render() {
       return (
         <WrappedComponent
-          registry={this.state.registry}
           hocInputChange={this.handleInputChange}
-          hocCall={this.handleCall}
-          hocSendTransaction={this.handleExecute}
+          hocCall={this.handleHOCCall}
+          hocSendTransaction={this.handleHOCSendTransaction}
+          registry={this.state.registry}
           voting={this.state.voting}
           token={this.state.token}
           callResult={this.state.callResult}

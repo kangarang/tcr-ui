@@ -41,6 +41,20 @@
     "call_isPassed": "Check to see if the applicant won a challenge",
     "call_hasBeenRevealed": "Check to see if a voter has revealed for a poll",
     "call_getNumPassingTokens": "Get the number of tokens that you voted, if you were in the majority_bloc of a poll",
-    "call_getTotalNumberOfTokensForWinningOption": "Get the total number of tokens that are awarded to the majority_bloc of a poll"
+    "call_getTotalNumberOfTokensForWinningOption": "Get the total number of tokens that are awarded to the majority_bloc of a poll",
+
+    "input_owner": "Owner",
+    "input_value": "Value",
+    "input_spender": "Contract address",
+    "input_listingHash": "Listing",
+    "input_amount": "Amount",
+    "input_pollID": "Poll ID",
+    "input_prevPollID": "Previous Poll ID",
+    "input_challengeID": "Challenge ID",
+    "input_salt": "Salt",
+    "input_secretHash": "Vote: Applicant(1) Challenger(0)",
+    "input_voteOption": "Vote: Applicant(1) Challenger(0)",
+    "input_numTokens": "Number of Tokens"
+
   }
 }

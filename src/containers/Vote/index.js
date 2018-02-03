@@ -25,7 +25,11 @@ import {
   selectEthjs,
   selectRequest,
 } from '../../selectors'
-import { sendTransaction, sendTransactionRequest, callRequested } from '../../actions'
+import {
+  sendTransaction,
+  sendTransactionRequest,
+  callRequested,
+} from '../../actions'
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -39,8 +43,14 @@ class Voting extends Component {
     }
   }
 
-  handleClick = e => {
+  handleOpenUDapp = e => {
     console.log('e', e)
+    this.props.onSendTransactionRequest({
+      method: e,
+    })
+  }
+
+  handleClick = e => {
     this.props.onSendTransactionRequest(e)
   }
 
@@ -56,7 +66,10 @@ class Voting extends Component {
 
   render() {
     const { wallet, faceoffs, ethjs, request } = this.props
-    const reqMeth = request.get('method') ? request.get('method') : 'vote'
+    const reqMeth =
+      request.get('method') && !request.get('context')
+        ? 'vote'
+        : request.get('method') ? request.get('method') : 'vote'
     const customMethods = methods[reqMeth].actions || []
     const customWarnings = methods[reqMeth].warning || []
 
@@ -68,10 +81,12 @@ class Voting extends Component {
           isOpen={request.get('method').length > 0}
           messages={messages.vote}
           actions={customMethods}
+          defaultMethods={methods.vote.actions}
           warnings={customWarnings}
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
           handleCall={this.handleCall}
+          onOpenUDapp={this.handleOpenUDapp}
           {...this.props}
         />
 

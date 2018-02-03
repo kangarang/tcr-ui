@@ -3,11 +3,7 @@ import EthAbi from 'ethjs-abi'
 import { select, call, takeEvery } from 'redux-saga/effects'
 import { SEND_TRANSACTION, CALL_REQUESTED } from '../actions/constants'
 
-import {
-  selectEthjs,
-  selectAccount,
-  selectContract,
-} from '../selectors'
+import { selectEthjs, selectAccount, selectContract } from '../selectors'
 
 export default function* udappSaga() {
   yield takeEvery(SEND_TRANSACTION, sendTransaction)
@@ -42,8 +38,7 @@ function* sendTransaction(action) {
   const txType = action.payload.type
   if (txType === 'tc') {
     yield call(sendContractTransaction, action)
-  }
-  if (txType === 'ethjs') {
+  } else if (txType === 'ethjs') {
     yield call(sendEthjsTransaction, action)
   }
 }

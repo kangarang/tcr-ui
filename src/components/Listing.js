@@ -87,9 +87,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         </Button>
       )}
       <BoldInlineText>
-        {!latest.get('pollID') && !whitelisted ? (
-          'This listing has not been challenged yet'
-        ) : whitelisted ? (
+        {whitelisted ? (
           'Whitelisted on block number: ' + latest.get('blockNumber')
         ) : latest.get('event') === '_Challenge' ? (
           <Button
