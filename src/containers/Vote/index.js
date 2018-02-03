@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import { List } from 'immutable'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
@@ -56,7 +55,7 @@ class Voting extends Component {
   }
 
   render() {
-    const { wallet, faceoffs, error, ethjs, request } = this.props
+    const { wallet, faceoffs, ethjs, request } = this.props
     const reqMeth = request.get('method') ? request.get('method') : 'vote'
     const customMethods = methods[reqMeth].actions || []
     const customWarnings = methods[reqMeth].warning || []

@@ -50,7 +50,7 @@ class Search extends Component {
   }
 
   render() {
-    const { wallet, whitelist, error, request } = this.props
+    const { wallet, whitelist, request } = this.props
 
     const reqMeth = request.get('method') ? request.get('method') : 'search'
     const customMethods = methods[reqMeth].actions || []

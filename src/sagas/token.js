@@ -1,13 +1,10 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
-import EthAbi from 'ethjs-abi'
 import { setTokensAllowed, contractError } from '../actions'
 import { GET_TOKENS_ALLOWED } from '../actions/constants'
 import {
   selectAccount,
   selectParameters,
   selectContract,
-  // selectAbi,
-  selectEthjs,
 } from '../selectors'
 import value_utils from '../utils/value_utils'
 // import { getMethodAbi } from '../utils/filter_utils'

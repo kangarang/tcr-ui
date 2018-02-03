@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import Login from '../Login'
 import messages from '../messages'
 import methods from '../methods'
-import translate from '../../translations'
 import UDapp from '../UDapp'
 
 import H2 from '../../components/H2'
@@ -79,12 +78,10 @@ class Home extends Component {
 
   render() {
     const {
-      error,
       account,
       wallet,
       contracts,
       whitelist,
-      ethjs,
       ecRecovered,
       request,
     } = this.props

@@ -55,7 +55,7 @@ class Challenge extends Component {
   }
   
   render() {
-    const { wallet, candidates, error, request } = this.props
+    const { wallet, candidates, request } = this.props
     const reqMeth = request.get('method') ? request.get('method') : 'challenge'
     const customMethods = methods[reqMeth].actions || []
     const customWarnings = methods[reqMeth].warning || []

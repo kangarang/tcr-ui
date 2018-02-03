@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-import EthAbi from 'ethjs-abi'
 
 import abis from '../../abis'
 
 import value_utils from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
-import log_utils from '../../utils/log_utils'
 
 const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
@@ -42,7 +40,6 @@ const UDappHOC = WrappedComponent => {
       if (newProps.request.get('context').size > 0) {
         const listingStr = newProps.request.getIn(['context', 'listing'])
         const _pollID = newProps.request.getIn(['context', 'latest', 'pollID'])
-        const listingHash = log_utils.getListingHash(listingStr)
         this.setState(prevState => ({
           ...prevState,
           [newProps.actions[0]]: {

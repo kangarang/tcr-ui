@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
-import styled from 'styled-components'
-
-import translate from '../../translations'
 
 import { colors } from '../../colors'
 
@@ -12,7 +9,6 @@ import H2 from '../../components/H2'
 import Method from './components/Method'
 import Button from '../../components/Button'
 import TopBar from '../../components/TopBar'
-import Input from '../../components/Input'
 import { BoldInlineText } from '../../components/Item'
 
 import {
@@ -127,9 +123,6 @@ class UDapp extends Component {
         this.props.registry.address,
         'total',
       ])
-
-    const context = this.props.request && this.props.request.get('context')
-    const requestMethod = this.props.request && this.props.request.get('method')
 
     const visibleRegistryMethods = (this.props.registry.abi || []).filter(
       methodInterface =>

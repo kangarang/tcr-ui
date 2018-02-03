@@ -1,14 +1,11 @@
 import EthAbi from 'ethjs-abi'
 
-import { put, select, call, take, fork, takeLatest, takeEvery } from 'redux-saga/effects'
+import { select, call, takeEvery } from 'redux-saga/effects'
 import { SEND_TRANSACTION, CALL_REQUESTED } from '../actions/constants'
 
-import { selectCustomMethods } from '../actions'
 import {
-  selectParameters,
   selectEthjs,
   selectAccount,
-  selectContracts,
   selectContract,
 } from '../selectors'
 
