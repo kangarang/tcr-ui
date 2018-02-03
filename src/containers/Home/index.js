@@ -6,9 +6,9 @@ import styled from 'styled-components'
 // import NetworkStatus from 'react-web3-network-status'
 
 import Login from '../Login'
-import messages from '../../messages'
+import messages from '../messages'
+import methods from '../methods'
 import translate from '../../translations'
-import methods from '../../methods'
 import UDapp from '../UDapp'
 
 import H2 from '../../components/H2'
@@ -20,7 +20,7 @@ import UserInfo from '../../components/UserInfo'
 
 import tcrWave from '../../assets/tcr-wave.jpg'
 
-import { setupEthereum, sendTransactionRequest, sendTransaction } from '../../actions'
+import { setupEthereum, sendTransactionRequest, sendTransaction, callRequested } from '../../actions'
 
 import {
   selectError,
@@ -31,6 +31,8 @@ import {
   selectWhitelist,
   selectEthjs,
   selectRequest,
+  selectPrerequisites,
+  selectCustomMethods,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -56,13 +58,18 @@ class Home extends Component {
     })
   }
 
+  handleCall = e => {
+    console.log('call:', e)
+    this.props.onCall(e)
+  }
+
   handleSendTransaction = e => {
-    console.log('confirm txn:', e)
+    console.log('send txn:', e)
     this.props.onSendTransaction(e)
   }
 
   handleClick = e => {
-    console.log('handle challenge click', e)
+    console.log('handle home click', e)
     this.props.onSendTransactionRequest(e)
   }
 
@@ -84,6 +91,7 @@ class Home extends Component {
 
     const reqMeth = request.get('method') ? request.get('method') : 'apply'
     const customMethods = methods[reqMeth].actions || []
+    const customWarnings = methods[reqMeth].warning || []
 
     return (
       <div>
@@ -115,8 +123,10 @@ class Home extends Component {
             isOpen={false}
             messages={messages.apply}
             actions={customMethods}
+            warnings={customWarnings}
             networkId={wallet.get('network')}
             handleSendTransaction={this.handleSendTransaction}
+            handleCall={this.handleCall}
             {...this.props}
           />
 
@@ -150,6 +160,7 @@ function mapDispatchToProps(dispatch) {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
     onSendTransactionRequest: e => dispatch(sendTransactionRequest(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
+    onCall: payload => dispatch(callRequested(payload)),
   }
 }
 
@@ -162,6 +173,8 @@ const mapStateToProps = createStructuredSelector({
   ecRecovered: selectECRecovered,
   ethjs: selectEthjs,
   request: selectRequest,
+  prerequisites: selectPrerequisites,
+  customMethods: selectCustomMethods,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

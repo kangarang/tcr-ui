@@ -14,7 +14,7 @@ import {
   LOGIN_ERROR,
   LOGOUT_SUCCESS,
   LOGIN_SUCCESS,
-  SELECT_CUSTOM_METHODS,
+  SET_CUSTOM_METHODS,
   SEND_TRANSACTION_REQUESTED,
 } from '../actions/constants'
 
@@ -70,18 +70,23 @@ const initialState = fromJS({
   request: {
     method: '',
     context: {},
-  }
+  },
+  prerequisites: {},
+  udappMethods: [],
 })
 
 function homeReducer(state = initialState, action) {
+  if (action.type === SEND_TRANSACTION_REQUESTED) {
+    console.log('action', action)
+  }
+
   switch (action.type) {
     case CONTRACT_ERROR:
       return state.setIn(['error', 'type'], true)
-    case SELECT_CUSTOM_METHODS:
+    case SET_CUSTOM_METHODS:
       return state.set('customMethods', fromJS(action.payload.customMethods))
     case SEND_TRANSACTION_REQUESTED:
-      return state
-      .set('request', fromJS(action.payload))
+      return state.set('request', fromJS(action.payload))
     case LOGIN_SUCCESS:
       return state.set('ecRecovered', fromJS(true))
     case LOGOUT_SUCCESS:
@@ -109,42 +114,56 @@ function homeReducer(state = initialState, action) {
         .set('ethjs', fromJS(action.payload.ethjs))
     case SET_CONTRACTS:
       return state
-        .setIn(['wallet', 'token', 'tokenName'], fromJS(action.payload.token.name))
-        .setIn(['wallet', 'token', 'decimals'], fromJS(action.payload.token.decimals))
-        .setIn(['wallet', 'token', 'tokenSymbol'], fromJS(action.payload.token.symbol))
+        .setIn(
+          ['wallet', 'token', 'tokenName'],
+          fromJS(action.payload.token.name)
+        )
+        .setIn(
+          ['wallet', 'token', 'decimals'],
+          fromJS(action.payload.token.decimals)
+        )
+        .setIn(
+          ['wallet', 'token', 'tokenSymbol'],
+          fromJS(action.payload.token.symbol)
+        )
         .setIn(
           ['wallet', 'token', 'totalSupply'],
           fromJS(action.payload.token.totalSupply)
         )
+        .setIn(['contracts', 'token'], fromJS(action.payload.token))
+        .setIn(['contracts', 'registry'], fromJS(action.payload.registry))
+        .setIn(['contracts', 'voting'], fromJS(action.payload.voting))
         .setIn(
-          ['contracts', 'registry'],
-          fromJS(action.payload.registry)
+          ['contracts', 'parameterizer'],
+          fromJS(action.payload.parameterizer)
         )
-        .setIn(
-          ['contracts', 'voting'],
-          fromJS(action.payload.voting)
-        )
-        .setIn(
-          ['contracts', 'parameterizer', 'address'],
-          fromJS(action.payload.parameterizer.address)
-        )
-        .set('parameters', fromJS(action.payload.parameterizer.parameters))
-        .setIn(['services', 'token'], fromJS(action.payload.token))
-        .setIn(['services', 'parameterizer'], fromJS(action.payload.parameterizer))
-        .setIn(['contracts', 'token', 'address'], fromJS(action.payload.token.address))
+        .set('parameters', fromJS(action.payload.parameters))
     case SET_MIN_DEPOSIT:
-      return state.setIn(['parameters', 'minDeposit'], fromJS(action.minDeposit))
+      return state.setIn(
+        ['parameters', 'minDeposit'],
+        fromJS(action.minDeposit)
+      )
     case SET_TOKENS_ALLOWED:
       return state
         .setIn(
-          ['wallet', 'token', 'allowances', action.payload.spender, 'votingRights'],
+          [
+            'wallet',
+            'token',
+            'allowances',
+            action.payload.spender,
+            'votingRights',
+          ],
           fromJS(action.payload.votingRights)
         )
         .setIn(
           ['wallet', 'token', 'allowances', action.payload.spender, 'total'],
           fromJS(action.payload.allowance)
         )
-        .setIn(['wallet', 'token', 'tokenBalance'], fromJS(action.payload.balance))
+        .set('prerequisites', fromJS(action.payload.prerequisites))
+        .setIn(
+          ['wallet', 'token', 'tokenBalance'],
+          fromJS(action.payload.balance)
+        )
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
     case DELETE_LISTINGS:
@@ -190,7 +209,8 @@ function deleteObjectInArray(array, payload) {
   return payload.map(pl => {
     const index = array.findIndex(
       ri =>
-        ri.get('listingHash') === pl.listingHash || ri.get('listingHash') === pl.listing
+        ri.get('listingHash') === pl.listingHash ||
+        ri.get('listingHash') === pl.listing
     )
     if (index !== -1) {
       return array.delete(index)

@@ -6,7 +6,8 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 import UDapp from '../UDapp'
-import messages from '../../messages'
+import messages from '../messages'
+import methods from '../methods'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -25,7 +26,6 @@ import {
   selectEthjs,
   selectRequest,
 } from '../../selectors'
-import methods from '../../methods'
 
 const SearchWrapper = styled.div`
   padding: 1em;

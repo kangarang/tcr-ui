@@ -6,7 +6,8 @@ import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
 import UDapp from '../UDapp'
-import messages from '../../messages'
+import messages from '../messages'
+import methods from '../methods'
 
 import H2 from '../../components/H2'
 import UserInfo from '../../components/UserInfo'
@@ -24,8 +25,7 @@ import {
   selectEthjs,
   selectRequest,
 } from '../../selectors'
-import methods from '../../methods'
-import { sendTransactionRequest, sendTransaction } from '../../actions/index';
+import { sendTransactionRequest, sendTransaction, callRequested } from '../../actions/index';
 
 const ChallengeWrapper = styled.div`
   padding: 1em;
@@ -44,6 +44,11 @@ class Challenge extends Component {
     this.props.onSendTransactionRequest(e)
   }
 
+  handleCall = e => {
+    console.log('call:', e)
+    this.props.onCall(e)
+  }
+
   handleSendTransaction = (e) => {
     console.log('confirm txn:', e)
     this.props.onSendTransaction(e)
@@ -53,17 +58,20 @@ class Challenge extends Component {
     const { wallet, candidates, error, request } = this.props
     const reqMeth = request.get('method') ? request.get('method') : 'challenge'
     const customMethods = methods[reqMeth].actions || []
+    const customWarnings = methods[reqMeth].warning || []
 
     return (
       <ChallengeWrapper>
         <UserInfo {...this.props} />
 
         <UDapp
-          isOpen={request.get('method').length > 0}
+          isOpen={false}
           messages={messages.challenge}
           actions={customMethods}
+          warnings={customWarnings}
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
+          handleCall={this.handleCall}
           {...this.props}
         />
 
@@ -95,6 +103,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onSendTransactionRequest: (e) => dispatch(sendTransactionRequest(e)),
     onSendTransaction: (e) => dispatch(sendTransaction(e)),
+    onCall: (e) => dispatch(callRequested(e)),
   }
 }
 

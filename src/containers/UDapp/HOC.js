@@ -5,6 +5,7 @@ import abis from '../../abis'
 
 import value_utils from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
+import log_utils from '../../utils/log_utils'
 
 const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
@@ -34,6 +35,26 @@ const UDappHOC = WrappedComponent => {
       }
     }
 
+    componentWillReceiveProps(newProps) {
+      // console.log('HOC OLD PROPS:', this.props)
+      // console.log('HOC NEW PROPS:', newProps)
+
+      if (newProps.request.get('context').size > 0) {
+        const listingStr = newProps.request.getIn(['context', 'listing'])
+        const _pollID = newProps.request.getIn(['context', 'latest', 'pollID'])
+        const listingHash = log_utils.getListingHash(listingStr)
+        this.setState(prevState => ({
+          ...prevState,
+          [newProps.actions[0]]: {
+            ...prevState[newProps.actions[0]],
+            _listingHash: listingStr,
+            _data: listingStr,
+            _pollID,
+          },
+        }))
+      }
+    }
+
     handleInputChange = async (e, method, input) => {
       const methName = method.name
       const inputName = input.name
@@ -59,28 +80,8 @@ const UDappHOC = WrappedComponent => {
       e.preventDefault()
       const args = await this.getMethodArgs(method)
       const inputNames = method.inputs.map(inp => inp.name)
-      const newArgs = this.checkInputs(inputNames, args, method.name)
-
-      try {
-        const txData = EthAbi.encodeMethod(method, newArgs)
-        const params = {
-          from: this.props.account,
-          to: this.state[contract].address,
-          data: txData,
-        }
-        const called = await this.props.ethjs.call(params, 'latest')
-        const decint = parseInt(called, 10)
-        const hexint = parseInt(called, 16)
-        console.log('CALL (dec):', decint)
-        console.log('CALL (hex):', hexint)
-        const cr = hexint === 0 ? 'false' : hexint === 1 ? 'true' : decint
-        this.setState({
-          callResult: cr,
-        })
-      } catch (err) {
-        // if (args.filter(Boolean).length !== args.length) return
-        console.warn(err)
-      }
+      const finalArgs = this.checkInputs(inputNames, args, method.name)
+      this.props.handleCall({ method, finalArgs, contract })
     }
 
     // inputNames:  ["_listingHash", "_amount", "_data"]
