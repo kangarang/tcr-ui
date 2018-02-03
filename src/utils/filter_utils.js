@@ -4,6 +4,12 @@ import jsSHA3 from 'js-sha3'
 
 const TOPIC_LENGTH = 32
 
+export const getMethodAbi = async (address, methodName, abi) => {
+  const methodAbi = _.find(abi, { name: methodName })
+  console.log('methodAbi', methodAbi)
+  return methodAbi
+}
+
 // adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
 const filterUtils = {
@@ -16,7 +22,7 @@ const filterUtils = {
       }
       return {
         ...blockRange,
-        ...filter
+        ...filter,
       }
     } else {
       eventAbi = _.find(abi, { name: eventName })
