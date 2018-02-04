@@ -9,7 +9,9 @@ import {
   selectRegistry,
   selectVoting,
 } from '../selectors'
+
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
+
 import vote_utils from '../utils/vote_utils'
 import saveFile from '../utils/file_utils'
 
@@ -29,6 +31,7 @@ function* callUDappSaga(action) {
   } else if (action.payload.contract === 'voting') {
     contract = yield select(selectVoting)
   }
+  console.log('callUDapp contracts:', contract)
 
   const method = action.payload.method
   const args = action.payload.finalArgs
@@ -46,13 +49,14 @@ function* callUDappSaga(action) {
   const hexint = parseInt(result, 16)
   console.log('CALL (dec):', decint)
   console.log('CALL (hex):', hexint)
+
   const callResult = hexint === 0 ? 'false' : hexint === 1 ? 'true' : decint
   console.log('callresult', callResult)
 }
 
 // adapted from:
 // https://github.com/kumavis/udapp/blob/master/index.js#L63
-function* sendEthjsTransaction(action) {
+function* sendTransactionSaga(action) {
   try {
     const ethjs = yield select(selectEthjs)
     const account = yield select(selectAccount)
@@ -64,13 +68,13 @@ function* sendEthjsTransaction(action) {
     } else if (action.payload.contract === 'voting') {
       contract = yield select(selectVoting)
     }
+    console.log('ethjs send TXN contract', contract)
 
     const method = yield action.payload.method
     const args = yield action.payload.finalArgs
     const nonce = yield call(ethjs.getTransactionCount, account)
     const txData = yield EthAbi.encodeMethod(method, args)
     console.log('send txn txData', txData)
-    console.log('contract', contract)
 
     const payload = yield {
       from: account,
@@ -80,82 +84,14 @@ function* sendEthjsTransaction(action) {
       data: txData,
       nonce,
     }
-    console.log('Tx Payload: ', payload)
-    if (method.name === 'commitVote') {
-      const txHash = yield call(saveFileSaga, action, args, payload)
-      console.log('file save + txHash:', txHash)
-    } else {
-      const txHash = yield call(ethjs.sendTransaction, payload)
-      console.log('txHash', txHash)
-    }
+    const txHash = yield call(ethjs.sendTransaction, payload)
+    console.log('txHash', txHash)
   } catch (error) {
     console.log('error', error)
   }
 }
 
-function* saveFileSaga(action, args, ethjsPayload) {
-  const ethjs = yield select(selectEthjs)
-  const voting = yield select(selectVoting)
-  const account = yield select(selectAccount)
 
-  const pollID = args[0]
-  const voteOption = args[1]
-  const numTokens = args[2]
-
-  // grab the correct position in the DLL
-  const prevPollID = yield call(
-    voting.contract.getInsertPointForNumTokens.call,
-    account,
-    numTokens
-  )
-
-  // grab the poll from the mapping
-  const pollStruct = yield call(voting.pollMap.call, pollID)
-  // record expiry dates
-  const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
-  const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
-
-  // random salt/secretHash generator
-  const salt = randInt(1e6, 1e8)
-  const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
-
-  const json = {
-    listing: action.payload.listing,
-    voteOption,
-    salt: salt.toString(10),
-    pollID,
-    pollStruct,
-    commitEndDateString,
-    revealEndDateString,
-    secretHash,
-  }
-
-  const listingUnderscored = json.listing.replace('.', '_')
-  const filename = `${listingUnderscored}--pollID_${
-    json.pollID
-  }--commitEnd_${commitEndDateString}--commitVote.json`
-
-  // Actual commitVote transaction
-  const receipt = yield call(
-    voting.contract.commitVote,
-    pollID,
-    secretHash,
-    numTokens,
-    prevPollID
-  )
-
-  if (receipt.receipt.status !== '0x0') {
-    saveFile(json, filename)
-    return receipt
-  }
-  return false
-  // const txHash = yield call(ethjs.sendTransaction, ethjsPayload)
-
-  // if (txHash !== '0x0') {
-  //   yield saveFile(json, filename)
-  //   return txHash
-  // }
-}
 
 // Deprecated
 // function* sendTransaction(action) {
@@ -163,7 +99,7 @@ function* saveFileSaga(action, args, ethjsPayload) {
 //   if (txType === 'tc') {
 //     yield call(sendContractTransaction, action)
 //   } else if (txType === 'ethjs') {
-//     yield call(sendEthjsTransaction, action)
+//     yield call(sendTransactionSaga, action)
 //   }
 // }
 

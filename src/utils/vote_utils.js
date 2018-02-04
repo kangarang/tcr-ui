@@ -4,8 +4,8 @@ import saveFile from './file_utils'
 import unit_value_utils, { randInt } from './unit-value-conversions'
 
 const vote_utils = {
-  getEndDateString: endDate =>
-    moment.unix(endDate).format('YYYY-MM-DD_HH-mm-ss'),
+  getEndDateString: integer =>
+    moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss'),
 
   // returns the solidity-sha3 output for vote hashing
   getVoteSaltHash: (vote, salt) =>

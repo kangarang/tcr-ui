@@ -42,7 +42,7 @@ export function formatDate(d) {
   const utcAMPM = ampm(utcTime[0])
   const utcTimeTwelve = getTwelveHour(utcTime)
 
-  // Locat Time Formatting
+  // Local Time Formatting
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])
   const localTimeTwelve = getTwelveHour(localTime)
