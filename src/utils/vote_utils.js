@@ -1,10 +1,11 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
 import saveFile from './file_utils'
-import value_utils from './value_utils'
+import value_utils, { randInt } from './value_utils'
 
 const vote_utils = {
-  getEndDateString: (endDate) => moment.unix(endDate).format('YYYY-MM-DD_HH-mm-ss'),
+  getEndDateString: endDate =>
+    moment.unix(endDate).format('YYYY-MM-DD_HH-mm-ss'),
 
   // returns the solidity-sha3 output for vote hashing
   getVoteSaltHash: (vote, salt) =>
@@ -30,7 +31,8 @@ const vote_utils = {
   },
 
   getReceiptValue: (receipt, arg) => receipt.logs[0].args[arg],
-  getPollIDFromReceipt: receipt => vote_utils.getReceiptValue(receipt, 'pollID'),
+  getPollIDFromReceipt: receipt =>
+    vote_utils.getReceiptValue(receipt, 'pollID'),
   getPoll: (voting, pollID) => voting.pollMap.call(pollID),
   getVotesFor: async (voting, pollID) => {
     const poll = await vote_utils.getPoll(voting, pollID)
@@ -42,7 +44,7 @@ const vote_utils = {
       account,
       numTokens
     )
-    const salt = value_utils.randInt(1e6, 1e8)
+    const salt = randInt(1e6, 1e8)
     const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
 
     const pollStruct = await plcr.pollMap.call(pollID)
@@ -64,7 +66,6 @@ const vote_utils = {
     const listingUnderscored = listing.replace('.', '_')
     const filename = `${listingUnderscored}--pollID_${pollID}--commitEnd_${commitEndDateString}--commitVote.json`
 
-    
     const receipt = await plcr.commitVote(
       pollID,
       secretHash,
@@ -79,4 +80,4 @@ const vote_utils = {
     return false
   },
 }
-export default vote_utils 
+export default vote_utils

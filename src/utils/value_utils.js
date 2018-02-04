@@ -1,23 +1,39 @@
 import Eth from 'ethjs'
-// import ethers from 'ethers'
+// import bs58 from 'bs58'
 // import _ from 'lodash'
 
 export const BN = small => new Eth.BN(small.toString(10), 10)
 
-const value_utils = {
-  // bigNumberToBN(value) {
-  //   return BN(value)
-  // },
-  randInt: (min, max) => {
-    if (max === undefined) {
-      max = min
-      min = 0
-    }
-    if (typeof min !== 'number' || typeof max !== 'number') {
-      throw new TypeError('All args should have been numbers')
-    }
-    return Math.floor(Math.random() * (max - min + 1) + min)
-  },
+export const withCommas = number => {
+  let sides = []
+  sides = number.toString().split('.')
+  sides[0] = sides[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return sides.join('.')
+}
+
+export const toWei = ether => Eth.toWei(ether, 'ether')
+export const toEther = wei => Eth.fromWei(wei, 'ether')
+
+export const trimDecimalsThree = n =>
+  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
+
+export const randInt = (min, max) => {
+  if (max === undefined) {
+    max = min
+    min = 0
+  }
+  if (typeof min !== 'number' || typeof max !== 'number') {
+    throw new TypeError('All args should have been numbers')
+  }
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+export default {
+  bytesToHex: bytes =>
+    `0x${byteArray.reduce(
+      (hexString, byte) => hexString + byte.toString(16),
+      ''
+    )}`,
 
   // convert FROM natural unit
   // (reading logs or an event)
@@ -65,18 +81,9 @@ const value_utils = {
     const weiQuotient = value_utils.divideAndGetWei(y, z)
     return value_utils.multiplyFromWei(x, weiQuotient)
   },
+
+  // base58Decode: encoded =>
+  //   JSON.parse(Buffer.from(bs58.decode(encoded)).toString('utf8')),
+
+  // base58Encode: o => bs58.encode(Buffer.from(JSON.stringify(o), 'utf8')),
 }
-
-export default value_utils
-
-
-export const withCommas = number =>
-  number.toString(10).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
-export const toWei = ether => Eth.toWei(ether, 'ether')
-export const toEther = wei => Eth.fromWei(wei, 'ether')
-
-export const trimDecimalsThree = n =>
-  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
-
-// export const numToHex = num => ethers.utils.bigNumberify(num).toHexString()

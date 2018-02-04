@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import abis from '../../abis'
 
-import value_utils from '../../utils/value_utils'
+import value_utils, { randInt } from '../../utils/value_utils'
 import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
@@ -87,7 +87,12 @@ const UDappHOC = WrappedComponent => {
       const args = this.getMethodArgs(method)
       const inputNames = method.inputs.map(inp => inp.name)
       const finalArgs = this.checkInputs(inputNames, args, method.name)
-      this.props.handleSendTransaction({ method, finalArgs, contract, type: 'ethjs' })
+      this.props.handleSendTransaction({
+        method,
+        finalArgs,
+        contract,
+        type: 'ethjs',
+      })
     }
 
     render() {
@@ -124,12 +129,18 @@ const UDappHOC = WrappedComponent => {
 
       if (inputNames.includes('_amount')) {
         const indexOfAmount = inputNames.indexOf('_amount')
-        const actualAmount = value_utils.toNaturalUnitAmount(args[indexOfAmount], 18)
+        const actualAmount = value_utils.toNaturalUnitAmount(
+          args[indexOfAmount],
+          18
+        )
         args[indexOfAmount] = actualAmount.toString(10)
       }
       if (inputNames.includes('_value')) {
         const indexOfValue = inputNames.indexOf('_value')
-        const actualValue = value_utils.toNaturalUnitAmount(args[indexOfValue], 18)
+        const actualValue = value_utils.toNaturalUnitAmount(
+          args[indexOfValue],
+          18
+        )
         args[indexOfValue] = actualValue.toString(10)
       }
       if (
@@ -149,7 +160,7 @@ const UDappHOC = WrappedComponent => {
 
       if (inputNames.includes('_secretHash')) {
         const indexOfSecretHash = inputNames.indexOf('_secretHash')
-        const salt = value_utils.randInt(1e6, 1e8)
+        const salt = randInt(1e6, 1e8)
         console.log('SALT SALT SALT: ', salt)
         const secretHash = vote_utils.getVoteSaltHash(
           args[indexOfSecretHash],
@@ -160,7 +171,6 @@ const UDappHOC = WrappedComponent => {
       }
       return args
     }
-
   }
 }
 

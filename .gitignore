@@ -15,6 +15,7 @@ firebase.json
 package-lock.json
 
 /tcr
+/src/zzz
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
