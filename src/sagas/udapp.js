@@ -9,7 +9,7 @@ import {
   selectRegistry,
   selectVoting,
 } from '../selectors'
-import value_utils, { randInt } from '../utils/value_utils'
+import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
 import vote_utils from '../utils/vote_utils'
 import saveFile from '../utils/file_utils'
 
@@ -93,22 +93,37 @@ function* sendEthjsTransaction(action) {
   }
 }
 
-function* saveFileSaga(action, args, payload) {
+function* saveFileSaga(action, args, ethjsPayload) {
   const ethjs = yield select(selectEthjs)
   const voting = yield select(selectVoting)
-  const pollStruct = yield call(voting.pollMap.call, args[0])
+  const account = yield select(selectAccount)
 
+  const pollID = args[0]
+  const voteOption = args[1]
+  const numTokens = args[2]
+
+  // grab the correct position in the DLL
+  const prevPollID = yield call(
+    voting.contract.getInsertPointForNumTokens.call,
+    account,
+    numTokens
+  )
+
+  // grab the poll from the mapping
+  const pollStruct = yield call(voting.pollMap.call, pollID)
+  // record expiry dates
   const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
   const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
 
+  // random salt/secretHash generator
   const salt = randInt(1e6, 1e8)
-  const secretHash = vote_utils.getVoteSaltHash(args[0], action.payload.listing)
+  const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
 
   const json = {
     listing: action.payload.listing,
-    voteOption: args[1],
+    voteOption,
     salt: salt.toString(10),
-    pollID: args[0],
+    pollID,
     pollStruct,
     commitEndDateString,
     revealEndDateString,
@@ -120,12 +135,26 @@ function* saveFileSaga(action, args, payload) {
     json.pollID
   }--commitEnd_${commitEndDateString}--commitVote.json`
 
-  const txHash = yield call(ethjs.sendTransaction, payload)
+  // Actual commitVote transaction
+  const receipt = yield call(
+    voting.contract.commitVote,
+    pollID,
+    secretHash,
+    numTokens,
+    prevPollID
+  )
 
-  if (txHash !== '0x0') {
-    yield saveFile(json, filename)
-    return txHash
+  if (receipt.receipt.status !== '0x0') {
+    saveFile(json, filename)
+    return receipt
   }
+  return false
+  // const txHash = yield call(ethjs.sendTransaction, ethjsPayload)
+
+  // if (txHash !== '0x0') {
+  //   yield saveFile(json, filename)
+  //   return txHash
+  // }
 }
 
 // Deprecated

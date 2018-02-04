@@ -4,15 +4,14 @@ import jsSHA3 from 'js-sha3'
 
 const TOPIC_LENGTH = 32
 
-export const getMethodAbi = async (address, methodName, abi) => {
-  const methodAbi = _.find(abi, { name: methodName })
-  console.log('methodAbi', methodAbi)
-  return methodAbi
-}
-
 // adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
-const filterUtils = {
+const abi_utils = {
+  getMethodAbi: async (address, methodName, abi) => {
+    const methodAbi = _.find(abi, { name: methodName })
+    return methodAbi
+  },
+
   getFilter: async (address, eventName, indexFilterValues, abi, blockRange) => {
     let eventAbi
     if (!eventName) {
@@ -28,14 +27,14 @@ const filterUtils = {
       eventAbi = _.find(abi, { name: eventName })
     }
     console.log('eventAbi', eventAbi)
-    const eventSignature = filterUtils.getEventSignatureFromAbiByName(
+    const eventSignature = abi_utils.getEventSignatureFromAbiByName(
       eventAbi,
       eventName
     )
     const topicForEventSignature = ethUtil.addHexPrefix(
       jsSHA3.keccak256(eventSignature)
     )
-    const topicsForIndexedArgs = filterUtils.getTopicsForIndexedArgs(
+    const topicsForIndexedArgs = abi_utils.getTopicsForIndexedArgs(
       eventAbi,
       indexFilterValues
     )
@@ -84,19 +83,21 @@ const filterUtils = {
       return false
     }
     if (!_.isUndefined(filter.topics)) {
-      return filterUtils.matchesTopics(log.topics, filter.topics)
+      return abi_utils.matchesTopics(log.topics, filter.topics)
     }
     return true
   },
+
   matchesTopics(logTopics, filterTopics) {
     const matchesTopic = _.zipWith(
       logTopics,
       filterTopics,
-      filterUtils.matchesTopic.bind(filterUtils)
+      abi_utils.matchesTopic.bind(abi_utils)
     )
     const matchesTopics = _.every(matchesTopic)
     return matchesTopics
   },
+
   matchesTopic(logTopic, filterTopic) {
     if (_.isArray(filterTopic)) {
       return _.includes(filterTopic, logTopic)
@@ -109,4 +110,4 @@ const filterUtils = {
   },
 }
 
-export default filterUtils
+export default abi_utils

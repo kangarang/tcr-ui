@@ -24,7 +24,7 @@ import {
   Methods,
 } from './components/StyledItems'
 
-import { withCommas, trimDecimalsThree } from '../../utils/value_utils'
+import { withCommas, trimDecimalsThree } from '../../utils/unit-value-conversions'
 
 const styles = {
   container: {

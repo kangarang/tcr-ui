@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
-// Thank you so much Augur!
+// Thank you Augur!
 // https://github.com/AugurProject/augur/tree/seadragon/src/utils
 
 const months = [

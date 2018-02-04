@@ -1,7 +1,7 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
 import saveFile from './file_utils'
-import value_utils, { randInt } from './value_utils'
+import unit_value_utils, { randInt } from './unit-value-conversions'
 
 const vote_utils = {
   getEndDateString: endDate =>
@@ -31,53 +31,16 @@ const vote_utils = {
   },
 
   getReceiptValue: (receipt, arg) => receipt.logs[0].args[arg],
+
   getPollIDFromReceipt: receipt =>
     vote_utils.getReceiptValue(receipt, 'pollID'),
+
   getPoll: (voting, pollID) => voting.pollMap.call(pollID),
+
   getVotesFor: async (voting, pollID) => {
     const poll = await vote_utils.getPoll(voting, pollID)
     return poll[3]
   },
-
-  commitVote: async (plcr, pollID, voteOption, account, numTokens, listing) => {
-    const prevPollID = await plcr.getInsertPointForNumTokens.call(
-      account,
-      numTokens
-    )
-    const salt = randInt(1e6, 1e8)
-    const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
-
-    const pollStruct = await plcr.pollMap.call(pollID)
-
-    const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
-    const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
-
-    const json = {
-      listing,
-      voteOption,
-      salt: salt.toString(10),
-      pollID,
-      pollStruct,
-      commitEndDateString,
-      revealEndDateString,
-      secretHash,
-    }
-
-    const listingUnderscored = listing.replace('.', '_')
-    const filename = `${listingUnderscored}--pollID_${pollID}--commitEnd_${commitEndDateString}--commitVote.json`
-
-    const receipt = await plcr.commitVote(
-      pollID,
-      secretHash,
-      numTokens,
-      prevPollID
-    )
-
-    if (receipt.receipt.status !== '0x0') {
-      saveFile(json, filename)
-      return receipt
-    }
-    return false
-  },
 }
+
 export default vote_utils

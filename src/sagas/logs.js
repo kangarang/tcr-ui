@@ -9,9 +9,9 @@ import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
 import { updateTokenBalancesSaga } from './token'
 
-import logUtils from '../utils/log_utils'
-import filterUtils from '../utils/filter_utils'
-import value_utils from '../utils/value_utils'
+import log_utils from '../utils/log_utils'
+import abi_utils from '../utils/abi_utils'
+import unit_value_utils from '../utils/unit-value-conversions'
 import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
 
 export default function* logsSaga() {
@@ -110,7 +110,7 @@ function* handleLogs(sb, eb, topic, contract) {
       toBlock: eb,
     }
     const filter = yield call(
-      filterUtils.getFilter,
+      abi_utils.getFilter,
       contract.address,
       topic,
       [],
@@ -127,8 +127,8 @@ function* handleLogs(sb, eb, topic, contract) {
 
     return yield all(
       (yield decodedLogs.map(async (dLog, ind) => {
-        const block = await logUtils.getBlock(ethjs, rawLogs[ind].blockHash)
-        const txDetails = await logUtils.getTransaction(
+        const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
+        const txDetails = await log_utils.getTransaction(
           ethjs,
           rawLogs[ind].transactionHash
         )
@@ -169,7 +169,7 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     const details = {
       listingString: dLog.data,
       listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3] ? value_utils.toUnitAmount(listing[3], 18) : false,
+      unstakedDeposit: listing[3] ? unit_value_utils.toUnitAmount(listing[3], 18) : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
       index: i,
       eventName: dLog._eventName,
@@ -178,7 +178,7 @@ async function buildListing(contract, block, dLog, i, txDetails) {
       blockNumber: txDetails.blockNumber && txDetails.blockNumber.toNumber(10),
     }
 
-    return logUtils.shapeShift(block, tx, details)
+    return log_utils.shapeShift(block, tx, details)
   } catch (err) {
     throw new Error(err.message)
   }

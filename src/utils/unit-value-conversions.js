@@ -2,21 +2,7 @@ import Eth from 'ethjs'
 // import bs58 from 'bs58'
 // import _ from 'lodash'
 
-export const BN = small => new Eth.BN(small.toString(10), 10)
-
-export const withCommas = number => {
-  let sides = []
-  sides = number.toString().split('.')
-  sides[0] = sides[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return sides.join('.')
-}
-
-export const toWei = ether => Eth.toWei(ether, 'ether')
-export const toEther = wei => Eth.fromWei(wei, 'ether')
-
-export const trimDecimalsThree = n =>
-  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
-
+// Random integer for salt
 export const randInt = (min, max) => {
   if (max === undefined) {
     max = min
@@ -28,13 +14,22 @@ export const randInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-export default {
-  bytesToHex: bytes =>
-    `0x${byteArray.reduce(
-      (hexString, byte) => hexString + byte.toString(16),
-      ''
-    )}`,
+export const BN = small => new Eth.BN(small.toString(10), 10)
+// Adds commas every 3 digits
+export const withCommas = number => {
+  let sides = []
+  sides = number.toString().split('.')
+  sides[0] = sides[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return sides.join('.')
+}
+// BN helpers
+export const toWei = ether => Eth.toWei(ether, 'ether')
+export const toEther = wei => Eth.fromWei(wei, 'ether')
+// Trim to 3 trailing decimals
+export const trimDecimalsThree = n =>
+  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
 
+export default {
   // convert FROM natural unit
   // (reading logs or an event)
   toUnitAmount: (amount, decimals) => {
@@ -53,14 +48,6 @@ export default {
     const unit = BN(10).pow(BN(18))
     const naturalUnitAmount = BN(amount).mul(unit)
     console.log('naturalUnitAmount', naturalUnitAmount.toString())
-    // const hasDecimals = naturalUnitAmount.decimalPlaces() !== 0
-    // if (hasDecimals) {
-    //   throw new Error(
-    //     `Invalid natural unit amount: ${amount.toString(
-    //       10
-    //     )} - Too many decimal places!`
-    //   )
-    // }
     return naturalUnitAmount
   },
 
@@ -78,9 +65,15 @@ export default {
   },
 
   multiplyByPercentage: (x, y, z = 100) => {
-    const weiQuotient = value_utils.divideAndGetWei(y, z)
-    return value_utils.multiplyFromWei(x, weiQuotient)
+    const weiQuotient = unit_value_utils.divideAndGetWei(y, z)
+    return unit_value_utils.multiplyFromWei(x, weiQuotient)
   },
+
+  bytesToHex: byteArray =>
+    `0x${byteArray.reduce(
+      (hexString, byte) => hexString + byte.toString(16),
+      ''
+    )}`,
 
   // base58Decode: encoded =>
   //   JSON.parse(Buffer.from(bs58.decode(encoded)).toString('utf8')),

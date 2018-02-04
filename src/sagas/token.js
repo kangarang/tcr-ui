@@ -7,7 +7,7 @@ import {
   selectToken,
   selectVoting,
 } from '../selectors'
-import value_utils from '../utils/value_utils'
+import unit_value_utils from '../utils/unit-value-conversions'
 
 export default function* tokenSaga() {
   // yield takeEvery(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
@@ -29,11 +29,11 @@ export function* updateTokenBalancesSaga(spender) {
       voting.contract.voteTokenBalance.call,
       owner
     )
-    const balance = value_utils
+    const balance = unit_value_utils
       .toUnitAmount(tokenBalance, token.decimalPower)
       .toString(10)
 
-    const allowance = value_utils
+    const allowance = unit_value_utils
       .toUnitAmount(tokensAllowed, token.decimalPower)
       .toString(10)
 
@@ -70,7 +70,7 @@ export function* updateTokenBalancesSaga(spender) {
 //   }
 //   const tokenBalance = yield call(ethjs.call, payload, 'latest')
 
-//   const balance = value_utils
+//   const balance = unit_value_utils
 //     .toUnitAmount(BN(tokenBalance), token.decimalPower)
 //     .toString(10)
 // }

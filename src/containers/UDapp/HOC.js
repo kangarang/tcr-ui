@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import abis from '../../abis'
 
-import value_utils, { randInt } from '../../utils/value_utils'
+import unit_value_utils, { randInt } from '../../utils/unit-value-conversions'
 import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
@@ -129,7 +129,7 @@ const UDappHOC = WrappedComponent => {
 
       if (inputNames.includes('_amount')) {
         const indexOfAmount = inputNames.indexOf('_amount')
-        const actualAmount = value_utils.toNaturalUnitAmount(
+        const actualAmount = unit_value_utils.toNaturalUnitAmount(
           args[indexOfAmount],
           18
         )
@@ -137,7 +137,7 @@ const UDappHOC = WrappedComponent => {
       }
       if (inputNames.includes('_value')) {
         const indexOfValue = inputNames.indexOf('_value')
-        const actualValue = value_utils.toNaturalUnitAmount(
+        const actualValue = unit_value_utils.toNaturalUnitAmount(
           args[indexOfValue],
           18
         )
@@ -151,7 +151,7 @@ const UDappHOC = WrappedComponent => {
         )
       ) {
         const indexOfNumTokens = inputNames.indexOf('_numTokens')
-        const actualNumTokens = value_utils.toNaturalUnitAmount(
+        const actualNumTokens = unit_value_utils.toNaturalUnitAmount(
           args[indexOfNumTokens],
           18
         )

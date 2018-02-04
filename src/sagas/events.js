@@ -15,8 +15,8 @@ import { SET_CONTRACTS } from "../actions/constants";
 import { selectEthjs, selectRegistry, makeSelectContract } from '../selectors'
 
 import {
-  eventUtils,
-  logUtils,
+  event_utils,
+  log_utils,
 } from './utils'
 
 export default function* eventsSaga() {
@@ -77,11 +77,11 @@ function* handleEvent(result) {
     return
   }
 
-  const txDetails = yield call(logUtils.getTransaction, eth, result.transactionHash)
+  const txDetails = yield call(log_utils.getTransaction, eth, result.transactionHash)
 
   // This is faster than registry.isWhitelisted
-  const isWhitelisted = yield call(eventUtils.checkForWhitelist, result)
-  const canBeWhitelisted = yield call(logUtils.canBeWhitelisted, registry, result.args.listing)
+  const isWhitelisted = yield call(event_utils.checkForWhitelist, result)
+  const canBeWhitelisted = yield call(log_utils.canBeWhitelisted, registry, result.args.listing)
 
   if (result.event === '_Challenge' || result.event === '_NewListingWhitelisted') {
     // Send the event with the listing and pollID
@@ -109,7 +109,7 @@ function* handleEvent(result) {
       canBeWhitelisted,
     }
 
-    const item = yield call(logUtils.shapeShift, block, tx, details)
+    const item = yield call(log_utils.shapeShift, block, tx, details)
     yield put(newItem(item))
   }
 
