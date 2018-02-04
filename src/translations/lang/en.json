@@ -5,7 +5,20 @@
     "tx_transfer": "Transfer tokens",
 
     "tx_apply": "Apply a listing with name and deposit",
+    "pre_apply": ["minDeposit", "approve"],
+    "ins_apply": ["You can deposit more than the minimum deposit", "Your deposit stays with the application", "Applications take 3 days, during which any token-holder can challenge your listing application", "If no challenges, your listing will be added to the registry", "Challenges cost minDeposit", "A challenge forces a listing into the voting period", "Voting period takes 6 days, during which time your deposit will be locked until the end of the voting period", "If you win the challenge, you will not only get added to the registry, but also win a percentage of the challenger's stake", "If you lose the challenge, you will forfeit minDeposit of your total deposit, and any additional deposit can be retrieved by you", "If you want to retreive your deposit once added to the registry, you can do so at any time", "However your listing will be removed at that time as well"],
+
     "tx_challenge": "Challenge a listing application",
+    "pre_challenge": ["minDeposit", "approve"],
+    "ins_challenge": ["You are challenging this listing", "To challenge, it will cost you tokens", " You need to approve the contract to transact on your behalf", "Once you challenge, the listing will enter a voting period which lasts 6 days", "If you win, you will receive your locked minDeposit + a % of the applicant's original deposit"],
+
+    "tx_commitVote": "Commit a vote for this challenge",
+    "pre_commitVote": ["requestVotingRights", "approve"],
+    "ins_commitVote": ["Voting is 2 parts", "This is the first part, the commit period", " You need to vote FOR or AGAINST the Listing", "FOR is 1, AGAINST is 0", "Vote with your tokens", "If you lose the vote, you do not lose any tokens", "The more tokens you vote with, the greater winnings you will possibly realize", "Salt"],
+    "tx_revealVote": "Reveal a vote for this challenge",
+    "pre_revealVote": [],
+    "ins_revealVote": [],
+
     "tx_exit": "Remove your listing from the registry",
     "tx_deposit": "Increase your deposit",
     "tx_withdraw": "Decrease your deposit",
@@ -28,8 +41,6 @@
     "tx_withdrawVotingRights": "Transfer tokens from the voting contract",
     "tx_rescueTokens":
       "Rescue tokens from a poll that you committed in, but did not reveal in",
-    "tx_commitVote": "Commit a vote for this challenge",
-    "tx_revealVote": "Reveal a vote for this challenge",
 
     "call_voteTokenBalance": "Get the number of tokens that you have transferred to the voting contract",
     "call_getLockedTokens": "Get the number of tokens that are currently locked in the voting contract. Includes all tokens associated with challenges with committed and not-revealed votes.",
@@ -55,6 +66,5 @@
     "input_secretHash": "Vote: Applicant(1) Challenger(0)",
     "input_voteOption": "Vote: Applicant(1) Challenger(0)",
     "input_numTokens": "Number of Tokens"
-
   }
 }

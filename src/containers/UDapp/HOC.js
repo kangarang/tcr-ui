@@ -33,6 +33,7 @@ const UDappHOC = WrappedComponent => {
       }
     }
 
+    // this is a hack to make default values work
     componentWillReceiveProps(newProps) {
       // console.log('HOC OLD PROPS:', this.props)
       // console.log('HOC NEW PROPS:', newProps)
@@ -79,6 +80,30 @@ const UDappHOC = WrappedComponent => {
       const inputNames = method.inputs.map(inp => inp.name)
       const finalArgs = this.checkInputs(inputNames, args, method.name)
       this.props.handleCall({ method, finalArgs, contract })
+    }
+
+    handleHOCSendTransaction = async (e, method, contract) => {
+      e.preventDefault()
+      const args = this.getMethodArgs(method)
+      const inputNames = method.inputs.map(inp => inp.name)
+      const finalArgs = this.checkInputs(inputNames, args, method.name)
+      this.props.handleSendTransaction({ method, finalArgs, contract, type: 'ethjs' })
+    }
+
+    render() {
+      return (
+        <WrappedComponent
+          hocInputChange={this.handleInputChange}
+          hocCall={this.handleHOCCall}
+          hocSendTransaction={this.handleHOCSendTransaction}
+          registry={this.state.registry}
+          voting={this.state.voting}
+          token={this.state.token}
+          callResult={this.state.callResult}
+          currentMethod={this.state.currentMethod}
+          {...this.props}
+        />
+      )
     }
 
     // inputNames:  ["_listingHash", "_amount", "_data"]
@@ -136,29 +161,6 @@ const UDappHOC = WrappedComponent => {
       return args
     }
 
-    handleHOCSendTransaction = async (e, method, contract) => {
-      e.preventDefault()
-      const args = this.getMethodArgs(method)
-      const inputNames = method.inputs.map(inp => inp.name)
-      const finalArgs = this.checkInputs(inputNames, args, method.name)
-      this.props.handleSendTransaction({ method, finalArgs, contract, type: 'ethjs' })
-    }
-
-    render() {
-      return (
-        <WrappedComponent
-          hocInputChange={this.handleInputChange}
-          hocCall={this.handleHOCCall}
-          hocSendTransaction={this.handleHOCSendTransaction}
-          registry={this.state.registry}
-          voting={this.state.voting}
-          token={this.state.token}
-          callResult={this.state.callResult}
-          currentMethod={this.state.currentMethod}
-          {...this.props}
-        />
-      )
-    }
   }
 }
 

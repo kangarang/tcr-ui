@@ -9,7 +9,11 @@ import H2 from '../../components/H2'
 import Method from './components/Method'
 import Button from '../../components/Button'
 import TopBar from '../../components/TopBar'
-import { BoldInlineText } from '../../components/Item'
+import {
+  BoldInlineText,
+  Text,
+  FourItemGridContainer,
+} from '../../components/Item'
 
 import {
   BigContainer,
@@ -57,51 +61,9 @@ const modalStyles = {
   },
 }
 
+// adapted from:
+// https://github.com/kumavis/udapp/blob/master/index.js#L205
 class UDapp extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      modalIsOpen: false,
-    }
-  }
-
-  componentWillReceiveProps(newProps) {
-    console.log('UDAPP newProps', newProps)
-
-    if (newProps.request && newProps.request.get('method')) {
-      this.setState({
-        modalIsOpen: true,
-      })
-    }
-  }
-
-  handleOpenUDapp = () => {
-    console.log('Open UDAPP')
-    this.setState({
-      modalIsOpen: true,
-    })
-  }
-
-  // handleCloseModal = () => {
-  //   console.log('Close UDAPP modal')
-  //   this.setState({
-  //     modalIsOpen: false,
-  //   })
-  // }
-
-  // handleAfterOpen = () => {
-  //   console.log('after open', this)
-  // }
-
-  handleRequestClose = () => {
-    console.log('after close', this)
-    this.setState({
-      modalIsOpen: false,
-    })
-  }
-
-  // adapted from:
-  // https://github.com/kumavis/udapp/blob/master/index.js#L205
   render() {
     const tokenBalance =
       this.props.wallet && this.props.wallet.getIn(['token', 'tokenBalance'])
@@ -115,7 +77,12 @@ class UDapp extends Component {
       ])
     const votingAllowance =
       this.props.wallet &&
-      this.props.wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])
+      this.props.wallet.getIn([
+        'token',
+        'allowances',
+        this.props.voting.address,
+        'total',
+      ])
     const registryAllowance =
       this.props.wallet &&
       this.props.wallet.getIn([
@@ -152,9 +119,8 @@ class UDapp extends Component {
       <div style={styles.container}>
         <Wrapper>
           <ReactModal
-            isOpen={this.state.modalIsOpen}
-            onAfterOpen={this.handleAfterOpen}
-            onRequestClose={this.handleRequestClose}
+            isOpen={this.props.modalIsOpen === this.props.default}
+            onRequestClose={this.props.closeModal}
             style={modalStyles}
             contentLabel="UDapp Modal"
             portalClassName="UDappModalPortal"
@@ -165,31 +131,20 @@ class UDapp extends Component {
             shouldFocusAfterRender={false}
             shouldCloseOnEsc={true}
             shouldReturnFocusAfterClose={true}
+            shouldCloseOnOverlayClick={true}
             role="dialog"
           >
             <TopBar />
 
-            <H2>{this.props.messages.heading}</H2>
-            {/* 
-            {this.props.messages.default && (
-              <ModalMessage>{this.props.messages.default}</ModalMessage>
-            )} */}
-
             <Methods>
               <div>
                 <BigContainer>
-                  <Container bgColor={this.props.token.address}>
-                    {/* ideal */}
-                    {/* {this.props.prerequisites && (
-                      <ModalMessage>{this.props.messages.prerequisites}</ModalMessage>
-                    )}
-                    {this.props.visibleTokenMethods.map(meth => (
-                      <Method method={one} contract={'token'} {...this.props} />
-                    ))} */}
-
+                  <Container>
                     {this.props.prerequisites && (
                       <div>
-                        <ModalMessage>{this.props.messages.prerequisites}</ModalMessage>
+                        <ModalMessage>
+                          {this.props.messages.prerequisites}
+                        </ModalMessage>
                         {warningTokenMethods.map(one => (
                           <Method
                             key={`PrereqTokenMethod-${one.name}`}
@@ -202,12 +157,50 @@ class UDapp extends Component {
                     )}
 
                     <Item gR={1}>
-                      <BoldInlineText>
-                        {'Token Balance: '}
-                        {tokenBalance && withCommas(trimDecimalsThree(tokenBalance))}
-                      </BoldInlineText>
+                      <Text>
+                        {'Registry Address: ' + this.props.registry.address}
+                      </Text>
                     </Item>
                     <Item gR={2}>
+                      <Text>
+                        {'Token Address: ' + this.props.token.address}
+                      </Text>
+                    </Item>
+                    <Item gR={3}>
+                      <Text>
+                        {'Voting Address: ' + this.props.voting.address}
+                      </Text>
+                    </Item>
+
+                    <FourItemGridContainer>
+                      <Item gR={1} gC={1}>
+                        <BoldInlineText>
+                          {'Token Balance: '}
+                          {tokenBalance &&
+                            withCommas(trimDecimalsThree(tokenBalance))}
+                        </BoldInlineText>
+                      </Item>
+                      <Item gR={2} gC={1}>
+                        <BoldInlineText>
+                          {`Registry Allowance: `}
+                          {registryAllowance && withCommas(registryAllowance)}
+                        </BoldInlineText>
+                      </Item>
+                      <Item gR={1} gC={2}>
+                        <BoldInlineText>
+                          {'Voting Allowance: '}
+                          {votingAllowance && withCommas(votingAllowance)}
+                        </BoldInlineText>
+                      </Item>
+                      <Item gR={2} gC={2}>
+                        <BoldInlineText>
+                          {'Voting Rights: '}
+                          {votingRights && withCommas(votingRights)}
+                        </BoldInlineText>
+                      </Item>
+                    </FourItemGridContainer>
+
+                    <Item gR={6}>
                       {visibleTokenMethods.map(one => (
                         <Method
                           key={`TokenMethod-${one.name}`}
@@ -219,49 +212,28 @@ class UDapp extends Component {
                     </Item>
                   </Container>
 
-                  <Container bgColor={this.props.registry.address}>
-                    <Item gR={1}>
-                      <BoldInlineText>
-                        {'REGISTRY: ' + this.props.registry.address}
-                      </BoldInlineText>
-                    </Item>
-                    <Item gR={2}>
-                      <BoldInlineText>
-                        {`Allowance: `}
-                        {registryAllowance && withCommas(registryAllowance)}
-                      </BoldInlineText>
-                    </Item>
+                  <Container>
                     <Item gR={3}>
                       {visibleRegistryMethods.map(one => (
                         <Method
                           key={`RegistryMethod-${one.name}`}
                           method={one}
-                          contract={'registry'} {...this.props} />
+                          contract={'registry'}
+                          {...this.props}
+                        />
                       ))}
                     </Item>
                   </Container>
 
-                  <Container bgColor={this.props.voting.address}>
-                    <Item gR={1}>
-                      <BoldInlineText>
-                        {'VOTING: ' + this.props.voting.address}
-                      </BoldInlineText>
-                    </Item>
-                    <Item gR={2}>
-                      <BoldInlineText>
-                        {'Allowance: '}
-                        {votingAllowance && withCommas(votingAllowance)}
-                      </BoldInlineText>
-                    </Item>
-                    <Item gR={3}>
-                      <BoldInlineText>
-                        {'Voting Rights: '}
-                        {votingRights && withCommas(votingRights)}
-                      </BoldInlineText>
-                    </Item>
+                  <Container>
                     <Item gR={4}>
                       {visibleVotingMethods.map(one => (
-                        <Method key={`VotingMethod-${one.name}`} method={one} contract={'voting'} {...this.props} />
+                        <Method
+                          key={`VotingMethod-${one.name}`}
+                          method={one}
+                          contract={'voting'}
+                          {...this.props}
+                        />
                       ))}
                     </Item>
                   </Container>
@@ -282,7 +254,7 @@ class UDapp extends Component {
             </Methods>
           </ReactModal>
 
-          <Button onClick={this.handleOpenUDapp}>{`UDAPP - ${
+          <Button onClick={this.props.openModal}>{`UDAPP - ${
             this.props.messages.heading
           }`}</Button>
         </Wrapper>

@@ -14,7 +14,7 @@ import {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 2fr 4fr 4fr 4fr;
+  grid-template-columns: 1fr 3fr 4fr 4fr 5fr;
   grid-gap: 15px;
   padding: 0.7em;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
@@ -47,7 +47,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       <BoldInlineText>
         {latest.get('pollID') && (
           <span>
-            {'Challenger: '}
+            {'Challenger address: '}
             <A
               target="_blank"
               href={`https://rinkeby.etherscan.io/address/${latest.get(

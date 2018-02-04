@@ -20,7 +20,7 @@ export const Item = styled.div`
   justify-content: flex-start;
   grid-row: ${props => props.gr && props.gR};
   grid-column: ${props => props.gC};
-  /* padding: ${props => props.pad && props.pad + 'em'}; */
+  padding: ${props => props.pad && props.pad + 'em'};
   overflow: hidden;
   text-overflow: ellipsis;
 `
@@ -43,4 +43,15 @@ export const BoldInlineText = styled(InlineText)`
 `
 export const BigBoldInlineText = styled(BoldInlineText)`
   font-size: 1.3em;
+`
+export const FourItemGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 2px;
+  margin: 1em;
+  /* padding: 1em; */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* color: ${colors.offBlack}; */
+  border: 2px solid ${colors.offBlack};
 `

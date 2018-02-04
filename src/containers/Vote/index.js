@@ -24,10 +24,11 @@ import {
   selectAllContracts,
   selectEthjs,
   selectRequest,
+  selectPrerequisites,
 } from '../../selectors'
 import {
   sendTransaction,
-  sendTransactionRequest,
+  requestModalMethod,
   callRequested,
 } from '../../actions'
 
@@ -36,36 +37,51 @@ const VotingWrapper = styled.div`
 `
 
 class Voting extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      modalIsOpen: false,
+    }
+  }
   componentDidMount() {
-    console.log('Voting props', this.props)
     if (!this.props.account) {
       this.props.history.push('/')
     }
-  }
-
-  handleOpenUDapp = e => {
-    console.log('e', e)
-    this.props.onSendTransactionRequest({
-      method: e,
-    })
-  }
-
-  handleClick = e => {
-    this.props.onSendTransactionRequest(e)
   }
 
   handleCall = e => {
     console.log('call:', e)
     this.props.onCall(e)
   }
-
   handleSendTransaction = e => {
     console.log('confirm txn:', e)
     this.props.onSendTransaction(e)
   }
 
+  handleClickListing = e => {
+    console.log('click listing', e)
+    this.props.onRequestModalMethod(e)
+    this.setState({
+      modalIsOpen: 'vote',
+    })
+  }
+
+  handleAfterOpen = () => {
+    console.log('after open')
+  }
+  handleRequestClose = () => {
+    console.log('request close')
+    this.setState({ modalIsOpen: false })
+  }
+  openModal = () => {
+    this.setState({ modalIsOpen: 'vote' })
+  }
+  closeModal = () => {
+    this.setState({ modalIsOpen: false })
+  }
+
   render() {
-    const { wallet, faceoffs, ethjs, request } = this.props
+    const { wallet, faceoffs, request } = this.props
     const reqMeth =
       request.get('method') && !request.get('context')
         ? 'vote'
@@ -78,15 +94,19 @@ class Voting extends Component {
         <UserInfo {...this.props} />
 
         <UDapp
-          isOpen={request.get('method').length > 0}
+          modalIsOpen={this.state.modalIsOpen}
+          default={'vote'}
           messages={messages.vote}
-          actions={customMethods}
           defaultMethods={methods.vote.actions}
+          actions={customMethods}
           warnings={customWarnings}
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
           handleCall={this.handleCall}
-          onOpenUDapp={this.handleOpenUDapp}
+          onRequestClose={this.handleRequestCloseModal}
+          onAfterOpen={this.handleAfterOpen}
+          openModal={this.openModal}
+          closeModal={this.closeModal}
           {...this.props}
         />
 
@@ -104,8 +124,7 @@ class Voting extends Component {
                   owner={log.get('owner')}
                   listing={log.get('listing')}
                   whitelisted={log.getIn(['latest', 'whitelisted'])}
-                  handleClick={this.handleClick}
-                  ethjs={ethjs}
+                  handleClick={this.handleClickListing}
                 />
               </Section>
             ))}
@@ -117,7 +136,7 @@ class Voting extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSendTransactionRequest: e => dispatch(sendTransactionRequest(e)),
+    onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: e => dispatch(sendTransaction(e)),
     onCall: e => dispatch(callRequested(e)),
   }
@@ -132,6 +151,7 @@ const mapStateToProps = createStructuredSelector({
   contracts: selectAllContracts,
   ethjs: selectEthjs,
   request: selectRequest,
+  prerequisites: selectPrerequisites,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

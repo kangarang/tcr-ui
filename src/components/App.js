@@ -7,10 +7,10 @@ import { colors } from '../colors'
 
 import Nav from './Nav'
 import Home from '../containers/Home'
-import Challenge from '../containers/Challenge'
+// import Challenge from '../containers/Challenge'
 import Vote from '../containers/Vote'
-import Activities from '../containers/Activities'
-import Search from '../containers/Search'
+// import Activities from '../containers/Activities'
+// import Search from '../containers/Search'
 import TopBar from './TopBar'
 import '../global-styles'
 
@@ -32,11 +32,12 @@ const App = () => (
     <Nav />
     <AppWrapper>
       <Switch>
+        {/* <Route exact path="/" /> */}
         <Route exact path="/" component={Home} />
-        <Route exact path="/challenge" component={Challenge} />
+        {/* <Route exact path="/challenge" component={Challenge} /> */}
         <Route exact path="/vote" component={Vote} />
-        <Route exact path="/activities" component={Activities} />
-        <Route exact path="/search" component={Search} />
+        {/* <Route exact path="/activities" component={Activities} /> */}
+        {/* <Route exact path="/search" component={Search} /> */}
       </Switch>
     </AppWrapper>
   </Wrapper>

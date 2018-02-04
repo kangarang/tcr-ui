@@ -34,7 +34,7 @@ import {
   LOGOUT_SUCCESS,
   DELETE_LISTINGS,
   SET_CUSTOM_METHODS,
-  SEND_TRANSACTION_REQUESTED,
+  REQUEST_MODAL_METHOD,
   SEND_TRANSACTION,
   CALL_REQUESTED,
 } from './constants'
@@ -140,9 +140,9 @@ export function sendTransaction(payload) {
     payload,
   }
 }
-export function sendTransactionRequest(payload) {
+export function requestModalMethod(payload) {
   return {
-    type: SEND_TRANSACTION_REQUESTED,
+    type: REQUEST_MODAL_METHOD,
     payload,
   }
 }

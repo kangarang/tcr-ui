@@ -21,21 +21,23 @@ class Nav extends Component {
     return (
       <NavBar>
         <NavLink to="/"/>
+        <NavLink to="/"/>
+        <NavLink to="/"/>
         <NavLink strict to="/">
           Home
         </NavLink>
-        <NavLink activeStyle={styles.active} to="/challenge">
+        {/* <NavLink activeStyle={styles.active} to="/challenge">
           Challenge
-        </NavLink>
+        </NavLink> */}
         <NavLink activeStyle={styles.active} to="/vote">
           Vote
         </NavLink>
         {/* <NavLink activeStyle={styles.active} to="/activities">
           Activities
         </NavLink> */}
-        <NavLink activeStyle={styles.active} to="/search">
+        {/* <NavLink activeStyle={styles.active} to="/search">
           Registry
-        </NavLink>
+        </NavLink> */}
       </NavBar>
     )
   }

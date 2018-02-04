@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-// import NetworkStatus from 'react-web3-network-status'
 
 import Login from '../Login'
 import messages from '../messages'
@@ -17,9 +16,14 @@ import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 import UserInfo from '../../components/UserInfo'
 
-import tcrWave from '../../assets/tcr-wave.jpg'
+// import tcrWave from '../../assets/tcr-wave.jpg'
 
-import { setupEthereum, sendTransactionRequest, sendTransaction, callRequested } from '../../actions'
+import {
+  setupEthereum,
+  requestModalMethod,
+  sendTransaction,
+  callRequested,
+} from '../../actions'
 
 import {
   selectError,
@@ -31,6 +35,7 @@ import {
   selectEthjs,
   selectRequest,
   selectPrerequisites,
+  selectCandidates,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -42,56 +47,53 @@ class Home extends Component {
     super(props)
     this.state = {
       registryAddress: '',
-      openModal: false
+      modalIsOpen: false,
     }
   }
-
   componentDidMount() {
     this.props.onSetupEthereum()
-    console.log('Home props:', this.props)
-  }
-
-  handleChangeRegistryAddress = e => {
-    this.setState({
-      registryAddress: e.target.value,
-    })
-  }
-
-  handleOpenUDapp = e => {
-    this.props.onSendTransactionRequest({
-      method: e,
-    })
   }
 
   handleCall = e => {
     console.log('call:', e)
     this.props.onCall(e)
   }
-
   handleSendTransaction = e => {
     console.log('send txn:', e)
     this.props.onSendTransaction(e)
   }
 
-  handleClick = e => {
-    console.log('handle home click', e)
-    this.props.onSendTransactionRequest(e)
+  handleClickListing = e => {
+    console.log('click listing', e)
+    this.props.onRequestModalMethod(e)
     this.setState({
-      openModal: true,
+      modalIsOpen: 'apply',
     })
   }
 
-  handleLogin() {
-    console.log('login')
+  handleAfterOpen = () => {
+    console.log('after open')
+  }
+  handleRequestClose = () => {
+    console.log('request close')
+    this.setState({ modalIsOpen: false })
+  }
+  openModal = () => {
+    this.props.onRequestModalMethod({method: 'apply', context: {}})
+    this.setState({ modalIsOpen: 'apply' })
+  }
+  closeModal = () => {
+    this.setState({ modalIsOpen: false })
   }
 
   render() {
     const {
-      account,
+      // account,
       wallet,
-      contracts,
+      // contracts,
       whitelist,
-      ecRecovered,
+      // ecRecovered,
+      candidates,
       request,
     } = this.props
 
@@ -105,7 +107,7 @@ class Home extends Component {
     return (
       <div>
         <HomeWrapper>
-          {/* {ecRecovered && (
+          {/* {!ecRecovered && (
             <Login
               execute={this.handleLogin}
               network={wallet.get('network')}
@@ -129,7 +131,8 @@ class Home extends Component {
           <UserInfo {...this.props} />
 
           <UDapp
-            isOpen={this.state.openModal}
+            modalIsOpen={this.state.modalIsOpen}
+            default={'apply'}
             messages={messages.apply}
             defaultMethods={methods.apply.actions}
             actions={customMethods}
@@ -137,10 +140,32 @@ class Home extends Component {
             networkId={wallet.get('network')}
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
-            onOpenUDapp={this.handleOpenUDapp}
+            onRequestClose={this.handleRequestCloseModal}
+            onAfterOpen={this.handleAfterOpen}
+            openModal={this.openModal}
+            closeModal={this.closeModal}
             {...this.props}
           />
 
+          <H2>
+            {'Applicants ('}
+            {candidates.size}
+            {')'}
+          </H2>
+          <FlexContainer>
+            {candidates.size > 0 &&
+              candidates.map(log => (
+                <Section key={log.get('listing')}>
+                  <Listing
+                    latest={log.get('latest')}
+                    owner={log.get('owner')}
+                    listing={log.get('listing')}
+                    whitelisted={log.getIn(['latest', 'whitelisted'])}
+                    handleClick={this.handleClickListing}
+                  />
+                </Section>
+              ))}
+          </FlexContainer>
           <H2>
             {'Registry ('}
             {whitelist.size}
@@ -155,7 +180,7 @@ class Home extends Component {
                     owner={log.get('owner')}
                     listing={log.get('listing')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
-                    handleClick={this.handleClick}
+                    handleClick={this.handleClickListing}
                   />
                 </Section>
               ))}
@@ -169,7 +194,7 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
-    onSendTransactionRequest: e => dispatch(sendTransactionRequest(e)),
+    onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
     onCall: payload => dispatch(callRequested(payload)),
   }
@@ -184,6 +209,7 @@ const mapStateToProps = createStructuredSelector({
   ecRecovered: selectECRecovered,
   ethjs: selectEthjs,
   request: selectRequest,
+  candidates: selectCandidates,
   prerequisites: selectPrerequisites,
 })
 

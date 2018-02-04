@@ -15,7 +15,7 @@ import {
   LOGOUT_SUCCESS,
   LOGIN_SUCCESS,
   SET_CUSTOM_METHODS,
-  SEND_TRANSACTION_REQUESTED,
+  REQUEST_MODAL_METHOD,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -76,7 +76,7 @@ const initialState = fromJS({
  })
 
 function homeReducer(state = initialState, action) {
-  if (action.type === SEND_TRANSACTION_REQUESTED) {
+  if (action.type === REQUEST_MODAL_METHOD) {
     console.log('action', action)
   }
 
@@ -85,7 +85,7 @@ function homeReducer(state = initialState, action) {
       return state.setIn(['error', 'type'], true)
     // case SET_CUSTOM_METHODS:
     //   return state.set('customMethods', fromJS(action.payload.customMethods))
-    case SEND_TRANSACTION_REQUESTED:
+    case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
     case LOGIN_SUCCESS:
       return state.set('ecRecovered', fromJS(true))

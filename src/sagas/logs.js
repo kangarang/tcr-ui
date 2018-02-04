@@ -14,13 +14,13 @@ import filterUtils from '../utils/filter_utils'
 import value_utils from '../utils/value_utils'
 import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
 
-let lastReadBlockNumber = 10
-// let lastReadBlockNumber = 1638476
-
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
+
+let lastReadBlockNumber = 10
+// let lastReadBlockNumber = 1638476
 
 function* getFreshLogs() {
   try {
@@ -74,6 +74,7 @@ function* pollController() {
   }
 }
 
+// call this every 15 seconds
 function* pollLogsSaga(action) {
   const ethjs = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
@@ -99,6 +100,7 @@ function* pollLogsSaga(action) {
   }
 }
 
+// async
 function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
@@ -139,6 +141,7 @@ function* handleLogs(sb, eb, topic, contract) {
   }
 }
 
+// compile
 async function buildListing(contract, block, dLog, i, txDetails) {
   try {
     // Get the listing struct from the mapping
