@@ -29,7 +29,7 @@ export const toEther = wei => Eth.fromWei(wei, 'ether')
 export const trimDecimalsThree = n =>
   (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
 
-export default {
+const unit_value_utils = {
   // convert FROM natural unit
   // (reading logs or an event)
   toUnitAmount: (amount, decimals) => {
@@ -80,3 +80,5 @@ export default {
 
   // base58Encode: o => bs58.encode(Buffer.from(JSON.stringify(o), 'utf8')),
 }
+
+export default unit_value_utils

@@ -13,10 +13,10 @@ import {
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
 
 import vote_utils from '../utils/vote_utils'
-import saveFile from '../utils/file_utils'
+import { saveFile } from '../utils/file_utils'
 
 export default function* udappSaga() {
-  yield takeEvery(SEND_TRANSACTION, sendEthjsTransaction)
+  yield takeEvery(SEND_TRANSACTION, sendTransactionSaga)
   yield takeEvery(CALL_REQUESTED, callUDappSaga)
 }
 
@@ -72,7 +72,17 @@ function* sendTransactionSaga(action) {
 
     const method = yield action.payload.method
     const args = yield action.payload.finalArgs
+    if (args.includes(undefined)) {
+      // prevPollID
+      args[args.length - 1] = yield call(
+        contract.contract.getInsertPointForNumTokens.call,
+        account,
+        args[2]
+      )
+    }
+    console.log('args', args)
     const nonce = yield call(ethjs.getTransactionCount, account)
+    console.log('nonce', nonce)
     const txData = yield EthAbi.encodeMethod(method, args)
     console.log('send txn txData', txData)
 
@@ -90,8 +100,6 @@ function* sendTransactionSaga(action) {
     console.log('error', error)
   }
 }
-
-
 
 // Deprecated
 // function* sendTransaction(action) {

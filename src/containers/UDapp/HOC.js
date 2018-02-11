@@ -35,12 +35,14 @@ const UDappHOC = WrappedComponent => {
 
     // this is a hack to make default values work
     componentWillReceiveProps(newProps) {
-      // console.log('HOC OLD PROPS:', this.props)
-      // console.log('HOC NEW PROPS:', newProps)
+      console.log('HOC OLD PROPS:', this.props)
+      console.log('HOC NEW PROPS:', newProps)
 
       if (newProps.request.get('context').size > 0) {
         const listingStr = newProps.request.getIn(['context', 'listing'])
         const _pollID = newProps.request.getIn(['context', 'latest', 'pollID'])
+
+        // if (newProps.request.)
         this.setState(prevState => ({
           ...prevState,
           [newProps.actions[0]]: {
@@ -48,6 +50,7 @@ const UDappHOC = WrappedComponent => {
             _listingHash: listingStr,
             _data: listingStr,
             _pollID,
+            // _prevPollID,
           },
         }))
       }
@@ -161,7 +164,6 @@ const UDappHOC = WrappedComponent => {
       if (inputNames.includes('_secretHash')) {
         const indexOfSecretHash = inputNames.indexOf('_secretHash')
         const salt = randInt(1e6, 1e8)
-        console.log('SALT SALT SALT: ', salt)
         const secretHash = vote_utils.getVoteSaltHash(
           args[indexOfSecretHash],
           salt.toString(10)

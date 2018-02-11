@@ -61,4 +61,4 @@ const log_utils = {
 
 }
 
-export defaultlog_utils 
+export default log_utils 

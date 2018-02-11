@@ -30,6 +30,7 @@ import {
   sendTransaction,
   requestModalMethod,
   callRequested,
+  commitVote,
 } from '../../actions'
 
 const VotingWrapper = styled.div`
@@ -55,7 +56,8 @@ class Voting extends Component {
   }
   handleSendTransaction = e => {
     console.log('confirm txn:', e)
-    this.props.onSendTransaction(e)
+    // this.props.onSendTransaction(e)
+    this.props.onTxCommitVote(e)
   }
 
   handleClickListing = e => {
@@ -138,6 +140,7 @@ function mapDispatchToProps(dispatch) {
   return {
     onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: e => dispatch(sendTransaction(e)),
+    onTxCommitVote: e => dispatch(commitVote(e)),
     onCall: e => dispatch(callRequested(e)),
   }
 }

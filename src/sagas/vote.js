@@ -18,7 +18,7 @@ import {
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
 
 import vote_utils from '../utils/vote_utils'
-import saveFile from '../utils/file_utils'
+import { saveFile } from '../utils/file_utils'
 
 export default function* voteSaga() {
   yield takeEvery(TX_COMMIT_VOTE, commitVoteSaga)
@@ -37,7 +37,8 @@ function* commitVoteSaga(action) {
     } else if (action.payload.contract === 'voting') {
       contract = yield select(selectVoting)
     }
-    console.log('commitVote contracts:', contract)
+    console.log('commitVote contract:', contract)
+
     const method = yield action.payload.method
     const args = yield action.payload.finalArgs
 
@@ -59,8 +60,9 @@ function* saveFileSaga(action, args) {
   const account = yield select(selectAccount)
 
   const pollID = args[0]
-  const voteOption = args[1]
+  const secretHash = args[1]
   const numTokens = args[2]
+  console.log('args', args)
 
   // grab the correct position in the DLL
   const prevPollID = yield call(
@@ -68,20 +70,24 @@ function* saveFileSaga(action, args) {
     account,
     numTokens
   )
+  console.log('prevPollID', prevPollID)
 
   // grab the poll from the mapping
-  const pollStruct = yield call(voting.pollMap.call, pollID)
+  const pollStruct = yield call(voting.contract.pollMap.call, pollID)
+  console.log('pollStruct', pollStruct)
   // record expiry dates
-  const commitEndDateString = vote_utils.getEndDateString(pollStruct[0])
-  const revealEndDateString = vote_utils.getEndDateString(pollStruct[1])
+  const commitEndDateString = vote_utils.getEndDateString(
+    pollStruct[0].toNumber()
+  )
+  const revealEndDateString = vote_utils.getEndDateString(
+    pollStruct[1].toNumber()
+  )
+  console.log('commitEndDateString', commitEndDateString)
 
-  // random salt/secretHash generator
   const salt = randInt(1e6, 1e8)
-  const secretHash = vote_utils.getVoteSaltHash(voteOption, salt)
 
   const json = {
-    listing: action.payload.listing,
-    voteOption,
+    // listing: action.payload.listing,
     salt: salt.toString(10),
     pollID,
     pollStruct,
@@ -90,7 +96,7 @@ function* saveFileSaga(action, args) {
     secretHash,
   }
 
-  const listingUnderscored = json.listing.replace('.', '_')
+  const listingUnderscored = action.payload.listing.replace('.', '_')
   const filename = `${listingUnderscored}--pollID_${
     json.pollID
   }--commitEnd_${commitEndDateString}--commitVote.json`
@@ -123,25 +129,21 @@ function* revealVoteSaga(action) {
   // console.log('action', action)
   // const ethjs = yield select(selectEthjs)
   // const account = yield select(selectAccount)
-
   // let contract
   // if (action.payload.contract === 'registry') {
   //   contract = yield select(selectRegistry)
   // } else if (action.payload.contract === 'voting') {
   //   contract = yield select(selectVoting)
   // }
-
   // const method = action.payload.method
   // const args = action.payload.finalArgs
   // const txData = yield call(EthAbi.encodeMethod, method, args)
   // console.log('call txData', txData)
-
   // const payload = {
   //   from: account,
   //   to: contract.address,
   //   data: txData,
   // }
-
   // const result = yield call(ethjs.call, payload, 'latest')
   // const decint = parseInt(result, 10)
   // const hexint = parseInt(result, 16)

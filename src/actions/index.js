@@ -4,7 +4,6 @@ import {
   UDAPP_ERROR,
   LOGIN_ERROR,
   GET_ETHEREUM,
-
   SET_ETHEREUM_PROVIDER,
   SET_WALLET,
   SET_CONTRACTS,
@@ -18,14 +17,12 @@ import {
   POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
   NEW_ARRAY,
-
   TX_APPROVE,
   TX_APPLY,
   TX_CHALLENGE,
   TX_COMMIT_VOTE,
   TX_UPDATE_STATUS,
   TX_CHECK_TEST,
-
   NEW_ITEM,
   CHANGE_ITEM,
   CHANGE_ITEMS,
@@ -38,7 +35,6 @@ import {
   SEND_TRANSACTION,
   CALL_REQUESTED,
 } from './constants'
-
 
 export function setupEthereum(network) {
   return {
@@ -74,7 +70,7 @@ export function setEthereumProvider(payload) {
 export function pollLogsRequest(payload) {
   return {
     type: POLL_LOGS_REQUEST,
-    payload
+    payload,
   }
 }
 export function udappError(error) {
@@ -185,12 +181,10 @@ export function challengeListing(listing) {
     listing,
   }
 }
-export function commitVote(listing, pollID, amount) {
+export function commitVote(payload) {
   return {
     type: TX_COMMIT_VOTE,
-    listing,
-    pollID,
-    amount,
+    payload,
   }
 }
 

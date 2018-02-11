@@ -35,11 +35,11 @@ const Method = props => {
         )}
       </MethodDescription>
 
-      <MethodDescription>
+      {/* <MethodDescription>
         <div>
           {translate(`ins_${props.method.name}`)}
         </div>
-      </MethodDescription>
+      </MethodDescription> */}
       {props.method.inputs.map((input, ind) => (
         <form
           key={input.name + ind + props.method.name}

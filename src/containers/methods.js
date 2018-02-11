@@ -13,7 +13,7 @@ export default {
   },
   revealVote: {
     actions: ['revealVote'],
-    warning: ['approve'],
+    warning: ['approve', 'requestVotingRights'],
   },
   vote: {
     actions: [
@@ -27,6 +27,8 @@ export default {
       'rescueTokens',
       'commitVote',
       'revealVote',
+      'approve',
+      'requestVotingRights',
     ],
     warning: ['requestVotingRights'],
   },

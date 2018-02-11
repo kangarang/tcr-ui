@@ -1,6 +1,6 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
-import saveFile from './file_utils'
+import { saveFile } from './file_utils'
 import unit_value_utils, { randInt } from './unit-value-conversions'
 
 const vote_utils = {
