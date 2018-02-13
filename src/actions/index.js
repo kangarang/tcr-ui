@@ -17,12 +17,6 @@ import {
   POLL_LOGS_REQUEST,
   SET_DECODED_LOGS,
   NEW_ARRAY,
-  TX_APPROVE,
-  TX_APPLY,
-  TX_CHALLENGE,
-  TX_COMMIT_VOTE,
-  TX_UPDATE_STATUS,
-  TX_CHECK_TEST,
   NEW_ITEM,
   CHANGE_ITEM,
   CHANGE_ITEMS,
@@ -54,12 +48,6 @@ export function setWallet(payload) {
     payload,
   }
 }
-export function changeSliderValue(value) {
-  return {
-    type: CHANGE_SLIDER_VALUE,
-    value,
-  }
-}
 export function setEthereumProvider(payload) {
   return {
     type: SET_ETHEREUM_PROVIDER,
@@ -67,12 +55,6 @@ export function setEthereumProvider(payload) {
   }
 }
 
-export function pollLogsRequest(payload) {
-  return {
-    type: POLL_LOGS_REQUEST,
-    payload,
-  }
-}
 export function udappError(error) {
   return {
     type: UDAPP_ERROR,
@@ -83,6 +65,18 @@ export function logsError(logType, error) {
   return {
     type: LOGS_ERROR,
     logType,
+    error,
+  }
+}
+export function loginError(error) {
+  return {
+    type: LOGIN_ERROR,
+    error,
+  }
+}
+export function contractError(error) {
+  return {
+    type: CONTRACT_ERROR,
     error,
   }
 }
@@ -98,21 +92,15 @@ export function loginSuccess(payload) {
     payload,
   }
 }
-export function loginError(error) {
-  return {
-    type: LOGIN_ERROR,
-    error,
-  }
-}
-export function contractError(error) {
-  return {
-    type: CONTRACT_ERROR,
-    error,
-  }
-}
 export function getProviderRequest() {
   return {
     type: GET_ETH_PROVIDER,
+  }
+}
+export function pollLogsRequest(payload) {
+  return {
+    type: POLL_LOGS_REQUEST,
+    payload,
   }
 }
 
@@ -142,59 +130,14 @@ export function requestModalMethod(payload) {
     payload,
   }
 }
-export function setCustomMethods(payload) {
-  return {
-    type: SET_CUSTOM_METHODS,
-    payload,
-  }
-}
 
-// User interactions
-export function executeMethod(payload) {
-  return {
-    type: EXECUTE_METHOD_REQUEST,
-    payload,
-  }
-}
-export function applyListing(listing, deposit) {
-  return {
-    type: TX_APPLY,
-    listing,
-    deposit,
-  }
-}
 export function deleteListings(payload) {
   return {
     type: DELETE_LISTINGS,
     payload,
   }
 }
-export function handleActionClick(payload) {
-  return {
-    type: CLICK_ACTION_REQUEST,
-    payload,
-  }
-}
-export function challengeListing(listing) {
-  return {
-    type: TX_CHALLENGE,
-    listing,
-  }
-}
-export function commitVote(payload) {
-  return {
-    type: TX_COMMIT_VOTE,
-    payload,
-  }
-}
-
 // Token actions
-export function requestApproval(amount) {
-  return {
-    type: TX_APPROVE,
-    amount,
-  }
-}
 export function getTokensAllowed(payload) {
   return {
     type: GET_TOKENS_ALLOWED,
@@ -204,18 +147,6 @@ export function getTokensAllowed(payload) {
 export function setTokensAllowed(payload) {
   return {
     type: SET_TOKENS_ALLOWED,
-    payload,
-  }
-}
-export function setDecodedLogs(payload) {
-  return {
-    type: SET_DECODED_LOGS,
-    payload,
-  }
-}
-export function newItem(payload) {
-  return {
-    type: NEW_ITEM,
     payload,
   }
 }
@@ -231,22 +162,4 @@ export function updateItems(payload) {
     payload,
   }
 }
-export function updateItem(payload) {
-  return {
-    type: CHANGE_ITEM,
-    payload,
-  }
-}
 
-export function checkTest(listing) {
-  return {
-    type: TX_CHECK_TEST,
-    listing,
-  }
-}
-export function updateStatus(listing) {
-  return {
-    type: TX_UPDATE_STATUS,
-    listing,
-  }
-}
