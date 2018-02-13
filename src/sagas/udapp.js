@@ -1,7 +1,7 @@
 import EthAbi from 'ethjs-abi'
 
 import { select, all, call, takeEvery } from 'redux-saga/effects'
-import { SEND_TRANSACTION, CALL_REQUESTED } from '../actions/constants'
+import { SEND_TRANSACTION, CALL_REQUESTED, TX_APPLY, TX_CHALLENGE, TX_COMMIT_VOTE, TX_REVEAL_VOTE, TX_REQUEST_VOTING_RIGHTS } from '../actions/constants'
 
 import {
   selectEthjs,
@@ -16,8 +16,13 @@ import vote_utils from '../utils/vote_utils'
 import { saveFile } from '../utils/file_utils'
 
 export default function* udappSaga() {
-  yield takeEvery(SEND_TRANSACTION, sendTransactionSaga)
+  yield takeEvery(SEND_TRANSACTION, sendTransaction)
+  yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)
   yield takeEvery(CALL_REQUESTED, callUDappSaga)
+  yield takeEvery(TX_APPLY, applySaga)
+  yield takeEvery(TX_CHALLENGE, challengeSaga)
+  yield takeEvery(TX_COMMIT_VOTE, commitVoteSaga)
+  yield takeEvery(TX_REVEAL_VOTE, revealVoteSaga)
 }
 
 function* callUDappSaga(action) {
@@ -34,7 +39,7 @@ function* callUDappSaga(action) {
   console.log('callUDapp contracts:', contract)
 
   const method = action.payload.method
-  const args = action.payload.finalArgs
+  const args = action.payload.args
   const txData = yield call(EthAbi.encodeMethod, method, args)
   console.log('call txData', txData)
 
@@ -54,76 +59,105 @@ function* callUDappSaga(action) {
   console.log('callresult', callResult)
 }
 
-// adapted from:
-// https://github.com/kumavis/udapp/blob/master/index.js#L63
-function* sendTransactionSaga(action) {
+function* applySaga(action) {
+  const registry = yield select(selectRegistry)
+
+  const listingString = action.payload.args[0]
+  const actualAmount = unit_value_utils.toNaturalUnitAmount(action.payload.args[1], 18)
+  const listingHash = vote_utils.getListingHash(listingString)
+
+  const finalArgs = [listingHash, actualAmount, listingString]
+
+  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+  const to = registry.address
+
+  yield call(sendTransactionSaga, txData, to)
+}
+function* challengeSaga(action) {
+  const listingString = action.payload.args[0]
+  const listingHash = vote_utils.getListingHash(listingString)
+  const finalArgs = [listingHash, listingString]
+
+  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+
+  const registry = yield select(selectRegistry)
+
+  yield call(sendTransactionSaga, txData, registry.address)
+}
+function* commitVoteSaga(action) {
+  const account = yield select(selectAccount)
+  const voting = yield select(selectVoting)
+
+  const pollID = action.payload.args[0]
+  const voteOption = action.payload.args[1]
+  const numTokens = action.payload.args[2]
+  // const numTokens = unit_value_utils.toNaturalUnitAmount(action.payload.args[2], 18)
+
+  const salt = randInt(1e6, 1e8)
+  const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
+  console.log('voting', voting)
+  const prevPollID = yield call(voting.contract.getInsertPointForNumTokens.call, account, numTokens)
+  console.log('prevPollID', prevPollID)
+
+  const finalArgs = [pollID, secretHash, numTokens.toString(10), prevPollID.toString(10)]
+
+  console.log('finalArgs', finalArgs)
+  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+
+  yield call(sendTransactionSaga, txData, voting.address)
+}
+function* revealVoteSaga(action) {
+  console.log('reveal action', action)
+  // const listingString = action.payload.args[0]
+  // const actualAmount = unit_value_utils.toNaturalUnitAmount(action.payload.args[1], 18)
+  // const listingHash = vote_utils.getListingHash(listingString)
+  // const finalArgs = [listingHash, actualAmount, listingString]
+
+  // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+
+  // const registry = yield select(selectRegistry)
+  // const to = registry.address
+
+  // yield call(sendTransactionSaga, txData, to)
+}
+function* requestVotingRightsSaga(action) {
   try {
     const ethjs = yield select(selectEthjs)
-    const account = yield select(selectAccount)
-    console.log('action', action)
+    const from = yield select(selectAccount)
+    const voting = yield select(selectVoting)
 
-    let contract
-    if (action.payload.contract === 'registry') {
-      contract = yield select(selectRegistry)
-    } else if (action.payload.contract === 'voting') {
-      contract = yield select(selectVoting)
-    }
-    console.log('ethjs send TXN contract', contract)
+    const tokens = unit_value_utils.toNaturalUnitAmount(action.payload.args[0], 18)
 
-    const method = yield action.payload.method
-    const args = yield action.payload.finalArgs
-    if (args.includes(undefined)) {
-      // prevPollID
-      args[args.length - 1] = yield call(
-        contract.contract.getInsertPointForNumTokens.call,
-        account,
-        args[2]
-      )
-    }
-    console.log('args', args)
-    const nonce = yield call(ethjs.getTransactionCount, account)
-    console.log('nonce', nonce)
-    const txData = yield EthAbi.encodeMethod(method, args)
-    console.log('send txn txData', txData)
+    const nonce = yield call(ethjs.getTransactionCount, from)
+    const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
 
-    const payload = yield {
-      from: account,
+    yield call(sendTransactionSaga, txData, voting.address)
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+function* sendTransactionSaga(data, to) {
+  console.log('send data', data)
+  try {
+    const ethjs = yield select(selectEthjs)
+    const from = yield select(selectAccount)
+
+    const nonce = yield call(ethjs.getTransactionCount, from)
+
+    const payload = {
+      to,
+      from,
       gas: 450000,
       gasPrice: 25000000000,
-      to: contract.address,
-      data: txData,
       nonce,
+      data,
     }
+
     const txHash = yield call(ethjs.sendTransaction, payload)
     console.log('txHash', txHash)
   } catch (error) {
     console.log('error', error)
   }
 }
-
-// Deprecated
-// function* sendTransaction(action) {
-//   const txType = action.payload.type
-//   if (txType === 'tc') {
-//     yield call(sendContractTransaction, action)
-//   } else if (txType === 'ethjs') {
-//     yield call(sendTransactionSaga, action)
-//   }
-// }
-
-// function* sendContractTransaction(action) {
-//   try {
-//     const contract = yield select(selectContract(action.payload.contract))
-
-//     const method = yield action.payload.method.name
-//     const args = yield action.payload.finalArgs
-//     console.log('SEND TX REQUEST', action)
-//     console.log('method', method)
-
-//     console.log('contract', contract)
-//     const receipt = yield call([contract.contract, method], ...args)
-//     console.log('receipt', receipt)
-//   } catch (err) {
-//     console.log('err', err)
-//   }
-// }
+function* sendTransaction(action) {
+}

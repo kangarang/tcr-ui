@@ -75,27 +75,26 @@ const UDappHOC = WrappedComponent => {
     getMethodArgs = method =>
       method.inputs.map(input => this.state[method.name][input.name])
 
-    // adapted from:
-    // https://github.com/kumavis/udapp/blob/master/index.js#L158
     handleHOCCall = async (e, method, contract) => {
       e.preventDefault()
       const args = await this.getMethodArgs(method)
-      const inputNames = method.inputs.map(inp => inp.name)
-      const finalArgs = this.checkInputs(inputNames, args, method.name)
-      this.props.handleCall({ method, finalArgs, contract })
+      this.props.handleCall({ method, contract, args })
     }
-
     handleHOCSendTransaction = async (e, method, contract) => {
       e.preventDefault()
       const args = this.getMethodArgs(method)
-      const inputNames = method.inputs.map(inp => inp.name)
-      const finalArgs = this.checkInputs(inputNames, args, method.name)
-      this.props.handleSendTransaction({
-        method,
-        finalArgs,
-        contract,
-        type: 'ethjs',
-      })
+
+      if (method.name === 'apply') {
+        this.props.handleApply({ method, args })
+      } else if (method.name === 'challenge') {
+        this.props.handleChallenge({ method, args })
+      } else if (method.name === 'commitVote') {
+        this.props.handleCommitVote({ method, args })
+      } else if (method.name === 'revealVote') {
+        this.props.handleRevealVote({ method, args })
+      } else if (method.name === 'requestVotingRights') {
+        this.props.handleRequestVotingRights({ method, args })
+      }
     }
 
     render() {
@@ -112,66 +111,6 @@ const UDappHOC = WrappedComponent => {
           {...this.props}
         />
       )
-    }
-
-    // inputNames:  ["_listingHash", "_amount", "_data"]
-    // args:        ["fdsaf", "123", undefined]
-    checkInputs = (inputNames, args, methodName) => {
-      if (inputNames.includes('_listingHash')) {
-        console.log('Inputs require bytes32. Auto-hashing...')
-        const indexOfListingHash = inputNames.indexOf('_listingHash')
-        const listingString = args[indexOfListingHash] // "fdsaf"
-        const listingHash = vote_utils.getListingHash(listingString) // '0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d'
-        args[indexOfListingHash] = listingHash // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", undefined]
-
-        if (inputNames.includes('_data')) {
-          const indexOfData = inputNames.indexOf('_data')
-          args[indexOfData] = listingString // ["0xa3799f91e5495128a918f6c7f5aef65564384240824d81244244a4ecde60765d", "123", "fdsaf"]
-        }
-      }
-
-      if (inputNames.includes('_amount')) {
-        const indexOfAmount = inputNames.indexOf('_amount')
-        const actualAmount = unit_value_utils.toNaturalUnitAmount(
-          args[indexOfAmount],
-          18
-        )
-        args[indexOfAmount] = actualAmount.toString(10)
-      }
-      if (inputNames.includes('_value')) {
-        const indexOfValue = inputNames.indexOf('_value')
-        const actualValue = unit_value_utils.toNaturalUnitAmount(
-          args[indexOfValue],
-          18
-        )
-        args[indexOfValue] = actualValue.toString(10)
-      }
-      if (
-        inputNames.includes(
-          '_numTokens' &&
-            (methodName === 'requestVotingRights' ||
-              methodName === 'withdrawVotingRights')
-        )
-      ) {
-        const indexOfNumTokens = inputNames.indexOf('_numTokens')
-        const actualNumTokens = unit_value_utils.toNaturalUnitAmount(
-          args[indexOfNumTokens],
-          18
-        )
-        args[indexOfNumTokens] = actualNumTokens.toString(10)
-      }
-
-      if (inputNames.includes('_secretHash')) {
-        const indexOfSecretHash = inputNames.indexOf('_secretHash')
-        const salt = randInt(1e6, 1e8)
-        const secretHash = vote_utils.getVoteSaltHash(
-          args[indexOfSecretHash],
-          salt.toString(10)
-        )
-        alert('SALT: ' + salt)
-        args[indexOfSecretHash] = secretHash
-      }
-      return args
     }
   }
 }

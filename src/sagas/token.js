@@ -10,7 +10,7 @@ import {
 import unit_value_utils from '../utils/unit-value-conversions'
 
 export default function* tokenSaga() {
-  // yield takeEvery(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
+  yield takeEvery(GET_TOKENS_ALLOWED, updateTokenBalancesSaga)
 }
 
 export function* updateTokenBalancesSaga(spender) {
@@ -29,6 +29,8 @@ export function* updateTokenBalancesSaga(spender) {
       voting.contract.voteTokenBalance.call,
       owner
     )
+    const tokenVotingRights = unit_value_utils.toUnitAmount(votingRights, 18)
+
     const balance = unit_value_utils
       .toUnitAmount(tokenBalance, token.decimalPower)
       .toString(10)
@@ -48,7 +50,7 @@ export function* updateTokenBalancesSaga(spender) {
         spender,
         allowance,
         balance,
-        votingRights,
+        votingRights: tokenVotingRights,
         prerequisites,
       })
     )

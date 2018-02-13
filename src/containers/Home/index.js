@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
 import Login from '../Login'
 import messages from '../messages'
@@ -24,6 +25,10 @@ import {
   sendTransaction,
   callRequested,
 } from '../../actions'
+import {
+  txApply,
+  txChallenge,
+} from '../../actions/transactions'
 
 import {
   selectError,
@@ -61,6 +66,12 @@ class Home extends Component {
   handleSendTransaction = e => {
     console.log('send txn:', e)
     this.props.onSendTransaction(e)
+  }
+  handleChallenge = (e) => {
+    this.props.onTxChallenge(e)
+  }
+  handleApply = (e) => {
+    this.props.onTxApply(e)
   }
 
   handleClickListing = e => {
@@ -140,6 +151,8 @@ class Home extends Component {
             networkId={wallet.get('network')}
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
+            handleApply={this.handleApply}
+            handleChallenge={this.handleChallenge}
             onRequestClose={this.handleRequestCloseModal}
             onAfterOpen={this.handleAfterOpen}
             openModal={this.openModal}
@@ -197,6 +210,8 @@ function mapDispatchToProps(dispatch) {
     onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
     onCall: payload => dispatch(callRequested(payload)),
+    onTxApply: payload => dispatch(txApply(payload)),
+    onTxChallenge: payload => dispatch(txChallenge(payload)),
   }
 }
 

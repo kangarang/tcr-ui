@@ -18,10 +18,10 @@ import {
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
 
 import vote_utils from '../utils/vote_utils'
-import { saveFile } from '../utils/file_utils'
+import saveFile from '../utils/file_utils'
 
 export default function* voteSaga() {
-  yield takeEvery(TX_COMMIT_VOTE, commitVoteSaga)
+  // yield takeEvery(TX_COMMIT_VOTE, commitVoteSaga)
   yield takeEvery(TX_REVEAL_VOTE, revealVoteSaga)
 }
 

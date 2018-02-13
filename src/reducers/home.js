@@ -14,7 +14,6 @@ import {
   LOGIN_ERROR,
   LOGOUT_SUCCESS,
   LOGIN_SUCCESS,
-  SET_CUSTOM_METHODS,
   REQUEST_MODAL_METHOD,
 } from '../actions/constants'
 

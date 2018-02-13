@@ -32,6 +32,11 @@ import {
   callRequested,
   commitVote,
 } from '../../actions'
+import {
+  txCommitVote,
+  txRevealVote,
+  txRequestVotingRights,
+} from '../../actions/transactions'
 
 const VotingWrapper = styled.div`
   padding: 1em;
@@ -56,8 +61,7 @@ class Voting extends Component {
   }
   handleSendTransaction = e => {
     console.log('confirm txn:', e)
-    // this.props.onSendTransaction(e)
-    this.props.onTxCommitVote(e)
+    this.props.onSendTransaction(e)
   }
 
   handleClickListing = e => {
@@ -74,6 +78,15 @@ class Voting extends Component {
   handleRequestClose = () => {
     console.log('request close')
     this.setState({ modalIsOpen: false })
+  }
+  handleRequestVotingRights = (e) => {
+    this.props.onTxRequestVotingRights(e)
+  }
+  handleCommitVote = (e) => {
+    this.props.onTxCommitVote(e)
+  }
+  handleRevealVote = (e) => {
+    this.props.onTxRevealVote(e)
   }
   openModal = () => {
     this.setState({ modalIsOpen: 'vote' })
@@ -105,6 +118,9 @@ class Voting extends Component {
           networkId={wallet.get('network')}
           handleSendTransaction={this.handleSendTransaction}
           handleCall={this.handleCall}
+          handleCommitVote={this.handleCommitVote}
+          handleRevealVote={this.handleRevealVote}
+          handleRequestVotingRights={this.handleRequestVotingRights}
           onRequestClose={this.handleRequestCloseModal}
           onAfterOpen={this.handleAfterOpen}
           openModal={this.openModal}
@@ -140,7 +156,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: e => dispatch(sendTransaction(e)),
-    onTxCommitVote: e => dispatch(commitVote(e)),
+    onTxCommitVote: payload => dispatch(txCommitVote(payload)),
+    onTxRequestVotingRights: payload => dispatch(txRequestVotingRights(payload)),
+    onTxRevealVote: payload => dispatch(txRevealVote(payload)),
     onCall: e => dispatch(callRequested(e)),
   }
 }
