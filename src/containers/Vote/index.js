@@ -89,6 +89,7 @@ class Voting extends Component {
     this.props.onTxRevealVote(e)
   }
   openModal = () => {
+    this.props.onRequestModalMethod({method: 'vote', context: {}})
     this.setState({ modalIsOpen: 'vote' })
   }
   closeModal = () => {

@@ -199,44 +199,52 @@ class UDapp extends Component {
                         </BoldInlineText>
                       </Item>
                     </FourItemGridContainer>
-
-                    <Item gR={6}>
-                      {visibleTokenMethods.map(one => (
-                        <Method
-                          key={`TokenMethod-${one.name}`}
-                          method={one}
-                          contract={'token'}
-                          {...this.props}
-                        />
-                      ))}
-                    </Item>
                   </Container>
 
-                  <Container>
-                    <Item gR={3}>
-                      {visibleRegistryMethods.map(one => (
-                        <Method
-                          key={`RegistryMethod-${one.name}`}
-                          method={one}
-                          contract={'registry'}
-                          {...this.props}
-                        />
-                      ))}
-                    </Item>
-                  </Container>
+                  {visibleTokenMethods.length > 0 && (
+                    <Container>
+                      <Item gR={6}>
+                        {visibleTokenMethods.map(one => (
+                          <Method
+                            key={`TokenMethod-${one.name}`}
+                            method={one}
+                            contract={'token'}
+                            {...this.props}
+                          />
+                        ))}
+                      </Item>
+                    </Container>
+                  )}
 
-                  <Container>
-                    <Item gR={4}>
-                      {visibleVotingMethods.map(one => (
-                        <Method
-                          key={`VotingMethod-${one.name}`}
-                          method={one}
-                          contract={'voting'}
-                          {...this.props}
-                        />
-                      ))}
-                    </Item>
-                  </Container>
+                  {visibleRegistryMethods.length > 0 && (
+                    <Container>
+                      <Item gR={3}>
+                        {visibleRegistryMethods.map(one => (
+                          <Method
+                            key={`RegistryMethod-${one.name}`}
+                            method={one}
+                            contract={'registry'}
+                            {...this.props}
+                          />
+                        ))}
+                      </Item>
+                    </Container>
+                  )}
+
+                  {visibleVotingMethods.length > 0 && (
+                    <Container>
+                      <Item gR={4}>
+                        {visibleVotingMethods.map(one => (
+                          <Method
+                            key={`VotingMethod-${one.name}`}
+                            method={one}
+                            contract={'voting'}
+                            {...this.props}
+                          />
+                        ))}
+                      </Item>
+                    </Container>
+                  )}
                 </BigContainer>
                 {/* <Item gR={5} gC={4}>
         <BoldInlineText>
@@ -256,7 +264,7 @@ class UDapp extends Component {
 
           <Button onClick={this.props.openModal}>{`UDAPP - ${
             this.props.messages.heading
-          }`}</Button>
+            }`}</Button>
         </Wrapper>
       </div>
     )

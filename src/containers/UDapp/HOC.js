@@ -35,8 +35,8 @@ const UDappHOC = WrappedComponent => {
 
     // this is a hack to make default values work
     componentWillReceiveProps(newProps) {
-      console.log('HOC OLD PROPS:', this.props)
-      console.log('HOC NEW PROPS:', newProps)
+      // console.log('HOC OLD PROPS:', this.props)
+      // console.log('HOC NEW PROPS:', newProps)
 
       if (newProps.request.get('context').size > 0) {
         const listingStr = newProps.request.getIn(['context', 'listing'])

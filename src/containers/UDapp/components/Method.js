@@ -22,7 +22,12 @@ const RedH3 = styled(H3)`
 // adapted from:
 // https://github.com/kumavis/udapp/blob/master/index.js#L310
 const Method = props => {
-  const hiddenInputs = ['_data', '_prevPollID']
+  let hiddenInputs
+  if (props.method.name !== 'commitVote' || props.method.name !== 'revealVote') {
+    hiddenInputs = ['_data', '_pollID', '_prevPollID']
+  } else {
+    hiddenInputs = ['_data', '_prevPollID']
+  }
   return (
     <div key={props.method.name} style={styles.udappMethod}>
       <RedH3>{`Function: ${props.method.name}`}</RedH3>
