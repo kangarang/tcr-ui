@@ -253,6 +253,20 @@ function* sendTransaction(action) {
       )
       args[indexOfValue] = actualValue.toString(10)
     }
+    if (
+      inputNames.includes(
+        '_numTokens' &&
+          (action.payload.method.name === 'requestVotingRights' ||
+            action.payload.method.name === 'withdrawVotingRights')
+      )
+    ) {
+      const indexOfNumTokens = inputNames.indexOf('_numTokens')
+      const actualNumTokens = unit_value_utils.toNaturalUnitAmount(
+        args[indexOfNumTokens],
+        18
+      )
+      args[indexOfNumTokens] = actualNumTokens.toString(10)
+    }
     let contract
     if (action.payload.contract === 'token') {
       contract = token
