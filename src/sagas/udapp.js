@@ -16,6 +16,7 @@ import {
   selectAccount,
   selectRegistry,
   selectVoting,
+  selectToken,
 } from '../selectors'
 
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
@@ -48,6 +49,9 @@ function* callUDappSaga(action) {
 
   const method = action.payload.method
   const args = action.payload.args
+  if (method.inputs[0].name === '_listingHash') {
+    args[0] = vote_utils.getListingHash(args[0])
+  }
   const txData = yield call(EthAbi.encodeMethod, method, args)
   console.log('call txData', txData)
 
@@ -64,7 +68,7 @@ function* callUDappSaga(action) {
   console.log('CALL (hex):', hexint)
 
   const callResult = hexint === 0 ? 'false' : hexint === 1 ? 'true' : decint
-  console.log('callresult', callResult)
+  alert(callResult)
 }
 
 function* applySaga(action) {
@@ -137,10 +141,9 @@ function* commitVoteSaga(action) {
   const listingUnderscored = action.payload.listing.replace('.', '_')
   const filename = `pollID-${json.pollID}_listing-${listingUnderscored}_commitVote_commitEndDate-${commitEndDateString}.json`
 
-  // Saves JSON commitVote file before sending transaction
-  yield call(saveFile, json, filename)
-
   // ethjs version
+  // Saves JSON commitVote file before sending transaction
+  // yield call(saveFile, json, filename)
   // const txHash = yield call(sendTransactionSaga, txData, voting.address)
 
   // truffle-contract version
@@ -212,4 +215,67 @@ function* sendTransactionSaga(data, to) {
   }
 }
 function* sendTransaction(action) {
+  console.log('send tx action', action)
+  try {
+    const ethjs = yield select(selectEthjs)
+    const from = yield select(selectAccount)
+    const registry = yield select(selectRegistry)
+    const token = yield select(selectToken)
+    const voting = yield select(selectVoting)
+
+    const nonce = yield call(ethjs.getTransactionCount, from)
+    const args = action.payload.args
+    const inputNames = action.payload.method.inputs.map(inp => inp.name)
+
+    if (inputNames.includes('_listingHash')) {
+      const indexOfListingHash = inputNames.indexOf('_listingHash')
+      const listingString = args[indexOfListingHash]
+      args[indexOfListingHash] = vote_utils.getListingHash(listingString)
+      if (inputNames.includes('_data')) {
+        const indexOfData = inputNames.indexOf('_data')
+        args[indexOfData] = listingString
+      }
+    }
+    
+    if (inputNames.includes('_amount')) {
+      const indexOfAmount = inputNames.indexOf('_amount')
+      const actualAmount = unit_value_utils.toNaturalUnitAmount(
+        args[indexOfAmount],
+        18
+      )
+      args[indexOfAmount] = actualAmount.toString(10)
+    }
+    if (inputNames.includes('_value')) {
+      const indexOfValue = inputNames.indexOf('_value')
+      const actualValue = unit_value_utils.toNaturalUnitAmount(
+        args[indexOfValue],
+        18
+      )
+      args[indexOfValue] = actualValue.toString(10)
+    }
+    let contract
+    if (action.payload.contract === 'token') {
+      contract = token
+    } else if (action.payload.contract === 'voting') {
+      contract = voting
+    } else {
+      contract = registry
+    }
+
+    const data = EthAbi.encodeMethod(action.payload.method, args)
+
+    const payload = {
+      to: contract.address,
+      from,
+      gas: 450000,
+      gasPrice: 25000000000,
+      nonce,
+      data,
+    }
+
+    const txHash = yield call(ethjs.sendTransaction, payload)
+    console.log('txHash', txHash)
+  } catch (error) {
+    console.log('error', error)
+  }
 }

@@ -32,6 +32,9 @@ export const selectAccount = createSelector(selectWallet, wallet =>
 )
 
 // Contracts
+export const selectMinDeposit = createSelector(selectHome, homeState =>
+  homeState.get('minDeposit')
+)
 export const selectAllContracts = createSelector(selectHome, homeState =>
   homeState.get('contracts')
 )

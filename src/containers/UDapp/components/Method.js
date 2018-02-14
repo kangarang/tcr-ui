@@ -5,6 +5,7 @@ import Button from '../../../components/Button'
 import translate, { translateRaw } from '../../../translations/index'
 import styled from 'styled-components'
 import { colors } from '../../../colors'
+import unit_value_utils, { BN } from '../../../utils/unit-value-conversions';
 
 const styles = {
   udappMethod: {
@@ -13,9 +14,9 @@ const styles = {
 }
 
 const MethodDescription = styled.div`
-  padding: 0 2em;
+  padding: 0 1em;
 `
-const RedH3 = styled(H3)`
+const ColorH3 = styled(H3) `
   color: ${colors.lightBlue};
 `
 
@@ -30,19 +31,26 @@ const Method = props => {
   }
   return (
     <div key={props.method.name} style={styles.udappMethod}>
-      <RedH3>{`Function: ${props.method.name}`}</RedH3>
+      <ColorH3>{`${props.method.name}`}</ColorH3>
 
       <MethodDescription>
         {props.method.constant ? (
-          <div>{translate(`call_${props.method.name}`)}</div>
+          <div>
+            {translate(`call_${props.method.name}`)}
+          </div>
         ) : (
-          <div>{translate(`tx_${props.method.name}`)}</div>
-        )}
+            <div>
+              {translate(`tx_${props.method.name}`)}
+              {props.method.name === 'apply' ? (
+                unit_value_utils.toUnitAmount(BN(props.minDeposit), 18).toString(10) + ' tokens'
+              ) : ''}
+            </div>
+          )}
       </MethodDescription>
 
       {/* <MethodDescription>
         <div>
-          {translate(`ins_${props.method.name}`)}
+          {translateRaw(`ins_${props.method.name}`)}
         </div>
       </MethodDescription> */}
       {props.method.inputs.map((input, ind) => (
@@ -76,14 +84,14 @@ const Method = props => {
           {'CALL'}
         </Button>
       ) : (
-        <Button
-          onClick={e =>
-            props.hocSendTransaction(e, props.method, props.contract)
-          }
-        >
-          {'SEND TXN'}
-        </Button>
-      )}
+          <Button
+            onClick={e =>
+              props.hocSendTransaction(e, props.method, props.contract)
+            }
+          >
+            {'SEND TXN'}
+          </Button>
+        )}
 
       {props.method.constant &&
         props.currentMethod === props.method.name &&

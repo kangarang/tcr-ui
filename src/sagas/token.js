@@ -52,6 +52,7 @@ export function* updateTokenBalancesSaga(spender) {
         balance,
         votingRights: tokenVotingRights,
         prerequisites,
+        minDeposit,
       })
     )
   } catch (err) {

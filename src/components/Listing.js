@@ -14,7 +14,7 @@ import {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 3fr 4fr 4fr 5fr;
+  grid-template-columns: 1fr 5fr 4fr 4fr 5fr;
   grid-gap: 15px;
   padding: 0.7em;
   border: 2px solid #${props => props.txHash && props.txHash.slice(-6)};
@@ -33,7 +33,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
 
     <Item gC={3}>
       <BoldInlineText>
-        {'Applicant address: '}
+        {'Applicant: '}
         <A
           target="_blank"
           href={`https://rinkeby.etherscan.io/address/${owner}`}
@@ -47,7 +47,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       <BoldInlineText>
         {latest.get('pollID') && (
           <span>
-            {'Challenger address: '}
+            {'Challenger: '}
             <A
               target="_blank"
               href={`https://rinkeby.etherscan.io/address/${latest.get(
@@ -60,7 +60,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         )}
       </BoldInlineText>
     </Item>
-    {/* 
+    
     {latest.get('numTokens') && (
       <Item gC={3}>
         <BoldInlineText>
@@ -69,7 +69,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         </BoldInlineText>
       </Item>
     )}
-    <Item gC={4}>
+    {/* <Item gC={4}>
       <BoldInlineText>
         {'Block number: '}
         {latest.get('blockNumber')}
@@ -101,11 +101,9 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
               })
             }
           >
-            {'Commit Vote for Poll: ' + latest.get('pollID')}
+            {'Commit Vote'}
           </Button>
-        ) : (
-          ''
-        )}
+        ) : ''}
       </BoldInlineText>
     </Item>
 

@@ -20,7 +20,7 @@ import {
 const initialState = fromJS({
   wallet: {
     account: '',
-    network: '420',
+    network: '4',
     ethBalance: '',
     token: {
       decimals: '',
@@ -72,6 +72,7 @@ const initialState = fromJS({
   },
   prerequisites: {},
   udappMethods: [],
+  minDeposit: '',
  })
 
 function homeReducer(state = initialState, action) {
@@ -155,6 +156,7 @@ function homeReducer(state = initialState, action) {
           fromJS(action.payload.allowance)
         )
         .set('prerequisites', fromJS(action.payload.prerequisites))
+        .set('minDeposit', fromJS(action.payload.minDeposit))
         .setIn(
           ['wallet', 'token', 'tokenBalance'],
           fromJS(action.payload.balance)

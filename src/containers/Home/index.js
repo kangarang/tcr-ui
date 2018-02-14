@@ -41,6 +41,7 @@ import {
   selectRequest,
   selectPrerequisites,
   selectCandidates,
+  selectMinDeposit,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -161,7 +162,7 @@ class Home extends Component {
           />
 
           <H2>
-            {'Applicants ('}
+            {'Applications ('}
             {candidates.size}
             {')'}
           </H2>
@@ -226,6 +227,7 @@ const mapStateToProps = createStructuredSelector({
   request: selectRequest,
   candidates: selectCandidates,
   prerequisites: selectPrerequisites,
+  minDeposit: selectMinDeposit,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

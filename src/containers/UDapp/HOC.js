@@ -78,7 +78,8 @@ const UDappHOC = WrappedComponent => {
     handleHOCCall = async (e, method, contract) => {
       e.preventDefault()
       const args = await this.getMethodArgs(method)
-      this.props.handleCall({ method, contract, args })
+      const callResult = await this.props.handleCall({ method, contract, args })
+      console.log('callResult', callResult)
     }
     handleHOCSendTransaction = async (e, method, contract) => {
       e.preventDefault()
@@ -94,6 +95,8 @@ const UDappHOC = WrappedComponent => {
         this.props.handleRevealVote({ method, args })
       } else if (method.name === 'requestVotingRights') {
         this.props.handleRequestVotingRights({ method, args })
+      } else {
+        this.props.handleSendTransaction({ method, args, contract })
       }
     }
 

@@ -19,8 +19,8 @@ export default function* logsSaga() {
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
-let lastReadBlockNumber = 10
-// let lastReadBlockNumber = 1638476
+// let lastReadBlockNumber = 10
+let lastReadBlockNumber = 1638476
 
 function* getFreshLogs() {
   try {
@@ -29,7 +29,7 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '_Application',
+      '',
       registry
     )
 
@@ -48,10 +48,10 @@ function* getFreshLogs() {
 // Timer
 function* pollController() {
   const network = yield select(selectNetwork)
-  let pollInterval = 15000
+  let pollInterval = 5000
 
   if (network === '420') {
-    pollInterval = 2000 // 2 seconds for localhost:8545
+    pollInterval = 1000 // 2 seconds for localhost:8545
   }
 
   while (true) {
