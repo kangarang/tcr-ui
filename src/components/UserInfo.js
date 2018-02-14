@@ -12,11 +12,12 @@ import {
   FlexCenteredItem,
   BoldInlineText,
   BigBoldInlineText,
+  InlineText,
 } from './Item'
 
 import { toEther, withCommas, trimDecimalsThree } from '../utils/unit-value-conversions'
 
-import iconSrc from '../assets/icons/favicon.ico'
+import iconSrc from '../assets/icons/corva.png'
 
 function UserInfo({ account, wallet, error, onSelectNetwork }) {
   const tokenBalance = wallet.getIn(['token', 'tokenBalance'])
@@ -26,7 +27,7 @@ function UserInfo({ account, wallet, error, onSelectNetwork }) {
         <Img src={iconSrc} alt="" />
       </FlexCenteredItem>
       <Item gR={1} gC={2}>
-        <BigBoldInlineText>{`${config.spokeName} Registry`}</BigBoldInlineText>
+        <BigBoldInlineText>{`${config.name} Registry`}</BigBoldInlineText>
       </Item>
       <Item gR={1} gC={3}>
         <BoldInlineText>

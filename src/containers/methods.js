@@ -8,7 +8,7 @@ export default {
     warning: ['approve'],
   },
   commitVote: {
-    actions: ['commitVote', 'approve', 'requestVotingRights'],
+    actions: ['commitVote'],
     warning: ['approve', 'requestVotingRights'],
   },
   revealVote: {

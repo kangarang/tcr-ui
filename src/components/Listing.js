@@ -24,7 +24,7 @@ const Container = styled.div`
 export default ({ latest, owner, listing, whitelisted, handleClick }) => (
   <Container txHash={latest.get('txHash')}>
     <FlexCenteredItem gC={1}>
-      <Identicon owner={listing} size={6} scale={6} />
+      <Identicon owner={owner} size={6} scale={6} />
     </FlexCenteredItem>
 
     <Item gC={2}>

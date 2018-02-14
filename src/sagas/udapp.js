@@ -1,7 +1,15 @@
 import EthAbi from 'ethjs-abi'
 
 import { select, all, call, takeEvery } from 'redux-saga/effects'
-import { SEND_TRANSACTION, CALL_REQUESTED, TX_APPLY, TX_CHALLENGE, TX_COMMIT_VOTE, TX_REVEAL_VOTE, TX_REQUEST_VOTING_RIGHTS } from '../actions/constants'
+import {
+  SEND_TRANSACTION,
+  CALL_REQUESTED,
+  TX_APPLY,
+  TX_CHALLENGE,
+  TX_COMMIT_VOTE,
+  TX_REVEAL_VOTE,
+  TX_REQUEST_VOTING_RIGHTS
+} from '../actions/constants'
 
 import {
   selectEthjs,
@@ -13,7 +21,7 @@ import {
 import unit_value_utils, { randInt } from '../utils/unit-value-conversions'
 
 import vote_utils from '../utils/vote_utils'
-import { saveFile } from '../utils/file_utils'
+import saveFile from '../utils/file_utils'
 
 export default function* udappSaga() {
   yield takeEvery(SEND_TRANSACTION, sendTransaction)
@@ -104,7 +112,50 @@ function* commitVoteSaga(action) {
   console.log('finalArgs', finalArgs)
   const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
-  yield call(sendTransactionSaga, txData, voting.address)
+  // grab the poll from the mapping
+  const pollStruct = yield call(voting.contract.pollMap.call, pollID)
+  console.log('pollStruct', pollStruct)
+  // record expiry dates
+  const commitEndDateString = vote_utils.getEndDateString(
+    pollStruct[0].toNumber()
+  )
+  const revealEndDateString = vote_utils.getEndDateString(
+    pollStruct[1].toNumber()
+  )
+  console.log('ceds, redc', commitEndDateString, revealEndDateString)
+
+  const json = {
+    listing: action.payload.listing,
+    salt: salt.toString(10),
+    pollID,
+    pollStruct,
+    commitEndDateString,
+    revealEndDateString,
+    secretHash,
+  }
+
+  const listingUnderscored = action.payload.listing.replace('.', '_')
+  const filename = `pollID-${json.pollID}_listing-${listingUnderscored}_commitVote_commitEndDate-${commitEndDateString}.json`
+
+  // Saves JSON commitVote file before sending transaction
+  yield call(saveFile, json, filename)
+
+  // ethjs version
+  // const txHash = yield call(sendTransactionSaga, txData, voting.address)
+
+  // truffle-contract version
+  const receipt = yield call(
+    voting.contract.commitVote,
+    pollID,
+    secretHash,
+    numTokens.toString(10),
+    prevPollID
+  )
+  console.log('receipt', receipt)
+
+  if (receipt.receipt.status !== '0x0') {
+    saveFile(json, filename)
+  }
 }
 function* revealVoteSaga(action) {
   console.log('reveal action', action)
@@ -155,6 +206,7 @@ function* sendTransactionSaga(data, to) {
 
     const txHash = yield call(ethjs.sendTransaction, payload)
     console.log('txHash', txHash)
+    return txHash
   } catch (error) {
     console.log('error', error)
   }

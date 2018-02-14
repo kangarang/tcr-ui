@@ -262,7 +262,7 @@ class UDapp extends Component {
             </Methods>
           </ReactModal>
 
-          <Button onClick={this.props.openModal}>{`UDAPP - ${
+          <Button onClick={this.props.openModal}>{`${
             this.props.messages.heading
             }`}</Button>
         </Wrapper>

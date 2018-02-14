@@ -47,6 +47,7 @@ class Voting extends Component {
     super(props)
     this.state = {
       modalIsOpen: false,
+      selectedListing: false,
     }
   }
   componentDidMount() {
@@ -69,6 +70,7 @@ class Voting extends Component {
     this.props.onRequestModalMethod(e)
     this.setState({
       modalIsOpen: 'vote',
+      selectedListing: e.context.listing
     })
   }
 
@@ -83,13 +85,13 @@ class Voting extends Component {
     this.props.onTxRequestVotingRights(e)
   }
   handleCommitVote = (e) => {
-    this.props.onTxCommitVote(e)
+    this.props.onTxCommitVote({ args: e.args, method: e.method, listing: this.state.selectedListing })
   }
   handleRevealVote = (e) => {
     this.props.onTxRevealVote(e)
   }
   openModal = () => {
-    this.props.onRequestModalMethod({method: 'vote', context: {}})
+    this.props.onRequestModalMethod({ method: 'vote', context: {} })
     this.setState({ modalIsOpen: 'vote' })
   }
   closeModal = () => {
