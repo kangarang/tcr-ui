@@ -27,6 +27,7 @@
     "react-scripts": "1.0.17",
     "redux": "3.7.2",
     "redux-immutable": "4.0.0",
+    "redux-logger": "3.0.6",
     "redux-saga": "0.16.0",
     "reselect": "3.0.1",
     "styled-components": "2.3.0",
@@ -39,8 +40,5 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "devDependencies": {
-    "redux-logger": "3.0.6"
   }
 }
