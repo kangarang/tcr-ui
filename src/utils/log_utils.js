@@ -43,6 +43,8 @@ const log_utils = {
     challenger: details.pollID && details.challenger,
     latest: {
       whitelisted: details.isWhitelisted,
+      appExpiry: details.appExpiry,
+      appExpired: details.appExpired,
       canBeWhitelisted: details.canBeWhitelisted,
       blockHash: details.blockHash,
       blockNumber: details.blockNumber,

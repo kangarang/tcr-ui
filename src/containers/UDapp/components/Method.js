@@ -5,7 +5,7 @@ import Button from '../../../components/Button'
 import translate, { translateRaw } from '../../../translations/index'
 import styled from 'styled-components'
 import { colors } from '../../../colors'
-import unit_value_utils, { BN } from '../../../utils/unit-value-conversions';
+import { BN, toUnitAmount } from '../../../utils/units_utils';
 
 const styles = {
   udappMethod: {
@@ -42,7 +42,7 @@ const Method = props => {
             <div>
               {translate(`tx_${props.method.name}`)}
               {props.method.name === 'apply' ? (
-                unit_value_utils.toUnitAmount(BN(props.minDeposit), 18).toString(10) + ' tokens'
+                toUnitAmount(BN(props.minDeposit), 18).toString(10) + ' tokens'
               ) : ''}
             </div>
           )}

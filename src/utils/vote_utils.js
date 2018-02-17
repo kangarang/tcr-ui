@@ -1,7 +1,7 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
 import { saveFile } from './file_utils'
-import unit_value_utils, { randInt } from './unit-value-conversions'
+import { randInt } from './units_utils'
 
 const vote_utils = {
   getEndDateString: integer =>

@@ -35,7 +35,8 @@ function* genesis() {
   try {
     const ethjs = yield call(setEthjs)
     const account = (yield call(ethjs.accounts))[0]
-    console.log('account', account)
+    // console.log('account', account)
+
     const balanceBlockNetwork = yield call(getBalBlockNet, ethjs, account)
 
     if (typeof balanceBlockNetwork !== 'undefined') {

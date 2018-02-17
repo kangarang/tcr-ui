@@ -11,16 +11,16 @@ import { updateTokenBalancesSaga } from './token'
 
 import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
-import unit_value_utils from '../utils/unit-value-conversions'
+import { toUnitAmount } from '../utils/units_utils'
 import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
+import { formatDate, convertUnix, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
-// let lastReadBlockNumber = 10
-let lastReadBlockNumber = 1638476
+let lastReadBlockNumber = 10
 
 function* getFreshLogs() {
   try {
@@ -29,7 +29,7 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '',
+      '_Application',
       registry
     )
 
@@ -41,32 +41,26 @@ function* getFreshLogs() {
     // yield put(logsError('logs error', err))
   }
 
-  // init polling
   yield fork(pollController)
 }
 
-// Timer
 function* pollController() {
   const network = yield select(selectNetwork)
   let pollInterval = 5000
 
   if (network === '420') {
-    pollInterval = 1000 // 2 seconds for localhost:8545
+    pollInterval = 1000
   }
 
   while (true) {
     try {
-      // Every 15 secs:
       yield call(delay, pollInterval)
-      // Dispatch: log query request
       yield put(
         pollLogsRequest({
           startBlock: lastReadBlockNumber,
           endBlock: 'latest',
         })
       )
-      // -> pollLogsSaga(action)
-      // -> handleLogs(sb, eb, '_Application')
     } catch (err) {
       console.log('Polling Log Saga error', err)
       // yield put(logsError('polling logs error', err))
@@ -100,7 +94,6 @@ function* pollLogsSaga(action) {
   }
 }
 
-// async
 function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
@@ -119,8 +112,11 @@ function* handleLogs(sb, eb, topic, contract) {
     )
 
     const rawLogs = yield call(ethjs.getLogs, filter)
+
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
+
     const decodedLogs = yield call(decoder, rawLogs)
+
     if (decodedLogs.length) {
       console.log('decodedLogs', decodedLogs)
     }
@@ -141,22 +137,26 @@ function* handleLogs(sb, eb, topic, contract) {
   }
 }
 
-// compile
 async function buildListing(contract, block, dLog, i, txDetails) {
   try {
-    // Get the listing struct from the mapping
     if (!dLog.listingHash) {
       return false
     }
+
+    // Get the listing struct from the mapping
     const listing = await contract.contract.listings.call(dLog.listingHash)
+
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
-    // const isWhitelisted = listing[1]
-    const isWhitelisted =
-      dLog._eventName === '_NewListingWhitelisted' ||
-      dLog._eventName === '_ChallengeFailed'
+    const appExpiryUnix = listing[0].toNumber()
+    const appExpiry = convertUnix(appExpiryUnix)
+    console.log('appExpiry', appExpiry)
+    const appExpired = dateHasPassed(appExpiryUnix)
+    console.log('appExpired', appExpired)
+
+    const isWhitelisted = listing[1]
 
     const tx = {
       hash: txDetails.hash,
@@ -169,13 +169,15 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     const details = {
       listingString: dLog.data,
       listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3] ? unit_value_utils.toUnitAmount(listing[3], 18) : false,
+      unstakedDeposit: listing[3] ? toUnitAmount(listing[3], 18) : false,
       pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
       index: i,
       eventName: dLog._eventName,
       isWhitelisted,
       blockHash: txDetails.blockHash,
       blockNumber: txDetails.blockNumber && txDetails.blockNumber.toNumber(10),
+      appExpiry,
+      appExpired,
     }
 
     return log_utils.shapeShift(block, tx, details)

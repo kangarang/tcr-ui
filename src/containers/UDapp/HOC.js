@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import abis from '../../abis'
 
-import unit_value_utils, { randInt } from '../../utils/unit-value-conversions'
+import { randInt } from '../../utils/units_utils'
 import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
@@ -33,7 +33,8 @@ const UDappHOC = WrappedComponent => {
       }
     }
 
-    // this is a hack to make default values work
+    // this is a horrendous hack to make default values work
+    // TODO: fix this pathetic piece of code
     componentWillReceiveProps(newProps) {
       // console.log('HOC OLD PROPS:', this.props)
       // console.log('HOC NEW PROPS:', newProps)
@@ -42,7 +43,6 @@ const UDappHOC = WrappedComponent => {
         const listingStr = newProps.request.getIn(['context', 'listing'])
         const _pollID = newProps.request.getIn(['context', 'latest', 'pollID'])
 
-        // if (newProps.request.)
         this.setState(prevState => ({
           ...prevState,
           [newProps.actions[0]]: {
@@ -84,20 +84,7 @@ const UDappHOC = WrappedComponent => {
     handleHOCSendTransaction = async (e, method, contract) => {
       e.preventDefault()
       const args = this.getMethodArgs(method)
-
-      if (method.name === 'apply') {
-        this.props.handleApply({ method, args })
-      } else if (method.name === 'challenge') {
-        this.props.handleChallenge({ method, args })
-      } else if (method.name === 'commitVote') {
-        this.props.handleCommitVote({ method, args })
-      } else if (method.name === 'revealVote') {
-        this.props.handleRevealVote({ method, args })
-      } else if (method.name === 'requestVotingRights') {
-        this.props.handleRequestVotingRights({ method, args })
-      } else {
-        this.props.handleSendTransaction({ method, args, contract })
-      }
+      this.props.handleSendTransaction({ method, args, contract })
     }
 
     render() {
