@@ -77,13 +77,22 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
     </Item> */}
 
     <Item gC={5}>
-      {!latest.get('pollID') && (
+      {!latest.get('pollID') && !latest.get('appExpired') && (
         <Button
           onClick={e =>
             handleClick({ method: 'challenge', context: { listing, latest } })
           }
         >
           {'Challenge'}
+        </Button>
+      )}
+      {!latest.get('pollID') && latest.get('appExpired') && (
+        <Button
+          onClick={e =>
+            handleClick({ method: 'updateStatus', context: { listing, latest } })
+          }
+        >
+          {'Update Status'}
         </Button>
       )}
       <BoldInlineText>

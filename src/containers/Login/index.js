@@ -6,7 +6,7 @@ import Img from '../../components/Img'
 import Button from '../../components/Button'
 import Input from '../../components/Input'
 import TopBar from '../../components/TopBar'
-import { trimDecimalsThree, toEther, withCommas } from '../../utils/unit-value-conversions'
+import { trimDecimalsThree, toEther, withCommas } from '../../utils/units_utils'
 
 import { Wrapper, PaddedDiv, RightPaddedDiv, LrgDiv, SmlDiv, SmlBoldDiv} from './components/StyledLoginComponents'
 

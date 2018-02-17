@@ -15,7 +15,7 @@ import {
   InlineText,
 } from './Item'
 
-import { toEther, withCommas, trimDecimalsThree } from '../utils/unit-value-conversions'
+import { toEther, withCommas, trimDecimalsThree } from '../utils/units_utils'
 
 import iconSrc from '../assets/icons/corva.png'
 

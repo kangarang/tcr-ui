@@ -11,6 +11,10 @@ export default {
     actions: ['commitVote'],
     warning: ['approve', 'requestVotingRights'],
   },
+  updateStatus: {
+    actions: ['updateStatus'],
+    warning: ['approve', 'requestVotingRights'],
+  },
   revealVote: {
     actions: ['revealVote'],
     warning: ['approve', 'requestVotingRights'],

@@ -59,30 +59,6 @@ class Home extends Component {
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-
-  handleCall = e => {
-    console.log('call:', e)
-    this.props.onCall(e)
-  }
-  handleSendTransaction = e => {
-    console.log('send txn:', e)
-    this.props.onSendTransaction(e)
-  }
-  handleChallenge = (e) => {
-    this.props.onTxChallenge(e)
-  }
-  handleApply = (e) => {
-    this.props.onTxApply(e)
-  }
-
-  handleClickListing = e => {
-    console.log('click listing', e)
-    this.props.onRequestModalMethod(e)
-    this.setState({
-      modalIsOpen: 'apply',
-    })
-  }
-
   handleAfterOpen = () => {
     console.log('after open')
   }
@@ -96,6 +72,24 @@ class Home extends Component {
   }
   closeModal = () => {
     this.setState({ modalIsOpen: false })
+  }
+
+  handleCall = e => {
+    console.log('call:', e)
+    this.props.onCall(e)
+  }
+  handleSendTransaction = (txObj) => {
+    console.log('send txn:', txObj)
+    // this.props.onSendTransaction()
+    // this.props.onTxChallenge(e)
+    // this.props.onTxApply(e)
+  }
+  handleClickListing = e => {
+    console.log('click listing', e)
+    this.props.onRequestModalMethod(e)
+    this.setState({
+      modalIsOpen: 'apply',
+    })
   }
 
   render() {
@@ -152,8 +146,6 @@ class Home extends Component {
             networkId={wallet.get('network')}
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
-            handleApply={this.handleApply}
-            handleChallenge={this.handleChallenge}
             onRequestClose={this.handleRequestCloseModal}
             onAfterOpen={this.handleAfterOpen}
             openModal={this.openModal}
