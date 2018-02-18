@@ -25,10 +25,6 @@ import {
   sendTransaction,
   callRequested,
 } from '../../actions'
-import {
-  txApply,
-  txChallenge,
-} from '../../actions/transactions'
 
 import {
   selectError,
@@ -80,9 +76,7 @@ class Home extends Component {
   }
   handleSendTransaction = (txObj) => {
     console.log('send txn:', txObj)
-    // this.props.onSendTransaction()
-    // this.props.onTxChallenge(e)
-    // this.props.onTxApply(e)
+    this.props.onSendTransaction(txObj)
   }
   handleClickListing = e => {
     console.log('click listing', e)
@@ -203,8 +197,6 @@ function mapDispatchToProps(dispatch) {
     onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
     onCall: payload => dispatch(callRequested(payload)),
-    onTxApply: payload => dispatch(txApply(payload)),
-    onTxChallenge: payload => dispatch(txChallenge(payload)),
   }
 }
 

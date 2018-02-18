@@ -3,7 +3,7 @@ TCR UI (WIP)
 
 "Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
-TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a list of high-quality entries (Registry)
+TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a Registry of high-quality entries
 
 The vision of this project is to build a registry-agnostic, highly-configurable, client-side user interface to interact and transact with Ethereum TCRs
 
@@ -39,17 +39,17 @@ The vision of this project is to build a registry-agnostic, highly-configurable,
 
 ### **Local blockchain/RPC** (optional)
 
-[ganache-cli](https://github.com/trufflesuite/ganache-cli) - `http://localhost:7545`
+[ganache-cli](https://github.com/trufflesuite/ganache-cli) - `http://localhost:8545`
 
 ```
   $ npm install -g ganache-cli
-  $ ganache-cli --port 7545 -v -b 3 -i 420 --db ~/path/to/db --mnemonic 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+  $ ganache-cli
 
-  (flags)
-  --port:  7545
+  (some flags)
+  --port:  8545
   -v:      verbose debugging
-  -b:      mine blocks every 3 seconds
-  -i:      network_id 420
+  -b:      auto-mine blocks (seconds)
+  -i:      network id
   --db     persistent local storage
 ```
 
@@ -294,6 +294,8 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 ---
 
 ## Workflow diagrams
+
+These workflow diagrams were created by our wonderful designer, Eva Shon.
 
 ![Simple overview](./src/assets/simple-overview.png)
 

@@ -60,7 +60,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         )}
       </BoldInlineText>
     </Item>
-    
+
     {latest.get('numTokens') && (
       <Item gC={3}>
         <BoldInlineText>
@@ -69,14 +69,19 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
         </BoldInlineText>
       </Item>
     )}
-    {/* <Item gC={4}>
+
+    <Item gC={4}>
       <BoldInlineText>
-        {'Block number: '}
-        {latest.get('blockNumber')}
+        {latest.get('appExpired')
+          ? 'UPDATE STATUS ->'
+          : `${'App Expiry:'} ${latest.getIn(['appExpiry', 'formattedLocal'])}`}
+        {/* {'Block number: '}
+        {latest.get('blockNumber')} */}
       </BoldInlineText>
-    </Item> */}
+    </Item>
 
     <Item gC={5}>
+      {/* unchallenged. not expired */}
       {!latest.get('pollID') && !latest.get('appExpired') && (
         <Button
           onClick={e =>
@@ -86,6 +91,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
           {'Challenge'}
         </Button>
       )}
+      {/* unchallenged. expired */}
       {!latest.get('pollID') && latest.get('appExpired') && (
         <Button
           onClick={e =>
@@ -98,7 +104,7 @@ export default ({ latest, owner, listing, whitelisted, handleClick }) => (
       <BoldInlineText>
         {whitelisted ? (
           'Whitelisted on block number: ' + latest.get('blockNumber')
-        ) : latest.get('event') === '_Challenge' ? (
+        ) : latest.get('event') === '_Challenge' ? ( // account for reveal period expiry
           <Button
             onClick={e =>
               handleClick({

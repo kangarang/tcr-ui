@@ -4,8 +4,6 @@ import { select, all, call, takeEvery } from 'redux-saga/effects'
 import {
   SEND_TRANSACTION,
   CALL_REQUESTED,
-  TX_APPLY,
-  TX_CHALLENGE,
 } from '../actions/constants'
 
 import {
@@ -22,14 +20,22 @@ import vote_utils from '../utils/vote_utils'
 import saveFile from '../utils/file_utils'
 
 export default function* udappSaga() {
-  yield takeEvery(SEND_TRANSACTION, sendGenericTransaction)
+  yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
   yield takeEvery(CALL_REQUESTED, callUDappSaga)
-  yield takeEvery(TX_APPLY, applySaga)
-  yield takeEvery(TX_CHALLENGE, challengeSaga)
 }
 
-function* sendGenericTransaction(action) {
+function* handleSendTransaction(action) {
   console.log('send tx action', action)
+  if (action.method === 'apply') {
+    yield call(applySaga, action)
+  } else if (action.method === 'challenge') {
+    yield call(challengeSaga, action)
+  } else {
+    yield call(sendOtherTransaction, action)
+  }
+}
+
+function* sendOtherTransaction(action) {
   try {
     const ethjs = yield select(selectEthjs)
     const from = yield select(selectAccount)

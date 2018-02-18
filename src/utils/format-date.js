@@ -49,27 +49,21 @@ export function formatDate(d) {
   const localOffset = date.getTimezoneOffset() / 60 * -1
 
   return {
+    // Sat Feb 17 2018 13:42:36 GMT-0700 (MST)
     value: date,
+    // "17 February"
     simpleDate: `${date.getUTCDate()} ${months[date.getUTCMonth()]}`,
-    formatted: `${
-      months[date.getUTCMonth()]
-    } ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(
-      ':'
-    )} ${utcAMPM}`, // UTC time
-    formattedShort: `${
-      shortMonths[date.getUTCMonth()]
-    } ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(
-      ':'
-    )} ${utcAMPM}`, // UTC time
-    formattedLocal: `${
-      months[date.getMonth()]
-    } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
-      ':'
-    )} ${localAMPM} (UTC ${localOffset})`, // local time
-    formattedLocalShort: `${
-      months[date.getMonth()]
-    } ${date.getDate()}, ${date.getFullYear()} (UTC ${localOffset})`, // local time
+    // "February 17, 2018 8:42 PM"
+    formatted: `${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(':')} ${utcAMPM}`,
+    // "Feb 17, 2018 8:42 PM"
+    formattedShort: `${shortMonths[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(':')} ${utcAMPM}`,
+    // "February 17, 2018 1:42 PM (UTC -7)"
+    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM} (UTC ${localOffset})`,
+    // "February 17, 2018 (UTC -7)"
+    formattedLocalShort: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} (UTC ${localOffset})`,
+    // "Sat, 17 Feb 2018 20:42:36 GMT"
     full: date.toUTCString(),
+    // 1518900156
     timestamp: date.getTime() / 1000,
   }
 }
