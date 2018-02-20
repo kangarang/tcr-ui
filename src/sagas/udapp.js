@@ -1,6 +1,6 @@
 import EthAbi from 'ethjs-abi'
 
-import { select, all, call, takeEvery } from 'redux-saga/effects'
+import { select, call, takeEvery } from 'redux-saga/effects'
 import {
   SEND_TRANSACTION,
   CALL_REQUESTED,
@@ -14,10 +14,9 @@ import {
   selectToken,
 } from '../selectors'
 
-import { randInt, toNaturalUnitAmount } from '../utils/units_utils'
+import { toNaturalUnitAmount } from '../utils/units_utils'
 
 import vote_utils from '../utils/vote_utils'
-import saveFile from '../utils/file_utils'
 
 export default function* udappSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)

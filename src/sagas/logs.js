@@ -13,7 +13,7 @@ import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
 import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
-import { formatDate, convertUnix, dateHasPassed } from '../utils/format-date';
+import { convertUnix, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
@@ -112,9 +112,7 @@ function* handleLogs(sb, eb, topic, contract) {
     )
 
     const rawLogs = yield call(ethjs.getLogs, filter)
-
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
-
     const decodedLogs = yield call(decoder, rawLogs)
 
     if (decodedLogs.length) {
@@ -146,15 +144,23 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     // Get the listing struct from the mapping
     const listing = await contract.contract.listings.call(dLog.listingHash)
 
+    console.log('called listing', listing)
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
-    const appExpiryUnix = listing[0].toNumber()
-    const appExpiry = convertUnix(appExpiryUnix)
+    const aeUnix = listing[0].toNumber()
+    const appExpiry = convertUnix(aeUnix)
     console.log('appExpiry', appExpiry)
-    const appExpired = dateHasPassed(appExpiryUnix)
+
+    const appExpired = dateHasPassed(aeUnix)
     console.log('appExpired', appExpired)
+
+    if (appExpired) {
+      // expired
+      // can call updateStatus()
+      // 
+    }
 
     const isWhitelisted = listing[1]
 

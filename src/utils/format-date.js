@@ -1,38 +1,16 @@
-import BigNumber from 'bignumber.js'
 import moment from 'moment'
 
 // Thank you Augur!
 // https://github.com/AugurProject/augur/tree/seadragon/src/utils
 
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
+export function convertUnix(integer) {
+  return formatDate(moment.unix(integer).toDate())
+}
 
-const shortMonths = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sept',
-  'Oct',
-  'Nov',
-  'Dec',
-]
+export function dateHasPassed(unixTimestamp) {
+  const date = moment().utc()
+  return date.unix() >= unixTimestamp
+}
 
 export function formatDate(d) {
   const date = d instanceof Date ? d : new Date(0)
@@ -80,10 +58,7 @@ function getTwelveHour(time) {
   return time
 }
 
-export function convertUnix(integer) {
-  return formatDate(moment.unix(integer).toDate())
-}
-
+// periodString: 'week', 'month', 'all'
 export function getBeginDate(periodString) {
   const date = moment()
   let beginDate = date.subtract(1, 'day')
@@ -99,7 +74,5 @@ export function getBeginDate(periodString) {
   return beginDate.unix()
 }
 
-export function dateHasPassed(unixTimestamp) {
-  const date = moment().utc()
-  return date.unix() >= unixTimestamp
-}
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']

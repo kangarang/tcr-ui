@@ -30,7 +30,6 @@ import {
   sendTransaction,
   requestModalMethod,
   callRequested,
-  commitVote,
 } from '../../actions'
 import {
   txCommitVote,

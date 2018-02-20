@@ -5,7 +5,6 @@ import { colors } from '../../colors'
 
 import UDappHOC from './HOC'
 
-import H2 from '../../components/H2'
 import Method from './components/Method'
 import Button from '../../components/Button'
 import TopBar from '../../components/TopBar'

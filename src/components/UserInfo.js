@@ -12,7 +12,6 @@ import {
   FlexCenteredItem,
   BoldInlineText,
   BigBoldInlineText,
-  InlineText,
 } from './Item'
 
 import { toEther, withCommas, trimDecimalsThree } from '../utils/units_utils'

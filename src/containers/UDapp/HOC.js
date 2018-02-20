@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
-
 import abis from '../../abis'
-
-import { randInt } from '../../utils/units_utils'
-import vote_utils from '../../utils/vote_utils'
 
 const UDappHOC = WrappedComponent => {
   return class UDapp extends Component {
