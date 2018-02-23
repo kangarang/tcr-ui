@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import abis from '../abis'
 
 import {
   SET_WALLET,
@@ -20,7 +19,7 @@ import {
 const initialState = fromJS({
   wallet: {
     account: '',
-    network: '4',
+    network: '',
     ethBalance: '',
     token: {
       decimals: '',
@@ -30,22 +29,10 @@ const initialState = fromJS({
     },
   },
   contracts: {
-    registry: {
-      address: '',
-      abi: abis.registry.abi,
-    },
-    token: {
-      address: '',
-      abi: abis.token.abi,
-    },
-    parameterizer: {
-      address: '',
-      abi: abis.parameterizer.abi,
-    },
-    voting: {
-      address: '',
-      abi: abis.voting.abi,
-    },
+    registry: {},
+    token: {},
+    parameterizer: {},
+    voting: {},
   },
   listings: {},
   parameters: {

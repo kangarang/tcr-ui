@@ -127,6 +127,10 @@ class Voting extends Component {
           onAfterOpen={this.handleAfterOpen}
           openModal={this.openModal}
           closeModal={this.closeModal}
+          tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+          votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
+          votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
+          registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
           {...this.props}
         />
 

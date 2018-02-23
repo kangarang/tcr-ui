@@ -7,7 +7,7 @@ import styled from 'styled-components'
 // import Login from '../Login'
 import messages from '../messages'
 import methods from '../methods'
-import UDapp from '../UDapp'
+import TransactionContainer from '../TransactionContainer'
 
 import H2 from '../../components/H2'
 
@@ -37,6 +37,10 @@ import {
   selectPrerequisites,
   selectCandidates,
   selectMinDeposit,
+  selectRegistry,
+  selectVoting,
+  selectToken,
+  selectFaceoffs,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -49,6 +53,8 @@ class Home extends Component {
     this.state = {
       registryAddress: '',
       modalIsOpen: false,
+      selectedListing: false,
+      actions: [],
     }
   }
   componentDidMount() {
@@ -62,13 +68,37 @@ class Home extends Component {
     this.setState({ modalIsOpen: false })
   }
   openModal = () => {
-    this.props.onRequestModalMethod({method: 'apply', context: {}})
-    this.setState({ modalIsOpen: 'apply' })
+    this.props.onRequestModalMethod({ method: 'apply', context: {} })
+    this.setState({
+      modalIsOpen: true,
+      actions: ['apply']
+    })
   }
   closeModal = () => {
     this.setState({ modalIsOpen: false })
   }
 
+  handleFileInput = e => {
+    const file = e.target.files[0]
+    const fr = new window.FileReader()
+
+    fr.onload = () => {
+      const contents = fr.result
+      console.log('contents', contents)
+
+      try {
+        const jsonFC = JSON.parse(contents)
+        console.log('jsonFC', jsonFC)
+        console.log('salt', jsonFC.salt)
+        console.log('voteOption', jsonFC.voteOption)
+
+      } catch (error) {
+        throw new Error('Invalid Commit JSON file')
+      }
+    }
+
+    fr.readAsText(file)
+  }
   handleCall = e => {
     console.log('call:', e)
     this.props.onCall(e)
@@ -76,12 +106,15 @@ class Home extends Component {
   handleSendTransaction = (txObj) => {
     console.log('send txn:', txObj)
     this.props.onSendTransaction(txObj)
+    // this.props.onSendTransaction({ args: e.args, method: e.method, listing: this.state.selectedListing })
   }
   handleClickListing = e => {
     console.log('click listing', e)
     this.props.onRequestModalMethod(e)
     this.setState({
-      modalIsOpen: 'apply',
+      modalIsOpen: true,
+      selectedListing: e.context.listing,
+      actions: [e.method],
     })
   }
 
@@ -90,6 +123,7 @@ class Home extends Component {
       // account,
       wallet,
       // contracts,
+      faceoffs,
       whitelist,
       // ecRecovered,
       candidates,
@@ -100,7 +134,7 @@ class Home extends Component {
       request.get('method') && !request.get('context')
         ? 'apply'
         : request.get('method') ? request.get('method') : 'apply'
-    const customMethods = methods[reqMeth].actions || []
+
     const customWarnings = methods[reqMeth].warning || []
 
     return (
@@ -129,7 +163,26 @@ class Home extends Component {
 
           <UserInfo {...this.props} />
 
-          <UDapp
+          <TransactionContainer
+            modalIsOpen={this.state.modalIsOpen}
+            messages={messages.apply}
+            actions={this.state.actions}
+            warnings={customWarnings}
+            networkId={wallet.get('network')}
+            handleSendTransaction={this.handleSendTransaction}
+            handleCall={this.handleCall}
+            onRequestClose={this.handleRequestCloseModal}
+            onAfterOpen={this.handleAfterOpen}
+            openModal={this.openModal} // index
+            closeModal={this.closeModal}
+            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
+            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
+            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
+            {...this.props}
+          />
+
+          {/* <UDapp
             modalIsOpen={this.state.modalIsOpen}
             default={'apply'}
             messages={messages.apply}
@@ -143,8 +196,12 @@ class Home extends Component {
             onAfterOpen={this.handleAfterOpen}
             openModal={this.openModal}
             closeModal={this.closeModal}
+            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
+            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
+            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
             {...this.props}
-          />
+          /> */}
 
           <H2>
             {'Applications ('}
@@ -156,11 +213,36 @@ class Home extends Component {
               candidates.map(log => (
                 <Section key={log.get('listing')}>
                   <Listing
+                    log={log}
+                    latest={log.get('latest')}
+                    owner={log.get('owner')}
+                    listing={log.get('listing')}
+                    whitelisted={log.getIn(['latest', 'whitelisted'])}
+                    // status={log.getIn(['latest', 'status'])}
+                    handleClick={this.handleClickListing}
+                    actions={['challenge', 'updateStatus']}
+                  />
+                </Section>
+              ))}
+          </FlexContainer>
+
+          <H2>
+            {'Challenges ('}
+            {faceoffs.size}
+            {')'}
+          </H2>
+          <FlexContainer>
+            {faceoffs.size > 0 &&
+              faceoffs.map(log => (
+                <Section key={log.get('listing')}>
+                  <Listing
+                    log={log}
                     latest={log.get('latest')}
                     owner={log.get('owner')}
                     listing={log.get('listing')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
                     handleClick={this.handleClickListing}
+                    onFileInput={this.handleFileInput}
                   />
                 </Section>
               ))}
@@ -175,6 +257,7 @@ class Home extends Component {
               whitelist.map(log => (
                 <Section key={log.get('listing')}>
                   <Listing
+                    log={log}
                     latest={log.get('latest')}
                     owner={log.get('owner')}
                     listing={log.get('listing')}
@@ -209,8 +292,12 @@ const mapStateToProps = createStructuredSelector({
   ethjs: selectEthjs,
   request: selectRequest,
   candidates: selectCandidates,
+  faceoffs: selectFaceoffs,
   prerequisites: selectPrerequisites,
   minDeposit: selectMinDeposit,
+  registry: selectRegistry,
+  voting: selectVoting,
+  token: selectToken,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

@@ -64,32 +64,11 @@ const modalStyles = {
 // https://github.com/kumavis/udapp/blob/master/index.js#L205
 class UDapp extends Component {
   render() {
-    const tokenBalance =
-      this.props.wallet && this.props.wallet.getIn(['token', 'tokenBalance'])
-    const votingRights =
-      this.props.wallet &&
-      this.props.wallet.getIn([
-        'token',
-        'allowances',
-        this.props.voting.address,
-        'votingRights',
-      ])
-    const votingAllowance =
-      this.props.wallet &&
-      this.props.wallet.getIn([
-        'token',
-        'allowances',
-        this.props.voting.address,
-        'total',
-      ])
-    const registryAllowance =
-      this.props.wallet &&
-      this.props.wallet.getIn([
-        'token',
-        'allowances',
-        this.props.registry.address,
-        'total',
-      ])
+    const tokenBalance = this.props.tokenBalance
+    const votingRights = this.props.votingRights
+    const votingAllowance = this.props.votingAllowance
+    const registryAllowance = this.props.registryAllowance
+    console.log('this.props', this.props)
 
     const visibleRegistryMethods = (this.props.registry.abi || []).filter(
       methodInterface =>

@@ -8,7 +8,7 @@ import { colors } from '../colors'
 import Nav from './Nav'
 import Home from '../containers/Home'
 // import Challenge from '../containers/Challenge'
-import Vote from '../containers/Vote'
+// import Vote from '../containers/Vote'
 // import Activities from '../containers/Activities'
 // import Search from '../containers/Search'
 import TopBar from './TopBar'
@@ -35,7 +35,7 @@ const App = () => (
         {/* <Route exact path="/" /> */}
         <Route exact path="/" component={Home} />
         {/* <Route exact path="/challenge" component={Challenge} /> */}
-        <Route exact path="/vote" component={Vote} />
+        {/* <Route exact path="/vote" component={Vote} /> */}
         {/* <Route exact path="/activities" component={Activities} /> */}
         {/* <Route exact path="/search" component={Search} /> */}
       </Switch>

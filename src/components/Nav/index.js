@@ -9,12 +9,12 @@ const NavBar = styled.div`
   padding: 1.5em;
   background-color: white;
 `
-const styles = {
-  active: {
-    fontWeight: 'bold',
-    color: 'red',
-  },
-}
+// const styles = {
+//   active: {
+//     fontWeight: 'bold',
+//     color: 'red',
+//   },
+// }
 
 class Nav extends Component {
   render() {
@@ -23,21 +23,10 @@ class Nav extends Component {
         <NavLink to="/"/>
         <NavLink to="/"/>
         <NavLink to="/"/>
+        <NavLink to="/"/>
         <NavLink strict to="/">
           Home
         </NavLink>
-        {/* <NavLink activeStyle={styles.active} to="/challenge">
-          Challenge
-        </NavLink> */}
-        <NavLink activeStyle={styles.active} to="/vote">
-          Vote
-        </NavLink>
-        {/* <NavLink activeStyle={styles.active} to="/activities">
-          Activities
-        </NavLink> */}
-        {/* <NavLink activeStyle={styles.active} to="/search">
-          Registry
-        </NavLink> */}
       </NavBar>
     )
   }
