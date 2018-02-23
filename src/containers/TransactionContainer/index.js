@@ -76,7 +76,7 @@ class TransactionContainer extends Component {
       this.props.actions.includes(meth.name)
     )
     // const warningTokenMethods = allTokenMethods.filter(meth =>
-      // this.props.warnings.includes(meth.name)
+    // this.props.warnings.includes(meth.name)
     // )
     const visibleVotingMethods = (this.props.voting.contract ? this.props.voting.contract.abi : this.props.voting.abi || []).filter(
       methodInterface =>
@@ -118,6 +118,8 @@ class TransactionContainer extends Component {
                   {'Voting Address: ' + this.props.voting.address}
                 </div>
 
+                <hr />
+
                 <div>
                   {'Token Balance: '}
                   {tokenBalance ? withCommas(trimDecimalsThree(tokenBalance)) : '0'}
@@ -135,6 +137,8 @@ class TransactionContainer extends Component {
                   {votingRights ? withCommas(votingRights) : '0'}
                 </div>
               </div>
+
+              <hr />
 
               {visibleTokenMethods.length > 0 && (
                 <Container>

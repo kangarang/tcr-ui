@@ -40,8 +40,7 @@ export const Methods = styled.div`
 
   & > div {
     margin: 0.5em;
-    display: flex;
-    flex-flow: row wrap;
+    display: block;
     overflow: hidden;
 
     & > div {
