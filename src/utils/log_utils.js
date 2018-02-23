@@ -56,6 +56,10 @@ const log_utils = {
         ? details.unstakedDeposit.toString(10)
         : false,
       event: details.eventName,
+      commitEndDate: details.commitEndDate,
+      commitExpiry: details.commitExpiry,
+      revealEndDate: details.revealEndDate,
+      revealExpiry: details.revealExpiry,
       logIndex: details.index.toString(10),
       pollID: details.pollID ? details.pollID.toString(10) : false,
     },

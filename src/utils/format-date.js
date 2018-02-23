@@ -3,6 +3,9 @@ import moment from 'moment'
 // Thank you Augur!
 // https://github.com/AugurProject/augur/tree/seadragon/src/utils
 
+export function convertUnixTimeLeft(integer) {
+  return timeLeft(moment.unix(integer).toDate())
+}
 export function convertUnix(integer) {
   return formatDate(moment.unix(integer).toDate())
 }
@@ -10,6 +13,28 @@ export function convertUnix(integer) {
 export function dateHasPassed(unixTimestamp) {
   const date = moment().utc()
   return date.unix() >= unixTimestamp
+}
+
+export function timeLeft(d) {
+  const date = d instanceof Date ? d : new Date(0)
+
+  const rightNow = moment().utc().unix()
+  const dd = date.getTime() / 1000
+  const diff = dd - rightNow
+
+  // Local Time Formatting
+  const localTime = [date.getHours(), date.getMinutes()]
+  const localAMPM = ampm(localTime[0])
+  const localTimeTwelve = getTwelveHour(localTime)
+
+  return {
+    // "February 17, 2018 1:42 PM (UTC -7)"
+    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
+    // 1518900156
+    timestamp: date.getTime() / 1000,
+    // 00 H : 05 Min : 00 Sec
+    timeleft: diff,
+  }
 }
 
 export function formatDate(d) {
@@ -36,7 +61,7 @@ export function formatDate(d) {
     // "Feb 17, 2018 8:42 PM"
     formattedShort: `${shortMonths[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(':')} ${utcAMPM}`,
     // "February 17, 2018 1:42 PM (UTC -7)"
-    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM} (UTC ${localOffset})`,
+    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
     // "February 17, 2018 (UTC -7)"
     formattedLocalShort: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} (UTC ${localOffset})`,
     // "Sat, 17 Feb 2018 20:42:36 GMT"
