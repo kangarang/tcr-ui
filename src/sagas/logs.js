@@ -13,14 +13,14 @@ import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
 import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
-import { convertUnix, dateHasPassed } from '../utils/format-date';
+import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
-let lastReadBlockNumber = 10
+let lastReadBlockNumber = 0
 
 function* getFreshLogs() {
   try {
@@ -29,7 +29,7 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '_Application',
+      '',
       registry
     )
 
@@ -46,10 +46,10 @@ function* getFreshLogs() {
 
 function* pollController() {
   const network = yield select(selectNetwork)
-  let pollInterval = 5000
+  let pollInterval = 15000 // 15 seconds
 
   if (network === '420') {
-    pollInterval = 1000
+    pollInterval = 2000
   }
 
   while (true) {
@@ -68,33 +68,34 @@ function* pollController() {
   }
 }
 
-// call this every 15 seconds
 function* pollLogsSaga(action) {
   const ethjs = yield select(selectEthjs)
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
   try {
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
+    const contract = registry
     const newLogs = yield call(
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
       '',
-      registry
+      contract
     )
-    if (newLogs.length) {
-      console.log(newLogs.length, 'newLogs', newLogs)
+    if (newLogs.length === 1) {
+      console.log(newLogs.length, 'newLog', newLogs[0])
       yield put(updateItems(newLogs))
       yield fork(updateTokenBalancesSaga, registry.address)
       yield fork(updateTokenBalancesSaga, voting.address)
     }
   } catch (err) {
-    console.log('Fresh log error:', err)
+    console.log('Poll logs error:', err)
     // yield put(logsError('logs error', err))
   }
 }
 
 function* handleLogs(sb, eb, topic, contract) {
+  const voting = yield select(selectVoting)
   try {
     const ethjs = yield select(selectEthjs)
 
@@ -116,7 +117,7 @@ function* handleLogs(sb, eb, topic, contract) {
     const decodedLogs = yield call(decoder, rawLogs)
 
     if (decodedLogs.length) {
-      console.log('decodedLogs', decodedLogs)
+      // console.log('decodedLogs', decodedLogs)
     }
 
     return yield all(
@@ -126,16 +127,16 @@ function* handleLogs(sb, eb, topic, contract) {
           ethjs,
           rawLogs[ind].transactionHash
         )
-        return buildListing(contract, block, dLog, ind, txDetails)
+        return buildListing(contract, block, dLog, ind, txDetails, voting)
       })).filter(lawg => lawg !== false)
     )
   } catch (err) {
-    console.log('Fresh log error:', err)
-    yield put(logsError('logs error', err))
+    console.log('Handle logs error:', err)
+    // yield put(logsError('logs error', err))
   }
 }
 
-async function buildListing(contract, block, dLog, i, txDetails) {
+async function buildListing(contract, block, dLog, i, txDetails, voting) {
   try {
     if (!dLog.listingHash) {
       return false
@@ -144,17 +145,25 @@ async function buildListing(contract, block, dLog, i, txDetails) {
     // Get the listing struct from the mapping
     const listing = await contract.contract.listings.call(dLog.listingHash)
 
-    console.log('called listing', listing)
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false
     }
 
-    const aeUnix = listing[0].toNumber()
-    const appExpiry = convertUnix(aeUnix)
-    console.log('appExpiry', appExpiry)
+    let commitEndDate
+    let commitExpiry
+    let revealEndDate
+    let revealExpiry
+    if (dLog._eventName === '_Challenge' || dLog._eventName === '_VoteCommitted') {
+      const poll = await voting.contract.pollMap(dLog.pollID.toString())
+      commitEndDate = poll[0].toNumber()
+      commitExpiry = convertUnixTimeLeft(commitEndDate)
+      revealEndDate = poll[1].toNumber()
+      revealExpiry = convertUnixTimeLeft(revealEndDate)
+    }
 
+    const aeUnix = listing[0].toNumber()
+    const appExpiry = convertUnixTimeLeft(aeUnix)
     const appExpired = dateHasPassed(aeUnix)
-    console.log('appExpired', appExpired)
 
     if (appExpired) {
       // expired
@@ -184,10 +193,17 @@ async function buildListing(contract, block, dLog, i, txDetails) {
       blockNumber: txDetails.blockNumber && txDetails.blockNumber.toNumber(10),
       appExpiry,
       appExpired,
+      commitEndDate,
+      commitExpiry,
+      revealEndDate,
+      revealExpiry,
     }
 
-    return log_utils.shapeShift(block, tx, details)
+    const finalForm = log_utils.shapeShift(block, tx, details)
+    console.log('finalForm', finalForm)
+    return finalForm
   } catch (err) {
     throw new Error(err.message)
+    console.log('build listing error', err)
   }
 }

@@ -92,7 +92,6 @@ function* contractsSaga(ethjs, account) {
       call(token.contract.decimals.call),
       call(token.contract.symbol.call),
     ])
-    console.log('token', token)
 
     const parameters = {
       minDeposit: yield minDeposit.toString(10),

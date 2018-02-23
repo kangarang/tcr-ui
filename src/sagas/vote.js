@@ -49,6 +49,7 @@ function* commitVoteSaga(action) {
   // grab the poll from the mapping
   const pollStruct = yield call(voting.contract.pollMap.call, pollID)
   console.log('pollStruct', pollStruct)
+
   // record expiry dates
   const commitEndDateString = vote_utils.getEndDateString(
     pollStruct[0].toNumber()
@@ -56,13 +57,14 @@ function* commitVoteSaga(action) {
   const revealEndDateString = vote_utils.getEndDateString(
     pollStruct[1].toNumber()
   )
-  console.log('ceds, redc', commitEndDateString, revealEndDateString)
+  console.log('commit & reveal end', commitEndDateString, revealEndDateString)
 
   const json = {
-    listing: action.payload.listing,
     salt: salt.toString(10),
+    voteOption,
     pollID,
-    pollStruct,
+    listing: action.payload.listing,
+    // pollStruct,
     commitEndDateString,
     revealEndDateString,
     secretHash,

@@ -26,7 +26,6 @@ const abi_utils = {
     } else {
       eventAbi = _.find(abi, { name: eventName })
     }
-    console.log('eventAbi', eventAbi)
     const eventSignature = abi_utils.getEventSignatureFromAbiByName(
       eventAbi,
       eventName
