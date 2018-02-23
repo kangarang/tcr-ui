@@ -17,6 +17,7 @@ import {
 import { toNaturalUnitAmount } from '../utils/units_utils'
 
 import vote_utils from '../utils/vote_utils'
+import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote';
 
 export default function* udappSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
@@ -29,6 +30,13 @@ function* handleSendTransaction(action) {
     yield call(applySaga, action)
   } else if (action.method === 'challenge') {
     yield call(challengeSaga, action)
+  } else if (action.payload.method.name === 'commitVote') {
+    yield call(commitVoteSaga, action)
+  } else if (action.payload.method.name === 'revealVote') {
+    yield call(revealVoteSaga, action)
+  } else if (action.payload.method.name === 'requestVotingRights') {
+    console.log('requestVotingRights')
+    yield call(requestVotingRightsSaga, action)
   } else {
     yield call(sendOtherTransaction, action)
   }
@@ -174,7 +182,6 @@ function* challengeSaga(action) {
 }
 
 export function* sendTransactionSaga(data, to) {
-  console.log('send data', data)
   try {
     const ethjs = yield select(selectEthjs)
     const from = yield select(selectAccount)

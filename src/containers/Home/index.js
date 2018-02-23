@@ -67,11 +67,11 @@ class Home extends Component {
     console.log('request close')
     this.setState({ modalIsOpen: false })
   }
-  openModal = () => {
+  openModal = (actions) => {
     this.props.onRequestModalMethod({ method: 'apply', context: {} })
     this.setState({
       modalIsOpen: true,
-      actions: ['apply']
+      actions
     })
   }
   closeModal = () => {
@@ -173,7 +173,29 @@ class Home extends Component {
             handleCall={this.handleCall}
             onRequestClose={this.handleRequestCloseModal}
             onAfterOpen={this.handleAfterOpen}
-            openModal={this.openModal} // index
+            openModal={e => this.openModal(['apply'])} // index
+            closeModal={this.closeModal}
+            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
+            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
+            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
+            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
+            {...this.props}
+          />
+
+          <TransactionContainer
+            modalIsOpen={this.state.modalIsOpen}
+            messages={messages.vote}
+            actions={this.state.actions}
+            warnings={customWarnings}
+            networkId={wallet.get('network')}
+            handleSendTransaction={this.handleSendTransaction}
+            handleCall={this.handleCall}
+            // handleCommitVote={this.handleCommitVote}
+            // handleRevealVote={this.handleRevealVote}
+            // handleRequestVotingRights={this.handleRequestVotingRights}
+            onRequestClose={this.handleRequestCloseModal}
+            onAfterOpen={this.handleAfterOpen}
+            openModal={e => this.openModal(methods.vote.actions)}
             closeModal={this.closeModal}
             tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
             votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}

@@ -8,7 +8,7 @@ export default {
     warning: ['approve'],
   },
   commitVote: {
-    actions: ['commitVote'],
+    actions: ['commitVote', 'requestVotingRights'],
     warning: ['approve', 'requestVotingRights'],
   },
   updateStatus: {
@@ -21,20 +21,17 @@ export default {
   },
   vote: {
     actions: [
+      'approve',
       'voterReward',
       'canBeWhitelisted',
-      'determineReward',
+      'voteTokenBalance',
       'tokenClaims',
       'challengeCanBeResolved',
       'updateStatus',
-      'withdrawVotingRights',
       'rescueTokens',
-      'commitVote',
-      'revealVote',
-      'approve',
       'requestVotingRights',
+      'withdrawVotingRights',
       'getNumTokens',
-      'getCommitHash'
     ],
     warning: ['requestVotingRights'],
   },

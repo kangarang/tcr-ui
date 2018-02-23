@@ -26,14 +26,15 @@ export default function* voteSaga() {
   yield takeEvery(TX_REVEAL_VOTE, revealVoteSaga)
 }
 
-function* commitVoteSaga(action) {
+export function* commitVoteSaga(action) {
   const account = yield select(selectAccount)
   const voting = yield select(selectVoting)
 
+  console.log('commit vote action', action)
   const pollID = action.payload.args[0]
   const voteOption = action.payload.args[1]
-  const numTokens = action.payload.args[2]
-  // const numTokens = toNaturalUnitAmount(action.payload.args[2], 18)
+  // const numTokens = action.payload.args[2]
+  const numTokens = toNaturalUnitAmount(action.payload.args[2], 18)
 
   const salt = randInt(1e6, 1e8)
   const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
@@ -92,7 +93,7 @@ function* commitVoteSaga(action) {
     saveFile(json, filename)
   }
 }
-function* revealVoteSaga(action) {
+export function* revealVoteSaga(action) {
   console.log('reveal action', action)
   // const listingString = action.payload.args[0]
   // const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
@@ -107,10 +108,10 @@ function* revealVoteSaga(action) {
 
   // yield call(sendTransactionSaga, txData, to)
 }
-function* requestVotingRightsSaga(action) {
+export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    const tokens = toNaturalUnitAmount(action.payload.args[0], 18)
+    const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
     const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
 
     yield call(sendTransactionSaga, txData, voting.address)

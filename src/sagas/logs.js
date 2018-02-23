@@ -3,7 +3,7 @@ import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
-import { newArray, logsError, updateItems, pollLogsRequest } from '../actions'
+import { newArray, updateItems, pollLogsRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -203,7 +203,6 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     console.log('finalForm', finalForm)
     return finalForm
   } catch (err) {
-    throw new Error(err.message)
     console.log('build listing error', err)
   }
 }
