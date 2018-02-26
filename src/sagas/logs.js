@@ -42,7 +42,7 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '_Application',
+      '', // All events
       registry
     )
 
