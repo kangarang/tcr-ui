@@ -2,6 +2,7 @@ import { all, select, takeLatest, fork, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
+// import { Organization } from '@governx/governx-lib'
 
 import { newArray, updateItems, pollLogsRequest } from '../actions'
 
@@ -12,13 +13,25 @@ import { updateTokenBalancesSaga } from './token'
 import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
-import { selectEthjs, selectNetwork, selectRegistry, selectVoting } from '../selectors/index'
+import { selectEthjs, selectNetwork, selectRegistry, selectVoting, selectAccount } from '../selectors/index'
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
+  // yield takeLatest(SET_CONTRACTS, governX)
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
+
+// function* governX() {
+//   const from = yield select(selectAccount)
+
+//   const { poll, tcr, account } = new Organization({
+//     address: '0x2e9321fc399202ea887e69497c5a00df2a47b358', // the tcr registry address
+//     from, // the users account
+//     network: 'rinkeby', // || ropsten || mainnet
+//   });
+//   console.log('poll, tcr, account', poll, tcr, account)
+// }
 
 let lastReadBlockNumber = 0
 
@@ -82,7 +95,7 @@ function* pollLogsSaga(action) {
       '',
       contract
     )
-    if (newLogs.length === 1) {
+    if (newLogs.length > 0) {
       console.log(newLogs.length, 'newLog', newLogs[0])
       yield put(updateItems(newLogs))
       yield fork(updateTokenBalancesSaga, registry.address)

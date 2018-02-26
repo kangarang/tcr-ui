@@ -25,7 +25,7 @@ export default function* udappSaga() {
 }
 
 function* handleSendTransaction(action) {
-  console.log('send tx action', action)
+  console.log('udapp handle send txn', action)
   if (action.method === 'apply') {
     yield call(applySaga, action)
   } else if (action.method === 'challenge') {
@@ -35,7 +35,6 @@ function* handleSendTransaction(action) {
   } else if (action.payload.method.name === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else if (action.payload.method.name === 'requestVotingRights') {
-    console.log('requestVotingRights')
     yield call(requestVotingRightsSaga, action)
   } else {
     yield call(sendOtherTransaction, action)
@@ -194,6 +193,7 @@ export function* sendTransactionSaga(data, to) {
       nonce,
       data,
     }
+    console.log('payload', payload)
 
     const txHash = yield call(ethjs.sendTransaction, payload)
     console.log('txHash', txHash)

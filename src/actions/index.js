@@ -20,6 +20,8 @@ import {
   REQUEST_MODAL_METHOD,
   SEND_TRANSACTION,
   CALL_REQUESTED,
+  UPDATE_BALANCES_REQUEST,
+  UPDATE_BALANCES,
 } from './constants'
 
 export function setupEthereum(network) {
@@ -37,6 +39,17 @@ export function setContracts(payload) {
 export function setWallet(payload) {
   return {
     type: SET_WALLET,
+    payload,
+  }
+}
+export function updateBalancesRequest() {
+  return {
+    type: UPDATE_BALANCES_REQUEST,
+  }
+}
+export function updateBalances(payload) {
+  return {
+    type: UPDATE_BALANCES,
     payload,
   }
 }

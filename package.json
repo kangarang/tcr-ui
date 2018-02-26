@@ -3,6 +3,7 @@
   "version": "0.3.2",
   "private": true,
   "dependencies": {
+    "@governx/governx-lib": "^1.1.1",
     "babel-polyfill": "6.26.0",
     "blockies": "0.0.2",
     "bluebird": "3.5.1",

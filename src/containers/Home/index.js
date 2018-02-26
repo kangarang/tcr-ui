@@ -27,20 +27,21 @@ import {
 
 import {
   selectError,
-  selectAccount,
-  selectWallet,
-  selectAllContracts,
-  selectECRecovered,
-  selectWhitelist,
   selectEthjs,
-  selectRequest,
-  selectPrerequisites,
-  selectCandidates,
-  selectMinDeposit,
+  selectAccount,
+  selectNetworkID,
+
+  selectBalances,
+
   selectRegistry,
-  selectVoting,
   selectToken,
+  selectVoting,
+
+  selectParameters,
+
+  selectCandidates,
   selectFaceoffs,
+  selectWhitelist,
 } from '../../selectors'
 
 const HomeWrapper = styled.div`
@@ -120,69 +121,48 @@ class Home extends Component {
 
   render() {
     const {
-      // account,
-      wallet,
-      // contracts,
+      ethjs,
+      account,
+      networkID,
+
+      balances,
+
+      registry,
+      token,
+      voting,
+
+      parameters,
+
+      candidates,
       faceoffs,
       whitelist,
-      // ecRecovered,
-      candidates,
-      request,
     } = this.props
-
-    const reqMeth =
-      request.get('method') && !request.get('context')
-        ? 'apply'
-        : request.get('method') ? request.get('method') : 'apply'
-
-    const customWarnings = methods[reqMeth].warning || []
 
     return (
       <div>
         <HomeWrapper>
-          {/* {!ecRecovered && (
-            <Login
-              execute={this.handleLogin}
-              network={wallet.get('network')}
-              // NetworkStatus={<NetworkStatus />}
-              // ns={NetworkStatus}
-              ethBalance={wallet.get('ethBalance')}
-              account={account}
-              imgSrc={tcrWave}
-              isOpen={false}
-              messages={messages.login}
-              onChange={this.handleChangeRegistryAddress}
-              registryValue={this.state.registryAddress}
-              registryPH={contracts.getIn(['registry', 'address'])}
-              tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-              tokenSymbol={wallet.getIn(['token', 'tokenSymbol'])}
-              tokenName={wallet.getIn(['token', 'tokenName'])}
-              ecRecovered={ecRecovered}
-            />
-          )} */}
 
           <UserInfo {...this.props} />
 
-          <TransactionContainer
+          {/* <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
             messages={messages.apply}
             actions={this.state.actions}
-            warnings={customWarnings}
-            networkId={wallet.get('network')}
+            networkId={networkID}
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
             onRequestClose={this.handleRequestCloseModal}
             onAfterOpen={this.handleAfterOpen}
             openModal={e => this.openModal(['apply'])} // index
             closeModal={this.closeModal}
-            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
-            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
-            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
+            tokenBalance={balances.get('token')}
+            votingRights={balances.get('votingRights')}
+            votingAllowance={balances.get('votingAllowance')}
+            registryAllowance={balances.get('registryAllowance')}
             {...this.props}
-          />
+          /> */}
 
-          <TransactionContainer
+          {/* <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
             messages={messages.vote}
             actions={this.state.actions}
@@ -198,28 +178,7 @@ class Home extends Component {
             openModal={e => this.openModal(methods.vote.actions)}
             closeModal={this.closeModal}
             tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
-            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
-            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
-            {...this.props}
-          />
-
-          {/* <UDapp
-            modalIsOpen={this.state.modalIsOpen}
-            default={'apply'}
-            messages={messages.apply}
-            defaultMethods={methods.apply.actions}
-            actions={customMethods}
-            warnings={customWarnings}
-            networkId={wallet.get('network')}
-            handleSendTransaction={this.handleSendTransaction}
-            handleCall={this.handleCall}
-            onRequestClose={this.handleRequestCloseModal}
-            onAfterOpen={this.handleAfterOpen}
-            openModal={this.openModal}
-            closeModal={this.closeModal}
-            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingrights'])}
+            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingRights'])}
             votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
             registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
             {...this.props}
@@ -305,21 +264,21 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  error: selectError,
-  account: selectAccount,
-  wallet: selectWallet,
-  contracts: selectAllContracts,
-  whitelist: selectWhitelist,
-  ecRecovered: selectECRecovered,
   ethjs: selectEthjs,
-  request: selectRequest,
+  account: selectAccount,
+  networkID: selectNetworkID,
+
+  balances: selectBalances,
+
+  registry: selectRegistry,
+  token: selectToken,
+  voting: selectVoting,
+
+  parameters: selectParameters,
+
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,
-  prerequisites: selectPrerequisites,
-  minDeposit: selectMinDeposit,
-  registry: selectRegistry,
-  voting: selectVoting,
-  token: selectToken,
+  whitelist: selectWhitelist,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

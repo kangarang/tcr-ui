@@ -11,6 +11,8 @@ export const LOGIN_ERROR = 'LOGIN_ERROR--|--Error'
 export const UDAPP_ERROR = 'UDAPP_ERROR--|--Error'
 
 // Home
+export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--|--TOKEN'
+export const UPDATE_BALANCES = 'UPDATE_BALANCES--|--TOKEN'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS--|--Home'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS--|--Home'
 export const WALLET_ERROR = 'WALLET_ERROR--|--Home'

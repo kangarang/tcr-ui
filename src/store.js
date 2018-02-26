@@ -9,10 +9,13 @@ import {
   POLL_LOGS_REQUEST,
   GET_ETH_PROVIDER,
   SET_TOKENS_ALLOWED,
+  UPDATE_BALANCES,
+  UPDATE_BALANCES_REQUEST,
 } from './actions/constants'
 import createReducer from './reducers'
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'
+import tokenSaga from './sagas/token'
 import udappSaga from './sagas/udapp'
 import voteSaga from './sagas/vote'
 
@@ -28,6 +31,8 @@ const logger = createLogger({
     action.type !== GET_TOKENS_ALLOWED &&
     action.type !== POLL_LOGS_REQUEST &&
     action.type !== GET_ETH_PROVIDER &&
+    action.type !== UPDATE_BALANCES &&
+    action.type !== UPDATE_BALANCES_REQUEST &&
     action.type !== SET_TOKENS_ALLOWED),
   collapsed: (getState, action, logEntry) => !action.error,
   stateTransformer,
@@ -58,6 +63,7 @@ export default function configureStore(initialState = {}) {
   // store.runSaga = sagaMiddleware.run(rootSaga);
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)
+  sagaMiddleware.run(tokenSaga)
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(udappSaga)
   // store.injectedReducers = {}; // Reducer registry
