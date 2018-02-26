@@ -10,7 +10,7 @@ import { loginError, loginSuccess } from '../actions'
 import { selectEthjs, selectRegistry } from '../selectors/index'
 
 export default function* rootLoginSaga() {
-  yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
+  // yield takeEvery(EXECUTE_METHOD_REQUEST, executeSaga)
 }
 
 function* executeSaga(action) {

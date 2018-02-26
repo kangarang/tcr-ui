@@ -26,18 +26,17 @@ import {
 } from '../../actions'
 
 import {
-  selectError,
   selectEthjs,
   selectAccount,
   selectNetworkID,
 
   selectBalances,
 
-  selectRegistry,
+  // selectRegistry,
   selectToken,
-  selectVoting,
+  // selectVoting,
 
-  selectParameters,
+  // selectParameters,
 
   selectCandidates,
   selectFaceoffs,
@@ -121,18 +120,6 @@ class Home extends Component {
 
   render() {
     const {
-      ethjs,
-      account,
-      networkID,
-
-      balances,
-
-      registry,
-      token,
-      voting,
-
-      parameters,
-
       candidates,
       faceoffs,
       whitelist,
@@ -270,11 +257,11 @@ const mapStateToProps = createStructuredSelector({
 
   balances: selectBalances,
 
-  registry: selectRegistry,
+  // registry: selectRegistry,
   token: selectToken,
-  voting: selectVoting,
+  // voting: selectVoting,
 
-  parameters: selectParameters,
+  // parameters: selectParameters,
 
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,

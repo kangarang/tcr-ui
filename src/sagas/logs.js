@@ -4,22 +4,22 @@ import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 // import { Organization } from '@governx/governx-lib'
 
-import { newArray, updateItems, pollLogsRequest } from '../actions'
+import { newArray, updateItems, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
-
-import { updateTokenBalancesSaga } from './token'
 
 import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
-import { selectEthjs, selectNetwork, selectRegistry, selectVoting, selectAccount } from '../selectors/index'
+
+import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAccount } from '../selectors'
+
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   // yield takeLatest(SET_CONTRACTS, governX)
-  yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
+  // yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
 
 // function* governX() {
@@ -42,23 +42,23 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '',
+      '_Application',
       registry
     )
 
     yield put(newArray(applications))
-    yield fork(updateTokenBalancesSaga, registry.address)
+    yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Fresh log error:', err)
     throw new Error(err.message)
     // yield put(logsError('logs error', err))
   }
 
-  yield fork(pollController)
+  // yield fork(pollController)
 }
 
 function* pollController() {
-  const network = yield select(selectNetwork)
+  const network = yield select(selectNetworkID)
   let pollInterval = 15000 // 15 seconds
 
   if (network === '420') {
@@ -98,8 +98,7 @@ function* pollLogsSaga(action) {
     if (newLogs.length > 0) {
       console.log(newLogs.length, 'newLog', newLogs[0])
       yield put(updateItems(newLogs))
-      yield fork(updateTokenBalancesSaga, registry.address)
-      yield fork(updateTokenBalancesSaga, voting.address)
+      yield put(updateBalancesRequest())
     }
   } catch (err) {
     console.log('Poll logs error:', err)
