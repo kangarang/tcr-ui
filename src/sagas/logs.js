@@ -26,9 +26,9 @@ export default function* logsSaga() {
 //   const from = yield select(selectAccount)
 
 //   const { poll, tcr, account } = new Organization({
-//     address: '0x2e9321fc399202ea887e69497c5a00df2a47b358', // the tcr registry address
-//     from, // the users account
-//     network: 'rinkeby', // || ropsten || mainnet
+//     address: '0x2e9321fc399202ea887e69497c5a00df2a47b358',
+//     from,
+//     network: 'rinkeby',
 //   });
 //   console.log('poll, tcr, account', poll, tcr, account)
 // }
@@ -165,6 +165,7 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     let commitExpiry
     let revealEndDate
     let revealExpiry
+
     if (dLog._eventName === '_Challenge' || dLog._eventName === '_VoteCommitted') {
       const poll = await voting.contract.pollMap(dLog.pollID.toString())
       commitEndDate = poll[0].toNumber()
@@ -212,7 +213,7 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     }
 
     const finalForm = log_utils.shapeShift(block, tx, details)
-    console.log('finalForm', finalForm)
+    console.log('listing (individual log):', finalForm)
     return finalForm
   } catch (err) {
     console.log('build listing error', err)
