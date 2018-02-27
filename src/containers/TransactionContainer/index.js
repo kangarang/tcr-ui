@@ -57,10 +57,7 @@ const modalStyles = {
 // https://github.com/kumavis/udapp/blob/master/index.js#L205
 class TransactionContainer extends Component {
   render() {
-    const tokenBalance = this.props.tokenBalance
-    const votingRights = this.props.votingRights
-    const votingAllowance = this.props.votingAllowance
-    const registryAllowance = this.props.registryAllowance
+    const { tokenBalance, votingRights, votingAllowance, registryAllowance } = this.props
 
     const visibleRegistryMethods = (this.props.registry.contract ? this.props.registry.contract.abi : this.props.registry.abi || []).filter(
       methodInterface =>
@@ -75,9 +72,6 @@ class TransactionContainer extends Component {
     const visibleTokenMethods = allTokenMethods.filter(meth =>
       this.props.actions.includes(meth.name)
     )
-    // const warningTokenMethods = allTokenMethods.filter(meth =>
-    // this.props.warnings.includes(meth.name)
-    // )
     const visibleVotingMethods = (this.props.voting.contract ? this.props.voting.contract.abi : this.props.voting.abi || []).filter(
       methodInterface =>
         methodInterface.type === 'function' &&
@@ -154,16 +148,6 @@ class TransactionContainer extends Component {
                   </Item>
                 </Container>
               )}
-
-              {/* {warningTokenMethods.map(one => (
-                    <Method
-                      key={`PrereqTokenMethod-${one.name}`}
-                      method={one}
-                      contract={'token'}
-                      {...this.props}
-                    />
-                  ))} */}
-
 
               {visibleRegistryMethods.length > 0 && (
                 <Container>

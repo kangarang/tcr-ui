@@ -34,18 +34,9 @@ const Method = props => {
       <ColorH3>{`${props.method.name}`}</ColorH3>
 
       <MethodDescription>
-        {props.method.constant ? (
-          <div>
-            {translate(`call_${props.method.name}`)}
-          </div>
-        ) : (
-            <div>
-              {translate(`tx_${props.method.name}`)}
-              {props.method.name === 'apply' ? (
-                toUnitAmount(BN(props.minDeposit), 18).toString(10) + ' tokens'
-              ) : ''}
-            </div>
-          )}
+        <div>
+          {props.method.constant ? translate(`call_${props.method.name}`) : translate(`tx_${props.method.name}`)}
+        </div>
       </MethodDescription>
 
       {/* <MethodDescription>

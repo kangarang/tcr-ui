@@ -1,4 +1,4 @@
-import { call, put, select, takeEvery } from 'redux-saga/effects'
+import { call, put, select, all, takeEvery } from 'redux-saga/effects'
 import { updateBalances } from '../actions'
 import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
 import {

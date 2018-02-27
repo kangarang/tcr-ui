@@ -15,17 +15,6 @@ import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 import UserInfo from '../../components/UserInfo'
 
-const CandidatesContainer = styled.div`
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 1em;
-  /* background-color: rgba(0, 0, 0, 0.2); */
-`
-
 import {
   setupEthereum,
   requestModalMethod,
@@ -38,14 +27,25 @@ import {
   selectAccount,
   selectNetworkID,
   selectBalances,
-  // selectRegistry,
+  selectRegistry,
   selectToken,
-  // selectVoting,
-  // selectParameters,
+  selectVoting,
+  selectParameters,
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
 } from '../../selectors'
+
+const CandidatesContainer = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  /* background-color: rgba(0, 0, 0, 0.2); */
+`
 
 const HomeWrapper = styled.div`
   padding: 1em;
@@ -121,6 +121,9 @@ class Home extends Component {
       candidates,
       faceoffs,
       whitelist,
+      balances,
+      networkID,
+      parameters,
     } = this.props
 
     return (
@@ -129,7 +132,7 @@ class Home extends Component {
 
           <UserInfo {...this.props} />
 
-          {/* <TransactionContainer
+          <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
             messages={messages.apply}
             actions={this.state.actions}
@@ -144,7 +147,7 @@ class Home extends Component {
             votingAllowance={balances.get('votingAllowance')}
             registryAllowance={balances.get('registryAllowance')}
             {...this.props}
-          /> */}
+          />
 
           {/* <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
@@ -248,11 +251,11 @@ const mapStateToProps = createStructuredSelector({
 
   balances: selectBalances,
 
-  // registry: selectRegistry,
+  registry: selectRegistry,
   token: selectToken,
-  // voting: selectVoting,
+  voting: selectVoting,
 
-  // parameters: selectParameters,
+  parameters: selectParameters,
 
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,
