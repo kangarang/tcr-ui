@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import { DropDown, SidePanel } from '@aragon/ui'
 
 import messages from '../messages'
 import methods from '../methods'
@@ -34,7 +35,9 @@ import {
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
+  selectMiningStatus,
 } from '../../selectors'
+import MiningOverlay from '../../components/MiningOverlay';
 
 const CandidatesContainer = styled.div`
   text-align: center;
@@ -51,6 +54,13 @@ const HomeWrapper = styled.div`
   padding: 1em;
 `
 
+const items = [
+  'Wandering Thunder',
+  'Black Wildflower',
+  'Ancient Paper',
+]
+
+
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -59,6 +69,8 @@ class Home extends Component {
       modalIsOpen: false,
       selectedListing: false,
       actions: [],
+      activeItem: 0,
+      opened: true,
     }
   }
   componentDidMount() {
@@ -116,6 +128,14 @@ class Home extends Component {
     })
   }
 
+  handleDropDownChange = (index) => {
+    console.log('handle dropdown change', index)
+    this.setState({ activeItem: index })
+  }
+
+  closeSidePanel = () => {
+    this.setState({ opened: false })
+  }
   render() {
     const {
       candidates,
@@ -124,6 +144,7 @@ class Home extends Component {
       balances,
       networkID,
       parameters,
+      miningStatus,
     } = this.props
 
     return (
@@ -131,6 +152,21 @@ class Home extends Component {
         <HomeWrapper>
 
           <UserInfo {...this.props} />
+
+          <DropDown
+            items={items}
+            active={this.state.activeItem}
+            onChange={this.handleDropDownChange}
+          />
+
+          <MiningOverlay
+            open={this.props.miningStatus.get('open')}
+            message={this.props.miningStatus.get('message')}
+          />
+
+          {/* <SidePanel title="Checkout Details" opened={this.state.opened} onClose={this.closeSidePanel}>
+            {'side panel'}
+          </SidePanel> */}
 
           <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
@@ -250,6 +286,7 @@ const mapStateToProps = createStructuredSelector({
   networkID: selectNetworkID,
 
   balances: selectBalances,
+  miningStatus: selectMiningStatus,
 
   registry: selectRegistry,
   token: selectToken,

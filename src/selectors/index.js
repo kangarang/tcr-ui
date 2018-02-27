@@ -12,6 +12,10 @@ export const selectEthjs = createSelector(selectHome, homeState =>
 export const selectAccount = createSelector(selectHome, homeState =>
   homeState.get('account')
 )
+
+export const selectMiningStatus = createSelector(selectHome, homeState =>
+  homeState.get('miningStatus')
+)
 export const selectNetworkID = createSelector(selectHome, homeState =>
   homeState.get('networkID')
 )

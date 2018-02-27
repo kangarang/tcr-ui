@@ -32,6 +32,10 @@ const initialState = fromJS({
     parameterizer: {},
   },
   parameters: {},
+  miningStatus: {
+    open: false,
+    message: ''
+  },
   listings: {},
 })
 
@@ -50,6 +54,7 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
+        .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
     case UPDATE_BALANCES:
       return state
         .set('balances', fromJS(action.payload.balances))
