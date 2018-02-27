@@ -4,7 +4,6 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 
-// import Login from '../Login'
 import messages from '../messages'
 import methods from '../methods'
 import TransactionContainer from '../TransactionContainer'
@@ -15,8 +14,6 @@ import Listing from '../../components/Listing'
 import FlexContainer from '../../components/FlexContainer'
 import Section from '../../components/Section'
 import UserInfo from '../../components/UserInfo'
-
-// import tcrWave from '../../assets/tcr-wave.jpg'
 
 import {
   setupEthereum,
@@ -29,19 +26,26 @@ import {
   selectEthjs,
   selectAccount,
   selectNetworkID,
-
   selectBalances,
-
-  // selectRegistry,
+  selectRegistry,
   selectToken,
-  // selectVoting,
-
-  // selectParameters,
-
+  selectVoting,
+  selectParameters,
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
 } from '../../selectors'
+
+const CandidatesContainer = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  /* background-color: rgba(0, 0, 0, 0.2); */
+`
 
 const HomeWrapper = styled.div`
   padding: 1em;
@@ -60,11 +64,7 @@ class Home extends Component {
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-  handleAfterOpen = () => {
-    console.log('after open')
-  }
   handleRequestClose = () => {
-    console.log('request close')
     this.setState({ modalIsOpen: false })
   }
   openModal = (actions) => {
@@ -77,7 +77,6 @@ class Home extends Component {
   closeModal = () => {
     this.setState({ modalIsOpen: false })
   }
-
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
@@ -100,16 +99,15 @@ class Home extends Component {
     fr.readAsText(file)
   }
   handleCall = e => {
-    console.log('call:', e)
     this.props.onCall(e)
   }
   handleSendTransaction = (txObj) => {
-    console.log('send txn:', txObj)
+    console.log('react send transaction:', txObj)
     this.props.onSendTransaction(txObj)
     // this.props.onSendTransaction({ args: e.args, method: e.method, listing: this.state.selectedListing })
   }
   handleClickListing = e => {
-    console.log('click listing', e)
+    console.log('handle click listing', e)
     this.props.onRequestModalMethod(e)
     this.setState({
       modalIsOpen: true,
@@ -123,6 +121,9 @@ class Home extends Component {
       candidates,
       faceoffs,
       whitelist,
+      balances,
+      networkID,
+      parameters,
     } = this.props
 
     return (
@@ -131,7 +132,7 @@ class Home extends Component {
 
           <UserInfo {...this.props} />
 
-          {/* <TransactionContainer
+          <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}
             messages={messages.apply}
             actions={this.state.actions}
@@ -139,8 +140,24 @@ class Home extends Component {
             handleSendTransaction={this.handleSendTransaction}
             handleCall={this.handleCall}
             onRequestClose={this.handleRequestCloseModal}
-            onAfterOpen={this.handleAfterOpen}
-            openModal={e => this.openModal(['apply'])} // index
+            openModal={e => this.openModal(['apply'])}
+            closeModal={this.closeModal}
+            tokenBalance={balances.get('token')}
+            votingRights={balances.get('votingRights')}
+            votingAllowance={balances.get('votingAllowance')}
+            registryAllowance={balances.get('registryAllowance')}
+            {...this.props}
+          />
+
+          {/* <TransactionContainer
+            modalIsOpen={this.state.modalIsOpen}
+            messages={messages.vote}
+            actions={this.state.actions}
+            networkId={wallet.get('network')}
+            handleSendTransaction={this.handleSendTransaction}
+            handleCall={this.handleCall}
+            onRequestClose={this.handleRequestCloseModal}
+            openModal={e => this.openModal(methods.vote.actions)}
             closeModal={this.closeModal}
             tokenBalance={balances.get('token')}
             votingRights={balances.get('votingRights')}
@@ -149,50 +166,27 @@ class Home extends Component {
             {...this.props}
           /> */}
 
-          {/* <TransactionContainer
-            modalIsOpen={this.state.modalIsOpen}
-            messages={messages.vote}
-            actions={this.state.actions}
-            warnings={customWarnings}
-            networkId={wallet.get('network')}
-            handleSendTransaction={this.handleSendTransaction}
-            handleCall={this.handleCall}
-            // handleCommitVote={this.handleCommitVote}
-            // handleRevealVote={this.handleRevealVote}
-            // handleRequestVotingRights={this.handleRequestVotingRights}
-            onRequestClose={this.handleRequestCloseModal}
-            onAfterOpen={this.handleAfterOpen}
-            openModal={e => this.openModal(methods.vote.actions)}
-            closeModal={this.closeModal}
-            tokenBalance={wallet.getIn(['token', 'tokenBalance'])}
-            votingRights={wallet.getIn(['token', 'allowances', this.props.voting.address, 'votingRights'])}
-            votingAllowance={wallet.getIn(['token', 'allowances', this.props.voting.address, 'total'])}
-            registryAllowance={wallet.getIn(['token', 'allowances', this.props.registry.address, 'total'])}
-            {...this.props}
-          /> */}
-
           <H2>
             {'Applications ('}
             {candidates.size}
             {')'}
           </H2>
-          <FlexContainer>
+          <CandidatesContainer>
             {candidates.size > 0 &&
               candidates.map(log => (
-                <Section key={log.get('listing')}>
+                <Section key={log.get('listingString')}>
                   <Listing
                     log={log}
                     latest={log.get('latest')}
                     owner={log.get('owner')}
-                    listing={log.get('listing')}
+                    listingString={log.get('listingString')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
-                    // status={log.getIn(['latest', 'status'])}
                     handleClick={this.handleClickListing}
                     actions={['challenge', 'updateStatus']}
                   />
                 </Section>
               ))}
-          </FlexContainer>
+          </CandidatesContainer>
 
           <H2>
             {'Challenges ('}
@@ -202,12 +196,12 @@ class Home extends Component {
           <FlexContainer>
             {faceoffs.size > 0 &&
               faceoffs.map(log => (
-                <Section key={log.get('listing')}>
+                <Section key={log.get('listingString')}>
                   <Listing
                     log={log}
                     latest={log.get('latest')}
                     owner={log.get('owner')}
-                    listing={log.get('listing')}
+                    listingString={log.get('listingString')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
                     handleClick={this.handleClickListing}
                     onFileInput={this.handleFileInput}
@@ -223,12 +217,12 @@ class Home extends Component {
           <FlexContainer>
             {whitelist.size > 0 &&
               whitelist.map(log => (
-                <Section key={log.get('listing')}>
+                <Section key={log.get('listingString')}>
                   <Listing
                     log={log}
                     latest={log.get('latest')}
                     owner={log.get('owner')}
-                    listing={log.get('listing')}
+                    listingString={log.get('listingString')}
                     whitelisted={log.getIn(['latest', 'whitelisted'])}
                     handleClick={this.handleClickListing}
                   />
@@ -257,11 +251,11 @@ const mapStateToProps = createStructuredSelector({
 
   balances: selectBalances,
 
-  // registry: selectRegistry,
+  registry: selectRegistry,
   token: selectToken,
-  // voting: selectVoting,
+  voting: selectVoting,
 
-  // parameters: selectParameters,
+  parameters: selectParameters,
 
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,

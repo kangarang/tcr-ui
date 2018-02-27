@@ -46,21 +46,19 @@ export function* commitVoteSaga(action) {
   const account = yield select(selectAccount)
   const voting = yield select(selectVoting)
 
-  console.log('commit vote action', action)
+  console.log('commit vote saga:', action)
   const pollID = action.payload.args[0]
   const voteOption = action.payload.args[1]
   const numTokens = action.payload.args[2]
   // const numTokens = toNaturalUnitAmount(action.payload.args[2], 18)
 
   const salt = randInt(1e6, 1e8)
+  // format args
   const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
-  console.log('voting', voting)
   const prevPollID = yield call(voting.contract.getInsertPointForNumTokens.call, account, numTokens)
-  console.log('prevPollID', prevPollID)
-
   const finalArgs = [pollID, secretHash, numTokens.toString(10), prevPollID.toString(10)]
-
   console.log('finalArgs', finalArgs)
+
   // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
   // grab the poll from the mapping
@@ -74,26 +72,21 @@ export function* commitVoteSaga(action) {
   const revealEndDateString = vote_utils.getEndDateString(
     pollStruct[1].toNumber()
   )
-  console.log('commit & reveal end', commitEndDateString, revealEndDateString)
 
   const json = {
     salt: salt.toString(10),
     voteOption,
     pollID,
     listing: action.payload.listing,
-    // pollStruct,
     commitEndDateString,
     revealEndDateString,
     secretHash,
   }
 
-  const listingUnderscored = action.payload.listing.replace('.', '_')
-  const filename = `pollID-${json.pollID}_listing-${listingUnderscored}_commitVote_commitEndDate-${commitEndDateString}.json`
+  console.log('commit vote json', json)
 
-  // ethjs version
-  // Saves JSON commitVote file before sending transaction
-  // yield call(saveFile, json, filename)
-  // const txHash = yield call(sendTransactionSaga, txData, voting.address)
+  const listingUnderscored = action.payload.listing.replace('.', '_')
+  const filename = `pollID-${pollID}_listing-${listingUnderscored}_commitVote_commitEndDate-${commitEndDateString}.json`
 
   // truffle-contract version
   const receipt = yield call(
@@ -108,11 +101,18 @@ export function* commitVoteSaga(action) {
   if (receipt.receipt.status !== '0x0') {
     saveFile(json, filename)
   }
+  // ethjs version
+  // Saves JSON commitVote file before sending transaction
+  // yield call(saveFile, json, filename)
+  // const txHash = yield call(sendTransactionSaga, txData, voting.address)
+  // console.log('txHash', txHash)
 }
 
 
 export function* revealVoteSaga(action) {
   console.log('reveal action', action)
+  // const registry = yield select(selectRegistry)
+  // const voting = yield select(selectVoting)
   // const listingString = action.payload.args[0]
   // const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
   // const listingHash = vote_utils.getListingHash(listingString)
@@ -120,9 +120,6 @@ export function* revealVoteSaga(action) {
 
   // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
-  const registry = yield select(selectRegistry)
-  console.log('registry', registry)
-  // const to = registry.address
-
+  // const to = voting.address
   // yield call(sendTransactionSaga, txData, to)
 }

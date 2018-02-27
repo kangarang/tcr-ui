@@ -24,7 +24,7 @@ const FileInput = styled.input`
   border: 2px solid ${colors.prism};
 `
 
-export default ({ log, latest, owner, listing, whitelisted, handleClick, onFileInput }) => (
+export default ({ log, latest, owner, listingString, whitelisted, handleClick, onFileInput }) => (
   <Container txHash={latest.get('txHash')}>
     {/* <FlexCenteredItem gC={1}>
       <Identicon owner={owner} size={6} scale={6} />
@@ -32,7 +32,7 @@ export default ({ log, latest, owner, listing, whitelisted, handleClick, onFileI
 
     <div>
       {'Listing: '}
-      {listing}
+      {listingString}
     </div>
     <div>
       {'Owner: '}
@@ -85,7 +85,7 @@ export default ({ log, latest, owner, listing, whitelisted, handleClick, onFileI
       {(!latest.get('pollID') && !latest.get('appExpired')) || whitelisted ? (
         <Button
           onClick={e =>
-            handleClick({ method: 'challenge', context: { listing, latest } })
+            handleClick({ method: 'challenge', context: { listing: listingString, latest } })
           }
         >
           {'Challenge'}
@@ -96,7 +96,7 @@ export default ({ log, latest, owner, listing, whitelisted, handleClick, onFileI
       {!whitelisted && !latest.get('pollID') && latest.get('appExpired') && (
         <Button
           onClick={e =>
-            handleClick({ method: 'updateStatus', context: { listing, latest } })
+            handleClick({ method: 'updateStatus', context: { listing: listingString, latest } })
           }
         >
           {'Update Status'}
@@ -111,7 +111,7 @@ export default ({ log, latest, owner, listing, whitelisted, handleClick, onFileI
               handleClick({
                 method: 'commitVote',
                 context: {
-                  listing,
+                  listing: listingString,
                   latest,
                 },
               })

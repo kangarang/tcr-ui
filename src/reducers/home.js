@@ -36,10 +36,6 @@ const initialState = fromJS({
 })
 
 function homeReducer(state = initialState, action) {
-  if (action.type === REQUEST_MODAL_METHOD) {
-    console.log('action', action)
-  }
-
   switch (action.type) {
     case LOGIN_ERROR:
       return state.set('error', action.error)
@@ -57,10 +53,8 @@ function homeReducer(state = initialState, action) {
     case UPDATE_BALANCES:
       return state
         .set('balances', fromJS(action.payload.balances))
-
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
-
     case NEW_ARRAY:
       return replaceListings(state, action.payload)
     case CHANGE_ITEMS:
@@ -107,7 +101,7 @@ function deleteObjectInArray(array, payload) {
     const index = array.findIndex(
       ri =>
         ri.get('listingHash') === pl.listingHash ||
-        ri.get('listingHash') === pl.listing
+        ri.get('listingHash') === pl.listingString
     )
     if (index !== -1) {
       return array.delete(index)

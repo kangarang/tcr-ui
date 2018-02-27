@@ -1,4 +1,4 @@
-import { call, put, select, takeEvery } from 'redux-saga/effects'
+import { call, put, select, all, takeEvery } from 'redux-saga/effects'
 import { updateBalances } from '../actions'
 import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
 import {
@@ -15,26 +15,39 @@ export default function* tokenSaga() {
 }
 
 function* updateBalancesSaga() {
-  const ethjs = yield select(selectEthjs)
-  const owner = yield select(selectAccount)
-  const registry = yield select(selectRegistry)
-  const token = yield select(selectToken)
-  const voting = yield select(selectVoting)
-
   try {
-    const ethBalance = yield call(ethjs.getBalance, owner)
+    const ethjs = yield select(selectEthjs)
+    const owner = yield select(selectAccount)
+    const registry = yield select(selectRegistry)
+    const token = yield select(selectToken)
+    const voting = yield select(selectVoting)
 
-    const tokenBalanceRaw = yield call(token.contract.balanceOf.call, owner)
+    const [ethBalance, tokenBalanceRaw, registryAllowanceRaw, votingAllowanceRaw, votingRightsRaw] = yield all([
+      call(ethjs.getBalance, owner),
+      call(token.contract.balanceOf.call, owner),
+      call(token.contract.allowance.call, owner, registry.address),
+      call(token.contract.allowance.call, owner, voting.address),
+      call(voting.contract.voteTokenBalance.call, owner)
+    ])
+
     const tokenBalance = toUnitAmount(tokenBalanceRaw, token.decimalPower).toString(10)
-
-    const registryAllowanceRaw = yield call(token.contract.allowance.call, owner, registry.address)
     const registryAllowance = toUnitAmount(registryAllowanceRaw, token.decimalPower).toString(10)
-
-    const votingAllowanceRaw = yield call(token.contract.allowance.call, owner, voting.address)
     const votingAllowance = toUnitAmount(votingAllowanceRaw, token.decimalPower).toString(10)
-
-    const votingRightsRaw = yield call(voting.contract.voteTokenBalance.call, owner)
     const votingRights = toUnitAmount(votingRightsRaw, 18)
+
+    // const ethBalance = yield call(ethjs.getBalance, owner)
+
+    // const tokenBalanceRaw = yield call(token.contract.balanceOf.call, owner)
+    // const tokenBalance = toUnitAmount(tokenBalanceRaw, token.decimalPower).toString(10)
+
+    // const registryAllowanceRaw = yield call(token.contract.allowance.call, owner, registry.address)
+    // const registryAllowance = toUnitAmount(registryAllowanceRaw, token.decimalPower).toString(10)
+
+    // const votingAllowanceRaw = yield call(token.contract.allowance.call, owner, voting.address)
+    // const votingAllowance = toUnitAmount(votingAllowanceRaw, token.decimalPower).toString(10)
+
+    // const votingRightsRaw = yield call(voting.contract.voteTokenBalance.call, owner)
+    // const votingRights = toUnitAmount(votingRightsRaw, 18)
 
     yield put(
       updateBalances({

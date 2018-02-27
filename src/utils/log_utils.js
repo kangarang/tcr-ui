@@ -37,31 +37,34 @@ const log_utils = {
   },
 
   shapeShift: (block, tx, details) => ({
-    listing: details.listingString,
+    listingString: details.listingString,
     listingHash: details.listingHash,
     owner: tx.from,
     challenger: details.pollID && details.challenger,
     latest: {
       whitelisted: details.isWhitelisted,
-      appExpiry: details.appExpiry,
-      appExpired: details.appExpired,
       canBeWhitelisted: details.canBeWhitelisted,
       blockHash: details.blockHash,
       blockNumber: details.blockNumber,
-      timestamp: block.timestamp && new Date(block.timestamp.toNumber(10)),
       txHash: tx.hash,
       txIndex: tx.index.toString(10),
+      logIndex: details.index.toString(10),
+      pollID: details.pollID ? details.pollID.toString(10) : false,
+
       sender: tx.from,
       numTokens: details.unstakedDeposit
         ? details.unstakedDeposit.toString(10)
         : false,
       event: details.eventName,
+
+      appExpiry: details.appExpiry,
+      appExpired: details.appExpired,
       commitEndDate: details.commitEndDate,
       commitExpiry: details.commitExpiry,
       revealEndDate: details.revealEndDate,
       revealExpiry: details.revealExpiry,
-      logIndex: details.index.toString(10),
-      pollID: details.pollID ? details.pollID.toString(10) : false,
+
+      timestamp: block.timestamp && new Date(block.timestamp.toNumber(10)),
     },
   }),
 
