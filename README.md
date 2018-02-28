@@ -105,14 +105,23 @@ Deploy UI to elastic beanstalk (ask for credentials)
 
 ---
 
-## U D A P P
+## Credits
 
-This project uses [kumavis' ethereum universal dapp](https://github.com/kumavis/udapp), refactored for react
+UI Components
 
-Udapp is a higher-order component that does a few things:
-- reads contract JSON ABI
-- decodes methods
-- exposes available endpoints
+[aragon-ui](https://github.com/aragon/aragon-ui/tree/master/src/components)
+
+[aragon-ui/styles](https://scene.zeplin.io/project/59a827960d4c4cb2274007f5)
+
+Utils
+
+[0x.js](https://github.com/0xProject/0x.js/tree/development/packages)
+
+[Augur](https://github.com/AugurProject/augur/tree/seadragon/src/utils)
+
+[MyCrypto](https://github.com/MyCryptoHQ/MyCrypto/tree/develop/common/utils)
+
+[UDAPP](https://github.com/kumavis/udapp)
 
 ---
 
