@@ -53,7 +53,7 @@
     "babel-eslint": "8.2.2",
     "eslint": "4.18.1",
     "eslint-plugin-react": "7.7.0",
-    "sync-assets": "0.1.1",
-    "sync-files": "1.0.3"
+    "sync-assets": "^0.1.1",
+    "sync-files": "^1.0.3"
   }
 }
