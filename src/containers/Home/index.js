@@ -50,17 +50,6 @@ const CandidatesContainer = styled.div`
   /* background-color: rgba(0, 0, 0, 0.2); */
 `
 
-const CandidatesContainer = styled.div`
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 1em;
-  /* background-color: rgba(0, 0, 0, 0.2); */
-`
-
 const HomeWrapper = styled.div`
   padding: 1em;
 `

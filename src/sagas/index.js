@@ -10,7 +10,7 @@ import {
   loginError,
 } from '../actions'
 
-import { setEthjs } from '../utils/provider_utils'
+import { setEthjs } from '../libs/provider'
 
 import { contractsSaga } from './contracts';
 
