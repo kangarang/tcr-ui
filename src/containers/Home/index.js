@@ -55,8 +55,9 @@ import {
   selectMiningStatus,
 } from '../../selectors'
 // import MiningOverlay from '../../components/MiningOverlay';
-import { toUnitAmount } from '../../utils/units_utils';
+import { toUnitAmount, toNaturalUnitAmount } from '../../utils/units_utils';
 import translate from '../../translations';
+import vote_utils from '../../utils/vote_utils';
 
 const CandidatesContainer = styled.div`
   text-align: center;
@@ -144,8 +145,13 @@ class Home extends Component {
       ...prevState,
     }))
   }
+  handleApply = () => {
+    const methods = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')
+    this.props.onSendTransaction({ args: [vote_utils.getListingHash('isaac'), toNaturalUnitAmount(500, 18), 'isaac'], method: methods[0] })
+  }
   handleSendTransaction = (txObj) => {
     console.log('react send transaction:', txObj)
+    const methods = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')
     // this.props.onSendTransaction(txObj)
     // this.props.onSendTransaction({ args: e.args, method: e.method, listing: this.state.selectedListing })
 
@@ -240,6 +246,7 @@ class Home extends Component {
 
             <MarginDiv>
               <Button
+                onClick={this.handleApply}
                 // emphasis='positive'
                 mode='strong'
                 wide
