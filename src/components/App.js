@@ -26,13 +26,12 @@ const AppWrapper = styled.div`
 `
 const App = () => (
   <Wrapper>
-    <TopBar />
+    {/* <TopBar /> */}
     <Nav />
 
     <AppWrapper>
       <AragonApp publicUrl='/aragon-ui'>
 
-        {'APPP'}
         <Home/>
 
       </AragonApp>
