@@ -3,10 +3,26 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import { DropDown, SidePanel, SidePanelSplit, Info, Section, LayoutGrid, Button, Countdown, Card, Table, TableHeader, TableRow, TableCell, Text, TextInput } from '@aragon/ui'
+import {
+  // DropDown,
+  SidePanel,
+  SidePanelSplit,
+  // Info,
+  Section,
+  // LayoutGrid,
+  Button,
+  Countdown,
+  // Card,
+  // Table,
+  // TableHeader,
+  // TableRow,
+  // TableCell,
+  Text,
+  TextInput
+} from '@aragon/ui'
 
 import messages from '../messages'
-import methods from '../methods'
+// import methods from '../methods'
 import TransactionContainer from '../TransactionContainer'
 
 import H2 from '../../components/H2'
@@ -37,7 +53,7 @@ import {
   selectWhitelist,
   selectMiningStatus,
 } from '../../selectors'
-import MiningOverlay from '../../components/MiningOverlay';
+// import MiningOverlay from '../../components/MiningOverlay';
 import { toUnitAmount } from '../../utils/units_utils';
 import translate from '../../translations';
 
@@ -59,11 +75,11 @@ const HomeWrapper = styled.div`
   padding: 1em;
 `
 
-const items = [
-  'Wandering Thunder',
-  'Black Wildflower',
-  'Ancient Paper',
-]
+// const items = [
+//   'Wandering Thunder',
+//   'Black Wildflower',
+//   'Ancient Paper',
+// ]
 
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24
@@ -153,7 +169,7 @@ class Home extends Component {
       networkID,
       parameters,
       token,
-      miningStatus,
+      // miningStatus,
     } = this.props
 
     return (
@@ -170,6 +186,7 @@ class Home extends Component {
             message={this.props.miningStatus.get('message')}
           /> */}
 
+          <UserInfo {...this.props} />
           <SidePanel
             title="Apply a Listing into the Registry"
             opened={this.state.opened}
@@ -177,8 +194,10 @@ class Home extends Component {
           >
             <SidePanelSplit children={[
               <Section>
-                <h1>{'Time Remaining'}</h1>
-                <Countdown end={endDate} />
+                <h1>{'Application Period'}</h1>
+                <h1>{'3 Days'}</h1>
+                {/* <h1>{'Time Remaining'}</h1>
+                <Countdown end={endDate} /> */}
               </Section>,
               <Section>
                 <h1>{'MIN_DEPOSIT'}</h1>

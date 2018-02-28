@@ -10,7 +10,7 @@ import {
 import {
   // selectEthjs,
   selectAccount,
-  selectRegistry,
+  // selectRegistry,
   selectVoting,
 } from '../selectors'
 
@@ -110,7 +110,7 @@ export function* commitVoteSaga(action) {
 
 
 export function* revealVoteSaga(action) {
-  console.log('reveal action', action)
+  // console.log('reveal action', action)
   // const registry = yield select(selectRegistry)
   // const voting = yield select(selectVoting)
   // const listingString = action.payload.args[0]

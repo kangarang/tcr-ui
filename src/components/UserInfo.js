@@ -1,7 +1,6 @@
 import React from 'react'
 import { config } from '../config'
 
-import Identicon from './Identicon'
 import JazzIdenticon from './JazzIdenticon'
 import Img from './Img'
 
@@ -42,7 +41,6 @@ export default ({ account, networkID, balances, parameters, token }) => (
     </Item>
 
     <FlexCenteredItem gR={2} gC={1}>
-      {/* <Identicon owner={account} size={6} scale={6} /> */}
       <JazzIdenticon address={account} diameter={40} />
     </FlexCenteredItem>
 

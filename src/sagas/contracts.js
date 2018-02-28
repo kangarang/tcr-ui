@@ -9,7 +9,7 @@ import {
 
 import { setupRegistry, setupContract } from '../libs/contracts';
 
-function ipfsSaga() {
+// function ipfsSaga() {
   // const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
   // const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5002')
 
@@ -34,7 +34,7 @@ function ipfsSaga() {
   //   console.log(node.toJSON())
   // })
 
-}
+// }
 export function* contractsSaga(ethjs, account) {
   try {
     const registry = yield call(setupRegistry, ethjs, account)

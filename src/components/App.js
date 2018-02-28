@@ -7,7 +7,7 @@ import { colors } from '../colors'
 
 import Home from '../containers/Home'
 
-import TopBar from './TopBar'
+// import TopBar from './TopBar'
 import Nav from './Nav'
 
 import '../global-styles'

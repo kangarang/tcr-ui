@@ -11,7 +11,7 @@ import {
 import { toUnitAmount } from '../utils/units_utils'
 
 export default function* tokenSaga() {
-  // yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
+  yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
 }
 
 function* updateBalancesSaga() {
