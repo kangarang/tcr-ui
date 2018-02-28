@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import blockies from 'blockies'
+// import blockies from 'blockies'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -16,16 +16,16 @@ function Identicon(props) {
   const size = props.size || 8
   const scale = props.scale || 8
 
-  const dataUrl = blockies({
-    // lowercase it in case it's a checksummedaccount
-    seed: owner.toLowerCase(),
-    size,
-    scale,
-  }).toDataURL()
+  // const dataUrl = blockies({
+  //   // lowercase it in case it's a checksummedaccount
+  //   seed: owner.toLowerCase(),
+  //   size,
+  //   scale,
+  // }).toDataURL()
 
   return (
     <Container>
-      <img src={dataUrl} alt="" />
+      {/* <img src={dataUrl} alt="" /> */}
     </Container>
   )
 }
