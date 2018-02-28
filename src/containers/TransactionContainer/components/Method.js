@@ -57,13 +57,13 @@ const Method = props => {
             <Input
               id={input.name}
               placeholder={translateRaw(`input${input.name}`)}
-              defaultValue={
-                input.name === '_voter' || input.name === '_owner'
-                  ? `${props.account}`
-                  : input.name === '_listingHash'
-                    ? props.request.getIn(['context', 'listing'])
-                    : ''
-              }
+              // defaultValue={
+                // input.name === '_voter' || input.name === '_owner'
+                //   ? `${props.account}`
+                //   : input.name === '_listingHash'
+                    // ? props.request.getIn(['context', 'listing'])
+                    // : ''
+              // }
               onChange={e => props.hocInputChange(e, props.method, input)}
             />
           )}

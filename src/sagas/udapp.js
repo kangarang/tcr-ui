@@ -59,7 +59,7 @@ function* callUDappSaga(action) {
   alert(callResult)
 }
 
-
+// TODO: write tests for these sagas. against abis
 function* handleSendTransaction(action) {
   console.log('handleSendTransaction saga:', action)
   if (action.method === 'apply') {

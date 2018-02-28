@@ -12,6 +12,7 @@ import {
   // LayoutGrid,
   Button,
   Countdown,
+  CircleGraph,
   // Card,
   // Table,
   // TableHeader,
@@ -94,7 +95,7 @@ class Home extends Component {
       selectedListing: false,
       actions: [],
       activeItem: 0,
-      opened: true,
+      opened: false,
     }
   }
   componentDidMount() {
@@ -104,10 +105,11 @@ class Home extends Component {
     this.setState({ modalIsOpen: false })
   }
   openModal = (actions) => {
-    this.props.onRequestModalMethod({ method: 'apply', context: {} })
+    // this.props.onRequestModalMethod({ method: 'apply', context: {} })
     this.setState({
-      modalIsOpen: true,
-      actions
+      // modalIsOpen: true,
+      // actions,
+      opened: true,
     })
   }
   closeModal = () => {
@@ -137,10 +139,16 @@ class Home extends Component {
   handleCall = e => {
     this.props.onCall(e)
   }
+  handleInputChange = (e) => {
+    this.setState(prevState => ({
+      ...prevState,
+    }))
+  }
   handleSendTransaction = (txObj) => {
     console.log('react send transaction:', txObj)
-    this.props.onSendTransaction(txObj)
+    // this.props.onSendTransaction(txObj)
     // this.props.onSendTransaction({ args: e.args, method: e.method, listing: this.state.selectedListing })
+
   }
   handleClickListing = e => {
     console.log('handle click listing', e)
@@ -186,7 +194,8 @@ class Home extends Component {
             message={this.props.miningStatus.get('message')}
           /> */}
 
-          <UserInfo {...this.props} />
+          {/* <UserInfo {...this.props} /> */}
+
           <SidePanel
             title="Apply a Listing into the Registry"
             opened={this.state.opened}
