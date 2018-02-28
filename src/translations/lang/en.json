@@ -4,6 +4,9 @@
     "tx_approve": "Approve tokens for address",
     "tx_transfer": "Transfer tokens",
 
+    "sidebar_apply_instructions": "To apply for Listing in the Registry, you need to submit the name of the Listing, and send at least the MIN_DEPOSIT. You can deposit more than the MIN_DEPOSIT. If your listing is challenged, only MIN_DEPOSIT will be at stake/risk.",
+    "sidebar_apply_question": "What is the domain of the Listing you wish to apply into the Registry? How many tokens will you stake with the application?",
+
     "tx_apply": "Apply a listing with name and deposit. The minimum deposit is ",
     "pre_apply": ["minDeposit", "approve"],
     "ins_apply": ["You can deposit more than the minimum deposit", "Your deposit stays with the application", "Applications take 3 days, during which any token-holder can challenge your listing application", "If no challenges, your listing will be added to the registry", "Challenges cost minDeposit", "A challenge forces a listing into the voting period", "Voting period takes 6 days, during which time your deposit will be locked until the end of the voting period", "If you win the challenge, you will not only get added to the registry, but also win a percentage of the challenger's stake", "If you lose the challenge, you will forfeit minDeposit of your total deposit, and any additional deposit can be retrieved by you", "If you want to retreive your deposit once added to the registry, you can do so at any time", "However your listing will be removed at that time as well"],
