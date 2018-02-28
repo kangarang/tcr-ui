@@ -298,6 +298,7 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 These workflow diagrams were created by our wonderful designer, Eva Shon.
 
 ![Simple overview](./src/assets/simple-overview.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui?ref=badge_shield)
 
 ![Detailed workflow](./src/assets/detailed-workflow.png)
 
@@ -306,3 +307,5 @@ These workflow diagrams were created by our wonderful designer, Eva Shon.
 ### License
 
 This project is licensed under the MIT license, Copyright (c) 2018 Isaac Kang. For more information see `LICENSE`.
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui?ref=badge_large)
