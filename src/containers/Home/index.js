@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import { DropDown, SidePanel } from '@aragon/ui'
+import { DropDown, SidePanel, SidePanelSplit, Info, Section, LayoutGrid, Button, Countdown, Card, Table, TableHeader, TableRow, TableCell, Text, TextInput } from '@aragon/ui'
 
 import messages from '../messages'
 import methods from '../methods'
@@ -13,7 +13,7 @@ import H2 from '../../components/H2'
 
 import Listing from '../../components/Listing'
 import FlexContainer from '../../components/FlexContainer'
-import Section from '../../components/Section'
+// import Section from '../../components/Section'
 import UserInfo from '../../components/UserInfo'
 
 import {
@@ -38,6 +38,8 @@ import {
   selectMiningStatus,
 } from '../../selectors'
 import MiningOverlay from '../../components/MiningOverlay';
+import { toUnitAmount } from '../../utils/units_utils';
+import translate from '../../translations';
 
 const CandidatesContainer = styled.div`
   text-align: center;
@@ -50,6 +52,9 @@ const CandidatesContainer = styled.div`
   /* background-color: rgba(0, 0, 0, 0.2); */
 `
 
+const MarginDiv = styled.div`
+  margin: 1em 0;
+`
 const HomeWrapper = styled.div`
   padding: 1em;
 `
@@ -60,6 +65,9 @@ const items = [
   'Ancient Paper',
 ]
 
+
+const DAY_IN_MS = 1000 * 60 * 60 * 24
+const endDate = new Date(Date.now() + 5 * DAY_IN_MS)
 
 class Home extends Component {
   constructor(props) {
@@ -144,29 +152,74 @@ class Home extends Component {
       balances,
       networkID,
       parameters,
+      token,
       miningStatus,
     } = this.props
 
     return (
       <div>
         <HomeWrapper>
-
-          <UserInfo {...this.props} />
-
-          <DropDown
+          {/* <DropDown
             items={items}
             active={this.state.activeItem}
             onChange={this.handleDropDownChange}
-          />
+          /> */}
 
-          <MiningOverlay
+          {/* <MiningOverlay
             open={this.props.miningStatus.get('open')}
             message={this.props.miningStatus.get('message')}
-          />
+          /> */}
 
-          {/* <SidePanel title="Checkout Details" opened={this.state.opened} onClose={this.closeSidePanel}>
-            {'side panel'}
-          </SidePanel> */}
+          <SidePanel
+            title="Apply a Listing into the Registry"
+            opened={this.state.opened}
+            onClose={this.closeSidePanel}
+          >
+            <SidePanelSplit children={[
+              <Section>
+                <h1>{'Time Remaining'}</h1>
+                <Countdown end={endDate} />
+              </Section>,
+              <Section>
+                <h1>{'MIN_DEPOSIT'}</h1>
+                <h2>{toUnitAmount(parameters.get('minDeposit'), 18).toString()} {token.name}</h2>
+              </Section>
+            ]
+            } />
+
+            <MarginDiv>
+              <Text color='grey' smallcaps>{'QUESTION'}</Text>
+            </MarginDiv>
+            <MarginDiv>
+              <Text>{translate('sidebar_apply_question')}</Text>
+            </MarginDiv>
+            <MarginDiv>
+              <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
+            </MarginDiv>
+            <MarginDiv>
+              <Text>{translate('sidebar_apply_instructions')}</Text>
+            </MarginDiv>
+
+            <MarginDiv>
+              <Text color='grey' smallcaps>{'LISTING NAME'}</Text>
+              <TextInput wide type='text' />
+            </MarginDiv>
+
+            <MarginDiv>
+              <Text color='grey' smallcaps>{'TOKEN AMOUNT TO STAKE'}</Text>
+              <TextInput wide type='number' />
+            </MarginDiv>
+
+            <MarginDiv>
+              <Button
+                // emphasis='positive'
+                mode='strong'
+                wide
+              >
+                {'Apply Listing'}
+              </Button>
+            </MarginDiv>
+          </SidePanel>
 
           <TransactionContainer
             modalIsOpen={this.state.modalIsOpen}

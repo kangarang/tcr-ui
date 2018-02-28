@@ -1,6 +1,6 @@
 import Eth from 'ethjs'
 // import bs58 from 'bs58'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 // Random integer for salt
 export const randInt = (min, max) => {
@@ -32,6 +32,9 @@ export const trimDecimalsThree = n =>
 // convert FROM natural unit
 // (reading logs or an event)
 export const toUnitAmount = (amount, decimals) => {
+  if (_.isString(amount) || _.isObject(amount)) {
+    amount = BN(amount)
+  }
   // if (!_.isNumber(amount)) console.log('amount', amount)
   // if (!_.isNumber(decimals)) console.log('decimals', decimals)
   const decimalPower = BN(10).pow(BN(18))

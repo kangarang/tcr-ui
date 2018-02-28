@@ -27,11 +27,11 @@ const initialState = fromJS({
   },
   contracts: {
     registry: {},
-    token: {},
+    token: { name: '' },
     voting: {},
     parameterizer: {},
   },
-  parameters: {},
+  parameters: { minDeposit: '' },
   miningStatus: {
     open: false,
     message: ''
