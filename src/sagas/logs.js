@@ -17,7 +17,7 @@ import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAccou
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
 
 export default function* logsSaga() {
-  yield takeLatest(SET_CONTRACTS, getFreshLogs)
+  // yield takeLatest(SET_CONTRACTS, getFreshLogs)
   // yield takeLatest(SET_CONTRACTS, governX)
   // yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
