@@ -32,8 +32,8 @@ export function timeLeft(d) {
     formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
     // 1518900156
     timestamp: date.getTime() / 1000,
-    // 00 H : 05 Min : 00 Sec
     timeleft: diff,
+    date,
   }
 }
 

@@ -47,7 +47,7 @@ function* updateBalancesSaga() {
     const votingAllowance = toUnitAmount(votingAllowanceRaw, token.decimalPower).toString(10)
 
     const votingRightsRaw = yield call(voting.contract.voteTokenBalance.call, owner)
-    const votingRights = toUnitAmount(votingRightsRaw, 18)
+    const votingRights = toUnitAmount(votingRightsRaw, 18).toString(10)
 
     yield put(
       updateBalances({

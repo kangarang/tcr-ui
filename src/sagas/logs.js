@@ -209,7 +209,7 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     }
 
     const finalForm = log_utils.shapeShift(block, tx, details)
-    console.log('listing (individual log):', finalForm)
+    // console.log('listing (individual log):', finalForm)
     return finalForm
   } catch (err) {
     console.log('build listing error', err)

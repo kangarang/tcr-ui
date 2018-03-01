@@ -30,7 +30,7 @@ export default function* voteSaga() {
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    // console.log('action', action)
+    console.log('request voting rights saga action', action)
     const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
     const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
     // const receipt = yield call(voting.contract.requestVotingRights, tokens.toString(10))

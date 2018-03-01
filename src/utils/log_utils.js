@@ -10,32 +10,6 @@ const log_utils = {
   canAnyBeWhitelisted: async (registry, logs) =>
     registry.filterListingAndCall(logs, 'canBeWhitelisted'),
 
-  normalizr: () => {
-    // const normal = {
-    //   timestamp: 1511390492,
-    //   transactionHash:
-    //     '0x173543d440410544b81d7ebeddd1f40f651ef8e8606fa8dcac7ab579d8e33087',
-    //   tokenInfo: {
-    //     address: '0x688f95e3416b3960a2bbcc1d25a2c17aff9aefc6',
-    //     name: 'TurkeyCoin',
-    //     decimals: '18',
-    //     symbol: 'TRKY',
-    //     totalSupply: '1000000000000000000000',
-    //     owner: '0x',
-    //     txsCount: 3,
-    //     transfersCount: 15,
-    //     lastUpdated: 1511505832,
-    //     issuancesCount: 0,
-    //     holdersCount: 12,
-    //     price: false,
-    //   },
-    //   type: 'transfer',
-    //   value: '100000000000000000',
-    //   from: '0x4b8ea56773822a393d38019e799bfc25229284b2',
-    //   to: '0x6c439e156c0571b9e9174c4ac440018515dea1f4',
-    // }
-  },
-
   shapeShift: (block, tx, details) => ({
     listingString: details.listingString,
     listingHash: details.listingHash,
