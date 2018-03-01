@@ -1,7 +1,7 @@
 import React from 'react'
 import { config } from '../config'
 
-import JazzIdenticon from './JazzIdenticon'
+import Identicon from './Identicon'
 import Img from './Img'
 
 import {
@@ -36,12 +36,12 @@ export default ({ account, networkID, balances, parameters, token }) => (
     <Item gR={1} gC={4}>
       <BoldInlineText>
         {'ΞTH Balance: '}
-        {withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))}
+        {withCommas(trimDecimalsThree(toEther(balances.ETH)))}
       </BoldInlineText>
     </Item>
 
     <FlexCenteredItem gR={2} gC={1}>
-      <JazzIdenticon address={account} diameter={40} />
+      <Identicon address={account} diameter={40} />
     </FlexCenteredItem>
 
     <Item gR={2} gC={2}>
@@ -61,7 +61,7 @@ export default ({ account, networkID, balances, parameters, token }) => (
     <Item gR={2} gC={4}>
       <BoldInlineText>
         {`${token.symbol ? token.symbol: ''} Balance: `}
-        {balances.get('token') && withCommas(trimDecimalsThree(balances.get('token')))}
+        {balances.token && withCommas(trimDecimalsThree(balances.token))}
       </BoldInlineText>
     </Item>
   </Container>

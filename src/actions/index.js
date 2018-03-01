@@ -4,7 +4,7 @@ import {
   UDAPP_ERROR,
   LOGIN_ERROR,
   GET_ETHEREUM,
-  SET_ETHEREUM_PROVIDER,
+  // SET_ETHEREUM_PROVIDER,
   SET_WALLET,
   SET_CONTRACTS,
   SET_MIN_DEPOSIT,
@@ -22,6 +22,8 @@ import {
   CALL_REQUESTED,
   UPDATE_BALANCES_REQUEST,
   UPDATE_BALANCES,
+  TXN_MINED,
+  TXN_REVERTED,
 } from './constants'
 
 export function setupEthereum(network) {
@@ -53,12 +55,12 @@ export function updateBalances(payload) {
     payload,
   }
 }
-export function setEthereumProvider(payload) {
-  return {
-    type: SET_ETHEREUM_PROVIDER,
-    payload,
-  }
-}
+// export function setEthereumProvider(payload) {
+//   return {
+//     type: SET_ETHEREUM_PROVIDER,
+//     payload,
+//   }
+// }
 
 export function udappError(error) {
   return {
@@ -120,6 +122,18 @@ export function setMinDeposit(minDeposit) {
 export function callRequested(payload) {
   return {
     type: CALL_REQUESTED,
+    payload,
+  }
+}
+export function txnMined(payload) {
+  return {
+    type: TXN_MINED,
+    payload,
+  }
+}
+export function txnReverted(payload) {
+  return {
+    type: TXN_REVERTED,
     payload,
   }
 }

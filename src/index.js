@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router'
 import createHistory from 'history/createBrowserHistory'
 import { ThemeProvider } from 'styled-components'
+import 'semantic-ui-css/semantic.min.css';
 
 import { colors } from './colors';
 

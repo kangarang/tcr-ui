@@ -10,7 +10,8 @@ export const LOGS_ERROR = 'LOGS_ERROR--|--Error'
 export const LOGIN_ERROR = 'LOGIN_ERROR--|--Error'
 export const UDAPP_ERROR = 'UDAPP_ERROR--|--Error'
 
-// Home
+export const SET_WALLET = 'SET_WALLET--|--Home'
+export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'
 export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--|--TOKEN'
 export const UPDATE_BALANCES = 'UPDATE_BALANCES--|--TOKEN'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS--|--Home'
@@ -18,13 +19,8 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS--|--Home'
 export const WALLET_ERROR = 'WALLET_ERROR--|--Home'
 export const GET_ETHEREUM = 'GET_ETHEREUM--|--Home'
 export const GET_TOKENS_ALLOWED = 'GET_TOKENS_ALLOWED--|--Home'
-export const CHANGE_SLIDER_VALUE = 'CHANGE_SLIDER_VALUE--|--Home'
-export const SET_ETHEREUM_PROVIDER = 'SET_ETHEREUM_PROVIDER--|--Home'
-export const SET_CUSTOM_METHODS = 'SET_CUSTOM_METHODS--|--Home'
 export const REQUEST_MODAL_METHOD = 'REQUEST_MODAL_METHOD--|--Home'
 export const CLICK_ACTION_REQUEST = 'CLICK_ACTION_REQUEST--|--Home'
-export const SET_WALLET = 'SET_WALLET--|--Home'
-export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'
 export const SET_MIN_DEPOSIT = 'SET_MIN_DEPOSIT--|--Home'
 
 export const SET_METHOD_ARGS = 'SET_METHOD_ARGS--|--Contract'
@@ -33,6 +29,8 @@ export const POLL_LOGS_REQUEST = 'POLL_LOGS_REQUEST--|--Contract'
 
 // call / txn
 export const SEND_TRANSACTION = 'SEND_TRANSACTION--|--Home'
+export const TXN_MINED = 'TXN_MINED--|--Home'
+export const TXN_REVERTED = 'TXN_REVERTED--|--Home'
 export const CALL_REQUESTED = 'CALL_REQUESTED--|--Home'
 
 // Token
