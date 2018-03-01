@@ -11,8 +11,10 @@ import {
   Section,
   // LayoutGrid,
   Button,
-  Countdown,
-  CircleGraph,
+  ContextMenu,
+  ContextMenuItem,
+  // Countdown,
+  // CircleGraph,
   // Card,
   // Table,
   // TableHeader,
@@ -23,15 +25,13 @@ import {
 } from '@aragon/ui'
 
 import messages from '../messages'
-// import methods from '../methods'
-import TransactionContainer from '../TransactionContainer'
+import Transaction from '../Transaction'
 
 import H2 from '../../components/H2'
 
 import Listing from '../../components/Listing'
 import FlexContainer from '../../components/FlexContainer'
-// import Section from '../../components/Section'
-import UserInfo from '../../components/UserInfo'
+// import UserInfo from '../../components/UserInfo'
 
 import {
   setupEthereum,
@@ -53,8 +53,9 @@ import {
   selectFaceoffs,
   selectWhitelist,
   selectMiningStatus,
+  selectAllContracts,
 } from '../../selectors'
-// import MiningOverlay from '../../components/MiningOverlay';
+
 import { toUnitAmount, toNaturalUnitAmount } from '../../utils/units_utils';
 import translate from '../../translations';
 import vote_utils from '../../utils/vote_utils';
@@ -141,30 +142,29 @@ class Home extends Component {
     this.props.onCall(e)
   }
   handleInputChange = (e) => {
-    this.setState(prevState => ({
-      ...prevState,
-    }))
+    // this.setState(prevState => ({
+    //   ...prevState,
+    // }))
   }
   handleApply = () => {
     const methods = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')
-    this.props.onSendTransaction({ args: [vote_utils.getListingHash('isaac'), toNaturalUnitAmount(500, 18), 'isaac'], method: methods[0] })
+    this.props.onSendTransaction({ args: [vote_utils.getListingHash('ixsac'), toNaturalUnitAmount('500', 18), 'isaac'], method: methods[0] })
   }
   handleSendTransaction = (txObj) => {
     console.log('react send transaction:', txObj)
-    const methods = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')
+    // const methods = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')
     // this.props.onSendTransaction(txObj)
     // this.props.onSendTransaction({ args: e.args, method: e.method, listing: this.state.selectedListing })
-
   }
-  handleClickListing = e => {
-    console.log('handle click listing', e)
-    this.props.onRequestModalMethod(e)
-    this.setState({
-      modalIsOpen: true,
-      selectedListing: e.context.listing,
-      actions: [e.method],
-    })
-  }
+  // handleClickListing = e => {
+  //   console.log('handle click listing', e)
+  //   this.props.onRequestModalMethod(e)
+  //   this.setState({
+  //     modalIsOpen: true,
+  //     selectedListing: e.context.listing,
+  //     actions: [e.method],
+  //   })
+  // }
 
   handleDropDownChange = (index) => {
     console.log('handle dropdown change', index)
@@ -189,19 +189,10 @@ class Home extends Component {
     return (
       <div>
         <HomeWrapper>
-          {/* <DropDown
-            items={items}
-            active={this.state.activeItem}
-            onChange={this.handleDropDownChange}
-          /> */}
-
-          {/* <MiningOverlay
-            open={this.props.miningStatus.get('open')}
-            message={this.props.miningStatus.get('message')}
-          /> */}
-
-          {/* <UserInfo {...this.props} /> */}
-
+          <ContextMenu>
+            <ContextMenuItem>Some Action</ContextMenuItem>
+            <ContextMenuItem>Another Action</ContextMenuItem>
+          </ContextMenu>
           <SidePanel
             title="Apply a Listing into the Registry"
             opened={this.state.opened}
@@ -211,8 +202,6 @@ class Home extends Component {
               <Section>
                 <h1>{'Application Period'}</h1>
                 <h1>{'3 Days'}</h1>
-                {/* <h1>{'Time Remaining'}</h1>
-                <Countdown end={endDate} /> */}
               </Section>,
               <Section>
                 <h1>{'MIN_DEPOSIT'}</h1>
@@ -247,7 +236,6 @@ class Home extends Component {
             <MarginDiv>
               <Button
                 onClick={this.handleApply}
-                // emphasis='positive'
                 mode='strong'
                 wide
               >
@@ -256,7 +244,7 @@ class Home extends Component {
             </MarginDiv>
           </SidePanel>
 
-          <TransactionContainer
+          <Transaction
             modalIsOpen={this.state.modalIsOpen}
             messages={messages.apply}
             actions={this.state.actions}
@@ -272,23 +260,6 @@ class Home extends Component {
             registryAllowance={balances.get('registryAllowance')}
             {...this.props}
           />
-
-          {/* <TransactionContainer
-            modalIsOpen={this.state.modalIsOpen}
-            messages={messages.vote}
-            actions={this.state.actions}
-            networkId={wallet.get('network')}
-            handleSendTransaction={this.handleSendTransaction}
-            handleCall={this.handleCall}
-            onRequestClose={this.handleRequestCloseModal}
-            openModal={e => this.openModal(methods.vote.actions)}
-            closeModal={this.closeModal}
-            tokenBalance={balances.get('token')}
-            votingRights={balances.get('votingRights')}
-            votingAllowance={balances.get('votingAllowance')}
-            registryAllowance={balances.get('registryAllowance')}
-            {...this.props}
-          /> */}
 
           <H2>
             {'Applications ('}

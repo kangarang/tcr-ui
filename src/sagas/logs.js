@@ -42,7 +42,7 @@ function* getFreshLogs() {
       handleLogs,
       lastReadBlockNumber,
       'latest',
-      '', // All events
+      '',
       registry
     )
 
@@ -54,7 +54,7 @@ function* getFreshLogs() {
     // yield put(logsError('logs error', err))
   }
 
-  // yield fork(pollController)
+  yield fork(pollController)
 }
 
 function* pollController() {
@@ -82,24 +82,20 @@ function* pollController() {
 }
 
 function* pollLogsSaga(action) {
-  const ethjs = yield select(selectEthjs)
-  const registry = yield select(selectRegistry)
-  const voting = yield select(selectVoting)
   try {
+    const ethjs = yield select(selectEthjs)
+    const registry = yield select(selectRegistry)
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
-    const contract = registry
     const newLogs = yield call(
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
       '',
-      contract
+      registry
     )
-    if (newLogs.length > 0) {
-      console.log(newLogs.length, 'newLog', newLogs[0])
-      yield put(updateItems(newLogs))
-      yield put(updateBalancesRequest())
-    }
+    console.log(newLogs.length, 'newLog', newLogs[0])
+    yield put(updateItems(newLogs))
+    yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Poll logs error:', err)
     // yield put(logsError('logs error', err))
@@ -111,7 +107,7 @@ function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
 
-    const blockRange = {
+    const blockRange = yield {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
     }

@@ -49,7 +49,6 @@ export const toNaturalUnitAmount = (amount, decimals) => {
   // if (!_.isNumber(decimals)) return false
   const unit = BN(10).pow(BN(18))
   const naturalUnitAmount = BN(amount).mul(unit)
-  console.log('naturalUnitAmount', naturalUnitAmount.toString())
   return naturalUnitAmount
 }
 

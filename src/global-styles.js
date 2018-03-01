@@ -82,7 +82,6 @@ const globalStyles = `
 
   html {
     margin: 0;
-
     body {
       line-height: 1.5em;
       color: ${colors.offBlack};
@@ -90,7 +89,6 @@ const globalStyles = `
       margin: 0;
     }
   }
-
   div {
     outline: none;
     box-sizing: border-box;

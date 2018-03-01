@@ -5,7 +5,7 @@ import Button from '../../../components/Button'
 import translate, { translateRaw } from '../../../translations/index'
 import styled from 'styled-components'
 import { colors } from '../../../colors'
-import { BN, toUnitAmount } from '../../../utils/units_utils';
+// import { BN, toUnitAmount } from '../../../utils/units_utils';
 
 const styles = {
   udappMethod: {

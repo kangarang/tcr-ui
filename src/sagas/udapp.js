@@ -62,7 +62,7 @@ function* callUDappSaga(action) {
 // TODO: write tests for these sagas. against abis
 function* handleSendTransaction(action) {
   console.log('handleSendTransaction saga:', action)
-  if (action.method === 'apply') {
+  if (action.payload.method.name === 'apply') {
     yield call(applySaga, action)
   } else if (action.method === 'challenge') {
     yield call(challengeSaga, action)
@@ -80,9 +80,12 @@ function* handleSendTransaction(action) {
 function* applySaga(action) {
   const registry = yield select(selectRegistry)
 
-  const listingString = action.payload.args[0]
-  const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
-  const listingHash = vote_utils.getListingHash(listingString)
+  const listingString = action.payload.args[2]
+  const actualAmount = action.payload.args[1]
+  const listingHash = action.payload.args[0]
+  // const listingString = action.payload.args[0]
+  // const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
+  // const listingHash = vote_utils.getListingHash(listingString)
 
   const finalArgs = [listingHash, actualAmount, listingString]
 
