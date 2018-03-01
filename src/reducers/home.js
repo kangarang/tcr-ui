@@ -31,11 +31,7 @@ const initialState = fromJS({
     voting: {},
     parameterizer: {},
   },
-  parameters: { minDeposit: '' },
-  miningStatus: {
-    open: false,
-    message: ''
-  },
+  parameters: { minDeposit: '', applyStageLen: '' },
   listings: {},
 })
 

@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux-immutable'
-import homeReducer from './home'
-import udappReducer from './udapp'
-import miningStatusReducer from './miningStatus'
+import home from './home'
+import miningStatus from './miningStatus'
+import udapp from './udapp'
 
 export default function createReducer() {
   return combineReducers({
-    home: homeReducer,
-    udapp: udappReducer,
-    miningStatus: miningStatusReducer,
+    home,
+    miningStatus,
+    udapp,
   })
 }

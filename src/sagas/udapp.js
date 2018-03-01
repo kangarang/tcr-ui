@@ -64,10 +64,12 @@ function* handleSendTransaction(action) {
   console.log('handleSendTransaction saga:', action)
   if (action.payload.method.name === 'apply') {
     yield call(applySaga, action)
-  } else if (action.method === 'challenge') {
+  } else if (action.payload.method.name === 'challenge') {
     yield call(challengeSaga, action)
   } else if (action.payload.method.name === 'requestVotingRights') {
     yield call(requestVotingRightsSaga, action)
+  } else if (action.payload.method.name === 'updateStatus') {
+    yield call(updateStatusSaga, action)
   } else if (action.payload.method.name === 'commitVote') {
     yield call(commitVoteSaga, action)
   } else if (action.payload.method.name === 'revealVote') {
@@ -77,6 +79,14 @@ function* handleSendTransaction(action) {
   }
 }
 
+function* updateStatusSaga(action) {
+  const registry = yield select(selectRegistry)
+
+  const txData = EthAbi.encodeMethod(action.payload.method, [action.payload.args[0]])
+  const to = registry.address
+
+  yield call(sendTransactionSaga, txData, to)
+}
 function* applySaga(action) {
   const registry = yield select(selectRegistry)
 
@@ -96,8 +106,9 @@ function* applySaga(action) {
 }
 
 function* challengeSaga(action) {
-  const listingString = action.payload.args[0]
-  const listingHash = vote_utils.getListingHash(listingString)
+  const listingHash = action.payload.args[0]
+  const listingString = action.payload.args[1]
+  // const listingHash = vote_utils.getListingHash(listingString)
   const finalArgs = [listingHash, listingString]
 
   const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
@@ -145,54 +156,54 @@ function* sendOtherTransaction(action) {
     const args = action.payload.args
     const inputNames = action.payload.method.inputs.map(inp => inp.name)
 
-    if (inputNames.includes('_listingHash')) {
-      const indexOfListingHash = inputNames.indexOf('_listingHash')
-      const listingString = args[indexOfListingHash]
-      args[indexOfListingHash] = vote_utils.getListingHash(listingString)
-      if (inputNames.includes('_data')) {
-        const indexOfData = inputNames.indexOf('_data')
-        args[indexOfData] = listingString
-      }
-    }
+    // if (inputNames.includes('_listingHash')) {
+    //   const indexOfListingHash = inputNames.indexOf('_listingHash')
+    //   const listingString = args[indexOfListingHash]
+    //   args[indexOfListingHash] = vote_utils.getListingHash(listingString)
+    //   if (inputNames.includes('_data')) {
+    //     const indexOfData = inputNames.indexOf('_data')
+    //     args[indexOfData] = listingString
+    //   }
+    // }
 
-    if (inputNames.includes('_amount')) {
-      const indexOfAmount = inputNames.indexOf('_amount')
-      const actualAmount = toNaturalUnitAmount(
-        args[indexOfAmount],
-        18
-      )
-      args[indexOfAmount] = actualAmount.toString(10)
-    }
-    if (inputNames.includes('_value')) {
-      const indexOfValue = inputNames.indexOf('_value')
-      const actualValue = toNaturalUnitAmount(
-        args[indexOfValue],
-        18
-      )
-      args[indexOfValue] = actualValue.toString(10)
-    }
-    if (
-      inputNames.includes(
-        '_numTokens' &&
-        (action.payload.method.name === 'requestVotingRights' ||
-          action.payload.method.name === 'withdrawVotingRights')
-      )
-    ) {
-      const indexOfNumTokens = inputNames.indexOf('_numTokens')
-      const actualNumTokens = toNaturalUnitAmount(
-        args[indexOfNumTokens],
-        18
-      )
-      args[indexOfNumTokens] = actualNumTokens.toString(10)
-    }
+    // if (inputNames.includes('_amount')) {
+    //   const indexOfAmount = inputNames.indexOf('_amount')
+    //   const actualAmount = toNaturalUnitAmount(
+    //     args[indexOfAmount],
+    //     18
+    //   )
+    //   args[indexOfAmount] = actualAmount.toString(10)
+    // }
+    // if (inputNames.includes('_value')) {
+    //   const indexOfValue = inputNames.indexOf('_value')
+    //   const actualValue = toNaturalUnitAmount(
+    //     args[indexOfValue],
+    //     18
+    //   )
+    //   args[indexOfValue] = actualValue.toString(10)
+    // }
+    // if (
+    //   inputNames.includes(
+    //     '_numTokens' &&
+    //     (action.payload.method.name === 'requestVotingRights' ||
+    //       action.payload.method.name === 'withdrawVotingRights')
+    //   )
+    // ) {
+    //   const indexOfNumTokens = inputNames.indexOf('_numTokens')
+    //   const actualNumTokens = toNaturalUnitAmount(
+    //     args[indexOfNumTokens],
+    //     18
+    //   )
+    //   args[indexOfNumTokens] = actualNumTokens.toString(10)
+    // }
     let contract
-    if (action.payload.contract === 'token') {
-      contract = token
-    } else if (action.payload.contract === 'voting') {
-      contract = voting
-    } else {
+    // if (action.payload.contract === 'token') {
+    //   contract = token
+    // } else if (action.payload.contract === 'voting') {
+    //   contract = voting
+    // } else {
       contract = registry
-    }
+    // }
 
     const data = EthAbi.encodeMethod(action.payload.method, args)
 
