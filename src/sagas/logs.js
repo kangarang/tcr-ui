@@ -152,6 +152,7 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
 
     // Get the listing struct from the mapping
     const listing = await contract.contract.listings.call(dLog.listingHash)
+    console.log('listing', listing)
 
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
       return false

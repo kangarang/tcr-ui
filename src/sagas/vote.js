@@ -10,7 +10,7 @@ import {
 import {
   // selectEthjs,
   selectAccount,
-  // selectRegistry,
+  selectRegistry,
   selectVoting,
 } from '../selectors'
 
@@ -110,16 +110,12 @@ export function* commitVoteSaga(action) {
 
 
 export function* revealVoteSaga(action) {
-  // console.log('reveal action', action)
-  // const registry = yield select(selectRegistry)
-  // const voting = yield select(selectVoting)
-  // const listingString = action.payload.args[0]
-  // const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
-  // const listingHash = vote_utils.getListingHash(listingString)
-  // const finalArgs = [listingHash, actualAmount, listingString]
+  const registry = yield select(selectRegistry)
+  const voting = yield select(selectVoting)
+  const finalArgs = action.payload.args
 
-  // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
-  // const to = voting.address
-  // yield call(sendTransactionSaga, txData, to)
+  const to = voting.address
+  yield call(sendTransactionSaga, txData, to)
 }

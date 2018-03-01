@@ -93,39 +93,34 @@ class Home extends Component {
       openCommitVote: false,
       openRevealVote: false,
       selectedOne: false,
+      revealedVote: false,
     }
   }
   componentDidMount() {
     this.props.onSetupEthereum()
   }
   handleCall = e => {
-    this.props.onCall(e)
+    console.log('e', e)
   }
+
+  // side panel
   closeSidePanel = () => {
     this.setState({ opened: false, openChallenge: false, openCommitVote: false, openRevealVote: false })
   }
-  openSidePanel = (one, methodName) => {
-    if (!methodName) {
+  openSidePanel = (one, openThis) => {
+    if (!openThis) {
       this.setState({
         opened: true
       })
-    } else if (methodName === 'challenge') {
+    } else {
       this.setState({
-        openChallenge: true,
-        selectedOne: one
-      })
-    } else if (methodName === 'commitVote') {
-      this.setState({
-        openCommitVote: true,
-        selectedOne: one
-      })
-    } else if (methodName === 'revealVote') {
-      this.setState({
-        openRevealVote: true,
-        selectedOne: one
+        selectedOne: one,
+        [openThis]: true
       })
     }
   }
+
+  // input changes
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
@@ -135,6 +130,9 @@ class Home extends Component {
 
       try {
         const jsonFC = JSON.parse(contents)
+        this.setState({
+          revealedVote: jsonFC
+        })
         console.log('jsonFC', jsonFC)
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
@@ -148,11 +146,41 @@ class Home extends Component {
       [t]: e.target.value,
     })
   }
-  handleUpdateStatus = (one) => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'updateStatus')[0]
+
+  // token txns
+  handleApprove = async (contract) => {
+    const approved = await this.props.token.contract.approve(this.props[contract].address, toNaturalUnitAmount(this.state.numTokens, 18).toString(10))
+    console.log('approved!!', approved)
+  }
+  handleRequestVotingRights = () => {
+    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'requestVotingRights')[0]
+    this.props.onSendTransaction({
+      args: [
+        this.state.numTokens
+      ],
+      method,
+    })
+  }
+
+  // registry txns
+  handleApply = () => {
+    // this.props.token.contract.transfer('0xeda75f826f12dfb245144769d97bf6d47abd2473', '420000000000000000000')
+    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')[0]
+    this.props.onSendTransaction({
+      args: [
+        vote_utils.getListingHash(this.state.listingName),
+        toNaturalUnitAmount(this.state.numTokens, 18),
+        this.state.listingName,
+      ],
+      method,
+    })
+  }
+  handleDepositWithdraw = (one, methodName) => {
+    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === methodName)[0]
     this.props.onSendTransaction({
       args: [
         one.get('listingHash'),
+        toNaturalUnitAmount(420, 18),
       ],
       method,
     })
@@ -167,15 +195,17 @@ class Home extends Component {
       method,
     })
   }
-  handleRequestVotingRights = () => {
-    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'requestVotingRights')[0]
+  handleUpdateStatus = (one) => {
+    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'updateStatus')[0]
     this.props.onSendTransaction({
       args: [
-        this.state.numTokens
+        one.get('listingHash'),
       ],
       method,
     })
   }
+
+  // voting txns
   handleCommitVote = (voteOption) => {
     const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'commitVote')[0]
     this.props.onSendTransaction({
@@ -188,34 +218,18 @@ class Home extends Component {
       method,
     })
   }
-  handleDepositWithdraw = (one, methodName) => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === methodName)[0]
+  handleRevealVote = () => {
+    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'revealVote')[0]
     this.props.onSendTransaction({
       args: [
-        one.get('listingHash'),
-        toNaturalUnitAmount(420, 18),
+        this.state.selectedOne.getIn(['latest', 'pollID']),
+        this.state.revealedVote.voteOption,
+        this.state.revealedVote.salt,
       ],
       method,
     })
   }
-  handleApply = () => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')[0]
-    this.props.onSendTransaction({
-      args: [
-        vote_utils.getListingHash(this.state.listingName),
-        toNaturalUnitAmount(this.state.numTokens, 18),
-        this.state.listingName,
-      ],
-      method,
-    })
-  }
-  handleItemClick = (e) => {
-    console.log('e', e)
-    console.log('this.state', this.state)
-    this.setState({
-      activeItem: e.target.name
-    })
-  }
+
   render() {
     const {
       candidates,
@@ -305,6 +319,19 @@ class Home extends Component {
               {'Apply Listing'}
             </Button>
           </MarginDiv>
+
+          <MarginDiv>
+            {Number(balances.get('registryAllowance')) < toUnitAmount(parameters.get('minDeposit'), 18) &&
+              <Text color='grey' smallcaps>{'YOU NEED TO APPROVE'}</Text>
+            }
+            <Button
+              onClick={e => this.handleApprove('registry')}
+              mode='strong'
+              wide
+            >
+              {'Approve tokens for Registry'}
+            </Button>
+          </MarginDiv>
           <SidePanelSeparator />
         </SidePanel>
 
@@ -345,19 +372,32 @@ class Home extends Component {
           </MarginDiv>
 
           <MarginDiv>
-            <Button
-              onClick={this.handleChallenge}
-              mode='strong'
-              wide
-            >
-              {'CHALLENGE'}
-            </Button>
+            {Number(balances.get('registryAllowance')) < toUnitAmount(parameters.get('minDeposit'), 18) ?
+              <MarginDiv>
+                <MarginDiv>
+                  <Text color='grey' smallcaps>{'TOKEN AMOUNT TO APPROVE'}</Text>
+                  <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
+                </MarginDiv>
+                <MarginDiv>
+                  <Button
+                    onClick={e => this.handleApprove('registry')}
+                    mode='strong'
+                    wide
+                  >
+                    {'Approve tokens for Registry'}
+                  </Button>
+                </MarginDiv>
+              </MarginDiv>
+              : <Button
+                onClick={this.handleChallenge}
+                mode='strong'
+                wide
+              >
+                {'CHALLENGE'}
+              </Button>
+            }
           </MarginDiv>
-          <SidePanelSeparator />
         </SidePanel>
-
-
-
 
 
 
@@ -368,8 +408,8 @@ class Home extends Component {
         >
           <SidePanelSplit children={[
             <Section>
-              <Text weight='bold'>{'Challenge Period'}</Text>
-              <h1>{`Commit: ${parameters.get('commitStageLen')} seconds & Reveal: ${parameters.get('revealStageLen')} seconds`}</h1>
+              <Text weight='bold'>{'Commit Period'}</Text>
+              <h1>{`Commit: ${parameters.get('commitStageLen')} seconds`}</h1>
             </Section>,
             <Section>
               <Text weight='bold'>{'POLL ID'}</Text>
@@ -437,9 +477,73 @@ class Home extends Component {
                 >
                   {'Oppose the applicant'}
                 </Button>
+                <Button
+                  onClick={e => this.handleApprove('voting')}
+                  mode='strong'
+                  wide
+                >
+                  {'Approve tokens for Voting'}
+                </Button>
               </MarginDiv>
             )}
           <SidePanelSeparator />
+        </SidePanel>
+
+        <SidePanel
+          title="Reveal Vote"
+          opened={this.state.openRevealVote}
+          onClose={this.closeSidePanel}
+        >
+          <SidePanelSplit children={[
+            <Section>
+              <Text weight='bold'>{'Reveal Token'}</Text>
+              <h1>{`Reveal: ${parameters.get('revealStageLen')} seconds`}</h1>
+            </Section>,
+            <Section>
+              <Text weight='bold'>{'POLL ID'}</Text>
+              <h2>{this.state.selectedOne && this.state.selectedOne.getIn(['latest', 'pollID'])}</h2>
+            </Section>
+          ]} />
+
+          <MarginDiv>
+            <Icon name='unlock' />
+            <Text color='grey' smallcaps>{'REVEAL VOTE'}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            <Text>{this.state.selectedOne && this.state.selectedOne.get('listingString')}</Text>
+          </MarginDiv>
+
+          <SidePanelSeparator />
+
+          <MarginDiv>
+            <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            <Text>{translate('sidebar_revealVote_instructions')}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            {this.state.selectedOne && this.state.selectedOne.getIn(['latest', 'revealExpiry', 'timeleft']) > 0 && (
+              <FileInput
+                type='file'
+                name='file'
+                onChange={this.handleFileInput}
+              />
+            )}
+          </MarginDiv>
+
+          {/* <MarginDiv>
+            <TextInput onChange={e => this.handleInputChange(e, 'salt')} wide type='number' />
+          </MarginDiv> */}
+
+          <MarginDiv>
+            <Button
+              onClick={this.handleRevealVote}
+              mode='strong'
+              wide
+            >
+              {'Reveal Vote'}
+            </Button>
+          </MarginDiv>
         </SidePanel>
 
         {/* listings */}
@@ -463,7 +567,10 @@ class Home extends Component {
                   <Text>{one.get('listingString')}</Text>
                 </TableCell>
                 <TableCell>
-                  <Countdown end={one.getIn(['latest', 'appExpiry', 'date'])} />
+                  {!dateHasPassed(one.getIn(['latest', 'appExpired'])) ?
+                    <Countdown end={one.getIn(['latest', 'appExpiry', 'date'])} /> :
+                    'Ready to update'
+                  }
                 </TableCell>
                 <TableCell>
                   {one.getIn(['latest', 'numTokens'])}
@@ -498,7 +605,7 @@ class Home extends Component {
                         <Icon name='angle double down' size='large' color='yellow' />
                         {'Withdraw Tokens'}
                       </CMItem>
-                      <CMItem onClick={e => this.openSidePanel(one, 'challenge')}>
+                      <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
                         <Icon name='remove circle outline' size='large' color='orange' />
                         {'Challenge Listing'}
                       </CMItem>
@@ -511,7 +618,7 @@ class Home extends Component {
                             {'Update Status'}
                           </CMItem>
                         }
-                        <CMItem onClick={e => this.openSidePanel(one, 'challenge')}>
+                        <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
                           <Icon name='remove circle outline' size='large' color='orange' />
                           {'Challenge Listing'}
                         </CMItem>
@@ -567,8 +674,14 @@ class Home extends Component {
                         </div>
                       </CMItem>
                     }
+                    {!dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
+                      <CMItem onClick={e => this.openSidePanel(one, 'openRevealVote')}>
+                        <Icon name='unlock' size='large' color='orange' />
+                        {'Reveal Token Vote'}
+                      </CMItem>
+                    }
                     {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
-                      <CMItem onClick={e => this.openSidePanel(one, 'commitVote')}>
+                      <CMItem onClick={e => this.openSidePanel(one, 'openCommitVote')}>
                         <Icon name='check circle' size='large' color='orange' />
                         {'Commit Token Vote'}
                       </CMItem>
@@ -591,7 +704,7 @@ class Home extends Component {
               </TableRow>
             }
           >
-            {faceoffs.map(one => (
+            {whitelist.map(one => (
               <TableRow key={one.get('listingHash')}>
                 <TableCell>
                   <Text>{one.get('listingString')}</Text>
@@ -607,7 +720,7 @@ class Home extends Component {
 
                 <TableCell>
                   <ContextMenu>
-                    <CMItem onClick={e => this.openSidePanel(one, 'challenge')}>
+                    <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
                       <Icon name='remove circle outline' size='large' color='orange' />
                       {'Challenge Listing'}
                     </CMItem>
@@ -617,7 +730,7 @@ class Home extends Component {
             ))}
           </Table>
 
-          <Button onClick={this.openSidePanel}>{'Apply'}</Button>
+          <Button mode='strong' onClick={this.openSidePanel}>{'Apply'}</Button>
         </HomeWrapper>
       </div>
     )
@@ -634,6 +747,12 @@ const CMItem = styled.div`
     padding: 5px;
   }
 `
+
+const FileInput = styled.input`
+  padding: 1em;
+  border: 2px solid ${colors.prism};
+`
+
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
