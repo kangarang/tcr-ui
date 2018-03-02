@@ -1,23 +1,17 @@
 node_modules
 build
 .DS_Store
+tcr
+
+package-lock.json
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 */secrets.json
-*/.keys.js
 .vscode
-.firebaserc
-firebase.json
 
-package-lock.json
-
-/tcr
-/src/zzz
-
-# Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml

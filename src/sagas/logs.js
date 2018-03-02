@@ -12,7 +12,7 @@ import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
 
-import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAccount } from '../selectors'
+import { selectEthjs, selectNetworkID, selectRegistry, selectVoting } from '../selectors'
 
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
 

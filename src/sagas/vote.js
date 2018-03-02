@@ -110,10 +110,8 @@ export function* commitVoteSaga(action) {
 
 
 export function* revealVoteSaga(action) {
-  const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
   const finalArgs = action.payload.args
-
   const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
   const to = voting.address

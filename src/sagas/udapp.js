@@ -11,10 +11,7 @@ import {
   selectAccount,
   selectRegistry,
   selectVoting,
-  selectToken,
 } from '../selectors'
-
-import { toNaturalUnitAmount } from '../utils/units_utils'
 
 import vote_utils from '../utils/vote_utils'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote';
@@ -61,61 +58,25 @@ function* callUDappSaga(action) {
 
 // TODO: write tests for these sagas. against abis
 function* handleSendTransaction(action) {
-  console.log('handleSendTransaction saga:', action)
-  if (action.payload.method.name === 'apply') {
-    yield call(applySaga, action)
-  } else if (action.payload.method.name === 'challenge') {
-    yield call(challengeSaga, action)
-  } else if (action.payload.method.name === 'requestVotingRights') {
+  const methodName = action.payload.method.name
+  if (methodName === 'apply' || methodName === 'challenge' || methodName === 'updateStatus') {
+    yield call(registryTxnSaga, action)
+  } else if (methodName === 'requestVotingRights') {
     yield call(requestVotingRightsSaga, action)
-  } else if (action.payload.method.name === 'updateStatus') {
-    yield call(updateStatusSaga, action)
-  } else if (action.payload.method.name === 'commitVote') {
+  } else if (methodName === 'commitVote') {
     yield call(commitVoteSaga, action)
-  } else if (action.payload.method.name === 'revealVote') {
+  } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else {
-    yield call(sendOtherTransaction, action)
+    console.log('lost?')
   }
 }
 
-function* updateStatusSaga(action) {
+function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
-
-  const txData = EthAbi.encodeMethod(action.payload.method, [action.payload.args[0]])
+  const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
   const to = registry.address
-
   yield call(sendTransactionSaga, txData, to)
-}
-function* applySaga(action) {
-  const registry = yield select(selectRegistry)
-
-  const listingString = action.payload.args[2]
-  const actualAmount = action.payload.args[1]
-  const listingHash = action.payload.args[0]
-  // const listingString = action.payload.args[0]
-  // const actualAmount = toNaturalUnitAmount(action.payload.args[1], 18)
-  // const listingHash = vote_utils.getListingHash(listingString)
-
-  const finalArgs = [listingHash, actualAmount, listingString]
-
-  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
-  const to = registry.address
-
-  yield call(sendTransactionSaga, txData, to)
-}
-
-function* challengeSaga(action) {
-  const listingHash = action.payload.args[0]
-  const listingString = action.payload.args[1]
-  // const listingHash = vote_utils.getListingHash(listingString)
-  const finalArgs = [listingHash, listingString]
-
-  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
-
-  const registry = yield select(selectRegistry)
-
-  yield call(sendTransactionSaga, txData, registry.address)
 }
 
 export function* sendTransactionSaga(data, to) {
@@ -131,93 +92,9 @@ export function* sendTransactionSaga(data, to) {
       nonce,
       data,
     }
-    console.log('payload', payload)
-
     const txHash = yield call(ethjs.sendTransaction, payload)
     console.log('txHash', txHash)
     return txHash
-  } catch (error) {
-    console.log('error', error)
-  }
-}
-
-
-
-
-function* sendOtherTransaction(action) {
-  try {
-    const ethjs = yield select(selectEthjs)
-    const from = yield select(selectAccount)
-    const registry = yield select(selectRegistry)
-    const token = yield select(selectToken)
-    const voting = yield select(selectVoting)
-
-    const nonce = yield call(ethjs.getTransactionCount, from)
-    const args = action.payload.args
-    const inputNames = action.payload.method.inputs.map(inp => inp.name)
-
-    // if (inputNames.includes('_listingHash')) {
-    //   const indexOfListingHash = inputNames.indexOf('_listingHash')
-    //   const listingString = args[indexOfListingHash]
-    //   args[indexOfListingHash] = vote_utils.getListingHash(listingString)
-    //   if (inputNames.includes('_data')) {
-    //     const indexOfData = inputNames.indexOf('_data')
-    //     args[indexOfData] = listingString
-    //   }
-    // }
-
-    // if (inputNames.includes('_amount')) {
-    //   const indexOfAmount = inputNames.indexOf('_amount')
-    //   const actualAmount = toNaturalUnitAmount(
-    //     args[indexOfAmount],
-    //     18
-    //   )
-    //   args[indexOfAmount] = actualAmount.toString(10)
-    // }
-    // if (inputNames.includes('_value')) {
-    //   const indexOfValue = inputNames.indexOf('_value')
-    //   const actualValue = toNaturalUnitAmount(
-    //     args[indexOfValue],
-    //     18
-    //   )
-    //   args[indexOfValue] = actualValue.toString(10)
-    // }
-    // if (
-    //   inputNames.includes(
-    //     '_numTokens' &&
-    //     (action.payload.method.name === 'requestVotingRights' ||
-    //       action.payload.method.name === 'withdrawVotingRights')
-    //   )
-    // ) {
-    //   const indexOfNumTokens = inputNames.indexOf('_numTokens')
-    //   const actualNumTokens = toNaturalUnitAmount(
-    //     args[indexOfNumTokens],
-    //     18
-    //   )
-    //   args[indexOfNumTokens] = actualNumTokens.toString(10)
-    // }
-    let contract
-    // if (action.payload.contract === 'token') {
-    //   contract = token
-    // } else if (action.payload.contract === 'voting') {
-    //   contract = voting
-    // } else {
-      contract = registry
-    // }
-
-    const data = EthAbi.encodeMethod(action.payload.method, args)
-
-    const payload = {
-      to: contract.address,
-      from,
-      gas: 450000,
-      gasPrice: 25000000000,
-      nonce,
-      data,
-    }
-
-    const txHash = yield call(ethjs.sendTransaction, payload)
-    console.log('txHash', txHash)
   } catch (error) {
     console.log('error', error)
   }

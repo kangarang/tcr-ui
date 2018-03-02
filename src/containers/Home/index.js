@@ -4,7 +4,6 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import {
-  // DropDown,
   SidePanel,
   SidePanelSplit,
   SidePanelSeparator,
@@ -20,17 +19,10 @@ import {
   Countdown,
 } from '@aragon/ui'
 
-import { Icon, Sidebar, Grid, Menu } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
-import messages from '../messages'
-import Transaction from '../Transaction'
-
-import H2 from '../../components/H2'
-
-import Listing from '../../components/Listing'
 import Identicon from '../../components/Identicon'
 import FlexContainer from '../../components/FlexContainer'
-// import UserInfo from '../../components/UserInfo'
 
 import {
   setupEthereum,
@@ -51,8 +43,6 @@ import {
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
-  selectMiningStatus,
-  selectAllContracts,
   selectTxnStatus,
 } from '../../selectors'
 
@@ -67,11 +57,18 @@ const AppBar = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 50px;
+  height: 70px;
   background-color: ${colors.offWhite};
+  & > div {
+    margin: 0 1em;
+  }
 `
 const MarginDiv = styled.div`
   margin: 1em 0;
+`
+const OverFlowDiv = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 const HomeWrapper = styled.div`
   padding: 1em;
@@ -92,6 +89,7 @@ class Home extends Component {
       openChallenge: false,
       openCommitVote: false,
       openRevealVote: false,
+      openCallPanel: false,
       selectedOne: false,
       revealedVote: false,
     }
@@ -105,7 +103,12 @@ class Home extends Component {
 
   // side panel
   closeSidePanel = () => {
-    this.setState({ opened: false, openChallenge: false, openCommitVote: false, openRevealVote: false })
+    this.setState({ opened: false, openCallPanel: false, openChallenge: false, openCommitVote: false, openRevealVote: false })
+  }
+  openCallPanel = () => {
+    this.setState({
+      openCallPanel: true,
+    })
   }
   openSidePanel = (one, openThis) => {
     if (!openThis) {
@@ -164,7 +167,7 @@ class Home extends Component {
 
   // registry txns
   handleApply = () => {
-    // this.props.token.contract.transfer('0xeda75f826f12dfb245144769d97bf6d47abd2473', '420000000000000000000')
+    // this.props.token.contract.transfer('0xeda75f826f12dfb245144769d97bf6d47abd2473', '420000000000000000000000')
     const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')[0]
     this.props.onSendTransaction({
       args: [
@@ -246,15 +249,24 @@ class Home extends Component {
     return (
       <div>
         <AppBar>
+          <Identicon address={account} diameter={25} />
+          <OverFlowDiv>
+            {account}
+          </OverFlowDiv>
           <div>
-            {`Balances: ${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
+            {`${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
           </div>
           <div>
             {`${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
           </div>
-          <Identicon address={account} diameter={25} />
           <div>
-            {`Account: ${account}`}
+            {`Registry Allowance: ${withCommas(balances.get('registryAllowance'))}`}
+          </div>
+          <div>
+            {`Voting Allowance: ${withCommas(balances.get('votingAllowance'))}`}
+          </div>
+          <div>
+            {`Voting Rights: ${withCommas(balances.get('votingRights'))}`}
           </div>
         </AppBar>
 
@@ -335,6 +347,66 @@ class Home extends Component {
           <SidePanelSeparator />
         </SidePanel>
 
+        <SidePanel
+          title="U D A P P"
+          opened={this.state.openCallPanel}
+          onClose={this.closeSidePanel}
+        >
+          <SidePanelSplit children={[
+            <Section>
+              <Text weight='bold'>{'Challenge Period'}</Text>
+              <h1>{`Commit: ${parameters.get('commitStageLen')} seconds & Reveal: ${parameters.get('revealStageLen')} seconds`}</h1>
+            </Section>,
+            <Section>
+              <Text weight='bold'>{'Minimum Deposit'}</Text>
+              <h2>{toUnitAmount(parameters.get('minDeposit'), 18).toString()} {token.symbol}</h2>
+            </Section>
+          ]} />
+
+          <MarginDiv>
+            <Text color='grey' smallcaps>{'LISTING TO CHALLENGE'}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            <Text>{this.state.selectedOne && this.state.selectedOne.get('listingString')}</Text>
+          </MarginDiv>
+
+          <SidePanelSeparator />
+
+          <MarginDiv>
+            <Icon name='exclamation triangle' size='small' />
+            <Text color='grey' smallcaps>{'WARNING'}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            <Text>{translate('sidebar_challenge_instructions')}</Text>
+          </MarginDiv>
+
+          <MarginDiv>
+            {Number(balances.get('registryAllowance')) < toUnitAmount(parameters.get('minDeposit'), 18) ?
+              <MarginDiv>
+                <MarginDiv>
+                  <Text color='grey' smallcaps>{'TOKEN AMOUNT TO APPROVE'}</Text>
+                  <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
+                </MarginDiv>
+                <MarginDiv>
+                  <Button
+                    onClick={e => this.handleApprove('registry')}
+                    mode='strong'
+                    wide
+                  >
+                    {'Approve tokens for Registry'}
+                  </Button>
+                </MarginDiv>
+              </MarginDiv>
+              : <Button
+                onClick={this.handleChallenge}
+                mode='strong'
+                wide
+              >
+                {'CHALLENGE'}
+              </Button>
+            }
+          </MarginDiv>
+        </SidePanel>
 
 
 
@@ -567,7 +639,7 @@ class Home extends Component {
                   <Text>{one.get('listingString')}</Text>
                 </TableCell>
                 <TableCell>
-                  {!dateHasPassed(one.getIn(['latest', 'appExpired'])) ?
+                  {!dateHasPassed(one.getIn(['latest', 'appExpiry', 'date'])) ?
                     <Countdown end={one.getIn(['latest', 'appExpiry', 'date'])} /> :
                     'Ready to update'
                   }
@@ -731,6 +803,7 @@ class Home extends Component {
           </Table>
 
           <Button mode='strong' onClick={this.openSidePanel}>{'Apply'}</Button>
+          <Button mode='strong' onClick={this.openCallPanel}>{'Call'}</Button>
         </HomeWrapper>
       </div>
     )
