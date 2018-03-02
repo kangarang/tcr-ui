@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import iconSrc from '../../assets/icons/corva.png'
 import {
   SidePanel,
   SidePanelSplit,
@@ -22,7 +23,6 @@ import {
 import { Icon } from 'semantic-ui-react'
 
 import Identicon from '../../components/Identicon'
-import FlexContainer from '../../components/FlexContainer'
 
 import {
   setupEthereum,
@@ -271,6 +271,9 @@ class Home extends Component {
             </div>
             <div>
               {`${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
+            </div>
+            <div>
+              {`Token: ${token.name}`}
             </div>
             <div>
               {`Registry Allowance: ${withCommas(balances.get('registryAllowance'))}`}
@@ -820,6 +823,12 @@ class Home extends Component {
                     <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
                       <Icon name='remove circle outline' size='large' color='orange' />
                       {'Challenge Listing'}
+                    </CMItem>
+                    <CMItem onClick={e => this.handleUpdateStatus(one)}>
+                      <Icon name='magic' size='large' color='purple' />
+                      <div>
+                        {'Update Status'}
+                      </div>
                     </CMItem>
                   </ContextMenu>
                 </TableCell>

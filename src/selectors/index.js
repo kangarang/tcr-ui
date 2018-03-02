@@ -71,10 +71,3 @@ export const selectFaceoffs = createSelector(selectAllListings, listings =>
 export const selectWhitelist = createSelector(selectAllListings, listings =>
   listings.filter(li => li.getIn(['latest', 'whitelisted']))
 )
-
-// export const selectECRecovered = createSelector(selectHome, homeState =>
-//   homeState.get('ecRecovered')
-// )
-// export const selectPrerequisites = createSelector(selectHome, homeState =>
-//   homeState.get('prerequisites')
-// )

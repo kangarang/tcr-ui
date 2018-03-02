@@ -59,7 +59,6 @@ function* getFreshLogs() {
 
 function* pollController() {
   const network = yield select(selectNetworkID)
-  // let pollInterval = 15000 // 15 seconds
   let pollInterval = 5000 // 5 seconds
 
   if (network === '420') {
@@ -169,12 +168,17 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     // let stake
     // let totalTokens
 
+    let isWhitelisted = listing[1]
+
     if (dLog._eventName === '_Challenge' || dLog._eventName === '_VoteCommitted') {
       const poll = await voting.contract.pollMap(dLog.pollID.toString())
       commitEndDate = poll[0].toNumber()
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
+      if (!dateHasPassed(revealEndDate)) {
+        isWhitelisted = false
+      }
       // const chall = await contract.contract.challenges.call(dLog.pollID.toString())
       // rewardPool = chall[0].toString()
       // challenger = chall[1].toString()
@@ -200,8 +204,6 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
       // can call updateStatus()
       // 
     }
-
-    const isWhitelisted = listing[1]
 
     const tx = {
       hash: txDetails.hash,
