@@ -12,7 +12,9 @@ import {
   UPDATE_BALANCES,
   UPDATE_BALANCES_REQUEST,
 } from './actions/constants'
+
 import createReducer from './reducers'
+
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'
 import tokenSaga from './sagas/token'
@@ -40,7 +42,6 @@ const logger = createLogger({
 
 export default function configureStore(initialState = {}) {
   const middlewares = [sagaMiddleware, logger]
-
   const enhancers = [applyMiddleware(...middlewares)]
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
@@ -59,15 +60,11 @@ export default function configureStore(initialState = {}) {
     composeEnhancers(...enhancers)
   )
 
-  // Extensions
-  // store.runSaga = sagaMiddleware.run(rootSaga);
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)
   sagaMiddleware.run(tokenSaga)
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(udappSaga)
-  // store.injectedReducers = {}; // Reducer registry
-  // store.injectedSagas = {}; // Saga registry
 
   // // Make reducers hot reloadable, see http://mxs.is/googmo
   // /* istanbul ignore next */

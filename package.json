@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "0.5.0",
-    "@governx/governx-lib": "1.1.1",
     "babel-polyfill": "6.26.0",
     "bluebird": "3.5.1",
     "ethereumjs-abi": "0.6.5",
@@ -25,7 +24,6 @@
     "react-dom": "16.2.0",
     "react-markdown": "3.1.4",
     "react-modal": "3.1.11",
-    "react-particles-js": "2.1.0",
     "react-redux": "5.0.6",
     "react-router-dom": "4.2.2",
     "react-scripts": "1.0.17",
@@ -40,11 +38,10 @@
     "truffle-contract": "3.0.1"
   },
   "scripts": {
-    "start": "npm run sync-assets && node server.js",
+    "start": "node server.js",
     "start:prod": "npm run build && node server.js",
-    "sync-assets": "sync-files $(dirname $(node -p 'require.resolve(\"@aragon/ui\")')) public/aragon-ui",
-    "dev": "npm run lint ./src && npm run sync-assets && react-scripts start",
-    "build": "npm run sync-assets && react-scripts build",
+    "dev": "npm run lint ./src && react-scripts start",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "fix": "eslint --fix",
@@ -53,8 +50,6 @@
   "devDependencies": {
     "babel-eslint": "8.2.2",
     "eslint": "4.18.1",
-    "eslint-plugin-react": "7.7.0",
-    "sync-assets": "^0.1.1",
-    "sync-files": "^1.0.3"
+    "eslint-plugin-react": "7.7.0"
   }
 }
