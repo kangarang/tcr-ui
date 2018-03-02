@@ -44,6 +44,19 @@ export const selectParameterizer = createSelector(selectAllContracts, contracts 
   contracts.get('parameterizer')
 )
 
+export const selectRegistryMethods = createSelector(
+  selectRegistry, registry =>
+    (registry.contract ? registry.contract.abi : []).filter(mi =>
+      mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+    )
+)
+export const selectTokenMethods = createSelector(
+  selectToken, token =>
+    (token.contract ? token.contract.abi : []).filter(mi =>
+      mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+    )
+)
+
 // Parameters
 export const selectParameters = createSelector(selectHome, homeState =>
   homeState.get('parameters')

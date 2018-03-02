@@ -2,7 +2,7 @@ import { fromJS } from 'immutable'
 
 import {
   LOGIN_ERROR,
-  CONTRACT_ERROR,
+  // CONTRACT_ERROR,
   SET_WALLET,
   SET_CONTRACTS,
   UPDATE_BALANCES,
@@ -37,12 +37,13 @@ const initialState = fromJS({
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    case LOGIN_ERROR:
-      return state.set('error', action.error)
-    case CONTRACT_ERROR:
-      return state.setIn(['error', 'type'], true)
+    // case LOGIN_ERROR:
+    //   return state.set('error', action.error)
+    // case CONTRACT_ERROR:
+    //   return state.setIn(['error', 'type'], true)
     case SET_WALLET:
       return state
+        .set('error', fromJS(false))
         .set('ethjs', fromJS(action.payload.ethjs))
         .set('account', fromJS(action.payload.account))
         .set('networkID', fromJS(action.payload.networkID))

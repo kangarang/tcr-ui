@@ -23,9 +23,12 @@ function* genesis() {
     const ethjs = yield call(setEthjs)
     const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
-
-    yield put(setWallet({ ethjs, account, networkID }))
-    yield call(contractsSaga, ethjs, account)
+    if (account === undefined) {
+      yield put(loginError({type: LOGIN_ERROR, message: 'Need MetaMask!'}))
+    } else {
+      yield put(setWallet({ ethjs, account, networkID }))
+      yield call(contractsSaga, ethjs, account)
+    }
   } catch (err) {
     console.log('Genesis error:', err)
     yield put(loginError({ type: LOGIN_ERROR, message: err.message }))
