@@ -47,6 +47,7 @@ import {
   selectError,
   selectTokenMethods,
   selectRegistryMethods,
+  selectVotingMethods,
 } from '../../selectors'
 
 import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree, toEther } from '../../utils/units_utils';
@@ -63,7 +64,7 @@ const AppBar = styled.div`
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 5em;
+  height: 4em;
   background-color: ${colors.offWhite};
   border-bottom: 1px solid ${colors.orange};
   padding: 0 3em;
@@ -121,9 +122,9 @@ class Home extends Component {
   closeSidePanel = () => {
     this.setState({ opened: false, openCallPanel: false, openChallenge: false, openCommitVote: false, openRevealVote: false })
   }
-  openCallPanel = () => {
+  openCallPanel = (contract) => {
     this.setState({
-      openCallPanel: true,
+      openCallPanel: contract,
     })
   }
   openSidePanel = (one, openThis) => {
@@ -271,6 +272,7 @@ class Home extends Component {
       token,
       txnStatus,
       registryMethods,
+      votingMethods,
     } = this.props
 
     return (
@@ -285,26 +287,17 @@ class Home extends Component {
                 <div>
                   <Identicon address={account} diameter={30} />
                 </div>
+                <div>
+                  {txnStatus && 'mining'}
+                </div>
                 <OverFlowDiv>
                   {account}
                 </OverFlowDiv>
                 <div>
-                  {`${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
+                  {`Ether Balance: ${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
                 </div>
                 <div>
-                  {`${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
-                </div>
-                <div>
-                  {`Token: ${token.name}`}
-                </div>
-                <div>
-                  {`Registry Allowance: ${withCommas(balances.get('registryAllowance'))}`}
-                </div>
-                <div>
-                  {`Voting Allowance: ${withCommas(balances.get('votingAllowance'))}`}
-                </div>
-                <div>
-                  {`Voting Rights: ${withCommas(balances.get('votingRights'))}`}
+                  {`${token.name} Balance: ${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
                 </div>
               </AppBar>
             )}
@@ -400,7 +393,7 @@ class Home extends Component {
 
         <SidePanel
           title="U D A P P"
-          opened={this.state.openCallPanel}
+          opened={this.state.openCallPanel === 'registry'}
           onClose={this.closeSidePanel}
         >
           <MarginDiv>
@@ -431,6 +424,38 @@ class Home extends Component {
           ))}
         </SidePanel>
 
+        <SidePanel
+          title="U D A P P"
+          opened={this.state.openCallPanel === 'voting'}
+          onClose={this.closeSidePanel}
+        >
+          <MarginDiv>
+            <Icon name='check circle' size='small' />
+            <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
+          </MarginDiv>
+          <MarginDiv>
+            <Text>{translate('sidebar_udapp_instructions')}</Text>
+          </MarginDiv>
+
+          <SidePanelSeparator />
+
+          {votingMethods.map(one => (
+            <MarginDiv>
+              {one.inputs.map(inp => (
+                <TextInput placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
+              ))}
+              <MarginDiv>
+                <Button
+                  onClick={e => this.handleCall('voting', one)}
+                  mode='strong'
+                  wide
+                >
+                  <Text color='white' smallcaps>{one.name}</Text>
+                </Button>
+              </MarginDiv>
+            </MarginDiv>
+          ))}
+        </SidePanel>
 
 
         <SidePanel
@@ -506,7 +531,6 @@ class Home extends Component {
         </SidePanel>
 
 
-
         <SidePanel
           title="Commit Vote"
           opened={this.state.openCommitVote}
@@ -564,6 +588,10 @@ class Home extends Component {
               >
                 {'Request Voting Rights'}
               </Button>
+              <div>
+                <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
+                <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
+              </div>
             </MarginDiv>
           ) : (
               <MarginDiv>
@@ -775,7 +803,8 @@ class Home extends Component {
                     </TableCell>
 
                     <TableCell>
-                      <Text>{one.get('listingString')}</Text>
+                      {'coming soon!'}
+                      {/* <Text>{one.getIn(['latest', 'numTokens'])}</Text> */}
                     </TableCell>
 
                     <TableCell>
@@ -867,7 +896,9 @@ class Home extends Component {
 
           <Button mode='strong' onClick={this.openSidePanel}>{'Apply Listing'}</Button>
           {' '}
-          <Button mode='strong' onClick={this.openCallPanel}>{'Call Registry Methods'}</Button>
+          <Button mode='strong' onClick={e => this.openCallPanel('registry')}>{'Call Registry Methods'}</Button>
+          {' '}
+          <Button mode='strong' onClick={e => this.openCallPanel('voting')}>{'Call Voting Methods'}</Button>
         </HomeWrapper>
       </div >
     )
@@ -918,6 +949,7 @@ const mapStateToProps = createStructuredSelector({
   faceoffs: selectFaceoffs,
   whitelist: selectWhitelist,
   registryMethods: selectRegistryMethods,
+  votingMethods: selectVotingMethods,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

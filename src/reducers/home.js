@@ -10,6 +10,7 @@ import {
   NEW_ARRAY,
   CHANGE_ITEMS,
   DELETE_LISTINGS,
+  SEND_TRANSACTION,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -33,6 +34,7 @@ const initialState = fromJS({
   },
   parameters: { minDeposit: '', applyStageLen: '' },
   listings: {},
+  txnStatus: false,
 })
 
 function homeReducer(state = initialState, action) {
@@ -41,6 +43,8 @@ function homeReducer(state = initialState, action) {
     //   return state.set('error', action.error)
     // case CONTRACT_ERROR:
     //   return state.setIn(['error', 'type'], true)
+    case SEND_TRANSACTION:
+      return state.set('txnStatus', fromJS(true))
     case SET_WALLET:
       return state
         .set('error', fromJS(false))
@@ -99,17 +103,14 @@ function changeListings(state, payload) {
 }
 
 function deleteObjectInArray(array, payload) {
-  return payload.map(pl => {
-    const index = array.findIndex(
-      ri =>
-        ri.get('listingHash') === pl.listingHash ||
-        ri.get('listingHash') === pl.listingString
-    )
-    if (index !== -1) {
-      return array.delete(index)
-    }
-    return array
-  })
+  const index = array.findIndex(
+    ri =>
+      ri.get('listingHash') === payload
+  )
+  if (index !== -1) {
+    return array.delete(index)
+  }
+  return array
 }
 
 export default homeReducer

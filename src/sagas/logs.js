@@ -4,7 +4,7 @@ import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 // import { Organization } from '@governx/governx-lib'
 
-import { newArray, updateItems, pollLogsRequest, updateBalancesRequest } from '../actions'
+import { newArray, updateItems, pollLogsRequest, updateBalancesRequest, deleteListings } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -90,11 +90,15 @@ function* pollLogsSaga(action) {
       handleLogs,
       action.payload.startBlock,
       action.payload.endBlock,
-      '',
+      '_Application',
       registry
     )
-    console.log(newLogs.length, 'newLog', newLogs[0])
-    yield put(updateItems(newLogs))
+    console.log(newLogs.length, 'newLogs', newLogs)
+    const strNLs = yield newLogs.filter(nL => typeof nL === 'string')
+    const NLs = yield newLogs.filter(nL => typeof nL !== 'string')
+    console.log('strNLs', strNLs)
+    yield put(newArray(NLs))
+    yield put(updateItems(NLs))
     yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Poll logs error:', err)
@@ -155,8 +159,9 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     console.log('listing', listing)
 
     if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
-      return false
+      return dLog.listingHash
     }
+    let isWhitelisted = listing[1]
 
     let commitEndDate
     let commitExpiry
@@ -168,16 +173,15 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     // let stake
     // let totalTokens
 
-    let isWhitelisted = listing[1]
-
     if (dLog._eventName === '_Challenge' || dLog._eventName === '_VoteCommitted') {
       const poll = await voting.contract.pollMap(dLog.pollID.toString())
       commitEndDate = poll[0].toNumber()
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
+
       if (!dateHasPassed(revealEndDate)) {
-        isWhitelisted = false
+        isWhitelisted = await contract.contract.isWhitelisted.call(dLog.data)
       }
       // const chall = await contract.contract.challenges.call(dLog.pollID.toString())
       // rewardPool = chall[0].toString()
@@ -193,6 +197,12 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
       //   const cwr = await contract.contract.challengeWinnerReward(dLog.pollID.toString())
       //   console.log('there exists challenge winner reward', cwr)
       // }
+    }
+
+    const appWasMade = await contract.contract.appWasMade.call(dLog.listingHash)
+    console.log('appWasMade', appWasMade)
+    if (!appWasMade) {
+      isWhitelisted = false
     }
 
     const aeUnix = listing[0].toNumber()
