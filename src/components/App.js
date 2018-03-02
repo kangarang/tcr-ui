@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 3em 1em;
   background-color: ${colors.offWhite};
   min-height: 100vh;
   max-width: 1400px;

@@ -37,6 +37,11 @@ const log_utils = {
       commitExpiry: details.commitExpiry,
       revealEndDate: details.revealEndDate,
       revealExpiry: details.revealExpiry,
+      rewardPool: details.rewardPool,
+      challenger: details.challenger,
+      resolved: details.resolved,
+      stake: details.stake,
+      totalTokens: details.totalTokens,
 
       timestamp: block.timestamp && new Date(block.timestamp.toNumber(10)),
     },

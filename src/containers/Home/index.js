@@ -52,13 +52,18 @@ import vote_utils from '../../utils/vote_utils';
 import { colors } from '../../colors';
 import { dateHasPassed } from '../../utils/format-date';
 
+const AppBarWrapper = styled.div`
+  flex-shrink: 0;
+`
 const AppBar = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  height: 70px;
+  height: 5em;
   background-color: ${colors.offWhite};
+  border-bottom: 1px solid ${colors.orange};
+  padding: 0 3em;
   & > div {
     margin: 0 1em;
   }
@@ -71,17 +76,13 @@ const OverFlowDiv = styled.div`
   text-overflow: ellipsis;
 `
 const HomeWrapper = styled.div`
-  padding: 1em;
+  padding: 2em;
 `
 
 class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      registryAddress: '',
-      modalIsOpen: false,
-      selectedListing: false,
-      actions: [],
       activeItem: 0,
       opened: false,
       listingName: '',
@@ -207,6 +208,15 @@ class Home extends Component {
       method,
     })
   }
+  handleRescueTokens = (one) => {
+    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'rescueTokens')[0]
+    this.props.onSendTransaction({
+      args: [
+        one.getIn(['latest', 'pollID'])
+      ],
+      method,
+    })
+  }
 
   // voting txns
   handleCommitVote = (voteOption) => {
@@ -248,31 +258,35 @@ class Home extends Component {
 
     return (
       <div>
-        <AppBar>
-          <Identicon address={account} diameter={25} />
-          <OverFlowDiv>
-            {account}
-          </OverFlowDiv>
-          <div>
-            {`${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
-          </div>
-          <div>
-            {`${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
-          </div>
-          <div>
-            {`Registry Allowance: ${withCommas(balances.get('registryAllowance'))}`}
-          </div>
-          <div>
-            {`Voting Allowance: ${withCommas(balances.get('votingAllowance'))}`}
-          </div>
-          <div>
-            {`Voting Rights: ${withCommas(balances.get('votingRights'))}`}
-          </div>
-        </AppBar>
+        <AppBarWrapper>
+          <AppBar>
+            <div>
+              <Identicon address={account} diameter={30} />
+            </div>
+            <OverFlowDiv>
+              {account}
+            </OverFlowDiv>
+            <div>
+              {`${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
+            </div>
+            <div>
+              {`${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
+            </div>
+            <div>
+              {`Registry Allowance: ${withCommas(balances.get('registryAllowance'))}`}
+            </div>
+            <div>
+              {`Voting Allowance: ${withCommas(balances.get('votingAllowance'))}`}
+            </div>
+            <div>
+              {`Voting Rights: ${withCommas(balances.get('votingRights'))}`}
+            </div>
+          </AppBar>
+        </AppBarWrapper>
 
         {/* <Grid>
           <Grid.Column width={4}>
-            <Menu fluid vertical tabular>
+          <Menu fluid vertical tabular>
               <Menu.Item name='registry' active={this.state.activeItem === 'bio'} onClick={this.handleItemClick} />
               <Menu.Item name='applications' active={this.state.activeItem === 'pics'} onClick={this.handleItemClick} />
               <Menu.Item name='committing' active={this.state.activeItem === 'companies'} onClick={this.handleItemClick} />
@@ -707,6 +721,7 @@ class Home extends Component {
               <TableRow>
                 <TableHeader title="Listing" />
                 <TableHeader title="Time Remaining" />
+                <TableHeader title="Number of Tokens Voted" />
                 <TableHeader title="Badges" />
                 <TableHeader title="Actions" />
               </TableRow>
@@ -728,6 +743,10 @@ class Home extends Component {
                 </TableCell>
 
                 <TableCell>
+                  <Text>{one.get('listingString')}</Text>
+                </TableCell>
+
+                <TableCell>
                   {one.get('owner') === account ?
                     <div>
                       <Icon name='exclamation circle' size='large' color='orange' />
@@ -746,16 +765,22 @@ class Home extends Component {
                         </div>
                       </CMItem>
                     }
-                    {!dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
-                      <CMItem onClick={e => this.openSidePanel(one, 'openRevealVote')}>
-                        <Icon name='unlock' size='large' color='orange' />
-                        {'Reveal Token Vote'}
+                    {dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
+                      <CMItem onClick={e => this.handleRescueTokens(one)}>
+                        <Icon name='exclaimation circle' size='large' color='orange' />
+                        {'Rescue Tokens'}
                       </CMItem>
                     }
                     {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
                       <CMItem onClick={e => this.openSidePanel(one, 'openCommitVote')}>
                         <Icon name='check circle' size='large' color='orange' />
                         {'Commit Token Vote'}
+                      </CMItem>
+                    }
+                    {dateHasPassed(one.getIn(['latest', 'commitEndDate'])) && !dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
+                      <CMItem onClick={e => this.openSidePanel(one, 'openRevealVote')}>
+                        <Icon name='unlock' size='large' color='orange' />
+                        {'Reveal Token Vote'}
                       </CMItem>
                     }
                   </ContextMenu>

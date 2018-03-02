@@ -197,18 +197,20 @@ Calls:
   .voteTokenBalance(address _voter) -> BN
 
 // voting-related
-  .attrUUID(address _user, uint _pollID) -> bytes32
-  .commitPeriodActive(address uint _pollID) -> Boolean
-  .getCommitHash(address _voter, uint _pollID) -> bytes32
-  .getLastNode(address _voter) -> BN
   .hasBeenRevealed(address _voter, uint _pollID) -> Boolean
+  .commitPeriodActive(address uint _pollID) -> Boolean
+  .revealPeriodActive(uint _pollID) -> Boolean
   .isExpired(uint _terminationDate) -> Boolean
   .isPassed(uint _pollID) -> Boolean
   .pollEnded(uint _pollID) -> Boolean
   .pollExists(uint _pollID) -> Boolean
+  .getCommitHash(address _voter, uint _pollID) -> bytes32
+
   .pollMap(uint _pollID) -> Poll struct (Array)
-  .revealPeriodActive(uint _pollID) -> Boolean
+  .getLastNode(address _voter) -> BN
   .validPosition(uint _prevID, uint _nextID, address _address, uint _numTokens) -> Boolean
+
+  .attrUUID(address _user, uint _pollID) -> bytes32
 ```
 
 #### Parameterizer

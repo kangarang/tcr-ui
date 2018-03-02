@@ -59,7 +59,8 @@ function* getFreshLogs() {
 
 function* pollController() {
   const network = yield select(selectNetworkID)
-  let pollInterval = 15000 // 15 seconds
+  // let pollInterval = 15000 // 15 seconds
+  let pollInterval = 5000 // 5 seconds
 
   if (network === '420') {
     pollInterval = 2000
@@ -162,6 +163,11 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
     let commitExpiry
     let revealEndDate
     let revealExpiry
+    // let rewardPool
+    // let challenger
+    // let resolved
+    // let stake
+    // let totalTokens
 
     if (dLog._eventName === '_Challenge' || dLog._eventName === '_VoteCommitted') {
       const poll = await voting.contract.pollMap(dLog.pollID.toString())
@@ -169,6 +175,20 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
+      // const chall = await contract.contract.challenges.call(dLog.pollID.toString())
+      // rewardPool = chall[0].toString()
+      // challenger = chall[1].toString()
+      // resolved = chall[2]
+      // stake = chall[3].toString()
+      // totalTokens = chall[4].toString()
+      // if (dateHasPassed(revealEndDate)) {
+      //   const vccr = await contract.contract.voterCanClaimReward(dLog.pollID.toString(), txDetails.from)
+      //   console.log('voter cannot claim reward', vccr)
+      // }
+      // if (txDetails.from === challenger) {
+      //   const cwr = await contract.contract.challengeWinnerReward(dLog.pollID.toString())
+      //   console.log('there exists challenge winner reward', cwr)
+      // }
     }
 
     const aeUnix = listing[0].toNumber()
@@ -207,6 +227,11 @@ async function buildListing(contract, block, dLog, i, txDetails, voting) {
       commitExpiry,
       revealEndDate,
       revealExpiry,
+      // rewardPool,
+      // challenger,
+      // resolved,
+      // stake,
+      // totalTokens,
     }
 
     const finalForm = log_utils.shapeShift(block, tx, details)
