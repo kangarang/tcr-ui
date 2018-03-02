@@ -592,6 +592,13 @@ class Home extends Component {
                 <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
                 <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
               </div>
+              <Button
+                onClick={e => this.handleApprove('voting')}
+                mode='strong'
+                wide
+              >
+                {'Approve tokens for Voting'}
+              </Button>
             </MarginDiv>
           ) : (
               <MarginDiv>
