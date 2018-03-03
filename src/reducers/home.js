@@ -11,6 +11,7 @@ import {
   CHANGE_ITEMS,
   DELETE_LISTINGS,
   SEND_TRANSACTION,
+  TXN_MINED,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -35,6 +36,7 @@ const initialState = fromJS({
   parameters: { minDeposit: '', applyStageLen: '' },
   listings: {},
   txnStatus: false,
+  latestTxn: false,
 })
 
 function homeReducer(state = initialState, action) {
@@ -43,6 +45,10 @@ function homeReducer(state = initialState, action) {
     //   return state.set('error', action.error)
     // case CONTRACT_ERROR:
     //   return state.setIn(['error', 'type'], true)
+    case TXN_MINED:
+      return state
+        .set('txnStatus', fromJS(false))
+        .set('latestTxn', fromJS(action.payload))
     case SEND_TRANSACTION:
       return state.set('txnStatus', fromJS(true))
     case SET_WALLET:
@@ -62,7 +68,7 @@ function homeReducer(state = initialState, action) {
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
     case NEW_ARRAY:
-      return replaceListings(state, action.payload)
+      return state.set('listings', fromJS(action.payload))
     case CHANGE_ITEMS:
       return changeListings(state, action.payload)
     case DELETE_LISTINGS:
@@ -72,32 +78,24 @@ function homeReducer(state = initialState, action) {
   }
 }
 
-function replaceListings(state, payload) {
-  const filteredPayload = payload.reduce((acc, val) => {
-    return acc.filter(a => a.listingHash !== val.listingHash)
-  }, [])
-  return state.set('listings', fromJS(filteredPayload))
-}
-
 function changeListings(state, payload) {
-  const newListings = payload.reduce((acc, val) => {
-    const index = acc.findIndex(ri => ri.get('listingHash') === val.listingHash)
+  const newListings = fromJS(payload).reduce((acc, val) => {
+    const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
     // New listing
     if (index === -1) {
+      // console.log('index -1: acc, val', acc.toJS(), val.toJS())
       return acc.push(fromJS(val))
     }
     // Check to see if the event is the more recent
-    if (val.latest.blockNumber > acc.getIn([index, 'latest', 'blockNumber'])) {
-      return acc.setIn([index, 'latest'], fromJS(val.latest))
+    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
+      // console.log('next: acc, val', acc.toJS(), val.toJS())
+      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
     }
+    // console.log('acc', acc.toJS())
     // Not unique, not more recent, return List
-    return acc
-  }, state.get('listings'))
+    return fromJS(acc)
+  }, fromJS(state.get('listings')))
 
-  const listings = state.get('listings')
-  if (newListings.isSubset(listings)) {
-    return state
-  }
   // Replace entire List
   return state.set('listings', newListings)
 }

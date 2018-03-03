@@ -33,9 +33,10 @@ export function* requestVotingRightsSaga(action) {
     console.log('request voting rights saga action', action)
     const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
     const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
-    // const receipt = yield call(voting.contract.requestVotingRights, tokens.toString(10))
-    // console.log('receipt', receipt)
-    yield call(sendTransactionSaga, txData, voting.address)
+    const receipt = yield call(voting.contract.requestVotingRights, tokens.toString(10))
+    console.log('receipt', receipt)
+    // yield call(sendTransactionSaga, txData, voting.address)
+    // yield call(sendTransactionSaga, voting, action.payload.method.name, action.payload.args)
   } catch (error) {
     console.log('error', error)
   }
@@ -115,5 +116,6 @@ export function* revealVoteSaga(action) {
   const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
   const to = voting.address
-  yield call(sendTransactionSaga, txData, to)
+  // yield call(sendTransactionSaga, txData, to)
+  yield call(sendTransactionSaga, voting, action.payload.method.name, finalArgs)
 }

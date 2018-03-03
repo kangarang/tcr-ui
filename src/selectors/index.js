@@ -78,16 +78,26 @@ export const selectAllListings = createSelector(selectHome, homeState =>
 export const selectCandidates = createSelector(selectAllListings, listings =>
   listings.filter(
     li =>
-      !li.getIn(['latest', 'whitelisted']) && !li.getIn(['latest', 'pollID'])
+      li.get('listingString')
+      && !li.get('whitelisted')
+      && !li.getIn(['latest', 'pollID'])
   )
 )
 // Only voteable listings
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
   listings.filter(
-    li => !li.getIn(['latest', 'whitelisted']) && li.getIn(['latest', 'pollID'])
+    li =>
+      li.get('listingString')
+      && !li.get('whitelisted')
+      && li.getIn(['latest', 'pollID'])
   )
 )
 // Only whitelisted listings
 export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.getIn(['latest', 'whitelisted']))
+  listings.filter(
+    li =>
+      li.get('listingString')
+      && li.get('whitelisted')
+      && li.getIn(['latest', 'event']) !== '_Challenge'
+  )
 )

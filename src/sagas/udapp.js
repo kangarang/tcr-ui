@@ -1,6 +1,6 @@
 import EthAbi from 'ethjs-abi'
 
-import { select, call, takeEvery } from 'redux-saga/effects'
+import { select, put, call, takeEvery } from 'redux-saga/effects'
 import {
   SEND_TRANSACTION,
   CALL_REQUESTED,
@@ -15,6 +15,7 @@ import {
 
 import vote_utils from '../utils/vote_utils'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote';
+import { txnMined } from '../actions';
 
 export default function* udappSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
@@ -68,7 +69,7 @@ function* handleSendTransaction(action) {
   } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else {
-    console.log('lost?')
+    yield call(sendDefaultTxn, action)
   }
 }
 
@@ -76,10 +77,40 @@ function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
   const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
   const to = registry.address
-  yield call(sendTransactionSaga, txData, to)
+  yield call(sendTransactionSaga, registry, action.payload.method.name, action.payload.args)
+  // yield call(sendTransactionSaga, txData, to)
 }
 
-export function* sendTransactionSaga(data, to) {
+export function* sendDefaultTxn(action) {
+  try {
+    const to = action.payload.to
+    const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
+    yield call(sendDefTransactionSaga, txData, to)
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export function* sendTransactionSaga(contract, method, args) {
+  try {
+    const newArgs = args.map(rg => {
+      if (typeof rg === 'object') {
+        return rg.toString()
+      }
+      return rg
+    })
+    const receipt = yield call(contract.contract[method], ...newArgs)
+    if (receipt.receipt.status !== '0x00') {
+      yield put(txnMined(receipt))
+    } else {
+      console.log('ERROR')
+    }
+    console.log('receipt', receipt)
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+export function* sendDefTransactionSaga(data, to) {
   try {
     const ethjs = yield select(selectEthjs)
     const from = yield select(selectAccount)
@@ -93,7 +124,6 @@ export function* sendTransactionSaga(data, to) {
       data,
     }
     const txHash = yield call(ethjs.sendTransaction, payload)
-    console.log('txHash', txHash)
     return txHash
   } catch (error) {
     console.log('error', error)

@@ -11,16 +11,17 @@ import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
 
-import { selectEthjs, selectNetworkID, selectRegistry, selectVoting } from '../selectors'
+import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAllListings } from '../selectors'
 
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
+import { fromJS } from 'immutable';
+
+let lastReadBlockNumber = 0
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
   yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
 }
-
-let lastReadBlockNumber = 0
 
 function* getFreshLogs() {
   try {
@@ -33,7 +34,24 @@ function* getFreshLogs() {
       registry
     )
 
-    yield put(newArray(applications))
+    const newListings = fromJS(applications).reduce((acc, val) => {
+      const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
+      // New listing
+      if (index === -1) {
+        // console.log('index -1: acc, val', acc.toJS(), val.toJS())
+        return acc.push(val)
+      }
+      // Check to see if the event is the more recent
+      if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
+        // console.log('next: acc, val', acc.toJS(), val.toJS())
+        return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
+      }
+      // console.log('acc', acc.toJS())
+      // Not unique, not more recent, return List
+      return acc
+    }, fromJS([]))
+
+    yield put(newArray(newListings))
     yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Fresh log error:', err)
@@ -43,7 +61,6 @@ function* getFreshLogs() {
 
   yield fork(pollController)
 }
-
 function* pollController() {
   const network = yield select(selectNetworkID)
   let pollInterval = 5000 // 5 seconds
@@ -67,7 +84,6 @@ function* pollController() {
     }
   }
 }
-
 function* pollLogsSaga(action) {
   try {
     const ethjs = yield select(selectEthjs)
@@ -80,7 +96,9 @@ function* pollLogsSaga(action) {
       '',
       registry
     )
-    console.log(newLogs.length, 'newLogs', newLogs)
+    if (newLogs.length == 0) {
+      return
+    }
     yield put(updateItems(newLogs))
     yield put(updateBalancesRequest())
   } catch (err) {
@@ -90,10 +108,10 @@ function* pollLogsSaga(action) {
 }
 
 function* handleLogs(sb, eb, topic, contract) {
-  const voting = yield select(selectVoting)
   try {
     const ethjs = yield select(selectEthjs)
-
+    const voting = yield select(selectVoting)
+    const allListings = yield select(selectAllListings)
     const blockRange = yield {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
@@ -108,124 +126,89 @@ function* handleLogs(sb, eb, topic, contract) {
     )
 
     const rawLogs = yield call(ethjs.getLogs, filter)
+    if (rawLogs.length === 0) {
+      return []
+    }
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
-
-    if (decodedLogs.length) {
-      // console.log('decodedLogs', decodedLogs)
-    }
-
-    return yield all(
-      (yield decodedLogs.map(async (dLog, ind) => {
-        const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
-        const txDetails = await log_utils.getTransaction(
-          ethjs,
-          rawLogs[ind].transactionHash
-        )
-        return buildListing(contract, block, dLog, ind, txDetails, voting)
-      })).filter(lawg => lawg !== false)
-    )
+    console.log('decodedLogs', decodedLogs)
+    const listings = yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting, allListings)
+    return listings
   } catch (err) {
     console.log('Handle logs error:', err)
     // yield put(logsError('logs error', err))
   }
 }
 
-async function buildListing(contract, block, dLog, i, txDetails, voting) {
+async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting, allListings) {
+  return Promise.all(decodedLogs.map(async (dLog, ind) => {
+    const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
+    const txDetails = await log_utils.getTransaction(
+      ethjs,
+      rawLogs[ind].transactionHash
+    )
+    return buildListing(contract, block.timestamp, dLog, ind, txDetails, voting, allListings)
+  }))
+}
+
+async function buildListing(contract, ts, dLog, i, txn, voting, allListings) {
   try {
-    if (!dLog.listingHash) {
-      return false
+    const listingHash = dLog.listingHash
+    const event = dLog._eventName
+    let listing = await contract.contract.listings.call(listingHash)
+    if (!listing) {
+      console.log('no listing', dLog)
     }
-
-    // Get the listing struct from the mapping
-    const listing = await contract.contract.listings.call(dLog.listingHash)
-    console.log('listing', listing)
-
-    if (!listing || listing[2] === '0x0000000000000000000000000000000000000000') {
-      return false
-    }
-    let isWhitelisted = listing[1]
+    const whitelisted = listing[1]
 
     let commitEndDate
     let commitExpiry
     let revealEndDate
     let revealExpiry
-    // let rewardPool
-    // let challenger
-    // let resolved
-    // let stake
-    // let totalTokens
 
-    if (dLog._eventName === '_Challenge' || dLog._eventName === '_ListingRemoved') {
-      const poll = await voting.contract.pollMap(dLog.pollID.toString())
+    let aeUnix = listing[0].toNumber()
+    const appExpiry = convertUnixTimeLeft(aeUnix)
+    const appExpired = dateHasPassed(aeUnix)
+
+    let pollID = (dLog.pollID || dLog.challengeID)
+
+    if (pollID) {
+      pollID = pollID.toString()
+      const poll = await voting.contract.pollMap(pollID)
       commitEndDate = poll[0].toNumber()
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
-
-      if (!dateHasPassed(revealEndDate)) {
-        isWhitelisted = false
-      }
-      // const chall = await contract.contract.challenges.call(dLog.pollID.toString())
-      // rewardPool = chall[0].toString()
-      // challenger = chall[1].toString()
-      // resolved = chall[2]
-      // stake = chall[3].toString()
-      // totalTokens = chall[4].toString()
-      // if (dateHasPassed(revealEndDate)) {
-      //   const vccr = await contract.contract.voterCanClaimReward(dLog.pollID.toString(), txDetails.from)
-      //   console.log('voter cannot claim reward', vccr)
-      // }
-      // if (txDetails.from === challenger) {
-      //   const cwr = await contract.contract.challengeWinnerReward(dLog.pollID.toString())
-      //   console.log('there exists challenge winner reward', cwr)
-      // }
     }
 
-    const aeUnix = listing[0].toNumber()
-    const appExpiry = convertUnixTimeLeft(aeUnix)
-    const appExpired = dateHasPassed(aeUnix)
+    // account for listingHash
+    // if (event === '_ChallengeSucceeded' || event === '_ChallengeFailed') {
+    // }
 
-    if (appExpired) {
-      // expired
-      // can call updateStatus()
-      // 
-    }
+    return {
+      listingString: (event === '_Application' && dLog.data),
+      owner: (event === '_Application' && txn.from),
 
-    const tx = {
-      hash: txDetails.hash,
-      from: txDetails.from,
-      to: txDetails.to,
-      index: txDetails.transactionIndex,
-      timestamp: new Date(block.timestamp * 1000).toUTCString(),
-    }
-
-    const details = {
-      listingString: dLog.data,
-      listingHash: dLog.listingHash,
-      unstakedDeposit: listing[3] ? toUnitAmount(listing[3], 18) : false,
-      pollID: dLog.pollID ? dLog.pollID.toString(10) : false,
-      index: i,
-      eventName: dLog._eventName,
-      isWhitelisted,
-      blockHash: txDetails.blockHash,
-      blockNumber: txDetails.blockNumber && txDetails.blockNumber.toNumber(10),
+      listingHash,
+      whitelisted,
       appExpiry,
       appExpired,
-      commitEndDate,
-      commitExpiry,
-      revealEndDate,
-      revealExpiry,
-      // rewardPool,
-      // challenger,
-      // resolved,
-      // stake,
-      // totalTokens,
-    }
 
-    const finalForm = log_utils.shapeShift(block, tx, details)
-    // console.log('listing (individual log):', finalForm)
-    return finalForm
+      latest: {
+        txHash: txn.hash,
+        blockHash: txn.blockHash,
+        blockNumber: txn.blockNumber.toNumber(10),
+        numTokens: listing[3] ? toUnitAmount(listing[3], 18).toString() : false,
+        pollID,
+        sender: txn.from,
+        event,
+        ts,
+        commitEndDate,
+        commitExpiry,
+        revealEndDate,
+        revealExpiry,
+      },
+    }
   } catch (err) {
     console.log('build listing error', err)
   }
