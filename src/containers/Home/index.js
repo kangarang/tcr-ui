@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
+import JSONTree from 'react-json-tree'
+
 import iconSrc from '../../assets/icons/corva.png'
 import {
   SidePanel,
@@ -55,6 +57,27 @@ import translate from '../../translations';
 import vote_utils from '../../utils/vote_utils';
 import { colors } from '../../colors';
 import { dateHasPassed } from '../../utils/format-date';
+
+const jsonTheme = {
+  scheme: 'monokai',
+  author: 'wimer hazenberg (http://www.monokai.nl)',
+  base00: '#272822',
+  base01: '#383830',
+  base02: '#49483e',
+  base03: '#75715e',
+  base04: '#a59f85',
+  base05: '#f8f8f2',
+  base06: '#f5f4f1',
+  base07: '#f9f8f5',
+  base08: '#f92672',
+  base09: '#fd971f',
+  base0A: '#f4bf75',
+  base0B: '#a6e22e',
+  base0C: '#a1efe4',
+  base0D: '#66d9ef',
+  base0E: '#ae81ff',
+  base0F: '#cc6633'
+}
 
 const AppBarWrapper = styled.div`
   flex-shrink: 0;
@@ -169,8 +192,17 @@ class Home extends Component {
 
   // token txns
   handleApprove = async (contract) => {
-    const approved = await this.props.token.contract.approve(this.props[contract].address, toNaturalUnitAmount(this.state.numTokens, 18).toString(10))
-    console.log('approved!!', approved)
+    //   const approved = await this.props.token.contract.approve(this.props[contract].address, toNaturalUnitAmount(this.state.numTokens, 18).toString(10))
+    //   console.log('approved!!', approved)
+    const method = this.props.token.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'approve')[0]
+    this.props.onSendTransaction({
+      args: [
+        this.props[contract].address,
+        toNaturalUnitAmount(this.state.numTokens, 18)
+      ],
+      method,
+      to: this.props.token.address
+    })
   }
   handleRequestVotingRights = () => {
     const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'requestVotingRights')[0]
@@ -287,14 +319,12 @@ class Home extends Component {
                 <div>
                   <Identicon address={account} diameter={30} />
                 </div>
-                <div>
-                  {txnStatus && 'mining'}
-                </div>
+                <Text color='red' weight='bold'>{txnStatus && 'MINING'}</Text>
                 <OverFlowDiv>
                   {account}
                 </OverFlowDiv>
                 <div>
-                  {`Ether Balance: ${withCommas(trimDecimalsThree(toEther(balances.get('ETH'))))} ΞTH`}
+                  {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
                 </div>
                 <div>
                   {`${token.name} Balance: ${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
@@ -407,20 +437,22 @@ class Home extends Component {
           <SidePanelSeparator />
 
           {registryMethods.map(one => (
-            <MarginDiv>
-              {one.inputs.map(inp => (
-                <TextInput placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
-              ))}
+            <div key={one.name}>
               <MarginDiv>
-                <Button
-                  onClick={e => this.handleCall('registry', one)}
-                  mode='strong'
-                  wide
-                >
-                  <Text color='white' smallcaps>{one.name}</Text>
-                </Button>
+                {one.inputs.map(inp => (
+                  <TextInput key={inp.name} placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
+                ))}
+                <MarginDiv>
+                  <Button
+                    onClick={e => this.handleCall('registry', one)}
+                    mode='strong'
+                    wide
+                  >
+                    <Text color='white' smallcaps>{one.name}</Text>
+                  </Button>
+                </MarginDiv>
               </MarginDiv>
-            </MarginDiv>
+            </div>
           ))}
         </SidePanel>
 
@@ -440,20 +472,22 @@ class Home extends Component {
           <SidePanelSeparator />
 
           {votingMethods.map(one => (
-            <MarginDiv>
-              {one.inputs.map(inp => (
-                <TextInput placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
-              ))}
+            <div key={one.name}>
               <MarginDiv>
-                <Button
-                  onClick={e => this.handleCall('voting', one)}
-                  mode='strong'
-                  wide
-                >
-                  <Text color='white' smallcaps>{one.name}</Text>
-                </Button>
+                {one.inputs.map(inp => (
+                  <TextInput key={inp.name} placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
+                ))}
+                <MarginDiv>
+                  <Button
+                    onClick={e => this.handleCall('voting', one)}
+                    mode='strong'
+                    wide
+                  >
+                    <Text color='white' smallcaps>{one.name}</Text>
+                  </Button>
+                </MarginDiv>
               </MarginDiv>
-            </MarginDiv>
+            </div>
           ))}
         </SidePanel>
 
@@ -589,7 +623,7 @@ class Home extends Component {
                 {'Request Voting Rights'}
               </Button>
               <div>
-                <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
+                <Text>{'Number of Tokens to Approve'}</Text>
                 <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
               </div>
               <Button
@@ -627,7 +661,14 @@ class Home extends Component {
               </MarginDiv>
             )
           }
-          <SidePanelSeparator />
+          <MarginDiv>
+            <JSONTree
+              invertTheme={false}
+              theme={jsonTheme}
+              data={balances}
+              shouldExpandNode={(keyName, data, level) => false}
+            />
+          </MarginDiv>
         </SidePanel>
 
         <SidePanel
@@ -675,7 +716,7 @@ class Home extends Component {
             <Text>{translate('sidebar_revealVote_instructions')}</Text>
           </MarginDiv>
           <MarginDiv>
-            {this.state.selectedOne && this.state.selectedOne.getIn(['latest', 'revealExpiry', 'timeleft']) > 0 && (
+            {this.state.selectedOne && this.state.selectedOne.getIn(['revealExpiry', 'timeleft']) > 0 && (
               <FileInput
                 type='file'
                 name='file'
@@ -716,13 +757,18 @@ class Home extends Component {
                       <Text>{one.get('listingString')}</Text>
                     </TableCell>
                     <TableCell>
-                      {!dateHasPassed(one.getIn(['latest', 'appExpiry', 'date'])) ?
-                        <Countdown end={one.getIn(['latest', 'appExpiry', 'date'])} /> :
+                      {!dateHasPassed(one.getIn(['appExpiry', 'date'])) ?
+                        <Countdown end={one.getIn(['appExpiry', 'date'])} /> :
                         'Ready to update'
                       }
                     </TableCell>
                     <TableCell>
-                      {one.getIn(['latest', 'numTokens'])}
+                      <JSONTree
+                        invertTheme={false}
+                        theme={jsonTheme}
+                        data={one}
+                        shouldExpandNode={(keyName, data, level) => false}
+                      />
                     </TableCell>
                     <TableCell>
                       {one.get('owner') === account ?
@@ -734,45 +780,30 @@ class Home extends Component {
                     </TableCell>
                     {/* actions */}
                     <TableCell>
-                      {one.get('owner') === account ? (
-                        <ContextMenu>
-                          {one.getIn(['latest', 'appExpired']) &&
-                            <CMItem onClick={e => this.handleUpdateStatus(one)}>
-                              <Icon name='magic' size='large' color='purple' />
-                              {'Update Status'}
-                            </CMItem>
-                          }
-                          <CMItem onClick={e => this.handleExit(one)}>
-                            <Icon name='remove circle outline' size='large' color='orange' />
-                            {'Remove Listing'}
+                      <ContextMenu>
+                        {one.get('appExpired') &&
+                          <CMItem onClick={e => this.handleUpdateStatus(one)}>
+                            <Icon name='magic' size='large' color='purple' />
+                            {'Update Status'}
                           </CMItem>
-                          <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
-                            <Icon name='angle double up' size='large' color='green' />
-                            {'Deposit Tokens'}
-                          </CMItem>
-                          <CMItem onClick={e => this.handleDepositWithdraw(one, 'withdraw')}>
-                            <Icon name='angle double down' size='large' color='yellow' />
-                            {'Withdraw Tokens'}
-                          </CMItem>
-                          <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
-                            <Icon name='remove circle outline' size='large' color='orange' />
-                            {'Challenge Listing'}
-                          </CMItem>
-                        </ContextMenu>
-                      ) : (
-                          <ContextMenu>
-                            {one.getIn(['latest', 'appExpired']) &&
-                              <CMItem onClick={e => this.handleUpdateStatus(one)}>
-                                <Icon name='magic' size='large' color='purple' />
-                                {'Update Status'}
-                              </CMItem>
-                            }
-                            <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
-                              <Icon name='remove circle outline' size='large' color='orange' />
-                              {'Challenge Listing'}
-                            </CMItem>
-                          </ContextMenu>
-                        )}
+                        }
+                        <CMItem onClick={e => this.handleExit(one)}>
+                          <Icon name='remove circle outline' size='large' color='orange' />
+                          {'Remove Listing'}
+                        </CMItem>
+                        <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
+                          <Icon name='angle double up' size='large' color='green' />
+                          {'Deposit Tokens'}
+                        </CMItem>
+                        <CMItem onClick={e => this.handleDepositWithdraw(one, 'withdraw')}>
+                          <Icon name='angle double down' size='large' color='yellow' />
+                          {'Withdraw Tokens'}
+                        </CMItem>
+                        <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
+                          <Icon name='remove circle outline' size='large' color='orange' />
+                          {'Challenge Listing'}
+                        </CMItem>
+                      </ContextMenu>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -788,7 +819,8 @@ class Home extends Component {
                   <TableRow>
                     <TableHeader title="Listing" />
                     <TableHeader title="Time Remaining" />
-                    <TableHeader title="Number of Tokens Voted" />
+                    <TableHeader title="" />
+                    {/* <TableHeader title="Number of Tokens Voted" /> */}
                     <TableHeader title="Badges" />
                     <TableHeader title="Actions" />
                   </TableRow>
@@ -802,16 +834,20 @@ class Home extends Component {
 
                     <TableCell>
                       {!dateHasPassed(one.getIn(['latest', 'commitEndDate']))
-                        ? <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
+                        ? <Countdown end={one.getIn(['latest', 'commitExpiry'])} />
                         : !dateHasPassed(one.getIn(['latest', 'revealEndDate']))
-                          ? <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
+                          ? <Countdown end={one.getIn(['latest', 'revealExpiry'])} />
                           : 'Ready to update'
                       }
                     </TableCell>
 
                     <TableCell>
-                      {'coming soon!'}
-                      {/* <Text>{one.getIn(['latest', 'numTokens'])}</Text> */}
+                      <JSONTree
+                        invertTheme={false}
+                        theme={jsonTheme}
+                        data={one}
+                        shouldExpandNode={(keyName, data, level) => false}
+                      />
                     </TableCell>
 
                     <TableCell>
@@ -825,20 +861,6 @@ class Home extends Component {
 
                     <TableCell>
                       <ContextMenu>
-                        {dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
-                          <div>
-                            <CMItem onClick={e => this.handleUpdateStatus(one)}>
-                              <Icon name='magic' size='large' color='purple' />
-                              <div>
-                                {'Update Status'}
-                              </div>
-                            </CMItem>
-                            <CMItem onClick={e => this.handleRescueTokens(one)}>
-                              <Icon name='exclaimation circle' size='large' color='orange' />
-                              {'Rescue Tokens'}
-                            </CMItem>
-                          </div>
-                        }
                         {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
                           <CMItem onClick={e => this.openSidePanel(one, 'openCommitVote')}>
                             <Icon name='check circle' size='large' color='orange' />
@@ -850,6 +872,20 @@ class Home extends Component {
                             <Icon name='unlock' size='large' color='orange' />
                             {'Reveal Token Vote'}
                           </CMItem>
+                        }
+                        {dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
+                          <div>
+                            <CMItem onClick={e => this.handleUpdateStatus(one)}>
+                              <Icon name='magic' size='large' color='purple' />
+                              <div>
+                                {'Update Status'}
+                              </div>
+                            </CMItem>
+                            <CMItem onClick={e => this.handleRescueTokens(one)}>
+                              <Icon name='exclamation circle' size='large' color='orange' />
+                              {'Rescue Tokens'}
+                            </CMItem>
+                          </div>
                         }
                       </ContextMenu>
                     </TableCell>
@@ -884,7 +920,12 @@ class Home extends Component {
                     </TableCell>
 
                     <TableCell>
-                      {one.getIn(['latest', 'blockNumber'])}
+                      <JSONTree
+                        invertTheme={false}
+                        theme={jsonTheme}
+                        data={one}
+                        shouldExpandNode={(keyName, data, level) => false}
+                      />
                     </TableCell>
 
                     <TableCell>
