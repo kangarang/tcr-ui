@@ -54,6 +54,7 @@ export function* contractsSaga(ethjs, account) {
       tokenName,
       tokenDecimals,
       tokenSymbol,
+      registryName,
     ] = yield all([
       call(parameterizer.contract.get.call, 'minDeposit'),
       call(parameterizer.contract.get.call, 'applyStageLen'),
@@ -63,6 +64,7 @@ export function* contractsSaga(ethjs, account) {
       call(token.contract.name.call),
       call(token.contract.decimals.call),
       call(token.contract.symbol.call),
+      call(registry.contract.name.call),
     ])
 
     const parameters = {
@@ -76,6 +78,7 @@ export function* contractsSaga(ethjs, account) {
     token.symbol = yield tokenSymbol
     token.name = yield tokenName
     token.decimals = yield tokenDecimals
+    registry.name = yield registryName
 
     yield put(setContracts({ parameters, contracts: { registry, token, voting, parameterizer } }))
     yield put(updateBalancesRequest())

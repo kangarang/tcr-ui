@@ -305,6 +305,7 @@ class Home extends Component {
       txnStatus,
       registryMethods,
       votingMethods,
+      registry,
     } = this.props
 
     return (
@@ -317,8 +318,10 @@ class Home extends Component {
           ) : (
               <AppBar>
                 <div>
-                  <Identicon address={account} diameter={30} />
+                  {registry.name}
                 </div>
+                <Identicon address={account} diameter={30} />
+                <div>{`Network: ${networkID === '4' ? 'Rinkeby' : networkID == '1' ? 'Main Net' : networkID === '420' ? 'ganache' : networkID}`}</div>
                 <Text color='red' weight='bold'>{txnStatus && 'MINING'}</Text>
                 <OverFlowDiv>
                   {account}
@@ -400,11 +403,12 @@ class Home extends Component {
             <Button
               onClick={this.handleApply}
               mode='strong'
-              wide
             >
               {'Apply Listing'}
             </Button>
           </MarginDiv>
+
+          <SidePanelSeparator />
 
           <MarginDiv>
             {Number(balances.get('registryAllowance')) < toUnitAmount(parameters.get('minDeposit'), 18) &&
@@ -413,12 +417,10 @@ class Home extends Component {
             <Button
               onClick={e => this.handleApprove('registry')}
               mode='strong'
-              wide
             >
               {'Approve tokens for Registry'}
             </Button>
           </MarginDiv>
-          <SidePanelSeparator />
         </SidePanel>
 
         <SidePanel
@@ -572,12 +574,23 @@ class Home extends Component {
         >
           <SidePanelSplit children={[
             <Section>
-              <Text weight='bold'>{'Commit Period'}</Text>
-              <h1>{`Commit: ${parameters.get('commitStageLen')} seconds`}</h1>
-            </Section>,
-            <Section>
               <Text weight='bold'>{'POLL ID'}</Text>
               <h2>{this.state.selectedOne && this.state.selectedOne.getIn(['latest', 'pollID'])}</h2>
+            </Section>,
+            <Section>
+              <Text weight='bold'>{'Token Balance'}</Text>
+              <h2>{withCommas(balances.get('token'))}</h2>
+            </Section>
+          ]} />
+
+          <SidePanelSplit children={[
+            <Section>
+              <Text weight='bold'>{'Voting Rights'}</Text>
+              <h2>{withCommas(balances.get('votingRights'))}</h2>
+            </Section>,
+            <Section>
+              <Text weight='bold'>{'Voting Allowance'}</Text>
+              <h2>{withCommas(balances.get('votingAllowance'))}</h2>
             </Section>
           ]} />
 
@@ -592,83 +605,67 @@ class Home extends Component {
           <SidePanelSeparator />
 
           <MarginDiv>
-            <Icon name='exclamation triangle' size='small' />
-            <Text color='grey' smallcaps>{'WARNING'}</Text>
-          </MarginDiv>
-          <MarginDiv>
-            {balances.get('votingRights') === '0' ? (
-              <div>
-                <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
-                <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
-              </div>
-            ) : (
-                <div>
-                  <MarginDiv>
-                    <Text>{translate('sidebar_commitVote_instructions')}</Text>
-                  </MarginDiv>
-                  <MarginDiv>
-                    <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
-                  </MarginDiv>
-                </div>
-              )}
-          </MarginDiv>
-
-          {balances.get('votingRights') === '0' ? (
             <MarginDiv>
-              <Button
-                onClick={this.handleRequestVotingRights}
-                mode='strong'
-                wide
-              >
-                {'Request Voting Rights'}
-              </Button>
-              <div>
-                <Text>{'Number of Tokens to Approve'}</Text>
-                <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
-              </div>
-              <Button
-                onClick={e => this.handleApprove('voting')}
-                mode='strong'
-                wide
-              >
-                {'Approve tokens for Voting'}
-              </Button>
+              <Text color='grey' smallcaps>{'Token Amount'}</Text>
             </MarginDiv>
-          ) : (
+            <TextInput onChange={e => this.handleInputChange(e, 'numTokens')} wide type='number' />
+
+            {balances.get('votingRights') === '0' ? (
               <MarginDiv>
+                <MarginDiv>
+                  <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
+                </MarginDiv>
                 <Button
-                  onClick={e => this.handleCommitVote(1)}
-                  emphasis='positive'
-                  mode='strong'
-                >
-                  {'Support the applicant'}
-                </Button>
-                {' '}
-                <Button
-                  onClick={e => this.handleCommitVote(0)}
-                  emphasis='negative'
-                  mode='strong'
-                >
-                  {'Oppose the applicant'}
-                </Button>
-                <Button
-                  onClick={e => this.handleApprove('voting')}
+                  onClick={this.handleRequestVotingRights}
                   mode='strong'
                   wide
                 >
-                  {'Approve tokens for Voting'}
+                  {'Request Voting Rights'}
                 </Button>
               </MarginDiv>
-            )
-          }
-          <MarginDiv>
-            <JSONTree
-              invertTheme={false}
-              theme={jsonTheme}
-              data={balances}
-              shouldExpandNode={(keyName, data, level) => false}
-            />
+            ) : (
+                <MarginDiv>
+                  <MarginDiv>
+                    <Text>{translate('sidebar_commitVote_instructions')}</Text>
+                  </MarginDiv>
+                  <Button
+                    onClick={e => this.handleCommitVote(1)}
+                    emphasis='positive'
+                    mode='strong'
+                  >
+                    {'Support the applicant'}
+                  </Button>
+                  {' '}
+                  <Button
+                    onClick={e => this.handleCommitVote(0)}
+                    emphasis='negative'
+                    mode='strong'
+                  >
+                    {'Oppose the applicant'}
+                  </Button>
+                </MarginDiv>
+              )}
           </MarginDiv>
+
+          <MarginDiv>
+            <MarginDiv>
+              <Text>{translate('sidebar_approve_instructions')}</Text>
+            </MarginDiv>
+            <Button
+              onClick={e => this.handleApprove('voting')}
+              mode='strong'
+              wide
+            >
+              {'Approve tokens for Voting'}
+            </Button>
+          </MarginDiv>
+
+          <JSONTree
+            invertTheme={false}
+            theme={jsonTheme}
+            data={balances}
+            shouldExpandNode={(keyName, data, level) => false}
+          />
         </SidePanel>
 
         <SidePanel
@@ -736,6 +733,14 @@ class Home extends Component {
         </SidePanel>
 
         <HomeWrapper>
+          <MarginDiv>
+            <Button mode='strong' onClick={this.openSidePanel}>{'Apply Listing'}</Button>
+            {' '}
+            <Button mode='strong' onClick={e => this.openCallPanel('registry')}>{'Call Registry Methods'}</Button>
+            {' '}
+            <Button mode='strong' onClick={e => this.openCallPanel('voting')}>{'Call Voting Methods'}</Button>
+          </MarginDiv>
+
           {candidates.size > 0 && (
             <div>
               {'CANDIDATES'}
@@ -791,16 +796,16 @@ class Home extends Component {
                           <Icon name='remove circle outline' size='large' color='orange' />
                           {'Remove Listing'}
                         </CMItem>
-                        <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
+                        {/* <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
                           <Icon name='angle double up' size='large' color='green' />
                           {'Deposit Tokens'}
                         </CMItem>
                         <CMItem onClick={e => this.handleDepositWithdraw(one, 'withdraw')}>
                           <Icon name='angle double down' size='large' color='yellow' />
                           {'Withdraw Tokens'}
-                        </CMItem>
+                        </CMItem> */}
                         <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
-                          <Icon name='remove circle outline' size='large' color='orange' />
+                          <Icon name='exclamation circle' size='large' color='red' />
                           {'Challenge Listing'}
                         </CMItem>
                       </ContextMenu>
@@ -834,9 +839,9 @@ class Home extends Component {
 
                     <TableCell>
                       {!dateHasPassed(one.getIn(['latest', 'commitEndDate']))
-                        ? <Countdown end={one.getIn(['latest', 'commitExpiry'])} />
+                        ? <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
                         : !dateHasPassed(one.getIn(['latest', 'revealEndDate']))
-                          ? <Countdown end={one.getIn(['latest', 'revealExpiry'])} />
+                          ? <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
                           : 'Ready to update'
                       }
                     </TableCell>
@@ -942,11 +947,6 @@ class Home extends Component {
             </div>
           )}
 
-          <Button mode='strong' onClick={this.openSidePanel}>{'Apply Listing'}</Button>
-          {' '}
-          <Button mode='strong' onClick={e => this.openCallPanel('registry')}>{'Call Registry Methods'}</Button>
-          {' '}
-          <Button mode='strong' onClick={e => this.openCallPanel('voting')}>{'Call Voting Methods'}</Button>
         </HomeWrapper>
       </div >
     )

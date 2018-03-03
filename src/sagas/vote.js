@@ -57,7 +57,7 @@ export function* commitVoteSaga(action) {
   // format args
   const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(voting.contract.getInsertPointForNumTokens.call, account, numTokens)
-  const finalArgs = [pollID, secretHash, numTokens.toString(10), prevPollID.toString(10)]
+  const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
   console.log('finalArgs', finalArgs)
 
   // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
@@ -82,6 +82,7 @@ export function* commitVoteSaga(action) {
     commitEndDateString,
     revealEndDateString,
     secretHash,
+    numTokens
   }
 
   console.log('commit vote json', json)
@@ -97,11 +98,14 @@ export function* commitVoteSaga(action) {
     numTokens.toString(10),
     prevPollID
   )
-  console.log('receipt', receipt)
 
-  if (receipt.receipt.status !== '0x0') {
+  if (receipt.receipt.status !== '0x00') {
     saveFile(json, filename)
+  } else {
+    console.log('ERROR')
   }
+
+  console.log('receipt', receipt)
   // ethjs version
   // Saves JSON commitVote file before sending transaction
   // yield call(saveFile, json, filename)
