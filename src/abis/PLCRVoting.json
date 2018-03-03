@@ -725,7 +725,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3501,
+          "SourceUnit": 3495,
           "absolutePath": "tokens/eip20/EIP20.sol",
           "file": "tokens/eip20/EIP20.sol",
           "scope": 1024,
@@ -740,7 +740,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3273,
+          "SourceUnit": 3267,
           "absolutePath": "dll/DLL.sol",
           "file": "dll/DLL.sol",
           "scope": 1024,
@@ -755,7 +755,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 2972,
+          "SourceUnit": 2966,
           "absolutePath": "attrstore/AttributeStore.sol",
           "file": "attrstore/AttributeStore.sol",
           "scope": 1024,
@@ -1287,7 +1287,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "AttributeStore",
-                  "referencedDeclaration": 2971,
+                  "referencedDeclaration": 2965,
                   "type": "library AttributeStore"
                 },
                 "id": 102,
@@ -1298,7 +1298,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "AttributeStore.Data",
-                  "referencedDeclaration": 2919,
+                  "referencedDeclaration": 2913,
                   "type": "struct AttributeStore.Data storage pointer"
                 },
                 "id": 103,
@@ -1316,7 +1316,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "DLL",
-                  "referencedDeclaration": 3272,
+                  "referencedDeclaration": 3266,
                   "type": "library DLL"
                 },
                 "id": 105,
@@ -1327,7 +1327,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "DLL.Data",
-                  "referencedDeclaration": 2986,
+                  "referencedDeclaration": 2980,
                   "type": "struct DLL.Data storage pointer"
                 },
                 "id": 106,
@@ -1700,7 +1700,7 @@
                     "attributes": {
                       "contractScope": null,
                       "name": "DLL.Data",
-                      "referencedDeclaration": 2986,
+                      "referencedDeclaration": 2980,
                       "type": "struct DLL.Data storage pointer"
                     },
                     "id": 135,
@@ -1733,7 +1733,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "AttributeStore.Data",
-                  "referencedDeclaration": 2919,
+                  "referencedDeclaration": 2913,
                   "type": "struct AttributeStore.Data storage pointer"
                 },
                 "id": 138,
@@ -1761,7 +1761,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "EIP20",
-                  "referencedDeclaration": 3500,
+                  "referencedDeclaration": 3494,
                   "type": "contract EIP20"
                 },
                 "id": 140,
@@ -1995,7 +1995,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2037,7 +2037,7 @@
                                     "attributes": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_EIP20_$3500",
+                                          "typeIdentifier": "t_contract$_EIP20_$3494",
                                           "typeString": "contract EIP20"
                                         }
                                       ],
@@ -2156,7 +2156,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3500,
+                                  "referencedDeclaration": 3494,
                                   "type": "type(contract EIP20)",
                                   "value": "EIP20"
                                 },
@@ -2344,7 +2344,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2395,7 +2395,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "balanceOf",
-                                      "referencedDeclaration": 3445,
+                                      "referencedDeclaration": 3439,
                                       "type": "function (address) view external returns (uint256)"
                                     },
                                     "children": [
@@ -2436,7 +2436,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -2511,7 +2511,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2555,7 +2555,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transferFrom",
-                                  "referencedDeclaration": 3433,
+                                  "referencedDeclaration": 3427,
                                   "type": "function (address,address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -2596,7 +2596,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -2615,7 +2615,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3599,
+                                  "referencedDeclaration": 3593,
                                   "type": "contract PLCRVoting",
                                   "value": "this"
                                 },
@@ -2707,7 +2707,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -2807,7 +2807,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -3006,7 +3006,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -3076,7 +3076,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -3132,7 +3132,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3226,7 +3226,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3266,7 +3266,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transfer",
-                                  "referencedDeclaration": 3366,
+                                  "referencedDeclaration": 3360,
                                   "type": "function (address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -3307,7 +3307,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -3404,7 +3404,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -3504,7 +3504,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -3641,7 +3641,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3740,7 +3740,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -3816,7 +3816,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -3893,7 +3893,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "remove",
-                              "referencedDeclaration": 3271,
+                              "referencedDeclaration": 3265,
                               "type": "function (struct DLL.Data storage pointer,uint256)"
                             },
                             "children": [
@@ -3939,7 +3939,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -4164,7 +4164,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4263,7 +4263,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4328,7 +4328,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -4403,7 +4403,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4500,7 +4500,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4645,7 +4645,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 3578,
+                                              "referencedDeclaration": 3572,
                                               "type": "msg",
                                               "value": "msg"
                                             },
@@ -4775,7 +4775,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "getNext",
-                              "referencedDeclaration": 3076,
+                              "referencedDeclaration": 3070,
                               "type": "function (struct DLL.Data storage pointer,uint256) view returns (uint256)"
                             },
                             "children": [
@@ -4821,7 +4821,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -4997,7 +4997,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "getNext",
-                                      "referencedDeclaration": 3076,
+                                      "referencedDeclaration": 3070,
                                       "type": "function (struct DLL.Data storage pointer,uint256) view returns (uint256)"
                                     },
                                     "children": [
@@ -5043,7 +5043,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 3578,
+                                                  "referencedDeclaration": 3572,
                                                   "type": "msg",
                                                   "value": "msg"
                                                 },
@@ -5142,7 +5142,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5242,7 +5242,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3578,
+                                      "referencedDeclaration": 3572,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -5322,7 +5322,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "insert",
-                              "referencedDeclaration": 3217,
+                              "referencedDeclaration": 3211,
                               "type": "function (struct DLL.Data storage pointer,uint256,uint256,uint256)"
                             },
                             "children": [
@@ -5368,7 +5368,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -5532,7 +5532,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -5607,7 +5607,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "setAttribute",
-                              "referencedDeclaration": 2970,
+                              "referencedDeclaration": 2964,
                               "type": "function (struct AttributeStore.Data storage pointer,bytes32,string memory,uint256)"
                             },
                             "children": [
@@ -5723,7 +5723,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "setAttribute",
-                              "referencedDeclaration": 2970,
+                              "referencedDeclaration": 2964,
                               "type": "function (struct AttributeStore.Data storage pointer,bytes32,string memory,uint256)"
                             },
                             "children": [
@@ -5902,7 +5902,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -6724,7 +6724,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -6823,7 +6823,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -6899,7 +6899,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -6974,7 +6974,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -7027,7 +7027,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3566,
                                       "type": "function () pure returns (bytes32)",
                                       "value": "keccak256"
                                     },
@@ -7124,7 +7124,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -7260,7 +7260,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -7579,7 +7579,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "remove",
-                              "referencedDeclaration": 3271,
+                              "referencedDeclaration": 3265,
                               "type": "function (struct DLL.Data storage pointer,uint256)"
                             },
                             "children": [
@@ -7625,7 +7625,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3578,
+                                          "referencedDeclaration": 3572,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -7738,7 +7738,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3578,
+                                  "referencedDeclaration": 3572,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -7977,7 +7977,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -8076,7 +8076,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -8368,7 +8368,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3572,
+                              "referencedDeclaration": 3566,
                               "type": "function () pure returns (bytes32)",
                               "value": "keccak256"
                             },
@@ -8551,7 +8551,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -9068,7 +9068,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3570,
+                                          "referencedDeclaration": 3564,
                                           "type": "block",
                                           "value": "block"
                                         },
@@ -9148,7 +9148,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 3570,
+                                              "referencedDeclaration": 3564,
                                               "type": "block",
                                               "value": "block"
                                             },
@@ -9508,7 +9508,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -10063,7 +10063,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -10456,7 +10456,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -10758,7 +10758,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -11077,7 +11077,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -11512,7 +11512,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -11611,7 +11611,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3581,
+                              "referencedDeclaration": 3575,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -11782,7 +11782,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "contains",
-                                  "referencedDeclaration": 3060,
+                                  "referencedDeclaration": 3054,
                                   "type": "function (struct DLL.Data storage pointer,uint256) view returns (bool)"
                                 },
                                 "children": [
@@ -12181,7 +12181,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3569,
+                              "referencedDeclaration": 3563,
                               "type": "function (bool) pure",
                               "value": "assert"
                             },
@@ -12382,7 +12382,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3569,
+                              "referencedDeclaration": 3563,
                               "type": "function (bool) pure",
                               "value": "assert"
                             },
@@ -12939,7 +12939,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "getAttribute",
-                                  "referencedDeclaration": 2943,
+                                  "referencedDeclaration": 2937,
                                   "type": "function (struct AttributeStore.Data storage pointer,bytes32,string memory) view returns (uint256)"
                                 },
                                 "children": [
@@ -13222,7 +13222,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "getAttribute",
-                              "referencedDeclaration": 2943,
+                              "referencedDeclaration": 2937,
                               "type": "function (struct AttributeStore.Data storage pointer,bytes32,string memory) view returns (uint256)"
                             },
                             "children": [
@@ -13470,7 +13470,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "getPrev",
-                              "referencedDeclaration": 3092,
+                              "referencedDeclaration": 3086,
                               "type": "function (struct DLL.Data storage pointer,uint256) view returns (uint256)"
                             },
                             "children": [
@@ -14390,7 +14390,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "getPrev",
-                                          "referencedDeclaration": 3092,
+                                          "referencedDeclaration": 3086,
                                           "type": "function (struct DLL.Data storage pointer,uint256) view returns (uint256)"
                                         },
                                         "children": [
@@ -14648,7 +14648,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3570,
+                                      "referencedDeclaration": 3564,
                                       "type": "block",
                                       "value": "block"
                                     },
@@ -14845,7 +14845,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3572,
+                              "referencedDeclaration": 3566,
                               "type": "function () pure returns (bytes32)",
                               "value": "keccak256"
                             },
@@ -14916,6 +14916,14 @@
     "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {},
+      "links": {
+        "DLL": "0xad5020712ceb35f5542c2f5fbc124295e33fdbc1",
+        "AttributeStore": "0x3821c687d8865577c9521b7fc431c09529bf1867"
+      },
+      "address": "0x2c0d5c997d8a8398f2ec0e1b45dee893cae73915"
+    },
     "420": {
       "events": {},
       "links": {
@@ -14926,5 +14934,5 @@
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-03-03T05:34:50.006Z"
+  "updatedAt": "2018-03-03T08:16:37.180Z"
 }

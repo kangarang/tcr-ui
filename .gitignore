@@ -2,8 +2,7 @@ node_modules
 build
 .DS_Store
 tcr
-
-package-lock.json
+zzz
 
 npm-debug.log*
 yarn-debug.log*

@@ -7,7 +7,7 @@
     "babel-polyfill": "6.26.0",
     "bluebird": "3.5.1",
     "ethereumjs-abi": "0.6.5",
-    "ethereumjs-util": "5.1.2",
+    "ethereumjs-util": "5.1.5",
     "ethjs": "0.3.1",
     "ethjs-abi": "0.2.1",
     "express": "4.16.2",
