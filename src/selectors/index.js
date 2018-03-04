@@ -63,6 +63,22 @@ export const selectTokenMethods = createSelector(
       mi.type === 'function' && mi.inputs.length > 0 && mi.constant
     )
 )
+export const selectVisibilityFilter = createSelector(
+  selectHome, homeState =>
+    homeState.get('vFilter')
+)
+export const selectVisibleRegistryMethod = createSelector(
+  [selectRegistryMethods, selectVisibilityFilter], (registryMethods, vFilter) =>
+    registryMethods.filter(rMeth => rMeth.name === vFilter)
+)
+export const selectVisibleVotingMethod = createSelector(
+  [selectVotingMethods, selectVisibilityFilter], (votingMethods, vFilter) =>
+    votingMethods.filter(vMeth => vMeth.name === vFilter)
+)
+export const selectVisibleTokenMethod = createSelector(
+  [selectTokenMethods, selectVisibilityFilter], (tokenMethods, vFilter) =>
+    tokenMethods.filter(tMeth => tMeth.name === vFilter)
+)
 
 // Parameters
 export const selectParameters = createSelector(selectHome, homeState =>
