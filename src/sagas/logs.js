@@ -180,28 +180,30 @@ async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
 
 async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
   try {
-    let listingHash = dLog.listingHash
+    let { listingHash, challengeID } = dLog
     const event = dLog._eventName
     let numTokens
     let whitelisted
-    let remove = false
 
-    if (event === '_ApplicationRemoved') {
+    if (
+      event === '_ApplicationRemoved' ||
+      event === '_ListingRemoved' ||
+      event === '_ChallengeSucceeded' ||
+      event === '_ChallengeFailed'
+    ) {
       return false
     }
 
-    if (event === '_ChallengeSucceeded') {
-      const fListings = decodedLogs.filter(
-        li => li.pollID && li.pollID.toString() === dLog.challengeID.toString()
-      )
-      const lis = fListings[0]
-      if (!lis) {
+    if (event === '_RewardClaimed') {
+      // pull from the old logs to find the listingHash
+      const dListing = decodedLogs.filter(
+        li => li.pollID && li.pollID.toString() === challengeID.toString()
+      )[0]
+      if (!dListing) {
         return false
       }
-      listingHash = lis.listingHash
-      numTokens = lis.deposit && lis.deposit.toString()
-      whitelisted = false
-      remove = true
+      listingHash = dListing.listingHash
+      numTokens = dListing.deposit && dListing.deposit.toString()
     }
 
     let listing = await contract.listings.call(listingHash)
@@ -253,7 +255,6 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
         commitExpiry,
         revealEndDate,
         revealExpiry,
-        remove,
       },
     }
   } catch (err) {
