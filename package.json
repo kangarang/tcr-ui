@@ -52,5 +52,22 @@
     "babel-eslint": "8.2.2",
     "eslint": "4.18.1",
     "eslint-plugin-react": "7.7.0"
+  },
+  "eslintConfig": {
+    "plugins": [
+      "react"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "arrow-body-style": 0,
+      "semi": 0
+    },
+    "parser": "babel-eslint"
   }
 }
