@@ -37,6 +37,8 @@ const initialState = fromJS({
   listings: {},
   txnStatus: false,
   latestTxn: false,
+  miningStatus: false,
+  vFilter: false,
 })
 
 function homeReducer(state = initialState, action) {
@@ -47,10 +49,10 @@ function homeReducer(state = initialState, action) {
     //   return state.setIn(['error', 'type'], true)
     case TXN_MINED:
       return state
-        .set('txnStatus', fromJS(false))
+        .set('miningStatus', fromJS(false))
         .set('latestTxn', fromJS(action.payload))
     case SEND_TRANSACTION:
-      return state.set('txnStatus', fromJS(true))
+      return state.set('miningStatus', fromJS(true))
     case SET_WALLET:
       return state
         .set('error', fromJS(false))
@@ -61,7 +63,7 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
-        .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
+        // .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
     case UPDATE_BALANCES:
       return state
         .set('balances', fromJS(action.payload.balances))
