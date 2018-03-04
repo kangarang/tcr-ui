@@ -28,6 +28,7 @@ import { colors, jsonTheme } from '../../colors'
 
 import Identicon from '../../components/Identicon'
 import SidePanelCalls from './components/SidePanelCalls'
+import SideSplit from './components/SideSplit'
 
 import {
   setupEthereum,
@@ -62,6 +63,8 @@ import {
 } from '../../utils/units_utils'
 import vote_utils from '../../utils/vote_utils'
 import { dateHasPassed } from '../../utils/format-date'
+import SideText from './components/SideText'
+import SideTextInput from './components/SideTextInput'
 
 const AppBarWrapper = styled.div`
   flex-shrink: 0;
@@ -101,11 +104,12 @@ class Home extends Component {
       openChallenge: false,
       openCommitVote: false,
       openRevealVote: false,
-      openCallPanel: false,
+      openClaimVoterReward: false,
       selectedOne: false,
       revealedVote: false,
       methodName: false,
       visibleApprove: false,
+      voterReward: '0',
     }
   }
   componentDidMount() {
@@ -131,15 +135,10 @@ class Home extends Component {
   closeSidePanel = () => {
     this.setState({
       opened: false,
-      openCallPanel: false,
       openChallenge: false,
       openCommitVote: false,
       openRevealVote: false,
-    })
-  }
-  openCallPanel = contract => {
-    this.setState({
-      openCallPanel: contract,
+      openClaimVoterReward: false,
     })
   }
   openApprove = () => {
@@ -158,23 +157,42 @@ class Home extends Component {
     }
   }
 
+  getVoterReward = async (pollID, salt) => {
+    console.log('pollID, salt', pollID, salt)
+    let vR
+    try {
+      vR = await this.props.registry.contract.voterReward.call(
+        this.props.account,
+        pollID,
+        salt
+      )
+    } catch (err) {
+      vR = 'No reward :('
+    }
+    this.setState({
+      voterReward: vR.toString(10),
+    })
+  }
+
   // input changes
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
+    let pollID, salt
 
     fr.onload = () => {
       const contents = fr.result
+      const json = JSON.parse(contents)
 
       try {
-        const jsonFC = JSON.parse(contents)
         this.setState({
-          revealedVote: jsonFC,
+          revealedVote: json,
         })
-        console.log('jsonFC', jsonFC)
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
       }
+
+      this.getVoterReward(json.pollID, json.salt)
     }
 
     fr.readAsText(file)
@@ -269,7 +287,7 @@ class Home extends Component {
                   ? 'Rinkeby'
                   : networkID === '1'
                     ? 'Main Net'
-                    : networkID === '420' ? 'ganache' : networkID
+                    : networkID === '420' ? 'Ganache' : networkID
               }`}</div>
               <Text color="red" weight="bold">
                 {miningStatus && 'MINING'}
@@ -293,36 +311,28 @@ class Home extends Component {
           opened={this.state.opened}
           onClose={this.closeSidePanel}
         >
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Application Period'}</Text>
-                <h2>
-                  {parameters.get('applyStageLen')}
-                  {' seconds'}
-                </h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Minimum Deposit'}</Text>
-                <h2>
-                  {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
-                  {token.symbol}
-                </h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Application Period'}
+            leftItem={
+              <div>
+                {parameters.get('applyStageLen')}
+                {' seconds'}
+              </div>
+            }
+            rightTitle={'Minimum Deposit'}
+            rightItem={
+              <div>
+                {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
+                {token.symbol}
+              </div>
+            }
           />
 
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Token Balance'}</Text>
-                <h2>{withCommas(balances.get('token'))}</h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Registry Allowance'}</Text>
-                <h2>{withCommas(balances.get('registryAllowance'))}</h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Token Balance'}
+            leftItem={balances.get('token')}
+            rightTitle={'Registry Allowance'}
+            rightItem={withCommas(balances.get('registryAllowance'))}
           />
 
           <MarginDiv>
@@ -415,85 +425,53 @@ class Home extends Component {
           </MarginDiv>
         </SidePanel>
 
-        <SidePanelCalls
-          contract={'registry'}
-          methods={registryMethods}
-          openCallPanel={this.state.openCallPanel}
-          closeSidePanel={this.closeSidePanel}
-          handleCallInputChange={this.handleCallInputChange}
-          handleCall={this.handleCall}
-        />
-
-        <SidePanelCalls
-          contract={'voting'}
-          methods={votingMethods}
-          openCallPanel={this.state.openCallPanel}
-          closeSidePanel={this.closeSidePanel}
-          handleCallInputChange={this.handleCallInputChange}
-          handleCall={this.handleCall}
-        />
-
         <SidePanel
           title="Challenge listing"
           opened={this.state.openChallenge}
           onClose={this.closeSidePanel}
         >
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Challenge Period'}</Text>
-                <h1>{`Commit: ${parameters.get(
-                  'commitStageLen'
-                )} seconds & Reveal: ${parameters.get(
-                  'revealStageLen'
-                )} seconds`}</h1>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Minimum Deposit'}</Text>
-                <h2>
-                  {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
-                  {token.symbol}
-                </h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Challenge Period'}
+            leftItem={
+              <div>{`Commit: ${parameters.get(
+                'commitStageLen'
+              )} seconds & Reveal: ${parameters.get(
+                'revealStageLen'
+              )} seconds`}</div>
+            }
+            rightTitle={'Minimum Deposit'}
+            rightItem={
+              <div>
+                {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
+                {token.symbol}
+              </div>
+            }
           />
 
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Token Balance'}</Text>
-                <h2>{withCommas(balances.get('token'))}</h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Registry Allowance'}</Text>
-                <h2>{withCommas(balances.get('registryAllowance'))}</h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Token Balance'}
+            leftItem={balances.get('token')}
+            rightTitle={'Registry Allowance'}
+            rightItem={withCommas(balances.get('registryAllowance'))}
           />
 
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'LISTING'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>
-              {this.state.selectedOne &&
-                this.state.selectedOne.get('listingString')}
-            </Text>
-          </MarginDiv>
+          <SideText
+            small
+            title={'LISTING'}
+            text={
+              this.state.selectedOne &&
+              this.state.selectedOne.get('listingString')
+            }
+          />
+
+          <SideText
+            small
+            title={'WARNING'}
+            text={translate('sidebar_challenge_instructions')}
+            icon={'exclamation triangle'}
+          />
 
           <SidePanelSeparator />
-
-          <MarginDiv>
-            <Icon name="exclamation triangle" size="small" />
-            <Text color="grey" smallcaps>
-              {'WARNING'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_challenge_instructions')}</Text>
-          </MarginDiv>
 
           <MarginDiv>
             {Number(balances.get('registryAllowance')) <
@@ -538,57 +516,38 @@ class Home extends Component {
           opened={this.state.openCommitVote}
           onClose={this.closeSidePanel}
         >
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'POLL ID'}</Text>
-                <h2>
-                  {this.state.selectedOne &&
-                    this.state.selectedOne.getIn(['latest', 'pollID'])}
-                </h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Token Balance'}</Text>
-                <h2>{withCommas(balances.get('token'))}</h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Poll ID'}
+            leftItem={
+              this.state.selectedOne &&
+              this.state.selectedOne.getIn(['latest', 'pollID'])
+            }
+            rightTitle={'Token Balance'}
+            rightItem={withCommas(balances.get('token'))}
           />
 
           {/* TODO: show inc/dec numTokens depending on user input */}
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Voting Rights'}</Text>
-                <h2>{withCommas(balances.get('votingRights'))}</h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Voting Allowance'}</Text>
-                <h2>{withCommas(balances.get('votingAllowance'))}</h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Voting Rights'}
+            leftItem={balances.get('votingRights')}
+            rightTitle={'Voting Allowance'}
+            rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <MarginDiv>
-            <Icon name="lock" />
-            <Text color="grey" smallcaps>
-              {'COMMIT VOTE'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>
-              {this.state.selectedOne &&
-                this.state.selectedOne.get('listingString')}
-            </Text>
-          </MarginDiv>
+          <SideText
+            small
+            title={'COMMIT VOTE'}
+            text={
+              this.state.selectedOne &&
+              this.state.selectedOne.get('listingString')
+            }
+            icon={'lock'}
+          />
 
           <SidePanelSeparator />
 
           <MarginDiv>
-            <MarginDiv>
-              <Text color="grey" smallcaps>
-                {'Token Amount'}
-              </Text>
-            </MarginDiv>
+            <SideText text={'Token Amount'} small />
             <TextInput
               onChange={e => this.handleInputChange(e, 'numTokens')}
               wide
@@ -597,11 +556,9 @@ class Home extends Component {
 
             {balances.get('votingRights') === '0' ? (
               <MarginDiv>
-                <MarginDiv>
-                  <Text>
-                    {translate('sidebar_requestVotingRights_instructions')}
-                  </Text>
-                </MarginDiv>
+                <SideText
+                  text={translate('sidebar_requestVotingRights_instructions')}
+                />
                 <Button
                   onClick={e =>
                     this.handleSendTransaction('requestVotingRights')
@@ -614,9 +571,7 @@ class Home extends Component {
               </MarginDiv>
             ) : (
               <MarginDiv>
-                <MarginDiv>
-                  <Text>{translate('sidebar_commitVote_instructions')}</Text>
-                </MarginDiv>
+                <SideText text={translate('sidebar_commitVote_instructions')} />
                 <Button
                   onClick={e =>
                     this.handleSendTransaction('commitVote', null, null, 1)
@@ -640,9 +595,7 @@ class Home extends Component {
           </MarginDiv>
 
           <MarginDiv>
-            <MarginDiv>
-              <Text>{translate('sidebar_approve_instructions')}</Text>
-            </MarginDiv>
+            <SideText text={translate('sidebar_approve_instructions')} />
             <Button
               onClick={e =>
                 this.handleSendTransaction('approve', null, 'voting')
@@ -667,59 +620,37 @@ class Home extends Component {
           opened={this.state.openRevealVote}
           onClose={this.closeSidePanel}
         >
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Reveal Token'}</Text>
-                <h1>{`Reveal: ${parameters.get('revealStageLen')} seconds`}</h1>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'POLL ID'}</Text>
-                <h2>
-                  {this.state.selectedOne &&
-                    this.state.selectedOne.getIn(['latest', 'pollID'])}
-                </h2>
-              </Section>,
-            ]}
+          <SideSplit
+            leftTitle={'Reveal Period'}
+            leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
+            rightTitle={'POLL ID'}
+            rightItem={
+              this.state.selectedOne &&
+              this.state.selectedOne.getIn(['latest', 'pollID'])
+            }
+          />
+          <SideSplit
+            leftTitle={'Token Balance'}
+            leftItem={withCommas(balances.get('token'))}
+            rightTitle={'Voting Allowance'}
+            rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <SidePanelSplit
-            children={[
-              <Section>
-                <Text weight="bold">{'Token Balance'}</Text>
-                <h2>{withCommas(balances.get('token'))}</h2>
-              </Section>,
-              <Section>
-                <Text weight="bold">{'Voting Allowance'}</Text>
-                <h2>{withCommas(balances.get('votingAllowance'))}</h2>
-              </Section>,
-            ]}
+          <SideText icon={'unlock'} small text={'REVEAL VOTE'} />
+          <SideText
+            small
+            text={
+              this.state.selectedOne &&
+              this.state.selectedOne.get('listingString')
+            }
           />
-
-          <MarginDiv>
-            <Icon name="unlock" />
-            <Text color="grey" smallcaps>
-              {'REVEAL VOTE'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>
-              {this.state.selectedOne &&
-                this.state.selectedOne.get('listingString')}
-            </Text>
-          </MarginDiv>
 
           <SidePanelSeparator />
 
-          <MarginDiv>
-            <Icon name="check circle" size="small" />
-            <Text color="grey" smallcaps>
-              {'INSTRUCTIONS'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_revealVote_instructions')}</Text>
-          </MarginDiv>
+          <SideText icon={'check circle'} small text={'INSTRUCTIONS'} />
+
+          <SideText text={translate('sidebar_revealVote_instructions')} />
+
           <MarginDiv>
             <FileInput
               type="file"
@@ -738,16 +669,60 @@ class Home extends Component {
           </MarginDiv>
         </SidePanel>
 
+        <SidePanel
+          title="Claim Voter Reward"
+          opened={this.state.openClaimVoterReward}
+          onClose={this.closeSidePanel}
+        >
+          <SideSplit
+            leftTitle={'Reveal Period'}
+            leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
+            rightTitle={'POLL ID'}
+            rightItem={
+              this.state.selectedOne &&
+              this.state.selectedOne.getIn(['latest', 'pollID'])
+            }
+          />
+          <SideSplit
+            leftTitle={'Token Balance'}
+            leftItem={withCommas(balances.get('token'))}
+            rightTitle={'Voting Allowance'}
+            rightItem={withCommas(balances.get('votingAllowance'))}
+          />
+
+          <SideText icon={'unlock'} small text={'CLAIM VOTER REWARD'} />
+          <SideText small text={this.state.voterReward} />
+
+          <SidePanelSeparator />
+
+          <SideText icon={'check circle'} small text={'INSTRUCTIONS'} />
+
+          <SideText text={translate('sidebar_claimVoterReward_instructions')} />
+
+          <MarginDiv>
+            <FileInput
+              type="file"
+              name="file"
+              onChange={this.handleFileInput}
+            />
+          </MarginDiv>
+          <MarginDiv>
+            <Button
+              onClick={e =>
+                this.handleSendTransaction('claimVoterReward', null, 'registry')
+              }
+              mode="strong"
+              wide
+            >
+              {'Claim Voter Reward'}
+            </Button>
+          </MarginDiv>
+        </SidePanel>
+
         <HomeWrapper>
           <MarginDiv>
             <Button mode="strong" onClick={this.openSidePanel}>
               {'Apply Listing'}
-            </Button>{' '}
-            <Button mode="strong" onClick={e => this.openCallPanel('registry')}>
-              {'Call Registry Methods'}
-            </Button>{' '}
-            <Button mode="strong" onClick={e => this.openCallPanel('voting')}>
-              {'Call Voting Methods'}
             </Button>
           </MarginDiv>
 
@@ -787,23 +762,18 @@ class Home extends Component {
                       />
                     </TableCell>
                     <TableCell>
-                      {one.get('owner') === account ? (
-                        <div>
-                          <Icon
-                            name="exclamation circle"
-                            size="large"
-                            color="yellow"
-                          />
-                          <Icon name="check circle" size="large" color="blue" />
-                        </div>
-                      ) : (
+                      <div>
                         <Icon
                           name="exclamation circle"
                           size="large"
                           color="yellow"
                         />
-                      )}
+                        {one.get('owner') === account && (
+                          <Icon name="check circle" size="large" color="blue" />
+                        )}
+                      </div>
                     </TableCell>
+
                     {/* actions */}
                     <TableCell>
                       <ContextMenu>
@@ -817,14 +787,6 @@ class Home extends Component {
                             {'Update Status'}
                           </CMItem>
                         )}
-                        {/* <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
-                          <Icon name='angle double up' size='large' color='green' />
-                          {'Deposit Tokens'}
-                        </CMItem>
-                        <CMItem onClick={e => this.handleDepositWithdraw(one, 'withdraw')}>
-                          <Icon name='angle double down' size='large' color='yellow' />
-                          {'Withdraw Tokens'}
-                        </CMItem> */}
                         <CMItem
                           onClick={e =>
                             this.openSidePanel(one, 'openChallenge')
@@ -853,8 +815,7 @@ class Home extends Component {
                   <TableRow>
                     <TableHeader title="Listing" />
                     <TableHeader title="Time Remaining" />
-                    <TableHeader title="" />
-                    {/* <TableHeader title="Number of Tokens Voted" /> */}
+                    <TableHeader title="Number of Tokens Voted" />
                     <TableHeader title="Badges" />
                     <TableHeader title="Actions" />
                   </TableRow>
@@ -971,7 +932,7 @@ class Home extends Component {
                             </CMItem>
                             <CMItem
                               onClick={e =>
-                                this.handleSendTransaction('claimVoterReward')
+                                this.openSidePanel(one, 'openClaimVoterReward')
                               }
                             >
                               <Icon name="check" size="large" color="orange" />
@@ -1030,6 +991,14 @@ class Home extends Component {
                             color="orange"
                           />
                           {'Challenge Listing'}
+                        </CMItem>
+                        <CMItem
+                          onClick={e =>
+                            this.openSidePanel(one, 'openClaimVoterReward')
+                          }
+                        >
+                          <Icon name="check" size="large" color="orange" />
+                          {'Claim Voter Reward'}
                         </CMItem>
                       </ContextMenu>
                     </TableCell>

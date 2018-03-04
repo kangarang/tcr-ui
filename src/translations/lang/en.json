@@ -10,6 +10,7 @@
     "sidebar_udapp_instructions": "Enter the inputs of methods you want to query the blockchain",
     "sidebar_commitVote_instructions": "Enter how many tokens you wish to commit your vote to SUPPORT or OPPOSE the listing applicant. You will be given the opportunity to download a file which contains your secret vote information. Hold onto this file! You will need it to reveal your secret vote.",
     "sidebar_revealVote_instructions": "In order to reveal your previously committed vote, upload the commit's JSON file or enter the commit's information in the fields below.",
+    "sidebar_claimVoterReward_instructions": "Upload the reveal file to claim your reward",
     "sidebar_requestVotingRights_instructions": "In order to vote, you must first transfer tokens to the voting contract.",
     "sidebar_approve_instructions": "Approve the smart contract for the MAX number of tokens specied above",
 
