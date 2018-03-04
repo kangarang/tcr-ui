@@ -9,6 +9,7 @@ import {
   selectAccount,
   selectRegistry,
   selectVoting,
+  selectToken,
 } from '../selectors'
 
 import vote_utils from '../utils/vote_utils'
@@ -57,7 +58,6 @@ export default function* udappSaga() {
 
 // TODO: write tests for these sagas. against abis
 function* handleSendTransaction(action) {
-  // const methodName = action.payload.method.name
   const methodName = action.payload.methodName
   if (
     methodName === 'apply' ||
@@ -72,7 +72,7 @@ function* handleSendTransaction(action) {
   } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else {
-    yield call(sendDefaultTxn, action)
+    yield call(sendContractTxn, action)
   }
 }
 
@@ -96,14 +96,22 @@ function* registryTxnSaga(action) {
   // yield call(sendTransactionSaga, txData, to)
 }
 
-export function* sendDefaultTxn(action) {
+export function* sendContractTxn(action) {
   try {
-    const to = action.payload.to
-    const txData = EthAbi.encodeMethod(
-      action.payload.method,
-      action.payload.args
-    )
-    yield call(sendEthjsTransactionSaga, txData, to)
+    const { methodName, args, contract } = action.payload
+    let c
+    if (contract === 'registry') {
+      c = yield select(selectRegistry)
+    } else if (contract === 'voting') {
+      c = yield select(selectVoting)
+    } else if (contract === 'token') {
+      c = yield select(selectToken)
+    }
+    if (methodName === 'approve') {
+      c = yield select(selectToken)
+    }
+    const receipt = yield call(sendTransactionSaga, c, methodName, args)
+    console.log('receipt', receipt)
   } catch (error) {
     console.log('error', error)
   }
@@ -132,8 +140,10 @@ export function* sendEthjsTransactionSaga(data, to) {
 export function* sendTransactionSaga(contract, method, args) {
   try {
     const newArgs = args.map(rg => {
-      if (typeof rg === 'object') {
-        return rg.toString()
+      if (_.isObject(rg)) {
+        return rg.toString(10)
+      } else if (_.isString(rg)) {
+        return rg
       }
       return rg
     })

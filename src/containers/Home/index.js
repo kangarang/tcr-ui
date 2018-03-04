@@ -188,7 +188,7 @@ class Home extends Component {
   handleSendTransaction = (methodName, listing, contract, voteOption) => {
     const args = this.getMethodArgs(methodName, listing, contract, voteOption)
     if (args) {
-      this.props.onSendTransaction({ methodName, args, listing })
+      this.props.onSendTransaction({ methodName, args, listing, contract })
     }
   }
 
