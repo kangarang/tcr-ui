@@ -51,20 +51,6 @@ function* updateBalancesSaga() {
     ).toString(10)
     const votingRights = toUnitAmount(votingRightsRaw, 18).toString(10)
 
-    // const ethBalance = yield call(ethjs.getBalance, owner)
-
-    // const tokenBalanceRaw = yield call(token.contract.balanceOf.call, owner)
-    // const tokenBalance = toUnitAmount(tokenBalanceRaw, token.decimalPower).toString(10)
-
-    // const registryAllowanceRaw = yield call(token.contract.allowance.call, owner, registry.address)
-    // const registryAllowance = toUnitAmount(registryAllowanceRaw, token.decimalPower).toString(10)
-
-    // const votingAllowanceRaw = yield call(token.contract.allowance.call, owner, voting.address)
-    // const votingAllowance = toUnitAmount(votingAllowanceRaw, token.decimalPower).toString(10)
-
-    // const votingRightsRaw = yield call(voting.contract.voteTokenBalance.call, owner)
-    // const votingRights = toUnitAmount(votingRightsRaw, 18).toString(10)
-
     yield put(
       updateBalances({
         balances: {
@@ -73,6 +59,7 @@ function* updateBalancesSaga() {
           registryAllowance,
           votingAllowance,
           votingRights,
+          voterReward: '0',
         },
       })
     )
