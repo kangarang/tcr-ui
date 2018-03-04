@@ -10,7 +10,7 @@ import {
 } from '@aragon/ui'
 
 import { Icon } from 'semantic-ui-react'
-import translate from '../translations'
+import translate from '../../../translations'
 
 const MarginDiv = styled.div`
   margin: 1em 0;

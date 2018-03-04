@@ -31,7 +31,7 @@ function* getFreshLogs() {
       lastReadBlockNumber,
       'latest',
       '',
-      registry
+      registry.contract
     )
 
     const newListings = fromJS(applications).reduce((acc, val) => {
@@ -91,7 +91,7 @@ function* pollLogsSaga(action) {
       action.payload.startBlock,
       action.payload.endBlock,
       '',
-      registry
+      registry.contract
     )
     if (newLogs.length === 0) {
       return
@@ -117,7 +117,7 @@ function* handleLogs(sb, eb, topic, contract) {
       contract.address,
       topic,
       [],
-      contract.contract.abi,
+      contract.abi,
       blockRange
     )
 
@@ -125,10 +125,10 @@ function* handleLogs(sb, eb, topic, contract) {
     if (rawLogs.length === 0) {
       return []
     }
-    const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
+    const decoder = yield call(EthAbi.logDecoder, contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
     console.log('decodedLogs', decodedLogs)
-    const listings = (yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting)).filter(lawg => lawg !== false)
+    const listings = (yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting)).filter(lawg => !(lawg === false))
     return listings
   } catch (err) {
     console.log('Handle logs error:', err)
@@ -152,25 +152,31 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     let listingHash = dLog.listingHash
     const event = dLog._eventName
     let numTokens
+    let whitelisted
+    let remove = false
 
     if (event === '_ApplicationRemoved') {
       return false
     }
 
     if (event === '_ChallengeSucceeded') {
-      const challengedListing = (decodedLogs.filter(li => (li.pollID && li.pollID.toString() === dLog.challengeID.toString())))[0]
-      console.log('challengedListing', challengedListing)
-      listingHash = challengedListing.listingHash
-      numTokens = (challengedListing.deposit && challengedListing.deposit.toString())
+      const fListings = decodedLogs.filter(li => (li.pollID && li.pollID.toString() === dLog.challengeID.toString()))
+      const lis = fListings[0]
+      if (!lis) {
+        return false
+      }
+      listingHash = lis.listingHash
+      numTokens = (lis.deposit && lis.deposit.toString())
+      whitelisted = false
+      remove = true
     }
 
-    let listing = await contract.contract.listings.call(listingHash)
+    let listing = await contract.listings.call(listingHash)
     numTokens = listing[3] ? toUnitAmount(listing[3], 18).toString() : false
 
-    if (!listing) {
-      console.log('no listing', dLog)
+    if (listing) {
+      whitelisted = listing[1]
     }
-    const whitelisted = listing[1]
 
     let commitEndDate
     let commitExpiry
@@ -215,6 +221,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
         commitExpiry,
         revealEndDate,
         revealExpiry,
+        remove,
       },
     }
   } catch (err) {

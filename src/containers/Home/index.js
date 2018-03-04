@@ -27,7 +27,7 @@ import translate from '../../translations';
 import { colors, jsonTheme } from '../../colors';
 
 import Identicon from '../../components/Identicon'
-import SideMethods from '../../components/SideMethods';
+import SidePanelCalls from './components/SidePanelCalls';
 
 import {
   setupEthereum,
@@ -54,9 +54,9 @@ import {
   selectMiningStatus,
 } from '../../selectors'
 
-import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree } from '../../utils/units_utils';
-import vote_utils from '../../utils/vote_utils';
-import { dateHasPassed } from '../../utils/format-date';
+import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree, BN } from '../../utils/units_utils'
+import vote_utils from '../../utils/vote_utils'
+import { dateHasPassed } from '../../utils/format-date'
 
 const AppBarWrapper = styled.div`
   flex-shrink: 0;
@@ -100,6 +100,7 @@ class Home extends Component {
       selectedOne: false,
       revealedVote: false,
       methodName: false,
+      visibleApprove: false,
     }
   }
   componentDidMount() {
@@ -129,6 +130,9 @@ class Home extends Component {
     this.setState({
       openCallPanel: contract,
     })
+  }
+  openApprove = () => {
+    this.setState({ visibleApprove: true })
   }
   openSidePanel = (one, openThis) => {
     if (!openThis) {
@@ -322,20 +326,42 @@ class Home extends Component {
 
           <SidePanelSeparator />
 
+          {/* if you wanna see approve, you'll see it */}
+          {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
           <MarginDiv>
-            {Number(balances.get('registryAllowance')) < toUnitAmount(parameters.get('minDeposit'), 18) &&
-              <Text color='grey' smallcaps>{'YOU NEED TO APPROVE'}</Text>
-            }
-            <Button
-              onClick={e => this.handleSendTransaction('approve', null, 'registry')}
-              mode='strong'
-            >
-              {'Approve tokens for Registry'}
-            </Button>
+            {this.state.visibleApprove ? (
+              <Button
+                onClick={e => this.handleSendTransaction('approve', null, 'registry')}
+                mode='strong'
+              >
+                {'Approve tokens for Registry'}
+              </Button>
+            ) : (
+                <div>
+                  {BN(balances.get('registryAllowance')).lt(BN(toUnitAmount(parameters.get('minDeposit'), 18))) ? (
+                    <div>
+                      <Text color='red'>{'YOU NEED TO APPROVE'}</Text>
+                      <Button
+                        onClick={e => this.handleSendTransaction('approve', null, 'registry')}
+                        mode='strong'
+                      >
+                        {'Approve tokens for Registry'}
+                      </Button>
+                    </div>
+                  ) : (
+                      <Button
+                        onClick={this.openApprove}
+                        mode=''
+                      >
+                        {'Show approve'}
+                      </Button>
+                    )}
+                </div>
+              )}
           </MarginDiv>
         </SidePanel>
 
-        <SideMethods
+        <SidePanelCalls
           contract={'registry'}
           methods={registryMethods}
           openCallPanel={this.state.openCallPanel}
@@ -344,7 +370,7 @@ class Home extends Component {
           handleCall={this.handleCall}
         />
 
-        <SideMethods
+        <SidePanelCalls
           contract={'voting'}
           methods={votingMethods}
           openCallPanel={this.state.openCallPanel}
