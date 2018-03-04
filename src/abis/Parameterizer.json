@@ -561,7 +561,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3495,
+          "SourceUnit": 3468,
           "absolutePath": "tokens/eip20/EIP20.sol",
           "file": "tokens/eip20/EIP20.sol",
           "scope": 1859,
@@ -1383,7 +1383,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "EIP20",
-                  "referencedDeclaration": 3494,
+                  "referencedDeclaration": 3467,
                   "type": "contract EIP20"
                 },
                 "id": 1090,
@@ -2597,7 +2597,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -2639,7 +2639,7 @@
                                     "attributes": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_EIP20_$3494",
+                                          "typeIdentifier": "t_contract$_EIP20_$3467",
                                           "typeString": "contract EIP20"
                                         }
                                       ],
@@ -2758,7 +2758,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3494,
+                                  "referencedDeclaration": 3467,
                                   "type": "type(contract EIP20)",
                                   "value": "EIP20"
                                 },
@@ -4134,7 +4134,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3566,
+                              "referencedDeclaration": 3539,
                               "type": "function () pure returns (bytes32)",
                               "value": "keccak256"
                             },
@@ -4208,7 +4208,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4324,7 +4324,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4457,7 +4457,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -4501,7 +4501,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transferFrom",
-                                  "referencedDeclaration": 3427,
+                                  "referencedDeclaration": 3400,
                                   "type": "function (address,address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -4542,7 +4542,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -4561,7 +4561,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3595,
+                                  "referencedDeclaration": 3568,
                                   "type": "contract Parameterizer",
                                   "value": "this"
                                 },
@@ -4710,7 +4710,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3574,
+                                      "referencedDeclaration": 3547,
                                       "type": "uint256",
                                       "value": "now"
                                     },
@@ -4842,7 +4842,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -4921,7 +4921,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 3574,
+                                                  "referencedDeclaration": 3547,
                                                   "type": "uint256",
                                                   "value": "now"
                                                 },
@@ -5226,7 +5226,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3572,
+                                  "referencedDeclaration": 3545,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -5614,7 +5614,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5801,7 +5801,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -5845,7 +5845,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transferFrom",
-                                  "referencedDeclaration": 3427,
+                                  "referencedDeclaration": 3400,
                                   "type": "function (address,address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -5886,7 +5886,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -5905,7 +5905,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3595,
+                                  "referencedDeclaration": 3568,
                                   "type": "contract Parameterizer",
                                   "value": "this"
                                 },
@@ -6319,7 +6319,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -6750,7 +6750,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3572,
+                                  "referencedDeclaration": 3545,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -7299,7 +7299,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3574,
+                                      "referencedDeclaration": 3547,
                                       "type": "uint256",
                                       "value": "now"
                                     },
@@ -7373,7 +7373,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 3575,
+                                              "referencedDeclaration": 3548,
                                               "type": "function (bool) pure",
                                               "value": "require"
                                             },
@@ -7413,7 +7413,7 @@
                                                   "isPure": false,
                                                   "lValueRequested": false,
                                                   "member_name": "transfer",
-                                                  "referencedDeclaration": 3360,
+                                                  "referencedDeclaration": 3333,
                                                   "type": "function (address,uint256) external returns (bool)"
                                                 },
                                                 "children": [
@@ -7548,7 +7548,7 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
-                                              "referencedDeclaration": 3576,
+                                              "referencedDeclaration": 3549,
                                               "type": "function () pure",
                                               "value": "revert"
                                             },
@@ -7779,7 +7779,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -7890,7 +7890,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3572,
+                                          "referencedDeclaration": 3545,
                                           "type": "msg",
                                           "value": "msg"
                                         },
@@ -7968,7 +7968,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -8193,7 +8193,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3572,
+                                  "referencedDeclaration": 3545,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -8337,7 +8337,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3572,
+                                  "referencedDeclaration": 3545,
                                   "type": "msg",
                                   "value": "msg"
                                 },
@@ -8610,7 +8610,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3575,
+                              "referencedDeclaration": 3548,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -8650,7 +8650,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transfer",
-                                  "referencedDeclaration": 3360,
+                                  "referencedDeclaration": 3333,
                                   "type": "function (address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -8691,7 +8691,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -8834,7 +8834,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3572,
+                                      "referencedDeclaration": 3545,
                                       "type": "msg",
                                       "value": "msg"
                                     },
@@ -9717,7 +9717,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3574,
+                                          "referencedDeclaration": 3547,
                                           "type": "uint256",
                                           "value": "now"
                                         },
@@ -9782,7 +9782,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 3574,
+                                          "referencedDeclaration": 3547,
                                           "type": "uint256",
                                           "value": "now"
                                         },
@@ -11358,7 +11358,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3566,
+                                  "referencedDeclaration": 3539,
                                   "type": "function () pure returns (bytes32)",
                                   "value": "keccak256"
                                 },
@@ -11906,7 +11906,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3574,
+                                      "referencedDeclaration": 3547,
                                       "type": "uint256",
                                       "value": "now"
                                     },
@@ -12071,7 +12071,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3575,
+                                      "referencedDeclaration": 3548,
                                       "type": "function (bool) pure",
                                       "value": "require"
                                     },
@@ -12111,7 +12111,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "transfer",
-                                          "referencedDeclaration": 3360,
+                                          "referencedDeclaration": 3333,
                                           "type": "function (address,uint256) external returns (bool)"
                                         },
                                         "children": [
@@ -12229,7 +12229,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3575,
+                                      "referencedDeclaration": 3548,
                                       "type": "function (bool) pure",
                                       "value": "require"
                                     },
@@ -12269,7 +12269,7 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "transfer",
-                                          "referencedDeclaration": 3360,
+                                          "referencedDeclaration": 3333,
                                           "type": "function (address,uint256) external returns (bool)"
                                         },
                                         "children": [
@@ -12781,7 +12781,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 3566,
+                                      "referencedDeclaration": 3539,
                                       "type": "function () pure returns (bytes32)",
                                       "value": "keccak256"
                                     },
@@ -12865,14 +12865,14 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0xf4429ccb3c0382beff45da80c96ff7d97c5d8242"
+      "address": "0xcd76a80ea88c5750d7d6765be650f25ccbf34066"
     },
     "420": {
       "events": {},
       "links": {},
-      "address": "0x53f22fbae01646c88ec8afefa5a92094a0a89add"
+      "address": "0xb0cee637179335cee8001506289ab621c23d9ef5"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-03-03T08:16:37.157Z"
+  "updatedAt": "2018-03-04T23:56:52.004Z"
 }

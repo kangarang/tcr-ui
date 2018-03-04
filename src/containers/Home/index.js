@@ -7,9 +7,7 @@ import JSONTree from 'react-json-tree'
 
 import {
   SidePanel,
-  SidePanelSplit,
   SidePanelSeparator,
-  Section,
   Button,
   ContextMenu,
   Table,
@@ -27,7 +25,6 @@ import translate from '../../translations'
 import { colors, jsonTheme } from '../../colors'
 
 import Identicon from '../../components/Identicon'
-import SidePanelCalls from './components/SidePanelCalls'
 import SideSplit from './components/SideSplit'
 
 import {
@@ -50,8 +47,6 @@ import {
   selectFaceoffs,
   selectWhitelist,
   selectError,
-  selectRegistryMethods,
-  selectVotingMethods,
   selectMiningStatus,
 } from '../../selectors'
 
@@ -64,7 +59,7 @@ import {
 import vote_utils from '../../utils/vote_utils'
 import { dateHasPassed } from '../../utils/format-date'
 import SideText from './components/SideText'
-import SideTextInput from './components/SideTextInput'
+// import SideTextInput from './components/SideTextInput'
 
 const AppBarWrapper = styled.div`
   flex-shrink: 0;
@@ -115,21 +110,6 @@ class Home extends Component {
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-  handleCall = (contract, method) => {
-    const args = Object.values(this.state[method.name])
-    console.log('args', args)
-    this.props.onCall({ args, contract, method })
-  }
-  handleCallInputChange = (e, methodName, inputName) => {
-    const value = e.target.value
-    this.setState(prevState => ({
-      ...prevState,
-      [methodName]: {
-        ...prevState[methodName],
-        [inputName]: value,
-      },
-    }))
-  }
 
   // side panel
   closeSidePanel = () => {
@@ -158,7 +138,6 @@ class Home extends Component {
   }
 
   getVoterReward = async (pollID, salt) => {
-    console.log('pollID, salt', pollID, salt)
     let vR
     try {
       vR = await this.props.registry.contract.voterReward.call(
@@ -173,12 +152,9 @@ class Home extends Component {
       voterReward: vR.toString(10),
     })
   }
-
-  // input changes
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
-    let pollID, salt
 
     fr.onload = () => {
       const contents = fr.result
@@ -201,13 +177,6 @@ class Home extends Component {
     this.setState({
       [t]: e.target.value,
     })
-  }
-
-  handleSendTransaction = (methodName, listing, contract, voteOption) => {
-    const args = this.getMethodArgs(methodName, listing, contract, voteOption)
-    if (args) {
-      this.props.onSendTransaction({ methodName, args, listing, contract })
-    }
   }
 
   getMethodArgs(methodName, listing, contract, voteOption) {
@@ -254,6 +223,13 @@ class Home extends Component {
                       : false
   }
 
+  handleSendTransaction = (methodName, listing, contract, voteOption) => {
+    const args = this.getMethodArgs(methodName, listing, contract, voteOption)
+    if (args) {
+      this.props.onSendTransaction({ methodName, args, listing, contract })
+    }
+  }
+
   render() {
     const {
       error,
@@ -266,8 +242,6 @@ class Home extends Component {
       parameters,
       token,
       miningStatus,
-      registryMethods,
-      votingMethods,
       registry,
     } = this.props
 
@@ -1055,8 +1029,6 @@ const mapStateToProps = createStructuredSelector({
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,
   whitelist: selectWhitelist,
-  registryMethods: selectRegistryMethods,
-  votingMethods: selectVotingMethods,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
