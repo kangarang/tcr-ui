@@ -151,7 +151,7 @@ Transactions:
   .updateStatus(bytes32 _listingHash)
 
 // token-related
-  .claimReward(uint _challengeID, uint _salt)
+  .claimVoterReward(uint _challengeID, uint _salt)
 
 Calls:
 // registry-related
@@ -162,8 +162,8 @@ Calls:
   .listings(bytes32 _listingHash) -> Listing struct (Array)
 
 // token-related
-  .determineReward(uint _challengeID) -> BN
-  .tokenClaims(uint _challengeID, address _address) -> Boolean
+  .challengeWinnerReward(uint _challengeID) -> BN
+  .voterCanClaimReward(uint _challengeID, address _address) -> Boolean
 
 // voting-related
   .challenges(uint _challengeID) -> Challenge struct (Array)
