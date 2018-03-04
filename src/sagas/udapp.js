@@ -2,10 +2,7 @@ import EthAbi from 'ethjs-abi'
 import _ from 'lodash'
 
 import { select, put, call, takeEvery } from 'redux-saga/effects'
-import {
-  SEND_TRANSACTION,
-  CALL_REQUESTED,
-} from '../actions/constants'
+import { SEND_TRANSACTION, CALL_REQUESTED } from '../actions/constants'
 
 import {
   selectEthjs,
@@ -15,8 +12,8 @@ import {
 } from '../selectors'
 
 import vote_utils from '../utils/vote_utils'
-import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote';
-import { txnMined } from '../actions';
+import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
+import { txnMined } from '../actions'
 
 function* callUDappSaga(action) {
   console.log('call requested:', action)
@@ -62,7 +59,11 @@ export default function* udappSaga() {
 function* handleSendTransaction(action) {
   // const methodName = action.payload.method.name
   const methodName = action.payload.methodName
-  if (methodName === 'apply' || methodName === 'challenge' || methodName === 'updateStatus') {
+  if (
+    methodName === 'apply' ||
+    methodName === 'challenge' ||
+    methodName === 'updateStatus'
+  ) {
     yield call(registryTxnSaga, action)
   } else if (methodName === 'requestVotingRights') {
     yield call(requestVotingRightsSaga, action)
@@ -98,7 +99,10 @@ function* registryTxnSaga(action) {
 export function* sendDefaultTxn(action) {
   try {
     const to = action.payload.to
-    const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
+    const txData = EthAbi.encodeMethod(
+      action.payload.method,
+      action.payload.args
+    )
     yield call(sendEthjsTransactionSaga, txData, to)
   } catch (error) {
     console.log('error', error)

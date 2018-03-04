@@ -4,7 +4,7 @@ import Jazzicon from 'jazzicon'
 
 class Identicon extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.defaultDiameter = 46
   }
 

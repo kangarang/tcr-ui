@@ -60,7 +60,7 @@ export default ({ account, networkID, balances, parameters, token }) => (
 
     <Item gR={2} gC={4}>
       <BoldInlineText>
-        {`${token.symbol ? token.symbol: ''} Balance: `}
+        {`${token.symbol ? token.symbol : ''} Balance: `}
         {balances.token && withCommas(trimDecimalsThree(balances.token))}
       </BoldInlineText>
     </Item>

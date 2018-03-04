@@ -13,7 +13,7 @@ const H2 = styled.h2`
 
 const H3 = styled.h3`
   font-size: 1em;
-  padding: .5em;
+  padding: 0.5em;
   margin: 0;
 `
 

@@ -26,7 +26,7 @@ const App = () => (
   <Wrapper>
     <TopBar />
     <AppWrapper>
-      <AragonApp publicUrl='/aragon-ui/'>
+      <AragonApp publicUrl="/aragon-ui/">
         <Home />
       </AragonApp>
     </AppWrapper>

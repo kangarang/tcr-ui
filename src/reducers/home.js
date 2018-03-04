@@ -63,10 +63,9 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
-        // .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
+    // .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
     case UPDATE_BALANCES:
-      return state
-        .set('balances', fromJS(action.payload.balances))
+      return state.set('balances', fromJS(action.payload.balances))
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
     case NEW_ARRAY:
@@ -82,7 +81,9 @@ function homeReducer(state = initialState, action) {
 
 function changeListings(state, payload) {
   const newListings = fromJS(payload).reduce((acc, val) => {
-    const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
+    const index = acc.findIndex(
+      it => it.get('listingHash') === val.get('listingHash')
+    )
     // New listing
     if (index === -1) {
       // console.log('index -1: acc, val', acc.toJS(), val.toJS())
@@ -103,10 +104,7 @@ function changeListings(state, payload) {
 }
 
 function deleteObjectInArray(array, payload) {
-  const index = array.findIndex(
-    ri =>
-      ri.get('listingHash') === payload
-  )
+  const index = array.findIndex(ri => ri.get('listingHash') === payload)
   if (index !== -1) {
     return array.delete(index)
   }

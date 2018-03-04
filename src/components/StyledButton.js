@@ -21,9 +21,13 @@ const buttonStyles = css`
   border-radius: 4px;
   overflow: hidden;
 `
-const A = styled.a`${buttonStyles}`
+const A = styled.a`
+  ${buttonStyles};
+`
 
-const StyledButton = styled.button`${buttonStyles}`
+const StyledButton = styled.button`
+  ${buttonStyles};
+`
 
 const Wrapper = styled.div`
   display: inline-block;
@@ -48,11 +52,7 @@ function StyledButton(props) {
     )
   }
 
-  return (
-    <Wrapper>
-      {button}
-    </Wrapper>
-  )
+  return <Wrapper>{button}</Wrapper>
 }
 
-export default StyledButton 
+export default StyledButton

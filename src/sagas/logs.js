@@ -3,7 +3,12 @@ import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
-import { newArray, updateItems, pollLogsRequest, updateBalancesRequest } from '../actions'
+import {
+  newArray,
+  updateItems,
+  pollLogsRequest,
+  updateBalancesRequest,
+} from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -11,7 +16,12 @@ import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
 import { toUnitAmount } from '../utils/units_utils'
 
-import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAllListings } from '../selectors'
+import {
+  selectEthjs,
+  selectNetworkID,
+  selectRegistry,
+  selectVoting,
+} from '../selectors'
 
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date'
 import { fromJS } from 'immutable'
@@ -35,7 +45,9 @@ function* getFreshLogs() {
     )
 
     const newListings = fromJS(applications).reduce((acc, val) => {
-      const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
+      const index = acc.findIndex(
+        it => it.get('listingHash') === val.get('listingHash')
+      )
       // New listing
       if (index === -1) {
         return acc.push(val)
@@ -128,7 +140,14 @@ function* handleLogs(sb, eb, topic, contract) {
     const decoder = yield call(EthAbi.logDecoder, contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
     console.log('decodedLogs', decodedLogs)
-    const listings = (yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting)).filter(lawg => !(lawg === false))
+    const listings = (yield call(
+      buildListings,
+      decodedLogs,
+      ethjs,
+      rawLogs,
+      contract,
+      voting
+    )).filter(lawg => !(lawg === false))
     return listings
   } catch (err) {
     console.log('Handle logs error:', err)
@@ -137,14 +156,24 @@ function* handleLogs(sb, eb, topic, contract) {
 }
 
 async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
-  return Promise.all(decodedLogs.map(async (dLog, ind) => {
-    const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
-    const txDetails = await log_utils.getTransaction(
-      ethjs,
-      rawLogs[ind].transactionHash
-    )
-    return buildListing(contract, block.timestamp, dLog, ind, txDetails, voting, decodedLogs)
-  }))
+  return Promise.all(
+    decodedLogs.map(async (dLog, ind) => {
+      const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
+      const txDetails = await log_utils.getTransaction(
+        ethjs,
+        rawLogs[ind].transactionHash
+      )
+      return buildListing(
+        contract,
+        block.timestamp,
+        dLog,
+        ind,
+        txDetails,
+        voting,
+        decodedLogs
+      )
+    })
+  )
 }
 
 async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
@@ -160,13 +189,15 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
 
     if (event === '_ChallengeSucceeded') {
-      const fListings = decodedLogs.filter(li => (li.pollID && li.pollID.toString() === dLog.challengeID.toString()))
+      const fListings = decodedLogs.filter(
+        li => li.pollID && li.pollID.toString() === dLog.challengeID.toString()
+      )
       const lis = fListings[0]
       if (!lis) {
         return false
       }
       listingHash = lis.listingHash
-      numTokens = (lis.deposit && lis.deposit.toString())
+      numTokens = lis.deposit && lis.deposit.toString()
       whitelisted = false
       remove = true
     }
@@ -187,7 +218,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     const appExpiry = convertUnixTimeLeft(aeUnix)
     const appExpired = dateHasPassed(aeUnix)
 
-    let pollID = (dLog.pollID || dLog.challengeID)
+    let pollID = dLog.pollID || dLog.challengeID
 
     if (pollID) {
       pollID = pollID.toString()
@@ -198,10 +229,9 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
       revealExpiry = convertUnixTimeLeft(revealEndDate)
     }
 
-
     return {
-      listingString: (event === '_Application' && dLog.data),
-      owner: (event === '_Application' && txn.from),
+      listingString: event === '_Application' && dLog.data,
+      owner: event === '_Application' && txn.from,
 
       listingHash,
       whitelisted,

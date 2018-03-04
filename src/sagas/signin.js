@@ -21,7 +21,8 @@ function* executeSaga(action) {
     const { account, method, network, registry } = action.payload
     console.log('method', method)
 
-    const text = `Account:\n${account || 'You need MetaMask!'}\n\nRegistry:\n${registry ||
+    const text = `Account:\n${account ||
+      'You need MetaMask!'}\n\nRegistry:\n${registry ||
       'No registry'}\n\nNetwork: ${network || 'Unlock MetaMask!'}`
 
     const msg = ethUtil.bufferToHex(new Buffer(text, 'utf8'))
@@ -37,7 +38,13 @@ function* executeSaga(action) {
     if (recovered === account) {
       console.log('Ethjs recovered the message signer')
       console.log('Checking if deployed...')
-      const deployed = yield call(checkIfDeployed, ethjs, account, regContract.contract, registry)
+      const deployed = yield call(
+        checkIfDeployed,
+        ethjs,
+        account,
+        regContract.contract,
+        registry
+      )
       console.log('deployed', deployed)
       if (deployed.contract && deployed.address === registry) {
         // Deployed
@@ -57,7 +64,10 @@ async function checkIfDeployed(ethjs, account, contract, address) {
   Contract.setProvider(ethjs.currentProvider)
   if (typeof Contract.currentProvider.sendAsync !== 'function') {
     Contract.currentProvider.sendAsync = function() {
-      return Contract.currentProvider.send.apply(Contract.currentProvider, arguments)
+      return Contract.currentProvider.send.apply(
+        Contract.currentProvider,
+        arguments
+      )
     }
   }
   // Contract.defaults(getDefaults(account))

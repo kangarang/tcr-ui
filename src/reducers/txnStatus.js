@@ -1,10 +1,6 @@
 import { fromJS } from 'immutable'
 
-import {
-  SEND_TRANSACTION,
-  TXN_MINED,
-  TXN_REVERTED,
-} from '../actions/constants'
+import { SEND_TRANSACTION, TXN_MINED, TXN_REVERTED } from '../actions/constants'
 
 const initialState = fromJS({
   txnStatus: {

@@ -3,11 +3,8 @@ import styled from 'styled-components'
 
 import Button from './Button'
 
-import {
-  BoldInlineText,
-  InlineText,
-} from './Item'
-import { colors } from '../colors';
+import { BoldInlineText, InlineText } from './Item'
+import { colors } from '../colors'
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +21,15 @@ const FileInput = styled.input`
   border: 2px solid ${colors.prism};
 `
 
-export default ({ log, latest, owner, listingString, whitelisted, handleClick, onFileInput }) => (
+export default ({
+  log,
+  latest,
+  owner,
+  listingString,
+  whitelisted,
+  handleClick,
+  onFileInput,
+}) => (
   <Container txHash={latest.get('txHash')}>
     {/* <FlexCenteredItem gC={1}>
       <Identicon owner={owner} size={6} scale={6} />
@@ -85,23 +90,33 @@ export default ({ log, latest, owner, listingString, whitelisted, handleClick, o
       {(!latest.get('pollID') && !latest.get('appExpired')) || whitelisted ? (
         <Button
           onClick={e =>
-            handleClick({ method: 'challenge', context: { listing: listingString, latest } })
+            handleClick({
+              method: 'challenge',
+              context: { listing: listingString, latest },
+            })
           }
         >
           {'Challenge'}
         </Button>
-      ) : false}
+      ) : (
+        false
+      )}
 
       {/* unchallenged. expired */}
-      {!whitelisted && !latest.get('pollID') && latest.get('appExpired') && (
-        <Button
-          onClick={e =>
-            handleClick({ method: 'updateStatus', context: { listing: listingString, latest } })
-          }
-        >
-          {'Update Status'}
-        </Button>
-      )}
+      {!whitelisted &&
+        !latest.get('pollID') &&
+        latest.get('appExpired') && (
+          <Button
+            onClick={e =>
+              handleClick({
+                method: 'updateStatus',
+                context: { listing: listingString, latest },
+              })
+            }
+          >
+            {'Update Status'}
+          </Button>
+        )}
       <BoldInlineText>
         {whitelisted ? (
           'Whitelisted on block number: ' + latest.get('blockNumber')
@@ -119,16 +134,14 @@ export default ({ log, latest, owner, listingString, whitelisted, handleClick, o
           >
             {'Commit Vote'}
           </Button>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </BoldInlineText>
 
       <InlineText>
         {latest.getIn(['revealExpiry', 'timeleft']) > 0 && (
-          <FileInput
-            type='file'
-            name='file'
-            onChange={onFileInput}
-          />
+          <FileInput type="file" name="file" onChange={onFileInput} />
         )}
       </InlineText>
     </div>

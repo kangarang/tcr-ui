@@ -23,44 +23,48 @@ export default ({
   handleCallInputChange,
   handleCall,
 }) => (
-    <SidePanel
-      title="U D A P P"
-      opened={openCallPanel === contract}
-      onClose={closeSidePanel}
-    >
-      <MarginDiv>
-        <Icon name='check circle' size='small' />
-        <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
-      </MarginDiv>
-      <MarginDiv>
-        <Text>{translate('sidebar_udapp_instructions')}</Text>
-      </MarginDiv>
+  <SidePanel
+    title="U D A P P"
+    opened={openCallPanel === contract}
+    onClose={closeSidePanel}
+  >
+    <MarginDiv>
+      <Icon name="check circle" size="small" />
+      <Text color="grey" smallcaps>
+        {'INSTRUCTIONS'}
+      </Text>
+    </MarginDiv>
+    <MarginDiv>
+      <Text>{translate('sidebar_udapp_instructions')}</Text>
+    </MarginDiv>
 
-      <SidePanelSeparator />
+    <SidePanelSeparator />
 
-      {methods.map(method => (
-        <div key={method.name}>
+    {methods.map(method => (
+      <div key={method.name}>
+        <MarginDiv>
+          {method.inputs.map(inp => (
+            <TextInput
+              key={inp.name}
+              placeholder={inp.name}
+              onChange={e => handleCallInputChange(e, method.name, inp.name)}
+              wide
+              type="text"
+            />
+          ))}
           <MarginDiv>
-            {method.inputs.map(inp => (
-              <TextInput
-                key={inp.name}
-                placeholder={inp.name}
-                onChange={e => handleCallInputChange(e, method.name, inp.name)}
-                wide
-                type='text'
-              />
-            ))}
-            <MarginDiv>
-              <Button
-                onClick={e => handleCall(contract, method)}
-                mode='strong'
-                wide
-              >
-                <Text color='white' smallcaps>{method.name}</Text>
-              </Button>
-            </MarginDiv>
+            <Button
+              onClick={e => handleCall(contract, method)}
+              mode="strong"
+              wide
+            >
+              <Text color="white" smallcaps>
+                {method.name}
+              </Text>
+            </Button>
           </MarginDiv>
-        </div>
-      ))}
-    </SidePanel>
-  )
+        </MarginDiv>
+      </div>
+    ))}
+  </SidePanel>
+)

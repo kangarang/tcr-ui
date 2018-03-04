@@ -23,7 +23,6 @@ export default function* voteSaga() {
   yield takeEvery(TX_REVEAL_VOTE, revealVoteSaga)
 }
 
-
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
@@ -34,7 +33,6 @@ export function* requestVotingRightsSaga(action) {
     console.log('request voting rights error:', error)
   }
 }
-
 
 export function* commitVoteSaga(action) {
   const account = yield select(selectAccount)
@@ -52,7 +50,11 @@ export function* commitVoteSaga(action) {
 
   // format args
   const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
-  const prevPollID = yield call(voting.contract.getInsertPointForNumTokens.call, account, numTokens)
+  const prevPollID = yield call(
+    voting.contract.getInsertPointForNumTokens.call,
+    account,
+    numTokens
+  )
   console.log('prevPollID', prevPollID)
   const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
@@ -76,7 +78,7 @@ export function* commitVoteSaga(action) {
     commitEnd: commitEndDateString,
     revealEnd: revealEndDateString,
     secretHash,
-    numTokens
+    numTokens,
   }
 
   console.log('commit json:', json)
@@ -86,7 +88,12 @@ export function* commitVoteSaga(action) {
 
   // saveFile(json, filename)
 
-  const receipt = yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
+  const receipt = yield call(
+    sendTransactionSaga,
+    voting,
+    'commitVote',
+    finalArgs
+  )
 
   if (receipt.receipt.status !== '0x00') {
     saveFile(json, filename)
