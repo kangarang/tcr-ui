@@ -367,7 +367,10 @@ class Home extends Component {
           </MarginDiv>
 
           <MarginDiv>
-            <Button onClick={e => this.handleSendTransaction('apply')} mode="strong">
+            <Button
+              onClick={e => this.handleSendTransaction('apply')}
+              mode="strong"
+            >
               {'Apply Listing'}
             </Button>
           </MarginDiv>
@@ -379,7 +382,9 @@ class Home extends Component {
           <MarginDiv>
             {this.state.visibleApprove ? (
               <Button
-                onClick={e => this.handleSendTransaction('approve', null, 'registry')}
+                onClick={e =>
+                  this.handleSendTransaction('approve', null, 'registry')
+                }
                 mode="strong"
               >
                 {'Approve tokens for Registry'}
@@ -439,7 +444,9 @@ class Home extends Component {
                 <Text weight="bold">{'Challenge Period'}</Text>
                 <h1>{`Commit: ${parameters.get(
                   'commitStageLen'
-                )} seconds & Reveal: ${parameters.get('revealStageLen')} seconds`}</h1>
+                )} seconds & Reveal: ${parameters.get(
+                  'revealStageLen'
+                )} seconds`}</h1>
               </Section>,
               <Section>
                 <Text weight="bold">{'Minimum Deposit'}</Text>
@@ -471,7 +478,8 @@ class Home extends Component {
           </MarginDiv>
           <MarginDiv>
             <Text>
-              {this.state.selectedOne && this.state.selectedOne.get('listingString')}
+              {this.state.selectedOne &&
+                this.state.selectedOne.get('listingString')}
             </Text>
           </MarginDiv>
 
@@ -503,7 +511,9 @@ class Home extends Component {
                 </MarginDiv>
                 <MarginDiv>
                   <Button
-                    onClick={e => this.handleSendTransaction('approve', null, 'registry')}
+                    onClick={e =>
+                      this.handleSendTransaction('approve', null, 'registry')
+                    }
                     mode="strong"
                     wide
                   >
@@ -566,7 +576,8 @@ class Home extends Component {
           </MarginDiv>
           <MarginDiv>
             <Text>
-              {this.state.selectedOne && this.state.selectedOne.get('listingString')}
+              {this.state.selectedOne &&
+                this.state.selectedOne.get('listingString')}
             </Text>
           </MarginDiv>
 
@@ -587,10 +598,14 @@ class Home extends Component {
             {balances.get('votingRights') === '0' ? (
               <MarginDiv>
                 <MarginDiv>
-                  <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
+                  <Text>
+                    {translate('sidebar_requestVotingRights_instructions')}
+                  </Text>
                 </MarginDiv>
                 <Button
-                  onClick={e => this.handleSendTransaction('requestVotingRights')}
+                  onClick={e =>
+                    this.handleSendTransaction('requestVotingRights')
+                  }
                   mode="strong"
                   wide
                 >
@@ -603,14 +618,18 @@ class Home extends Component {
                   <Text>{translate('sidebar_commitVote_instructions')}</Text>
                 </MarginDiv>
                 <Button
-                  onClick={e => this.handleSendTransaction('commitVote', null, null, 1)}
+                  onClick={e =>
+                    this.handleSendTransaction('commitVote', null, null, 1)
+                  }
                   emphasis="positive"
                   mode="strong"
                 >
                   {'Support the applicant'}
                 </Button>{' '}
                 <Button
-                  onClick={e => this.handleSendTransaction('commitVote', null, null, 0)}
+                  onClick={e =>
+                    this.handleSendTransaction('commitVote', null, null, 0)
+                  }
                   emphasis="negative"
                   mode="strong"
                 >
@@ -625,7 +644,9 @@ class Home extends Component {
               <Text>{translate('sidebar_approve_instructions')}</Text>
             </MarginDiv>
             <Button
-              onClick={e => this.handleSendTransaction('approve', null, 'voting')}
+              onClick={e =>
+                this.handleSendTransaction('approve', null, 'voting')
+              }
               mode="strong"
               wide
             >
@@ -683,7 +704,8 @@ class Home extends Component {
           </MarginDiv>
           <MarginDiv>
             <Text>
-              {this.state.selectedOne && this.state.selectedOne.get('listingString')}
+              {this.state.selectedOne &&
+                this.state.selectedOne.get('listingString')}
             </Text>
           </MarginDiv>
 
@@ -699,7 +721,11 @@ class Home extends Component {
             <Text>{translate('sidebar_revealVote_instructions')}</Text>
           </MarginDiv>
           <MarginDiv>
-            <FileInput type="file" name="file" onChange={this.handleFileInput} />
+            <FileInput
+              type="file"
+              name="file"
+              onChange={this.handleFileInput}
+            />
           </MarginDiv>
           <MarginDiv>
             <Button
@@ -763,11 +789,19 @@ class Home extends Component {
                     <TableCell>
                       {one.get('owner') === account ? (
                         <div>
-                          <Icon name="exclamation circle" size="large" color="yellow" />
+                          <Icon
+                            name="exclamation circle"
+                            size="large"
+                            color="yellow"
+                          />
                           <Icon name="check circle" size="large" color="blue" />
                         </div>
                       ) : (
-                        <Icon name="exclamation circle" size="large" color="yellow" />
+                        <Icon
+                          name="exclamation circle"
+                          size="large"
+                          color="yellow"
+                        />
                       )}
                     </TableCell>
                     {/* actions */}
@@ -775,7 +809,9 @@ class Home extends Component {
                       <ContextMenu>
                         {one.get('appExpired') && (
                           <CMItem
-                            onClick={e => this.handleSendTransaction('updateStatus', one)}
+                            onClick={e =>
+                              this.handleSendTransaction('updateStatus', one)
+                            }
                           >
                             <Icon name="magic" size="large" color="purple" />
                             {'Update Status'}
@@ -789,8 +825,16 @@ class Home extends Component {
                           <Icon name='angle double down' size='large' color='yellow' />
                           {'Withdraw Tokens'}
                         </CMItem> */}
-                        <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
-                          <Icon name="exclamation circle" size="large" color="red" />
+                        <CMItem
+                          onClick={e =>
+                            this.openSidePanel(one, 'openChallenge')
+                          }
+                        >
+                          <Icon
+                            name="exclamation circle"
+                            size="large"
+                            color="red"
+                          />
                           {'Challenge Listing'}
                         </CMItem>
                       </ContextMenu>
@@ -823,10 +867,18 @@ class Home extends Component {
                     </TableCell>
 
                     <TableCell>
-                      {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) ? (
-                        <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
-                      ) : !dateHasPassed(one.getIn(['latest', 'revealEndDate'])) ? (
-                        <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
+                      {!dateHasPassed(
+                        one.getIn(['latest', 'commitEndDate'])
+                      ) ? (
+                        <Countdown
+                          end={one.getIn(['latest', 'commitExpiry', 'date'])}
+                        />
+                      ) : !dateHasPassed(
+                        one.getIn(['latest', 'revealEndDate'])
+                      ) ? (
+                        <Countdown
+                          end={one.getIn(['latest', 'revealExpiry', 'date'])}
+                        />
                       ) : (
                         'Ready to update'
                       )}
@@ -844,34 +896,58 @@ class Home extends Component {
                     <TableCell>
                       {one.get('owner') === account ? (
                         <div>
-                          <Icon name="exclamation circle" size="large" color="orange" />
+                          <Icon
+                            name="exclamation circle"
+                            size="large"
+                            color="orange"
+                          />
                           <Icon name="check circle" size="large" color="blue" />
                         </div>
                       ) : (
-                        <Icon name="exclamation circle" size="large" color="orange" />
+                        <Icon
+                          name="exclamation circle"
+                          size="large"
+                          color="orange"
+                        />
                       )}
                     </TableCell>
 
                     <TableCell>
                       <ContextMenu>
-                        {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) && (
+                        {!dateHasPassed(
+                          one.getIn(['latest', 'commitEndDate'])
+                        ) && (
                           <CMItem
-                            onClick={e => this.openSidePanel(one, 'openCommitVote')}
+                            onClick={e =>
+                              this.openSidePanel(one, 'openCommitVote')
+                            }
                           >
-                            <Icon name="check circle" size="large" color="orange" />
+                            <Icon
+                              name="check circle"
+                              size="large"
+                              color="orange"
+                            />
                             {'Commit Token Vote'}
                           </CMItem>
                         )}
-                        {dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
-                          !dateHasPassed(one.getIn(['latest', 'revealEndDate'])) && (
+                        {dateHasPassed(
+                          one.getIn(['latest', 'commitEndDate'])
+                        ) &&
+                          !dateHasPassed(
+                            one.getIn(['latest', 'revealEndDate'])
+                          ) && (
                             <CMItem
-                              onClick={e => this.openSidePanel(one, 'openRevealVote')}
+                              onClick={e =>
+                                this.openSidePanel(one, 'openRevealVote')
+                              }
                             >
                               <Icon name="unlock" size="large" color="orange" />
                               {'Reveal Token Vote'}
                             </CMItem>
                           )}
-                        {dateHasPassed(one.getIn(['latest', 'revealEndDate'])) && (
+                        {dateHasPassed(
+                          one.getIn(['latest', 'revealEndDate'])
+                        ) && (
                           <div>
                             <CMItem
                               onClick={e =>
@@ -943,7 +1019,11 @@ class Home extends Component {
 
                     <TableCell>
                       <ContextMenu>
-                        <CMItem onClick={e => this.openSidePanel(one, 'openChallenge')}>
+                        <CMItem
+                          onClick={e =>
+                            this.openSidePanel(one, 'openChallenge')
+                          }
+                        >
                           <Icon
                             name="remove circle outline"
                             size="large"

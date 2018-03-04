@@ -60,8 +60,10 @@ function* getFreshLogs() {
       return acc
     }, fromJS([]))
 
-    yield put(newArray(newListings))
-    yield put(updateBalancesRequest())
+    if (newListings.size > 0) {
+      yield put(newArray(newListings))
+      yield put(updateBalancesRequest())
+    }
   } catch (err) {
     console.log('Fresh log error:', err)
     throw new Error(err.message)
