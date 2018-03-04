@@ -13,8 +13,8 @@ import { toUnitAmount } from '../utils/units_utils'
 
 import { selectEthjs, selectNetworkID, selectRegistry, selectVoting, selectAllListings } from '../selectors'
 
-import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date';
-import { fromJS } from 'immutable';
+import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date'
+import { fromJS } from 'immutable'
 
 let lastReadBlockNumber = 0
 
@@ -38,15 +38,12 @@ function* getFreshLogs() {
       const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
       // New listing
       if (index === -1) {
-        // console.log('index -1: acc, val', acc.toJS(), val.toJS())
         return acc.push(val)
       }
       // Check to see if the event is the more recent
       if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
-        // console.log('next: acc, val', acc.toJS(), val.toJS())
         return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
       }
-      // console.log('acc', acc.toJS())
       // Not unique, not more recent, return List
       return acc
     }, fromJS([]))
@@ -111,7 +108,6 @@ function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
     const voting = yield select(selectVoting)
-    const allListings = yield select(selectAllListings)
     const blockRange = yield {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
@@ -132,7 +128,7 @@ function* handleLogs(sb, eb, topic, contract) {
     const decoder = yield call(EthAbi.logDecoder, contract.contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
     console.log('decodedLogs', decodedLogs)
-    const listings = yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting, allListings)
+    const listings = (yield call(buildListings, decodedLogs, ethjs, rawLogs, contract, voting)).filter(lawg => lawg !== false)
     return listings
   } catch (err) {
     console.log('Handle logs error:', err)
@@ -140,22 +136,37 @@ function* handleLogs(sb, eb, topic, contract) {
   }
 }
 
-async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting, allListings) {
+async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
   return Promise.all(decodedLogs.map(async (dLog, ind) => {
     const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
     const txDetails = await log_utils.getTransaction(
       ethjs,
       rawLogs[ind].transactionHash
     )
-    return buildListing(contract, block.timestamp, dLog, ind, txDetails, voting, allListings)
+    return buildListing(contract, block.timestamp, dLog, ind, txDetails, voting, decodedLogs)
   }))
 }
 
-async function buildListing(contract, ts, dLog, i, txn, voting, allListings) {
+async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
   try {
-    const listingHash = dLog.listingHash
+    let listingHash = dLog.listingHash
     const event = dLog._eventName
+    let numTokens
+
+    if (event === '_ApplicationRemoved') {
+      return false
+    }
+
+    if (event === '_ChallengeSucceeded') {
+      const challengedListing = (decodedLogs.filter(li => (li.pollID && li.pollID.toString() === dLog.challengeID.toString())))[0]
+      console.log('challengedListing', challengedListing)
+      listingHash = challengedListing.listingHash
+      numTokens = (challengedListing.deposit && challengedListing.deposit.toString())
+    }
+
     let listing = await contract.contract.listings.call(listingHash)
+    numTokens = listing[3] ? toUnitAmount(listing[3], 18).toString() : false
+
     if (!listing) {
       console.log('no listing', dLog)
     }
@@ -181,9 +192,6 @@ async function buildListing(contract, ts, dLog, i, txn, voting, allListings) {
       revealExpiry = convertUnixTimeLeft(revealEndDate)
     }
 
-    // account for listingHash
-    // if (event === '_ChallengeSucceeded' || event === '_ChallengeFailed') {
-    // }
 
     return {
       listingString: (event === '_Application' && dLog.data),
@@ -198,7 +206,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, allListings) {
         txHash: txn.hash,
         blockHash: txn.blockHash,
         blockNumber: txn.blockNumber.toNumber(10),
-        numTokens: listing[3] ? toUnitAmount(listing[3], 18).toString() : false,
+        numTokens,
         pollID,
         sender: txn.from,
         event,
