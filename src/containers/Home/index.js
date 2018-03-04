@@ -23,7 +23,11 @@ import {
 
 import { Icon } from 'semantic-ui-react'
 
+import translate from '../../translations';
+import { colors, jsonTheme } from '../../colors';
+
 import Identicon from '../../components/Identicon'
+import SideMethods from '../../components/SideMethods';
 
 import {
   setupEthereum,
@@ -44,39 +48,15 @@ import {
   selectCandidates,
   selectFaceoffs,
   selectWhitelist,
-  selectTxnStatus,
   selectError,
   selectRegistryMethods,
   selectVotingMethods,
+  selectMiningStatus,
 } from '../../selectors'
 
 import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree } from '../../utils/units_utils';
-import translate from '../../translations';
 import vote_utils from '../../utils/vote_utils';
-import { colors } from '../../colors';
 import { dateHasPassed } from '../../utils/format-date';
-import SideMethods from '../../components/SideMethods';
-
-const jsonTheme = {
-  scheme: 'monokai',
-  author: 'wimer hazenberg (http://www.monokai.nl)',
-  base00: '#272822',
-  base01: '#383830',
-  base02: '#49483e',
-  base03: '#75715e',
-  base04: '#a59f85',
-  base05: '#f8f8f2',
-  base06: '#f5f4f1',
-  base07: '#f9f8f5',
-  base08: '#f92672',
-  base09: '#fd971f',
-  base0A: '#f4bf75',
-  base0B: '#a6e22e',
-  base0C: '#a1efe4',
-  base0D: '#66d9ef',
-  base0E: '#ae81ff',
-  base0F: '#cc6633'
-}
 
 const AppBarWrapper = styled.div`
   flex-shrink: 0;
@@ -119,6 +99,7 @@ class Home extends Component {
       openCallPanel: false,
       selectedOne: false,
       revealedVote: false,
+      methodName: false,
     }
   }
   componentDidMount() {
@@ -189,105 +170,45 @@ class Home extends Component {
     })
   }
 
-  // token txns
-  handleApprove = async (contract) => {
-    //   const approved = await this.props.token.contract.approve(this.props[contract].address, toNaturalUnitAmount(this.state.numTokens, 18).toString(10))
-    //   console.log('approved!!', approved)
-    const method = this.props.token.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'approve')[0]
-    this.props.onSendTransaction({
-      args: [
-        this.props[contract].address,
-        toNaturalUnitAmount(this.state.numTokens, 18)
-      ],
-      method,
-      to: this.props.token.address
-    })
-  }
-  handleRequestVotingRights = () => {
-    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'requestVotingRights')[0]
-    this.props.onSendTransaction({
-      args: [
-        this.state.numTokens
-      ],
-      method,
-    })
+  handleSendTransaction = (methodName, listing, contract, voteOption) => {
+    const args = this.getMethodArgs(methodName, listing, contract, voteOption)
+    if (args) {
+      this.props.onSendTransaction({ methodName, args, listing })
+    }
   }
 
-  // registry txns
-  handleApply = () => {
-    // this.props.token.contract.transfer('0xeda75f826f12dfb245144769d97bf6d47abd2473', '420000000000000000000000')
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'apply')[0]
-    this.props.onSendTransaction({
-      args: [
+  getMethodArgs(methodName, listing, contract, voteOption) {
+    return (
+      methodName === 'apply' ? [
         vote_utils.getListingHash(this.state.listingName),
         toNaturalUnitAmount(this.state.numTokens, 18),
-        this.state.listingName,
-      ],
-      method,
-    })
-  }
-  handleDepositWithdraw = (one, methodName) => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === methodName)[0]
-    this.props.onSendTransaction({
-      args: [
-        one.get('listingHash'),
-        toNaturalUnitAmount(420, 18),
-      ],
-      method,
-    })
-  }
-  handleChallenge = () => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'challenge')[0]
-    this.props.onSendTransaction({
-      args: [
+        this.state.listingName
+      ] : methodName === 'challenge' ? [
         this.state.selectedOne.get('listingHash'),
         this.state.selectedOne.get('listingString')
-      ],
-      method,
-    })
-  }
-  handleUpdateStatus = (one) => {
-    const method = this.props.registry.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'updateStatus')[0]
-    this.props.onSendTransaction({
-      args: [
-        one.get('listingHash'),
-      ],
-      method,
-    })
-  }
-  handleRescueTokens = (one) => {
-    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'rescueTokens')[0]
-    this.props.onSendTransaction({
-      args: [
-        one.getIn(['latest', 'pollID'])
-      ],
-      method,
-    })
-  }
-
-  // voting txns
-  handleCommitVote = (voteOption) => {
-    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'commitVote')[0]
-    this.props.onSendTransaction({
-      args: [
+      ] : methodName === 'updateStatus' ? [
+        listing.get('listingHash')
+      ] : methodName === 'rescueTokens' ? [
+        listing.getIn(['latest', 'pollID'])
+      ] : methodName === 'approve' ? [
+        this.props[contract].address,
+        toNaturalUnitAmount(this.state.numTokens, 18)
+      ] : methodName === 'requestVotingRights' ? [
+        this.state.numTokens
+      ] : methodName === 'commitVote' ? [
         this.state.selectedOne.getIn(['latest', 'pollID']),
         voteOption,
-        this.state.numTokens
-      ],
-      listing: this.state.selectedOne.get('listingString'),
-      method,
-    })
-  }
-  handleRevealVote = () => {
-    const method = this.props.voting.contract.abi.filter(methI => methI.type === 'function' && methI.name === 'revealVote')[0]
-    this.props.onSendTransaction({
-      args: [
+        this.state.numTokens,
+        this.state.selectedOne.get('listingString')
+      ] : methodName === 'revealVote' ? [
         this.state.selectedOne.getIn(['latest', 'pollID']),
         this.state.revealedVote.voteOption,
-        this.state.revealedVote.salt,
-      ],
-      method,
-    })
+        this.state.revealedVote.salt
+      ] : methodName === 'claimVoterReward' ? [
+        this.state.selectedOne.getIn(['latest', 'pollID']),
+        this.state.revealedVote.salt
+      ] : false
+    )
   }
 
   render() {
@@ -301,7 +222,7 @@ class Home extends Component {
       networkID,
       parameters,
       token,
-      txnStatus,
+      miningStatus,
       registryMethods,
       votingMethods,
       registry,
@@ -321,30 +242,22 @@ class Home extends Component {
                 </div>
                 <Identicon address={account} diameter={30} />
                 <div>{`Network: ${networkID === '4' ? 'Rinkeby' : networkID === '1' ? 'Main Net' : networkID === '420' ? 'ganache' : networkID}`}</div>
-                <Text color='red' weight='bold'>{txnStatus && 'MINING'}</Text>
+                <Text color='red' weight='bold'>{miningStatus && 'MINING'}</Text>
                 <OverFlowDiv>
                   {account}
                 </OverFlowDiv>
-                <div>
-                  {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
-                </div>
-                <div>
-                  {`${token.name} Balance: ${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`}
-                </div>
+                {/* {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
+                {`${token.name} Balance: ${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`} */}
               </AppBar>
             )}
         </AppBarWrapper>
 
-        {/* <Grid>
-          <Grid.Column width={4}>
-          <Menu fluid vertical tabular>
-              <Menu.Item name='registry' active={this.state.activeItem === 'bio'} onClick={this.handleItemClick} />
-              <Menu.Item name='applications' active={this.state.activeItem === 'pics'} onClick={this.handleItemClick} />
-              <Menu.Item name='committing' active={this.state.activeItem === 'companies'} onClick={this.handleItemClick} />
-              <Menu.Item name='revealing' active={this.state.activeItem === 'links'} onClick={this.handleItemClick} />
-            </Menu>
-          </Grid.Column>
-        </Grid> */}
+        <JSONTree
+          invertTheme={false}
+          theme={jsonTheme}
+          data={balances}
+          shouldExpandNode={(keyName, data, level) => false}
+        />
 
         <SidePanel
           title="Apply a Listing into the Registry"
@@ -400,7 +313,7 @@ class Home extends Component {
 
           <MarginDiv>
             <Button
-              onClick={this.handleApply}
+              onClick={e => this.handleSendTransaction('apply')}
               mode='strong'
             >
               {'Apply Listing'}
@@ -414,7 +327,7 @@ class Home extends Component {
               <Text color='grey' smallcaps>{'YOU NEED TO APPROVE'}</Text>
             }
             <Button
-              onClick={e => this.handleApprove('registry')}
+              onClick={e => this.handleSendTransaction('approve', null, 'registry')}
               mode='strong'
             >
               {'Approve tokens for Registry'}
@@ -469,7 +382,7 @@ class Home extends Component {
           ]} />
 
           <MarginDiv>
-            <Text color='grey' smallcaps>{'LISTING TO CHALLENGE'}</Text>
+            <Text color='grey' smallcaps>{'LISTING'}</Text>
           </MarginDiv>
           <MarginDiv>
             <Text>{this.state.selectedOne && this.state.selectedOne.get('listingString')}</Text>
@@ -494,7 +407,7 @@ class Home extends Component {
                 </MarginDiv>
                 <MarginDiv>
                   <Button
-                    onClick={e => this.handleApprove('registry')}
+                    onClick={e => this.handleSendTransaction('approve', null, 'registry')}
                     mode='strong'
                     wide
                   >
@@ -503,7 +416,7 @@ class Home extends Component {
                 </MarginDiv>
               </MarginDiv>
               : <Button
-                onClick={this.handleChallenge}
+                onClick={e => this.handleSendTransaction('challenge')}
                 mode='strong'
                 wide
               >
@@ -530,6 +443,7 @@ class Home extends Component {
             </Section>
           ]} />
 
+          {/* TODO: show inc/dec numTokens depending on user input */}
           <SidePanelSplit children={[
             <Section>
               <Text weight='bold'>{'Voting Rights'}</Text>
@@ -563,7 +477,7 @@ class Home extends Component {
                   <Text>{translate('sidebar_requestVotingRights_instructions')}</Text>
                 </MarginDiv>
                 <Button
-                  onClick={this.handleRequestVotingRights}
+                  onClick={e => this.handleSendTransaction('requestVotingRights')}
                   mode='strong'
                   wide
                 >
@@ -576,7 +490,7 @@ class Home extends Component {
                     <Text>{translate('sidebar_commitVote_instructions')}</Text>
                   </MarginDiv>
                   <Button
-                    onClick={e => this.handleCommitVote(1)}
+                    onClick={e => this.handleSendTransaction('commitVote', null, null, 1)}
                     emphasis='positive'
                     mode='strong'
                   >
@@ -584,7 +498,7 @@ class Home extends Component {
                   </Button>
                   {' '}
                   <Button
-                    onClick={e => this.handleCommitVote(0)}
+                    onClick={e => this.handleSendTransaction('commitVote', null, null, 0)}
                     emphasis='negative'
                     mode='strong'
                   >
@@ -599,7 +513,7 @@ class Home extends Component {
               <Text>{translate('sidebar_approve_instructions')}</Text>
             </MarginDiv>
             <Button
-              onClick={e => this.handleApprove('voting')}
+              onClick={e => this.handleSendTransaction('approve', null, 'voting')}
               mode='strong'
               wide
             >
@@ -660,17 +574,15 @@ class Home extends Component {
             <Text>{translate('sidebar_revealVote_instructions')}</Text>
           </MarginDiv>
           <MarginDiv>
-            {this.state.selectedOne && this.state.selectedOne.getIn(['revealExpiry', 'timeleft']) > 0 && (
-              <FileInput
-                type='file'
-                name='file'
-                onChange={this.handleFileInput}
-              />
-            )}
+            <FileInput
+              type='file'
+              name='file'
+              onChange={this.handleFileInput}
+            />
           </MarginDiv>
           <MarginDiv>
             <Button
-              onClick={this.handleRevealVote}
+              onClick={e => this.handleSendTransaction('revealVote')}
               mode='strong'
               wide
             >
@@ -734,15 +646,11 @@ class Home extends Component {
                     <TableCell>
                       <ContextMenu>
                         {one.get('appExpired') &&
-                          <CMItem onClick={e => this.handleUpdateStatus(one)}>
+                          <CMItem onClick={e => this.handleSendTransaction('updateStatus', one)}>
                             <Icon name='magic' size='large' color='purple' />
                             {'Update Status'}
                           </CMItem>
                         }
-                        <CMItem onClick={e => this.handleExit(one)}>
-                          <Icon name='remove circle outline' size='large' color='orange' />
-                          {'Remove Listing'}
-                        </CMItem>
                         {/* <CMItem onClick={e => this.handleDepositWithdraw(one, 'deposit')}>
                           <Icon name='angle double up' size='large' color='green' />
                           {'Deposit Tokens'}
@@ -803,12 +711,12 @@ class Home extends Component {
                     </TableCell>
 
                     <TableCell>
-                      {one.get('owner') === account ?
+                      {one.get('owner') === account ? (
                         <div>
                           <Icon name='exclamation circle' size='large' color='orange' />
                           <Icon name='check circle' size='large' color='blue' />
                         </div>
-                        : <Icon name='exclamation circle' size='large' color='orange' />}
+                      ) : <Icon name='exclamation circle' size='large' color='orange' />}
                     </TableCell>
 
                     <TableCell>
@@ -827,15 +735,19 @@ class Home extends Component {
                         }
                         {dateHasPassed(one.getIn(['latest', 'revealEndDate'])) &&
                           <div>
-                            <CMItem onClick={e => this.handleUpdateStatus(one)}>
+                            <CMItem onClick={e => this.handleSendTransaction('updateStatus', one)}>
                               <Icon name='magic' size='large' color='purple' />
                               <div>
                                 {'Update Status'}
                               </div>
                             </CMItem>
-                            <CMItem onClick={e => this.handleRescueTokens(one)}>
+                            <CMItem onClick={e => this.handleSendTransaction('rescueTokens', one)}>
                               <Icon name='exclamation circle' size='large' color='orange' />
                               {'Rescue Tokens'}
+                            </CMItem>
+                            <CMItem onClick={e => this.handleSendTransaction('claimVoterReward')}>
+                              <Icon name='check' size='large' color='orange' />
+                              {'Claim Voter Reward'}
                             </CMItem>
                           </div>
                         }
@@ -910,7 +822,6 @@ const CMItem = styled.div`
     padding: 5px;
   }
 `
-
 const FileInput = styled.input`
   padding: 1em;
   border: 2px solid ${colors.prism};
@@ -932,7 +843,7 @@ const mapStateToProps = createStructuredSelector({
   networkID: selectNetworkID,
 
   balances: selectBalances,
-  txnStatus: selectTxnStatus,
+  miningStatus: selectMiningStatus,
 
   registry: selectRegistry,
   token: selectToken,
