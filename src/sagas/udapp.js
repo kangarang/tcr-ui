@@ -75,9 +75,9 @@ function* handleSendTransaction(action) {
 
 function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
-  const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
-  const to = registry.address
   yield call(sendTransactionSaga, registry, action.payload.method.name, action.payload.args)
+  // const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
+  // const to = registry.address
   // yield call(sendTransactionSaga, txData, to)
 }
 
@@ -85,7 +85,7 @@ export function* sendDefaultTxn(action) {
   try {
     const to = action.payload.to
     const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
-    yield call(sendDefTransactionSaga, txData, to)
+    yield call(sendEthjsTransactionSaga, txData, to)
   } catch (error) {
     console.log('error', error)
   }
@@ -110,7 +110,7 @@ export function* sendTransactionSaga(contract, method, args) {
     console.log('error', error)
   }
 }
-export function* sendDefTransactionSaga(data, to) {
+export function* sendEthjsTransactionSaga(data, to) {
   try {
     const ethjs = yield select(selectEthjs)
     const from = yield select(selectAccount)

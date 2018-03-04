@@ -1,5 +1,3 @@
-import EthAbi from 'ethjs-abi'
-
 import { select, call, takeEvery } from 'redux-saga/effects'
 import {
   TX_REQUEST_VOTING_RIGHTS,
@@ -10,7 +8,6 @@ import {
 import {
   // selectEthjs,
   selectAccount,
-  selectRegistry,
   selectVoting,
 } from '../selectors'
 
@@ -30,11 +27,11 @@ export default function* voteSaga() {
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    console.log('request voting rights saga action', action)
+    // console.log('request voting rights saga action', action)
     const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
-    const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
     const receipt = yield call(voting.contract.requestVotingRights, tokens.toString(10))
     console.log('receipt', receipt)
+    // const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
     // yield call(sendTransactionSaga, txData, voting.address)
     // yield call(sendTransactionSaga, voting, action.payload.method.name, action.payload.args)
   } catch (error) {
@@ -117,9 +114,10 @@ export function* commitVoteSaga(action) {
 export function* revealVoteSaga(action) {
   const voting = yield select(selectVoting)
   const finalArgs = action.payload.args
-  const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
-
-  const to = voting.address
-  // yield call(sendTransactionSaga, txData, to)
   yield call(sendTransactionSaga, voting, action.payload.method.name, finalArgs)
+
+  // ethjs
+  // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
+  // const to = voting.address
+  // yield call(sendTransactionSaga, txData, to)
 }

@@ -5,7 +5,6 @@ import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import JSONTree from 'react-json-tree'
 
-import iconSrc from '../../assets/icons/corva.png'
 import {
   SidePanel,
   SidePanelSplit,
@@ -47,16 +46,16 @@ import {
   selectWhitelist,
   selectTxnStatus,
   selectError,
-  selectTokenMethods,
   selectRegistryMethods,
   selectVotingMethods,
 } from '../../selectors'
 
-import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree, toEther } from '../../utils/units_utils';
+import { toUnitAmount, toNaturalUnitAmount, withCommas, trimDecimalsThree } from '../../utils/units_utils';
 import translate from '../../translations';
 import vote_utils from '../../utils/vote_utils';
 import { colors } from '../../colors';
 import { dateHasPassed } from '../../utils/format-date';
+import SideMethods from '../../components/SideMethods';
 
 const jsonTheme = {
   scheme: 'monokai',
@@ -321,7 +320,7 @@ class Home extends Component {
                   {registry.name}
                 </div>
                 <Identicon address={account} diameter={30} />
-                <div>{`Network: ${networkID === '4' ? 'Rinkeby' : networkID == '1' ? 'Main Net' : networkID === '420' ? 'ganache' : networkID}`}</div>
+                <div>{`Network: ${networkID === '4' ? 'Rinkeby' : networkID === '1' ? 'Main Net' : networkID === '420' ? 'ganache' : networkID}`}</div>
                 <Text color='red' weight='bold'>{txnStatus && 'MINING'}</Text>
                 <OverFlowDiv>
                   {account}
@@ -423,75 +422,23 @@ class Home extends Component {
           </MarginDiv>
         </SidePanel>
 
-        <SidePanel
-          title="U D A P P"
-          opened={this.state.openCallPanel === 'registry'}
-          onClose={this.closeSidePanel}
-        >
-          <MarginDiv>
-            <Icon name='check circle' size='small' />
-            <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_udapp_instructions')}</Text>
-          </MarginDiv>
+        <SideMethods
+          contract={'registry'}
+          methods={registryMethods}
+          openCallPanel={this.state.openCallPanel}
+          closeSidePanel={this.closeSidePanel}
+          handleCallInputChange={this.handleCallInputChange}
+          handleCall={this.handleCall}
+        />
 
-          <SidePanelSeparator />
-
-          {registryMethods.map(one => (
-            <div key={one.name}>
-              <MarginDiv>
-                {one.inputs.map(inp => (
-                  <TextInput key={inp.name} placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
-                ))}
-                <MarginDiv>
-                  <Button
-                    onClick={e => this.handleCall('registry', one)}
-                    mode='strong'
-                    wide
-                  >
-                    <Text color='white' smallcaps>{one.name}</Text>
-                  </Button>
-                </MarginDiv>
-              </MarginDiv>
-            </div>
-          ))}
-        </SidePanel>
-
-        <SidePanel
-          title="U D A P P"
-          opened={this.state.openCallPanel === 'voting'}
-          onClose={this.closeSidePanel}
-        >
-          <MarginDiv>
-            <Icon name='check circle' size='small' />
-            <Text color='grey' smallcaps>{'INSTRUCTIONS'}</Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_udapp_instructions')}</Text>
-          </MarginDiv>
-
-          <SidePanelSeparator />
-
-          {votingMethods.map(one => (
-            <div key={one.name}>
-              <MarginDiv>
-                {one.inputs.map(inp => (
-                  <TextInput key={inp.name} placeholder={inp.name} onChange={e => this.handleCallInputChange(e, one.name, inp.name)} wide type='text' />
-                ))}
-                <MarginDiv>
-                  <Button
-                    onClick={e => this.handleCall('voting', one)}
-                    mode='strong'
-                    wide
-                  >
-                    <Text color='white' smallcaps>{one.name}</Text>
-                  </Button>
-                </MarginDiv>
-              </MarginDiv>
-            </div>
-          ))}
-        </SidePanel>
+        <SideMethods
+          contract={'voting'}
+          methods={votingMethods}
+          openCallPanel={this.state.openCallPanel}
+          closeSidePanel={this.closeSidePanel}
+          handleCallInputChange={this.handleCallInputChange}
+          handleCall={this.handleCall}
+        />
 
 
         <SidePanel

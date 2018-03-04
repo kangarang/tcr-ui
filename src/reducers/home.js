@@ -41,8 +41,8 @@ const initialState = fromJS({
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    // case LOGIN_ERROR:
-    //   return state.set('error', action.error)
+    case LOGIN_ERROR:
+      return state.set('error', action.error)
     // case CONTRACT_ERROR:
     //   return state.setIn(['error', 'type'], true)
     case TXN_MINED:

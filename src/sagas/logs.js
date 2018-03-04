@@ -1,9 +1,9 @@
-import { all, select, takeLatest, fork, call, put } from 'redux-saga/effects'
+import { select, takeLatest, fork, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
-import { newArray, updateItems, pollLogsRequest, updateBalancesRequest, deleteListings } from '../actions'
+import { newArray, updateItems, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -96,7 +96,7 @@ function* pollLogsSaga(action) {
       '',
       registry
     )
-    if (newLogs.length == 0) {
+    if (newLogs.length === 0) {
       return
     }
     yield put(updateItems(newLogs))
