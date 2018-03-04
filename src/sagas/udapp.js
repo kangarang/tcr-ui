@@ -22,17 +22,16 @@ function* callUDappSaga(action) {
   console.log('call requested:', action)
   const ethjs = yield select(selectEthjs)
   const account = yield select(selectAccount)
+  const { method, args, contract } = action.payload
 
-  let contract
-  if (action.payload.contract === 'registry') {
-    contract = yield select(selectRegistry)
-  } else if (action.payload.contract === 'voting') {
-    contract = yield select(selectVoting)
+  let c
+  if (contract === 'registry') {
+    c = yield select(selectRegistry)
+  } else if (contract === 'voting') {
+    c = yield select(selectVoting)
   }
 
-  const method = action.payload.method
-  const args = action.payload.args
-
+  // hash the string
   if (method.inputs[0].name === '_listingHash') {
     args[0] = vote_utils.getListingHash(args[0])
   }
@@ -40,7 +39,7 @@ function* callUDappSaga(action) {
 
   const payload = {
     from: account,
-    to: contract.address,
+    to: c.address,
     data: txData,
   }
 
