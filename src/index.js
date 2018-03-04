@@ -4,9 +4,9 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router'
 import createHistory from 'history/createBrowserHistory'
 import { ThemeProvider } from 'styled-components'
-import 'semantic-ui-css/semantic.min.css';
+import 'semantic-ui-css/semantic.min.css'
 
-import { colors } from './colors';
+import { colors } from './colors'
 
 import configureStore from './store'
 import App from './components/App'
