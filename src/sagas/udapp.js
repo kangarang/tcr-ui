@@ -1,4 +1,5 @@
 import EthAbi from 'ethjs-abi'
+import _ from 'lodash'
 
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import {
@@ -17,11 +18,6 @@ import vote_utils from '../utils/vote_utils'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote';
 import { txnMined } from '../actions';
 
-export default function* udappSaga() {
-  yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
-  yield takeEvery(CALL_REQUESTED, callUDappSaga)
-}
-
 function* callUDappSaga(action) {
   console.log('call requested:', action)
   const ethjs = yield select(selectEthjs)
@@ -36,6 +32,7 @@ function* callUDappSaga(action) {
 
   const method = action.payload.method
   const args = action.payload.args
+
   if (method.inputs[0].name === '_listingHash') {
     args[0] = vote_utils.getListingHash(args[0])
   }
@@ -57,9 +54,15 @@ function* callUDappSaga(action) {
   alert(callResult)
 }
 
+export default function* udappSaga() {
+  yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
+  yield takeEvery(CALL_REQUESTED, callUDappSaga)
+}
+
 // TODO: write tests for these sagas. against abis
 function* handleSendTransaction(action) {
-  const methodName = action.payload.method.name
+  // const methodName = action.payload.method.name
+  const methodName = action.payload.methodName
   if (methodName === 'apply' || methodName === 'challenge' || methodName === 'updateStatus') {
     yield call(registryTxnSaga, action)
   } else if (methodName === 'requestVotingRights') {
@@ -75,7 +78,19 @@ function* handleSendTransaction(action) {
 
 function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
-  yield call(sendTransactionSaga, registry, action.payload.method.name, action.payload.args)
+  const methodName = action.payload.methodName
+
+  const args = action.payload.args.map(rg => {
+    if (_.isObject(rg)) {
+      return rg.toString()
+    } else if (_.isString(rg)) {
+      return rg
+    }
+    // TODO: more typechecking
+    return rg
+  })
+
+  yield call(sendTransactionSaga, registry, methodName, args)
   // const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)
   // const to = registry.address
   // yield call(sendTransactionSaga, txData, to)
@@ -91,25 +106,6 @@ export function* sendDefaultTxn(action) {
   }
 }
 
-export function* sendTransactionSaga(contract, method, args) {
-  try {
-    const newArgs = args.map(rg => {
-      if (typeof rg === 'object') {
-        return rg.toString()
-      }
-      return rg
-    })
-    const receipt = yield call(contract.contract[method], ...newArgs)
-    if (receipt.receipt.status !== '0x00') {
-      yield put(txnMined(receipt))
-    } else {
-      console.log('ERROR')
-    }
-    console.log('receipt', receipt)
-  } catch (error) {
-    console.log('error', error)
-  }
-}
 export function* sendEthjsTransactionSaga(data, to) {
   try {
     const ethjs = yield select(selectEthjs)
@@ -125,6 +121,29 @@ export function* sendEthjsTransactionSaga(data, to) {
     }
     const txHash = yield call(ethjs.sendTransaction, payload)
     return txHash
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export function* sendTransactionSaga(contract, method, args) {
+  try {
+    const newArgs = args.map(rg => {
+      if (typeof rg === 'object') {
+        return rg.toString()
+      }
+      return rg
+    })
+
+    const receipt = yield call(contract.contract[method], ...newArgs)
+
+    if (receipt.receipt.status !== '0x00') {
+      yield put(txnMined(receipt))
+    } else {
+      console.log('ERROR')
+    }
+    console.log('receipt', receipt)
+    return receipt
   } catch (error) {
     console.log('error', error)
   }

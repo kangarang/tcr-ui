@@ -27,15 +27,11 @@ export default function* voteSaga() {
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    // console.log('request voting rights saga action', action)
     const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
-    const receipt = yield call(voting.contract.requestVotingRights, tokens.toString(10))
-    console.log('receipt', receipt)
-    // const txData = EthAbi.encodeMethod(action.payload.method, [tokens])
-    // yield call(sendTransactionSaga, txData, voting.address)
-    // yield call(sendTransactionSaga, voting, action.payload.method.name, action.payload.args)
+    const args = [tokens.toString(10)]
+    yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
   } catch (error) {
-    console.log('error', error)
+    console.log('request voting rights error:', error)
   }
 }
 
@@ -45,19 +41,20 @@ export function* commitVoteSaga(action) {
   const voting = yield select(selectVoting)
 
   console.log('commit vote saga:', action)
-  const pollID = action.payload.args[0]
-  const voteOption = action.payload.args[1]
-  const numTokens = action.payload.args[2]
-  // const numTokens = toNaturalUnitAmount(action.payload.args[2], 18)
-
+  const { args } = action.payload
+  const pollID = args[0]
+  const voteOption = args[1]
+  const numTokens = args[2]
+  const listingString = args[3]
+  console.log('args', args)
+  // const numTokens = toNaturalUnitAmount(args[2], 18)
   const salt = randInt(1e6, 1e8)
+
   // format args
   const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(voting.contract.getInsertPointForNumTokens.call, account, numTokens)
+  console.log('prevPollID', prevPollID)
   const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
-  console.log('finalArgs', finalArgs)
-
-  // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
 
   // grab the poll from the mapping
   const pollStruct = yield call(voting.contract.pollMap.call, pollID)
@@ -75,49 +72,31 @@ export function* commitVoteSaga(action) {
     salt: salt.toString(10),
     voteOption,
     pollID,
-    listing: action.payload.listing,
-    commitEndDateString,
-    revealEndDateString,
+    listing: listingString,
+    commitEnd: commitEndDateString,
+    revealEnd: revealEndDateString,
     secretHash,
     numTokens
   }
 
-  console.log('commit vote json', json)
+  console.log('commit json:', json)
 
-  const listingUnderscored = action.payload.listing.replace('.', '_')
-  const filename = `pollID-${pollID}_listing-${listingUnderscored}_commitVote_commitEndDate-${commitEndDateString}.json`
+  const listingUnderscored = listingString.replace('.', '_')
+  const filename = `${listingUnderscored}_pollID-${pollID}.json`
 
-  // truffle-contract version
-  const receipt = yield call(
-    voting.contract.commitVote,
-    pollID,
-    secretHash,
-    numTokens.toString(10),
-    prevPollID
-  )
+  // saveFile(json, filename)
+
+  const receipt = yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
 
   if (receipt.receipt.status !== '0x00') {
     saveFile(json, filename)
   } else {
     console.log('ERROR')
   }
-
-  console.log('receipt', receipt)
-  // ethjs version
-  // Saves JSON commitVote file before sending transaction
-  // yield call(saveFile, json, filename)
-  // const txHash = yield call(sendTransactionSaga, txData, voting.address)
-  // console.log('txHash', txHash)
 }
-
 
 export function* revealVoteSaga(action) {
   const voting = yield select(selectVoting)
-  const finalArgs = action.payload.args
-  yield call(sendTransactionSaga, voting, action.payload.method.name, finalArgs)
-
-  // ethjs
-  // const txData = EthAbi.encodeMethod(action.payload.method, finalArgs)
-  // const to = voting.address
-  // yield call(sendTransactionSaga, txData, to)
+  const { args, methodName } = action.payload
+  yield call(sendTransactionSaga, voting, methodName, args)
 }
