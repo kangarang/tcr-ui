@@ -65,6 +65,7 @@ import {
   toNaturalUnitAmount,
   withCommas,
   BN,
+  trimDecimalsThree,
 } from '../../utils/units_utils'
 import vote_utils from '../../utils/vote_utils'
 import { dateHasPassed } from '../../utils/format-date'
@@ -256,18 +257,17 @@ class Home extends Component {
                 {miningStatus && 'MINING'}
               </Text>
               <OverFlowDiv>{account}</OverFlowDiv>
-              {/* {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
-                {`${token.name} Balance: ${withCommas(trimDecimalsThree(balances.get('token')))} ${token.symbol}`} */}
+              <div>
+                {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
+              </div>
+              <div>
+                {`${token.name} Balance: ${withCommas(
+                  trimDecimalsThree(balances.get('token'))
+                )} ${token.symbol}`}
+              </div>
             </AppBar>
           )}
         </AppBarWrapper>
-
-        <JSONTree
-          invertTheme={false}
-          theme={jsonTheme}
-          data={balances}
-          shouldExpandNode={(keyName, data, level) => false}
-        />
 
         <SidePanel
           title="Apply a Listing into the Registry"
@@ -698,7 +698,7 @@ class Home extends Component {
                   <TableRow>
                     <TableHeader title="Listing" />
                     <TableHeader title="Time Remaining" />
-                    <TableHeader title="Staked Tokens" />
+                    <TableHeader title="Tokens required to challenge" />
                     <TableHeader title="Badges" />
                     <TableHeader title="Actions" />
                   </TableRow>
@@ -718,12 +718,7 @@ class Home extends Component {
                       )}
                     </TableCell>
                     <TableCell>
-                      <JSONTree
-                        invertTheme={false}
-                        theme={jsonTheme}
-                        data={one}
-                        shouldExpandNode={(keyName, data, level) => false}
-                      />
+                      {toUnitAmount(parameters.get('minDeposit'), token.decimals).toString()}
                     </TableCell>
                     <TableCell>
                       <div>
