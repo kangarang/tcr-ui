@@ -1,6 +1,5 @@
-import React from 'react'
 import styled from 'styled-components'
-import { colors, jsonTheme } from '../../../colors'
+import { colors } from '../../../colors'
 
 export const AppBarWrapper = styled.div`
   flex-shrink: 0;

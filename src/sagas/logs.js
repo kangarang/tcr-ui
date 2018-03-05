@@ -5,7 +5,6 @@ import Eth from 'ethjs'
 
 import {
   newArray,
-  updateItems,
   pollLogsRequest,
   updateBalancesRequest,
 } from '../actions'

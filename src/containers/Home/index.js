@@ -26,7 +26,9 @@ import { jsonTheme } from '../../colors'
 import Identicon from '../../components/Identicon'
 import SideSplit from './components/SideSplit'
 import SideText from './components/SideText'
+import ListingRow from '../ListingRow'
 // import SideTextInput from './components/SideTextInput'
+
 import {
   AppBar,
   AppBarWrapper,
@@ -88,6 +90,7 @@ class Home extends Component {
       visibleApprove: false,
       voterReward: '0',
       // miningStatus: false,
+      expand: '',
     }
   }
   componentDidMount() {
@@ -690,7 +693,7 @@ class Home extends Component {
             </Button>
           </MarginDiv>
 
-          {candidates.size > 0 && (
+          {/* {candidates.size > 0 && ( */}
             <div>
               {'CANDIDATES'}
               <Table
@@ -698,73 +701,28 @@ class Home extends Component {
                   <TableRow>
                     <TableHeader title="Listing" />
                     <TableHeader title="Time Remaining" />
+                    <TableHeader title="" />
                     <TableHeader title="Tokens required to challenge" />
                     <TableHeader title="Badges" />
                     <TableHeader title="Actions" />
                   </TableRow>
                 }
               >
-                {candidates.map(one => (
-                  <TableRow key={one.get('listingHash')}>
-                    {/* stats */}
-                    <TableCell>
-                      <Text>{one.get('listingString')}</Text>
-                    </TableCell>
-                    <TableCell>
-                      {!dateHasPassed(one.getIn(['appExpiry', 'date'])) ? (
-                        <Countdown end={one.getIn(['appExpiry', 'date'])} />
-                      ) : (
-                        'Ready to update'
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {toUnitAmount(parameters.get('minDeposit'), token.decimals).toString()}
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <Icon
-                          name="exclamation circle"
-                          size="large"
-                          color="yellow"
-                        />
-                        {one.get('owner') === account && (
-                          <Icon name="check circle" size="large" color="blue" />
-                        )}
-                      </div>
-                    </TableCell>
-
-                    {/* actions */}
-                    <TableCell>
-                      <ContextMenu>
-                        {one.get('appExpired') && (
-                          <CMItem
-                            onClick={e =>
-                              this.handleSendTransaction('updateStatus', one)
-                            }
-                          >
-                            <Icon name="magic" size="large" color="purple" />
-                            {'Update Status'}
-                          </CMItem>
-                        )}
-                        <CMItem
-                          onClick={e =>
-                            this.openSidePanel(one, 'openChallenge')
-                          }
-                        >
-                          <Icon
-                            name="exclamation circle"
-                            size="large"
-                            color="red"
-                          />
-                          {'Challenge Listing'}
-                        </CMItem>
-                      </ContextMenu>
-                    </TableCell>
-                  </TableRow>
+                {candidates.map(candidate => (
+                  <ListingRow
+                    key={candidate.get('listingHash')}
+                    listing={candidate}
+                    parameters={parameters}
+                    token={token}
+                    account={account}
+                    handleSendTransaction={this.handleSendTransaction}
+                    openSidePanel={this.openSidePanel}
+                    listingHash={candidate.get('listingHash')}
+                  />
                 ))}
               </Table>
             </div>
-          )}
+          {/* )} */}
 
           {faceoffs.size > 0 && (
             <div>
