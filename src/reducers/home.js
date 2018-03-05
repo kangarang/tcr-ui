@@ -34,7 +34,7 @@ const initialState = fromJS({
     parameterizer: {},
   },
   parameters: { minDeposit: '', applyStageLen: '' },
-  listings: {},
+  listings: [],
   txnStatus: false,
   latestTxn: false,
   miningStatus: false,
@@ -68,39 +68,14 @@ function homeReducer(state = initialState, action) {
       return state.set('balances', fromJS(action.payload.balances))
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
+      // TODO: semantics: set listings
     case NEW_ARRAY:
       return state.set('listings', fromJS(action.payload))
-    case CHANGE_ITEMS:
-      return changeListings(state, action.payload)
     case DELETE_LISTINGS:
       return deleteObjectInArray(state, action.payload)
     default:
       return state
   }
-}
-
-function changeListings(state, payload) {
-  const newListings = fromJS(payload).reduce((acc, val) => {
-    const index = acc.findIndex(
-      it => it.get('listingHash') === val.get('listingHash')
-    )
-    // New listing
-    if (index === -1) {
-      // console.log('index -1: acc, val', acc.toJS(), val.toJS())
-      return acc.push(fromJS(val))
-    }
-    // Check to see if the event is the more recent
-    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
-      // console.log('next: acc, val', acc.toJS(), val.toJS())
-      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
-    }
-    // console.log('acc', acc.toJS())
-    // Not unique, not more recent, return List
-    return fromJS(acc)
-  }, fromJS(state.get('listings')))
-
-  // Replace entire List
-  return state.set('listings', newListings)
 }
 
 function deleteObjectInArray(array, payload) {

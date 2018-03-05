@@ -21,6 +21,7 @@ import {
   selectNetworkID,
   selectRegistry,
   selectVoting,
+  selectAllListings,
 } from '../selectors'
 
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date'
@@ -36,7 +37,7 @@ export default function* logsSaga() {
 function* getFreshLogs() {
   try {
     const registry = yield select(selectRegistry)
-    const applications = yield call(
+    const listings = yield call(
       handleLogs,
       lastReadBlockNumber,
       'latest',
@@ -44,21 +45,7 @@ function* getFreshLogs() {
       registry.contract
     )
 
-    const newListings = fromJS(applications).reduce((acc, val) => {
-      const index = acc.findIndex(
-        it => it.get('listingHash') === val.get('listingHash')
-      )
-      // New listing
-      if (index === -1) {
-        return acc.push(val)
-      }
-      // Check to see if the event is the more recent
-      if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
-        return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
-      }
-      // Not unique, not more recent, return List
-      return acc
-    }, fromJS([]))
+    const newListings = yield call(updateListings, [], listings)
 
     if (newListings.size > 0) {
       yield put(newArray(newListings))
@@ -95,22 +82,46 @@ function* pollController() {
     }
   }
 }
+
+function updateListings(listings, newListings) {
+  const latestListings = fromJS(newListings).reduce((acc, val) => {
+    const index = acc.findIndex(
+      it => it.get('listingHash') === val.get('listingHash')
+    )
+    // New listing
+    if (index === -1) {
+      return acc.push(val)
+    }
+    // Check to see if the event is the more recent
+    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
+      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
+    }
+    // Not unique, not more recent, return List
+    return acc
+  }, fromJS(listings))
+  return latestListings
+}
+
 function* pollLogsSaga(action) {
   try {
     const ethjs = yield select(selectEthjs)
     const registry = yield select(selectRegistry)
+    const allListings = yield select(selectAllListings)
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
-    const newLogs = yield call(
+    const newListings = yield call(
       handleLogs,
       action.payload.startBlock,
-      action.payload.endBlock,
+      action.payload.endBock,
       '',
       registry.contract
     )
-    if (newLogs.length === 0) {
+    if (newListings.length === 0) {
       return
     }
-    yield put(updateItems(newLogs))
+    console.log('allListings', allListings)
+    const latestListings = yield call(updateListings, allListings, newListings)
+    // TODO: semantics: setListings
+    yield put(newArray(latestListings))
     yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Poll logs error:', err)

@@ -30,6 +30,7 @@ const abi_utils = {
       eventAbi,
       eventName
     )
+    // TODO: semantics for event signature
     const topicForEventSignature = ethUtil.addHexPrefix(
       jsSHA3.keccak256(eventSignature)
     )
