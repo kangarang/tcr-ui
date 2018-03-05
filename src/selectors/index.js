@@ -40,43 +40,42 @@ export const selectToken = createSelector(selectAllContracts, contracts =>
 export const selectVoting = createSelector(selectAllContracts, contracts =>
   contracts.get('voting')
 )
-export const selectParameterizer = createSelector(selectAllContracts, contracts =>
-  contracts.get('parameterizer')
+export const selectParameterizer = createSelector(
+  selectAllContracts,
+  contracts => contracts.get('parameterizer')
 )
 
-
-export const selectVotingMethods = createSelector(
-  selectVoting, voting =>
-    (voting.contract ? voting.contract.abi : []).filter(mi =>
-      mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-    )
+export const selectVotingMethods = createSelector(selectVoting, voting =>
+  (voting.contract ? voting.contract.abi : []).filter(
+    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+  )
 )
-export const selectRegistryMethods = createSelector(
-  selectRegistry, registry =>
-    (registry.contract ? registry.contract.abi : []).filter(mi =>
-      mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-    )
+export const selectRegistryMethods = createSelector(selectRegistry, registry =>
+  (registry.contract ? registry.contract.abi : []).filter(
+    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+  )
 )
-export const selectTokenMethods = createSelector(
-  selectToken, token =>
-    (token.contract ? token.contract.abi : []).filter(mi =>
-      mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-    )
+export const selectTokenMethods = createSelector(selectToken, token =>
+  (token.contract ? token.contract.abi : []).filter(
+    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+  )
 )
-export const selectVisibilityFilter = createSelector(
-  selectHome, homeState =>
-    homeState.get('vFilter')
+export const selectVisibilityFilter = createSelector(selectHome, homeState =>
+  homeState.get('vFilter')
 )
 export const selectVisibleRegistryMethod = createSelector(
-  [selectRegistryMethods, selectVisibilityFilter], (registryMethods, vFilter) =>
+  [selectRegistryMethods, selectVisibilityFilter],
+  (registryMethods, vFilter) =>
     registryMethods.filter(rMeth => rMeth.name === vFilter)
 )
 export const selectVisibleVotingMethod = createSelector(
-  [selectVotingMethods, selectVisibilityFilter], (votingMethods, vFilter) =>
+  [selectVotingMethods, selectVisibilityFilter],
+  (votingMethods, vFilter) =>
     votingMethods.filter(vMeth => vMeth.name === vFilter)
 )
 export const selectVisibleTokenMethod = createSelector(
-  [selectTokenMethods, selectVisibilityFilter], (tokenMethods, vFilter) =>
+  [selectTokenMethods, selectVisibilityFilter],
+  (tokenMethods, vFilter) =>
     tokenMethods.filter(tMeth => tMeth.name === vFilter)
 )
 
@@ -84,7 +83,6 @@ export const selectVisibleTokenMethod = createSelector(
 export const selectParameters = createSelector(selectHome, homeState =>
   homeState.get('parameters')
 )
-
 
 // Listings
 export const selectAllListings = createSelector(selectHome, homeState =>
@@ -94,25 +92,21 @@ export const selectAllListings = createSelector(selectHome, homeState =>
 export const selectCandidates = createSelector(selectAllListings, listings =>
   listings.filter(
     li =>
-      li.get('listingString')
-      && !li.get('whitelisted')
-      && !li.getIn(['latest', 'pollID'])
+      li.get('listingString') &&
+      !li.get('whitelisted') &&
+      !li.getIn(['latest', 'pollID'])
   )
 )
 // Only voteable listings
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
   listings.filter(
     li =>
-      li.get('listingString')
-      && !li.get('whitelisted')
-      && li.getIn(['latest', 'pollID'])
+      li.get('listingString') &&
+      !li.get('whitelisted') &&
+      li.getIn(['latest', 'pollID'])
   )
 )
 // Only whitelisted listings
 export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(
-    li =>
-      li.get('listingString')
-      && li.get('whitelisted')
-  )
+  listings.filter(li => li.get('listingString') && li.get('whitelisted'))
 )

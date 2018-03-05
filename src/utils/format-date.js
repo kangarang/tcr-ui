@@ -18,7 +18,9 @@ export function dateHasPassed(unixTimestamp) {
 export function timeLeft(d) {
   const date = d instanceof Date ? d : new Date(0)
 
-  const rightNow = moment().utc().unix()
+  const rightNow = moment()
+    .utc()
+    .unix()
   const dd = date.getTime() / 1000
   const diff = dd - rightNow
 
@@ -29,7 +31,11 @@ export function timeLeft(d) {
 
   return {
     // "February 17, 2018 1:42 PM (UTC -7)"
-    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
+    formattedLocal: `${
+      months[date.getMonth()]
+    } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
+      ':'
+    )} ${localAMPM}`,
     // 1518900156
     timestamp: date.getTime() / 1000,
     timeleft: diff,
@@ -57,13 +63,27 @@ export function formatDate(d) {
     // "17 February"
     simpleDate: `${date.getUTCDate()} ${months[date.getUTCMonth()]}`,
     // "February 17, 2018 8:42 PM"
-    formatted: `${months[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(':')} ${utcAMPM}`,
+    formatted: `${
+      months[date.getUTCMonth()]
+    } ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(
+      ':'
+    )} ${utcAMPM}`,
     // "Feb 17, 2018 8:42 PM"
-    formattedShort: `${shortMonths[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(':')} ${utcAMPM}`,
+    formattedShort: `${
+      shortMonths[date.getUTCMonth()]
+    } ${date.getUTCDate()}, ${date.getUTCFullYear()} ${utcTimeTwelve.join(
+      ':'
+    )} ${utcAMPM}`,
     // "February 17, 2018 1:42 PM (UTC -7)"
-    formattedLocal: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
+    formattedLocal: `${
+      months[date.getMonth()]
+    } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
+      ':'
+    )} ${localAMPM}`,
     // "February 17, 2018 (UTC -7)"
-    formattedLocalShort: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} (UTC ${localOffset})`,
+    formattedLocalShort: `${
+      months[date.getMonth()]
+    } ${date.getDate()}, ${date.getFullYear()} (UTC ${localOffset})`,
     // "Sat, 17 Feb 2018 20:42:36 GMT"
     full: date.toUTCString(),
     // 1518900156
@@ -99,5 +119,31 @@ export function getBeginDate(periodString) {
   return beginDate.unix()
 }
 
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+const months = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+const shortMonths = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec',
+]

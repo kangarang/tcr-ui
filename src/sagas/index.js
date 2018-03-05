@@ -1,18 +1,12 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 
-import {
-  GET_ETHEREUM,
-  LOGIN_ERROR,
-} from '../actions/constants'
+import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 
-import {
-  setWallet,
-  loginError,
-} from '../actions'
+import { setWallet, loginError } from '../actions'
 
 import { setEthjs } from '../libs/provider'
 
-import { contractsSaga } from './contracts';
+import { contractsSaga } from './contracts'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -24,7 +18,7 @@ function* genesis() {
     const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
     if (account === undefined) {
-      yield put(loginError({type: LOGIN_ERROR, message: 'Need MetaMask!'}))
+      yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
     } else {
       yield put(setWallet({ ethjs, account, networkID }))
       yield call(contractsSaga, ethjs, account)

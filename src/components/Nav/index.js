@@ -20,10 +20,10 @@ class Nav extends Component {
   render() {
     return (
       <NavBar>
-        <NavLink to="/"/>
-        <NavLink to="/"/>
-        <NavLink to="/"/>
-        <NavLink to="/"/>
+        <NavLink to="/" />
+        <NavLink to="/" />
+        <NavLink to="/" />
+        <NavLink to="/" />
         <NavLink strict to="/">
           Home
         </NavLink>

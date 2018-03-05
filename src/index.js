@@ -18,8 +18,8 @@ const store = configureStore(initialState, history)
 
 const theme = {
   default: {
-    color: colors.offWhite
-  }
+    color: colors.offWhite,
+  },
 }
 
 ReactDOM.render(

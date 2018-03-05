@@ -11,4 +11,4 @@ const log_utils = {
     registry.filterListingAndCall(logs, 'canBeWhitelisted'),
 }
 
-export default log_utils 
+export default log_utils

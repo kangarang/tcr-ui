@@ -13,7 +13,7 @@ const Input = styled.input`
   border: none;
   border-bottom: 2px solid ${colors.prism};
   font-size: 1em;
-  padding: .75em;
+  padding: 0.75em;
   color: white;
 `
 
