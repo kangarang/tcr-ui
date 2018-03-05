@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import styled from 'styled-components'
 import JSONTree from 'react-json-tree'
 
 import {
@@ -22,10 +21,21 @@ import {
 import { Icon } from 'semantic-ui-react'
 
 import translate from '../../translations'
-import { colors, jsonTheme } from '../../colors'
+import { jsonTheme } from '../../colors'
 
 import Identicon from '../../components/Identicon'
 import SideSplit from './components/SideSplit'
+import SideText from './components/SideText'
+// import SideTextInput from './components/SideTextInput'
+import {
+  AppBar,
+  AppBarWrapper,
+  MarginDiv,
+  OverFlowDiv,
+  HomeWrapper,
+  CMItem,
+  FileInput,
+} from './components/StyledHome'
 
 import {
   setupEthereum,
@@ -58,35 +68,6 @@ import {
 } from '../../utils/units_utils'
 import vote_utils from '../../utils/vote_utils'
 import { dateHasPassed } from '../../utils/format-date'
-import SideText from './components/SideText'
-// import SideTextInput from './components/SideTextInput'
-
-const AppBarWrapper = styled.div`
-  flex-shrink: 0;
-`
-const AppBar = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 4em;
-  background-color: ${colors.offWhite};
-  border-bottom: 1px solid ${colors.orange};
-  padding: 0 3em;
-  & > div {
-    margin: 0 1em;
-  }
-`
-const MarginDiv = styled.div`
-  margin: 1em 0;
-`
-const OverFlowDiv = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-const HomeWrapper = styled.div`
-  padding: 2em;
-`
 
 class Home extends Component {
   constructor(props) {
@@ -105,6 +86,7 @@ class Home extends Component {
       methodName: false,
       visibleApprove: false,
       voterReward: '0',
+      // miningStatus: false,
     }
   }
   componentDidMount() {
@@ -228,6 +210,13 @@ class Home extends Component {
     if (args) {
       this.props.onSendTransaction({ methodName, args, listing, contract })
     }
+    // this.setState({
+    //   miningStatus: true
+    // })
+    // var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
+
+    // or connect with multiaddr
+    // var ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
   }
 
   render() {
@@ -309,24 +298,25 @@ class Home extends Component {
             rightItem={withCommas(balances.get('registryAllowance'))}
           />
 
-          <MarginDiv>
-            <Icon name="question circle outline" size="small" />
-            <Text color="grey" smallcaps>
-              {'QUESTION'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_apply_question')}</Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Icon name="check circle" size="small" />
-            <Text color="grey" smallcaps>
-              {'INSTRUCTIONS'}
-            </Text>
-          </MarginDiv>
-          <MarginDiv>
-            <Text>{translate('sidebar_apply_instructions')}</Text>
-          </MarginDiv>
+          <SideSplit
+            leftTitle={'Voting Rights'}
+            leftItem={balances.get('votingRights')}
+            rightTitle={'Voting Allowance'}
+            rightItem={withCommas(balances.get('votingAllowance'))}
+          />
+
+          <SideText
+            small
+            title={'QUESTION'}
+            text={translate('sidebar_apply_question')}
+            icon={'question circle outline'}
+          />
+          <SideText
+            small
+            title={'INSTRUCTIONS'}
+            text={translate('sidebar_apply_instructions')}
+            icon={'check circle'}
+          />
 
           <MarginDiv>
             <Text color="grey" smallcaps>
@@ -548,7 +538,7 @@ class Home extends Component {
                 <SideText text={translate('sidebar_commitVote_instructions')} />
                 <Button
                   onClick={e =>
-                    this.handleSendTransaction('commitVote', null, null, 1)
+                    this.handleSendTransaction('commitVote', null, null, '1')
                   }
                   emphasis="positive"
                   mode="strong"
@@ -557,7 +547,7 @@ class Home extends Component {
                 </Button>{' '}
                 <Button
                   onClick={e =>
-                    this.handleSendTransaction('commitVote', null, null, 0)
+                    this.handleSendTransaction('commitVote', null, null, '0')
                   }
                   emphasis="negative"
                   mode="strong"
@@ -986,21 +976,6 @@ class Home extends Component {
     )
   }
 }
-
-const CMItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 20px;
-  cursor: pointer;
-  white-space: nowrap;
-  & > div {
-    padding: 5px;
-  }
-`
-const FileInput = styled.input`
-  padding: 1em;
-  border: 2px solid ${colors.prism};
-`
 
 function mapDispatchToProps(dispatch) {
   return {

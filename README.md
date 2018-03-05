@@ -304,6 +304,16 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 
 ---
 
+```json
+{
+  "identifier": "",
+  "data": ""
+}
+```
+
+
+---
+
 ## Workflow diagrams
 
 These workflow diagrams were created by our wonderful designer, Eva Shon.
