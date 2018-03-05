@@ -1,36 +1,8 @@
 import { call, put, all } from 'redux-saga/effects'
-// import ipfsAPI from 'ipfs-api'
 
 import { setContracts, contractError, updateBalancesRequest } from '../actions'
-
 import { setupRegistry, setupContract } from '../libs/contracts'
 
-// function ipfsSaga() {
-// const ipfs = ipfsAPI('localhost', '5002', { protocol: 'http' })
-// const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5002')
-
-// console.log('ipfs', ipfs)
-// const obj = {
-//   Data: new Buffer('aab'),
-//   Links: []
-// }
-
-// ipfs.object.put(obj, (err, node) => {
-//   if (err) {
-//     throw err
-//   }
-//   console.log(node.toJSON())
-//   // Logs:
-// })
-// const mH = 'QmPb5f92FxKPYdT3QNBd1GKiL4tZUXUrzF4Hkpdr3Gf1gK'
-// ipfs.object.get(mH, (err, node) => {
-//   if (err) {
-//     throw err
-//   }
-//   console.log(node.toJSON())
-// })
-
-// }
 export function* contractsSaga(ethjs, account) {
   try {
     const registry = yield call(setupRegistry, ethjs, account)

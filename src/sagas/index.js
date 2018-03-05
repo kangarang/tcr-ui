@@ -1,11 +1,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 
+import { setWallet, loginError } from '../actions'
 import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 
-import { setWallet, loginError } from '../actions'
-
 import { setEthjs } from '../libs/provider'
-
 import { contractsSaga } from './contracts'
 
 export default function* rootSaga() {
