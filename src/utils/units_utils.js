@@ -31,24 +31,29 @@ export const trimDecimalsThree = n =>
 
 // convert FROM natural unit
 // (reading logs or an event)
+// TODO: tests
 export const toUnitAmount = (amount, decimals) => {
-  if (_.isString(amount) || _.isObject(amount)) {
+  if (_.isString(amount) || _.isObject(amount) || _.isNumber(amount)) {
     amount = BN(amount)
   }
   // if (!_.isNumber(amount)) console.log('amount', amount)
   // if (!_.isNumber(decimals)) console.log('decimals', decimals)
-  const decimalPower = BN(10).pow(BN(18))
+  const decimalPower = BN(10).pow(BN(decimals))
   const unit = amount.div(decimalPower)
   return unit
 }
 
 // sending txns convert TO natural unit
 // 1,000,000 -> 1,000,000,000,000,000
+// TODO: tests
 export const toNaturalUnitAmount = (amount, decimals) => {
+  if (_.isString(amount) || _.isObject(amount) || _.isNumber(amount)) {
+    amount = BN(amount)
+  }
   // if (!_.isNumber(amount)) return false
   // if (!_.isNumber(decimals)) return false
-  const unit = BN(10).pow(BN(18))
-  const naturalUnitAmount = BN(amount).mul(unit)
+  const decimalPower = BN(10).pow(BN(decimals))
+  const naturalUnitAmount = BN(amount).mul(decimalPower)
   return naturalUnitAmount
 }
 

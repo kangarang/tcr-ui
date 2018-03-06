@@ -2,6 +2,7 @@ import { call, put, all } from 'redux-saga/effects'
 
 import { setContracts, contractError, updateBalancesRequest } from '../actions'
 import { setupRegistry, setupContract } from '../libs/contracts'
+import { toUnitAmount } from '../utils/units_utils';
 
 export function* contractsSaga(ethjs, account) {
   try {
@@ -36,7 +37,7 @@ export function* contractsSaga(ethjs, account) {
     ])
 
     const parameters = {
-      minDeposit: yield minDeposit.toString(10),
+      minDeposit: toUnitAmount(minDeposit.toString(10), tokenDecimals),
       applyStageLen: applyStageLen.toString(10),
       commitStageLen: commitStageLen.toString(10),
       revealStageLen: revealStageLen.toString(10),

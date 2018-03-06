@@ -240,6 +240,7 @@ class Home extends Component {
 
     return (
       <div>
+        {/* TODO: test */}
         <AppBarWrapper>
           {error ? (
             <AppBar>
@@ -248,20 +249,24 @@ class Home extends Component {
           ) : (
             <AppBar>
               <div>{registry.name}</div>
-              <Identicon address={account} diameter={30} />
+
               <div>{`Network: ${
                 networkID === '4'
                   ? 'Rinkeby'
-                  : networkID === '1'
-                    ? 'Main Net'
-                    : networkID === '420' ? 'Ganache' : networkID
+                  : networkID === '420' ? 'Ganache' : networkID
               }`}</div>
+
+              <Identicon address={account} diameter={30} />
+
               <Text color="red" weight="bold">
                 {miningStatus && 'MINING'}
               </Text>
-              <OverFlowDiv>{account}</OverFlowDiv>
+
+              <OverFlowDiv>{`Account: ${account}`}</OverFlowDiv>
               <div>
-                {`Ether Balance: ${withCommas(balances.get('ETH'))} ΞTH`}
+                {`Ether Balance: ${withCommas(
+                  trimDecimalsThree(balances.get('ETH'))
+                )} ΞTH`}
               </div>
               <div>
                 {`${token.name} Balance: ${withCommas(
@@ -279,18 +284,10 @@ class Home extends Component {
         >
           <SideSplit
             leftTitle={'Application Period'}
-            leftItem={
-              <div>
-                {parameters.get('applyStageLen')}
-                {' seconds'}
-              </div>
-            }
+            leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
             rightTitle={'Minimum Deposit'}
             rightItem={
-              <div>
-                {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
-                {token.symbol}
-              </div>
+              <div>{`${parameters.get('minDeposit')} ${token.symbol}`}</div>
             }
           />
 
@@ -693,237 +690,225 @@ class Home extends Component {
             </Button>
           </MarginDiv>
 
-          {/* {candidates.size > 0 && ( */}
-            <div>
-              {'CANDIDATES'}
-              <Table
-                header={
-                  <TableRow>
-                    <TableHeader title="Listing" />
-                    <TableHeader title="Time Remaining" />
-                    <TableHeader title="" />
-                    <TableHeader title="Tokens required to challenge" />
-                    <TableHeader title="Badges" />
-                    <TableHeader title="Actions" />
-                  </TableRow>
-                }
-              >
-                {candidates.map(candidate => (
-                  <ListingRow
-                    key={candidate.get('listingHash')}
-                    listing={candidate}
-                    parameters={parameters}
-                    token={token}
-                    account={account}
-                    handleSendTransaction={this.handleSendTransaction}
-                    openSidePanel={this.openSidePanel}
-                    listingHash={candidate.get('listingHash')}
-                  />
-                ))}
-              </Table>
-            </div>
-          {/* )} */}
+          <div>
+            {'CANDIDATES'}
+            <Table
+              header={
+                <TableRow>
+                  <TableHeader title="Listing" />
+                  <TableHeader title="Time Remaining" />
+                  <TableHeader title="" />
+                  <TableHeader title="Tokens required to challenge" />
+                  <TableHeader title="Badges" />
+                  <TableHeader title="Actions" />
+                </TableRow>
+              }
+            >
+              {candidates.map(candidate => (
+                <ListingRow
+                  key={candidate.get('listingHash')}
+                  listing={candidate}
+                  parameters={parameters}
+                  token={token}
+                  account={account}
+                  handleSendTransaction={this.handleSendTransaction}
+                  openSidePanel={this.openSidePanel}
+                  listingHash={candidate.get('listingHash')}
+                />
+              ))}
+            </Table>
+          </div>
 
-          {faceoffs.size > 0 && (
-            <div>
-              {'FACEOFFS'}
-              <Table
-                header={
-                  <TableRow>
-                    <TableHeader title="Listing" />
-                    <TableHeader title="Time Remaining" />
-                    <TableHeader title="Number of Tokens Voted" />
-                    <TableHeader title="Badges" />
-                    <TableHeader title="Actions" />
-                  </TableRow>
-                }
-              >
-                {faceoffs.map(one => (
-                  <TableRow key={one.get('listingHash')}>
-                    <TableCell>
-                      <Text>{one.get('listingString')}</Text>
-                    </TableCell>
+          <div>
+            {'FACEOFFS'}
+            <Table
+              header={
+                <TableRow>
+                  <TableHeader title="Listing" />
+                  <TableHeader title="Time Remaining" />
+                  <TableHeader title="Number of Tokens Voted" />
+                  <TableHeader title="Badges" />
+                  <TableHeader title="Actions" />
+                </TableRow>
+              }
+            >
+              {faceoffs.map(one => (
+                <TableRow key={one.get('listingHash')}>
+                  <TableCell>
+                    <Text>{one.get('listingString')}</Text>
+                  </TableCell>
 
-                    <TableCell>
-                      {!dateHasPassed(
-                        one.getIn(['latest', 'commitEndDate'])
-                      ) ? (
-                        <Countdown
-                          end={one.getIn(['latest', 'commitExpiry', 'date'])}
-                        />
-                      ) : !dateHasPassed(
-                        one.getIn(['latest', 'revealEndDate'])
-                      ) ? (
-                        <Countdown
-                          end={one.getIn(['latest', 'revealExpiry', 'date'])}
-                        />
-                      ) : (
-                        'Ready to update'
-                      )}
-                    </TableCell>
-
-                    <TableCell>
-                      <JSONTree
-                        invertTheme={false}
-                        theme={jsonTheme}
-                        data={one}
-                        shouldExpandNode={(keyName, data, level) => false}
+                  <TableCell>
+                    {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) ? (
+                      <Countdown
+                        end={one.getIn(['latest', 'commitExpiry', 'date'])}
                       />
-                    </TableCell>
+                    ) : !dateHasPassed(
+                      one.getIn(['latest', 'revealEndDate'])
+                    ) ? (
+                      <Countdown
+                        end={one.getIn(['latest', 'revealExpiry', 'date'])}
+                      />
+                    ) : (
+                      'Ready to update'
+                    )}
+                  </TableCell>
 
-                    <TableCell>
-                      {one.get('owner') === account ? (
-                        <div>
-                          <Icon
-                            name="exclamation circle"
-                            size="large"
-                            color="orange"
-                          />
-                          <Icon name="check circle" size="large" color="blue" />
-                        </div>
-                      ) : (
+                  <TableCell>
+                    <JSONTree
+                      invertTheme={false}
+                      theme={jsonTheme}
+                      data={one}
+                      shouldExpandNode={(keyName, data, level) => false}
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    {one.get('owner') === account ? (
+                      <div>
                         <Icon
                           name="exclamation circle"
                           size="large"
                           color="orange"
                         />
-                      )}
-                    </TableCell>
-
-                    <TableCell>
-                      <ContextMenu>
-                        {!dateHasPassed(
-                          one.getIn(['latest', 'commitEndDate'])
-                        ) && (
-                          <CMItem
-                            onClick={e =>
-                              this.openSidePanel(one, 'openCommitVote')
-                            }
-                          >
-                            <Icon
-                              name="check circle"
-                              size="large"
-                              color="orange"
-                            />
-                            {'Commit Token Vote'}
-                          </CMItem>
-                        )}
-                        {dateHasPassed(
-                          one.getIn(['latest', 'commitEndDate'])
-                        ) &&
-                          !dateHasPassed(
-                            one.getIn(['latest', 'revealEndDate'])
-                          ) && (
-                            <CMItem
-                              onClick={e =>
-                                this.openSidePanel(one, 'openRevealVote')
-                              }
-                            >
-                              <Icon name="unlock" size="large" color="orange" />
-                              {'Reveal Token Vote'}
-                            </CMItem>
-                          )}
-                        {dateHasPassed(
-                          one.getIn(['latest', 'revealEndDate'])
-                        ) && (
-                          <div>
-                            <CMItem
-                              onClick={e =>
-                                this.handleSendTransaction('updateStatus', one)
-                              }
-                            >
-                              <Icon name="magic" size="large" color="purple" />
-                              <div>{'Update Status'}</div>
-                            </CMItem>
-                            <CMItem
-                              onClick={e =>
-                                this.handleSendTransaction('rescueTokens', one)
-                              }
-                            >
-                              <Icon
-                                name="exclamation circle"
-                                size="large"
-                                color="orange"
-                              />
-                              {'Rescue Tokens'}
-                            </CMItem>
-                            <CMItem
-                              onClick={e =>
-                                this.openSidePanel(one, 'openClaimVoterReward')
-                              }
-                            >
-                              <Icon name="check" size="large" color="orange" />
-                              {'Claim Voter Reward'}
-                            </CMItem>
-                          </div>
-                        )}
-                      </ContextMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </Table>
-            </div>
-          )}
-
-          {whitelist.size > 0 && (
-            <div>
-              {'REGISTRY'}
-              <Table
-                header={
-                  <TableRow>
-                    <TableHeader title="Listing" />
-                    <TableHeader title="Deposit" />
-                    <TableHeader title="Registered on block" />
-                    <TableHeader title="Actions" />
-                  </TableRow>
-                }
-              >
-                {whitelist.map(one => (
-                  <TableRow key={one.get('listingHash')}>
-                    <TableCell>
-                      <Text>{one.get('listingString')}</Text>
-                    </TableCell>
-
-                    <TableCell>{one.getIn(['latest', 'numTokens'])}</TableCell>
-
-                    <TableCell>
-                      <JSONTree
-                        invertTheme={false}
-                        theme={jsonTheme}
-                        data={one}
-                        shouldExpandNode={(keyName, data, level) => false}
+                        <Icon name="check circle" size="large" color="blue" />
+                      </div>
+                    ) : (
+                      <Icon
+                        name="exclamation circle"
+                        size="large"
+                        color="orange"
                       />
-                    </TableCell>
+                    )}
+                  </TableCell>
 
-                    <TableCell>
-                      <ContextMenu>
+                  <TableCell>
+                    <ContextMenu>
+                      {!dateHasPassed(
+                        one.getIn(['latest', 'commitEndDate'])
+                      ) && (
                         <CMItem
                           onClick={e =>
-                            this.openSidePanel(one, 'openChallenge')
+                            this.openSidePanel(one, 'openCommitVote')
                           }
                         >
                           <Icon
-                            name="remove circle outline"
+                            name="check circle"
                             size="large"
                             color="orange"
                           />
-                          {'Challenge Listing'}
+                          {'Commit Token Vote'}
                         </CMItem>
-                        <CMItem
-                          onClick={e =>
-                            this.openSidePanel(one, 'openClaimVoterReward')
-                          }
-                        >
-                          <Icon name="check" size="large" color="orange" />
-                          {'Claim Voter Reward'}
-                        </CMItem>
-                      </ContextMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </Table>
-            </div>
-          )}
+                      )}
+                      {dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
+                        !dateHasPassed(
+                          one.getIn(['latest', 'revealEndDate'])
+                        ) && (
+                          <CMItem
+                            onClick={e =>
+                              this.openSidePanel(one, 'openRevealVote')
+                            }
+                          >
+                            <Icon name="unlock" size="large" color="orange" />
+                            {'Reveal Token Vote'}
+                          </CMItem>
+                        )}
+                      {dateHasPassed(
+                        one.getIn(['latest', 'revealEndDate'])
+                      ) && (
+                        <div>
+                          <CMItem
+                            onClick={e =>
+                              this.handleSendTransaction('updateStatus', one)
+                            }
+                          >
+                            <Icon name="magic" size="large" color="purple" />
+                            <div>{'Update Status'}</div>
+                          </CMItem>
+                          <CMItem
+                            onClick={e =>
+                              this.handleSendTransaction('rescueTokens', one)
+                            }
+                          >
+                            <Icon
+                              name="exclamation circle"
+                              size="large"
+                              color="orange"
+                            />
+                            {'Rescue Tokens'}
+                          </CMItem>
+                          <CMItem
+                            onClick={e =>
+                              this.openSidePanel(one, 'openClaimVoterReward')
+                            }
+                          >
+                            <Icon name="check" size="large" color="orange" />
+                            {'Claim Voter Reward'}
+                          </CMItem>
+                        </div>
+                      )}
+                    </ContextMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </div>
+
+          <div>
+            {'REGISTRY'}
+            <Table
+              header={
+                <TableRow>
+                  <TableHeader title="Listing" />
+                  <TableHeader title="Deposit" />
+                  <TableHeader title="Registered on block" />
+                  <TableHeader title="Actions" />
+                </TableRow>
+              }
+            >
+              {whitelist.map(one => (
+                <TableRow key={one.get('listingHash')}>
+                  <TableCell>
+                    <Text>{one.get('listingString')}</Text>
+                  </TableCell>
+
+                  <TableCell>{one.getIn(['latest', 'numTokens'])}</TableCell>
+
+                  <TableCell>
+                    <JSONTree
+                      invertTheme={false}
+                      theme={jsonTheme}
+                      data={one}
+                      shouldExpandNode={(keyName, data, level) => false}
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    <ContextMenu>
+                      <CMItem
+                        onClick={e => this.openSidePanel(one, 'openChallenge')}
+                      >
+                        <Icon
+                          name="remove circle outline"
+                          size="large"
+                          color="orange"
+                        />
+                        {'Challenge Listing'}
+                      </CMItem>
+                      <CMItem
+                        onClick={e =>
+                          this.openSidePanel(one, 'openClaimVoterReward')
+                        }
+                      >
+                        <Icon name="check" size="large" color="orange" />
+                        {'Claim Voter Reward'}
+                      </CMItem>
+                    </ContextMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </div>
         </HomeWrapper>
       </div>
     )

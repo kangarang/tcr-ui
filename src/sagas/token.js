@@ -14,6 +14,7 @@ export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
 }
 
+// TODO: tests
 function* updateBalancesSaga() {
   try {
     const ethjs = yield select(selectEthjs)
@@ -39,17 +40,17 @@ function* updateBalancesSaga() {
     const ETH = toEther(ethBalance)
     const tokenBalance = toUnitAmount(
       tokenBalanceRaw,
-      token.decimalPower
+      token.decimals
     ).toString(10)
     const registryAllowance = toUnitAmount(
       registryAllowanceRaw,
-      token.decimalPower
+      token.decimals
     ).toString(10)
     const votingAllowance = toUnitAmount(
       votingAllowanceRaw,
-      token.decimalPower
+      token.decimals
     ).toString(10)
-    const votingRights = toUnitAmount(votingRightsRaw, 18).toString(10)
+    const votingRights = toUnitAmount(votingRightsRaw, token.decimals).toString(10)
 
     yield put(
       updateBalances({

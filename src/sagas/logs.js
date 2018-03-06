@@ -128,6 +128,7 @@ function* pollLogsSaga(action) {
   }
 }
 
+// TODO: tests
 function* handleLogs(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
@@ -167,6 +168,7 @@ function* handleLogs(sb, eb, topic, contract) {
   }
 }
 
+// TODO: tests
 async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
   return Promise.all(
     decodedLogs.map(async (dLog, ind) => {
@@ -197,11 +199,10 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
 
     if (
       event === '_ApplicationRemoved' ||
-      event === '_ListingRemoved' ||
-      event === '_ChallengeSucceeded' ||
-      event === '_ChallengeFailed'
+      event === '_ListingRemoved'
     ) {
-      return false
+      whitelisted = false
+      numTokens = 0
     }
 
     if (event === '_RewardClaimed') {
