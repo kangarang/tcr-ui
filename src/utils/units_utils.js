@@ -32,7 +32,7 @@ export const trimDecimalsThree = n =>
 // convert FROM natural unit
 // (reading logs or an event)
 // TODO: tests
-export const toUnitAmount = (amount, decimals) => {
+export const baseToConvertedUnit = (amount, decimals) => {
   if (_.isString(amount) || _.isObject(amount) || _.isNumber(amount)) {
     amount = BN(amount)
   }
@@ -46,7 +46,7 @@ export const toUnitAmount = (amount, decimals) => {
 // sending txns convert TO natural unit
 // 1,000,000 -> 1,000,000,000,000,000
 // TODO: tests
-export const toNaturalUnitAmount = (amount, decimals) => {
+export const convertedToBaseUnit = (amount, decimals) => {
   if (_.isString(amount) || _.isObject(amount) || _.isNumber(amount)) {
     amount = BN(amount)
   }
@@ -85,3 +85,49 @@ export const bytesToHex = byteArray =>
 //   JSON.parse(Buffer.from(bs58.decode(encoded)).toString('utf8'))
 
 // export const base58Encode = o => bs58.encode(Buffer.from(JSON.stringify(o), 'utf8'))
+
+// // adapted from: https://github.com/MyCryptoHQ/MyCrypto/blob/develop/common/libs/units.ts
+// const stripRightZeros = str => {
+//   const strippedStr = str.replace(/0+$/, '')
+//   return strippedStr === '' ? null : strippedStr
+// }
+// const baseToConvertedUnit = (value, decimal) => {
+//   if (decimal === 0) {
+//     return value
+//   }
+//   const paddedValue = value.padStart(decimal + 1, '0') //0.1 ==>
+//   const integerPart = paddedValue.slice(0, -decimal)
+//   const fractionPart = stripRightZeros(paddedValue.slice(-decimal))
+//   return fractionPart ? `${integerPart}.${fractionPart}` : `${integerPart}`
+// }
+
+// const convertedToBaseUnit = (value, decimal) => {
+//   if (decimal === 0) {
+//     return value
+//   }
+//   const [integerPart, fractionPart = ''] = value.split('.')
+//   const paddedFraction = fractionPart.padEnd(decimal, '0')
+//   return `${integerPart}${paddedFraction}`
+// }
+
+// const fromTokenBase = (value, decimal) =>
+//   baseToConvertedUnit(value.toString(), decimal)
+
+// const toTokenBase = (value, decimal) =>
+//   BN(convertedToBaseUnit(value, decimal))
+
+// const convertTokenBase = (value, oldDecimal, newDecimal) => {
+//   if (oldDecimal === newDecimal) {
+//     return value
+//   }
+//   return toTokenBase(fromTokenBase(value, oldDecimal), newDecimal)
+// }
+
+// export {
+//   stripRightZeros,
+//   baseToConvertedUnit,
+//   convertedToBaseUnit,
+//   fromTokenBase,
+//   toTokenBase,
+//   convertTokenBase,
+// }

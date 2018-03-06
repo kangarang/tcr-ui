@@ -11,7 +11,7 @@ import {
   selectVoting,
 } from '../selectors'
 
-import { randInt, toNaturalUnitAmount } from '../utils/units_utils'
+import { randInt, convertedToBaseUnit } from '../utils/units_utils'
 
 import vote_utils from '../utils/vote_utils'
 import saveFile from '../utils/file_utils'
@@ -26,7 +26,7 @@ export default function* voteSaga() {
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    const tokens = yield call(toNaturalUnitAmount, action.payload.args[0], 18)
+    const tokens = yield call(convertedToBaseUnit, action.payload.args[0], 18)
     const args = [tokens.toString(10)]
     yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
   } catch (error) {
@@ -45,7 +45,7 @@ export function* commitVoteSaga(action) {
   const numTokens = args[2]
   const listingString = args[3]
   console.log('args', args)
-  // const numTokens = toNaturalUnitAmount(args[2], 18)
+  // const numTokens = convertedToBaseUnit(args[2], 18)
   const salt = randInt(1e6, 1e8)
 
   // format args

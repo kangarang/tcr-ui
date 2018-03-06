@@ -63,8 +63,8 @@ import {
 } from '../../selectors'
 
 import {
-  toUnitAmount,
-  toNaturalUnitAmount,
+  baseToConvertedUnit,
+  convertedToBaseUnit,
   withCommas,
   BN,
   trimDecimalsThree,
@@ -169,7 +169,7 @@ class Home extends Component {
     return methodName === 'apply'
       ? [
           vote_utils.getListingHash(this.state.listingName),
-          toNaturalUnitAmount(this.state.numTokens, 18),
+          convertedToBaseUnit(this.state.numTokens, 18),
           this.state.listingName,
         ]
       : methodName === 'challenge'
@@ -184,7 +184,7 @@ class Home extends Component {
             : methodName === 'approve'
               ? [
                   this.props[contract].address,
-                  toNaturalUnitAmount(this.state.numTokens, 18),
+                  convertedToBaseUnit(this.state.numTokens, 18),
                 ]
               : methodName === 'requestVotingRights'
                 ? [this.state.numTokens]
@@ -366,7 +366,7 @@ class Home extends Component {
             ) : (
               <div>
                 {BN(balances.get('registryAllowance')).lt(
-                  BN(toUnitAmount(parameters.get('minDeposit'), 18))
+                  BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
                 ) ? (
                   <div>
                     <Text color="red">{'YOU NEED TO APPROVE'}</Text>
@@ -406,7 +406,7 @@ class Home extends Component {
             rightTitle={'Minimum Deposit'}
             rightItem={
               <div>
-                {toUnitAmount(parameters.get('minDeposit'), 18).toString()}{' '}
+                {baseToConvertedUnit(parameters.get('minDeposit'), 18).toString()}{' '}
                 {token.symbol}
               </div>
             }
@@ -439,7 +439,7 @@ class Home extends Component {
 
           <MarginDiv>
             {Number(balances.get('registryAllowance')) <
-            toUnitAmount(parameters.get('minDeposit'), 18) ? (
+            baseToConvertedUnit(parameters.get('minDeposit'), 18) ? (
               <MarginDiv>
                 <MarginDiv>
                   <Text color="grey" smallcaps>
@@ -697,6 +697,7 @@ class Home extends Component {
                 <TableRow>
                   <TableHeader title="Listing" />
                   <TableHeader title="Time Remaining" />
+                  <TableHeader title="Submitted by" />
                   <TableHeader title="" />
                   <TableHeader title="Tokens required to challenge" />
                   <TableHeader title="Badges" />
@@ -726,7 +727,8 @@ class Home extends Component {
                 <TableRow>
                   <TableHeader title="Listing" />
                   <TableHeader title="Time Remaining" />
-                  <TableHeader title="Number of Tokens Voted" />
+                  <TableHeader title="Submitted by" />
+                  <TableHeader title="" />
                   <TableHeader title="Badges" />
                   <TableHeader title="Actions" />
                 </TableRow>

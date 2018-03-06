@@ -6,7 +6,7 @@ import { Icon } from 'semantic-ui-react'
 import { jsonTheme } from '../colors'
 import { CMItem } from './Home/components/StyledHome'
 import { dateHasPassed } from '../utils/format-date'
-import { toUnitAmount } from '../utils/units_utils'
+import { baseToConvertedUnit } from '../utils/units_utils'
 
 export default class ListingRow extends Component {
   constructor(props) {
@@ -24,39 +24,54 @@ export default class ListingRow extends Component {
 
   render() {
     return (
-      <TableRow
-        key={this.props.listingHash}
-        onClick={this.handleToggleExpandDetails}
-      >
+      <TableRow key={this.props.listingHash}>
         {/* stats */}
-        <TableCell>
+        <TableCell onClick={this.handleToggleExpandDetails}>
           <Text>{this.props.listing.get('listingString')}</Text>
         </TableCell>
-        <TableCell>
+        <TableCell onClick={this.handleToggleExpandDetails}>
           {!dateHasPassed(this.props.listing.getIn(['appExpiry', 'date'])) ? (
             <Countdown end={this.props.listing.getIn(['appExpiry', 'date'])} />
           ) : (
             'Ready to update'
           )}
         </TableCell>
-        <TableCell>
-          {this.state.expand && (
+        {!this.state.expand && (
+          <TableCell onClick={this.handleToggleExpandDetails}>
+            <Text>
+              <a
+                target="_blank"
+                href={`https://rinkeby.etherscan.io/address/${this.props.listing.get(
+                  'owner'
+                )}`}
+              >
+                {this.props.listing.get('owner')}
+              </a>
+            </Text>
+          </TableCell>
+        )}
+        {this.state.expand ? (
+          <TableCell>
             <JSONTree
               invertTheme={false}
               theme={jsonTheme}
-              data={this.props.listing}
+              data={this.props.listing.get('infoObject')}
               keyName={'root'}
               level={0}
             />
-          )}
-        </TableCell>
-        <TableCell>
-          {toUnitAmount(
+          </TableCell>
+        ) : (
+          <TableCell onClick={this.handleToggleExpandDetails}>
+            {'click to expand'}
+          </TableCell>
+        )}
+        <TableCell onClick={this.handleToggleExpandDetails}>
+          {baseToConvertedUnit(
             this.props.parameters.get('minDeposit'),
             this.props.token.decimals
           ).toString()}
         </TableCell>
-        <TableCell>
+        <TableCell onClick={this.handleToggleExpandDetails}>
           <div>
             <Icon name="exclamation circle" size="large" color="yellow" />
             {this.props.listing.get('owner') === this.props.account && (

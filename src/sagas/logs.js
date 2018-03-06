@@ -3,17 +3,13 @@ import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
-import {
-  newArray,
-  pollLogsRequest,
-  updateBalancesRequest,
-} from '../actions'
+import { newArray, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
 import log_utils from '../utils/log_utils'
 import abi_utils from '../utils/abi_utils'
-import { toUnitAmount } from '../utils/units_utils'
+import { baseToConvertedUnit } from '../utils/units_utils'
 
 import {
   selectEthjs,
@@ -197,10 +193,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     let numTokens
     let whitelisted
 
-    if (
-      event === '_ApplicationRemoved' ||
-      event === '_ListingRemoved'
-    ) {
+    if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
       whitelisted = false
       numTokens = 0
     }
@@ -218,7 +211,9 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
 
     let listing = await contract.listings.call(listingHash)
-    numTokens = listing[3] ? toUnitAmount(listing[3], 18).toString() : false
+    numTokens = listing[3]
+      ? baseToConvertedUnit(listing[3], 18).toString()
+      : false
 
     if (listing) {
       whitelisted = listing[1]
@@ -242,6 +237,15 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
+    }
+    const infoObject = {
+      listingString: event === '_Application' && dLog.data,
+      owner: event === '_Application' && txn.from,
+      listingHash,
+      numTokens,
+      pollID,
+      sender: txn.from,
+      ts: ts.toString(10),
     }
 
     return {
@@ -267,6 +271,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
         revealEndDate,
         revealExpiry,
       },
+      infoObject,
     }
   } catch (err) {
     console.log('build listing error', err)
