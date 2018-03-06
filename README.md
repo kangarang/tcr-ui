@@ -1,5 +1,4 @@
-TCR UI (WIP)
-============
+# TCR UI (WIP)
 
 "Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
@@ -73,7 +72,7 @@ Clone contracts
 
 Build JSON ABI artifacts
 
-(Note: only have to run once. *While ganache-cli is running*)
+(Note: only have to run once. _While ganache-cli is running_)
 
 ```
   $ npm run compile
@@ -128,6 +127,7 @@ Utils
 ### TCR endpoints
 
 #### Token:
+
 ```
 Transactions:
   .approve(address _spender, uint _value)
@@ -140,6 +140,7 @@ Calls:
 ```
 
 #### Registry:
+
 ```
 Transactions:
 // registry-related
@@ -173,6 +174,7 @@ Calls:
 ```
 
 #### PLCR Voting
+
 ```
 Transactions:
 // token-related
@@ -214,6 +216,7 @@ Calls:
 ```
 
 #### Parameterizer
+
 ```
 Calls:
   .proposals(uint _pollID) -> Poll struct (indended data change)
@@ -227,6 +230,7 @@ Calls:
 Particular events effectively signal changes in state. The following events are organized by the effects they have on state changes.
 
 #### Registry
+
 ```
 _Application(bytes32 listingHash, uint deposit, string data)
   -> new Listing in Application stage
@@ -250,6 +254,7 @@ _Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)
 ```
 
 #### PLCR Voting
+
 ```
 PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)
   -> new voting_item (comes with _Challenge)
@@ -270,39 +275,86 @@ VotingRightsWithdrawn(address voter, uint numTokens)
 ## Lifecycle of a `Listing`; General TCR Language (WIP)
 
 Each `Listing` starts out in the **Application** stage.
-- The owner of the `Listing` is called the "Applicant"
-- Tokens sent by Applicant are called `application_deposit`
-- `application_deposit` **>=** `min_deposit` (canonical parameter)
-- The Applicant is allowed to increase the `application_deposit`
 
-If *challenged*, a `Listing` moves into the **Voting** stage.
-- The msg.sender of the *challenge* is called the "Challenger"
-- Tokens obtained from Challenger are called `challenge_stake`
-- `challenge_stake` **===** `min_deposit` (canonical parameter)
+* The owner of the `Listing` is called the "Applicant"
+* Tokens sent by Applicant are called `application_deposit`
+* `application_deposit` **>=** `min_deposit` (canonical parameter)
+* The Applicant is allowed to increase the `application_deposit`
 
-The **Voting** stage consists of 2 sub-periods: *Commit* and *Reveal*
-- **Voting** can also be called **Faceoff**
-- Participants *voting* with tokens are called "Voters"
-- Tokens used for *voting* are called `voting_rights`
-- Tokens are *locked* during the `commit_period`
-- Once the `commit_period` has ended and the `reveal_period` has begun, a Voter can "reveal" his secret vote to unveil the contents
+If _challenged_, a `Listing` moves into the **Voting** stage.
+
+* The msg.sender of the _challenge_ is called the "Challenger"
+* Tokens obtained from Challenger are called `challenge_stake`
+* `challenge_stake` **===** `min_deposit` (canonical parameter)
+
+The **Voting** stage consists of 2 sub-periods: _Commit_ and _Reveal_
+
+* **Voting** can also be called **Faceoff**
+* Participants _voting_ with tokens are called "Voters"
+* Tokens used for _voting_ are called `voting_rights`
+* Tokens are _locked_ during the `commit_period`
+* Once the `commit_period` has ended and the `reveal_period` has begun, a Voter can "reveal" his secret vote to unveil the contents
 
 If the majority of votes is FOR the Applicant's `Listing`, the `Listing` enters the **Registry** stage.
-- Applicant's `application_deposit` stays with the `Listing`
-- Challenger forfeits full `challenge_stake`
-- Applicant receieves `%` of the Challenger's forfeited `challenge_stake`
-- Voters in the `majority_bloc` are awarded the remaining tokens of the Challenger's forfeited `challenge_stake`, disbursed based on token-vote weight
-- Voters in the `minority_bloc` are allowed to retreive `voting_rights`
+
+* Applicant's `application_deposit` stays with the `Listing`
+* Challenger forfeits full `challenge_stake`
+* Applicant receieves `%` of the Challenger's forfeited `challenge_stake`
+* Voters in the `majority_bloc` are awarded the remaining tokens of the Challenger's forfeited `challenge_stake`, disbursed based on token-vote weight
+* Voters in the `minority_bloc` are allowed to retreive `voting_rights`
 
 If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from the system.
-- Challenger receives full `challenge_stake`
-- Applicant forfeits `min_deposit` and receives `application_deposit` - `min_deposit` (extra tokens)
-- Tokens that are to be forfeited by the Applicant are called `application_stake` (equal to `min_deposit`)
-- Challenger receieves `%` of the Applicant's forfeited `application_stake`
-- Voters in the `majority_bloc`, those who voted AGAINST the Applicant, are awarded the remaining tokens from the Applicant's forfeited `application_stake`, disbursed based on token-vote weight
-- Voters in the `minority_bloc` are allowed to retreive tokens rights
+
+* Challenger receives full `challenge_stake`
+* Applicant forfeits `min_deposit` and receives `application_deposit` - `min_deposit` (extra tokens)
+* Tokens that are to be forfeited by the Applicant are called `application_stake` (equal to `min_deposit`)
+* Challenger receieves `%` of the Applicant's forfeited `application_stake`
+* Voters in the `majority_bloc`, those who voted AGAINST the Applicant, are awarded the remaining tokens from the Applicant's forfeited `application_stake`, disbursed based on token-vote weight
+* Voters in the `minority_bloc` are allowed to retreive tokens rights
 
 ---
+
+## IPLD
+
+InterPlanetary Linked Data
+
+[specs](https://github.com/ipld/specs/tree/master/ipld)
+
+"in short: JSON documents with named merkle-links that can be traversed"
+
+"a common hash-chain format for distributed data structures" - Juan Benet
+
+[how does it work? - Protocol Description](https://github.com/ipld/cid#how-does-it-work---protocol-description)
+
+[what is the IPLD data model?](https://github.com/ipld/specs/tree/master/ipld#what-is-the-ipld-data-model)
+
+
+```json
+// A link, represented in json as a "link object"
+{ "/" : "/ipfs/QmUmg7BZC1YP1ca66rRtWKxpXp77WgVHrnv263JtDuvs2k" }
+
+// Object with a link at foo/baz
+{
+  "foo": {
+    "bar": "/ipfs/QmUmg7BZC1YP1ca66rRtWKxpXp77WgVHrnv263JtDuvs2k", // not a link
+    "baz": {"/": "/ipfs/QmUmg7BZC1YP1ca66rRtWKxpXp77WgVHrnv263JtDuvs2k"} // link
+  }
+}
+
+// Object with pseudo 'link object' at files/cat.jpg and ACTUAL link at files/cat.jpg/link
+{
+  "files": {
+    "cat.jpg": { // give links properties wrapping them in another object
+      "link": {"/": "/ipfs/QmUmg7BZC1YP1ca66rRtWKxpXp77WgVHrnv263JtDuvs2k"}, // the link
+      "mode": 0755,
+      "owner": "jbenet"
+    }
+  }
+}
+
+```
+
+
 
 ```json
 {
@@ -310,7 +362,6 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
   "data": ""
 }
 ```
-
 
 ---
 
