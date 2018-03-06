@@ -23,17 +23,14 @@ import { Icon } from 'semantic-ui-react'
 import translate from '../../translations'
 import { jsonTheme } from '../../colors'
 
-import Identicon from '../../components/Identicon'
 import SideSplit from './components/SideSplit'
 import SideText from './components/SideText'
+import Navigation from './components/Navigation'
 import ListingRow from '../ListingRow'
 // import SideTextInput from './components/SideTextInput'
 
 import {
-  AppBar,
-  AppBarWrapper,
   MarginDiv,
-  OverFlowDiv,
   HomeWrapper,
   CMItem,
   FileInput,
@@ -67,7 +64,6 @@ import {
   convertedToBaseUnit,
   withCommas,
   BN,
-  trimDecimalsThree,
 } from '../../utils/units_utils'
 import vote_utils from '../../utils/vote_utils'
 import { dateHasPassed } from '../../utils/format-date'
@@ -225,57 +221,19 @@ class Home extends Component {
 
   render() {
     const {
-      error,
       candidates,
       faceoffs,
       whitelist,
       account,
       balances,
-      networkID,
       parameters,
       token,
-      miningStatus,
-      registry,
     } = this.props
 
     return (
       <div>
         {/* TODO: test */}
-        <AppBarWrapper>
-          {error ? (
-            <AppBar>
-              <div>{error.message}</div>
-            </AppBar>
-          ) : (
-            <AppBar>
-              <div>{registry.name}</div>
-
-              <div>{`Network: ${
-                networkID === '4'
-                  ? 'Rinkeby'
-                  : networkID === '420' ? 'Ganache' : networkID
-              }`}</div>
-
-              <Identicon address={account} diameter={30} />
-
-              <Text color="red" weight="bold">
-                {miningStatus && 'MINING'}
-              </Text>
-
-              <OverFlowDiv>{`Account: ${account}`}</OverFlowDiv>
-              <div>
-                {`Ether Balance: ${withCommas(
-                  trimDecimalsThree(balances.get('ETH'))
-                )} ΞTH`}
-              </div>
-              <div>
-                {`${token.name} Balance: ${withCommas(
-                  trimDecimalsThree(balances.get('token'))
-                )} ${token.symbol}`}
-              </div>
-            </AppBar>
-          )}
-        </AppBarWrapper>
+        <Navigation {...this.props} openSidePanel={this.openSidePanel} />
 
         <SidePanel
           title="Apply a Listing into the Registry"
@@ -406,7 +364,10 @@ class Home extends Component {
             rightTitle={'Minimum Deposit'}
             rightItem={
               <div>
-                {baseToConvertedUnit(parameters.get('minDeposit'), 18).toString()}{' '}
+                {baseToConvertedUnit(
+                  parameters.get('minDeposit'),
+                  18
+                ).toString()}{' '}
                 {token.symbol}
               </div>
             }
@@ -684,11 +645,6 @@ class Home extends Component {
         </SidePanel>
 
         <HomeWrapper>
-          <MarginDiv>
-            <Button mode="strong" onClick={this.openSidePanel}>
-              {'Apply Listing'}
-            </Button>
-          </MarginDiv>
 
           <div>
             {'CANDIDATES'}
@@ -721,7 +677,7 @@ class Home extends Component {
           </div>
 
           <div>
-            {'FACEOFFS'}
+            {'CHALLENGES'}
             <Table
               header={
                 <TableRow>
