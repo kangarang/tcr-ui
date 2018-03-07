@@ -314,6 +314,12 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 
 ---
 
+## IPFS
+
+InterPlanetary File System
+
+
+
 ## IPLD
 
 InterPlanetary Linked Data
@@ -328,8 +334,34 @@ InterPlanetary Linked Data
 
 [what is the IPLD data model?](https://github.com/ipld/specs/tree/master/ipld#what-is-the-ipld-data-model)
 
+```js
+const hash = new Promise((resolve, reject) => {
+  const ipfsObj = {
+    id: '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
+    data: 'consensysclassic.net',
+  }
+  ipfs.files.add(Buffer.from(JSON.stringify(ipfsObj)), (err, result) => {
+    if (err) reject(new Error(err))
+    console.log('result', result)
+    // cid / hash / path: Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+    resolve(result)
+  })
+})
 
-```json
+// Fetch a file or an entire directory tree from IPFS that is addressed by a valid IPFS Path.
+const thing = ipfs.files.get(hash[0].hash)
+
+thing.forEach(file => {
+  console.log(file.path)
+  // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+  console.log(file.content.toString('utf8'))
+  // {"id":"0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2","data":"consensysclassic.net"}
+})
+```
+
+<!-- IPLD STUFF FOR LATER -->
+
+<!-- ```json
 // A link, represented in json as a "link object"
 { "/" : "/ipfs/QmUmg7BZC1YP1ca66rRtWKxpXp77WgVHrnv263JtDuvs2k" }
 
@@ -351,17 +383,7 @@ InterPlanetary Linked Data
     }
   }
 }
-
-```
-
-
-
-```json
-{
-  "identifier": "",
-  "data": ""
-}
-```
+``` -->
 
 ---
 
