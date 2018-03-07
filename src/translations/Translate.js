@@ -1,6 +1,6 @@
 import React from 'react'
 import Markdown from 'react-markdown'
-import { translateRaw } from '../translations'
+import { translateRaw } from './index'
 
 export default ({ translationKey }) => {
   const source = translateRaw(translationKey)

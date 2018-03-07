@@ -6,7 +6,7 @@ const TOPIC_LENGTH = 32
 
 // adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
-const abi_utils = {
+const _abi = {
   getMethodAbi: async (address, methodName, abi) => {
     const methodAbi = _.find(abi, { name: methodName })
     return methodAbi
@@ -26,7 +26,7 @@ const abi_utils = {
     } else {
       eventAbi = _.find(abi, { name: eventName })
     }
-    const eventSignature = abi_utils.getEventSignatureFromAbiByName(
+    const eventSignature = _abi.getEventSignatureFromAbiByName(
       eventAbi,
       eventName
     )
@@ -34,7 +34,7 @@ const abi_utils = {
     const topicForEventSignature = ethUtil.addHexPrefix(
       jsSHA3.keccak256(eventSignature)
     )
-    const topicsForIndexedArgs = abi_utils.getTopicsForIndexedArgs(
+    const topicsForIndexedArgs = _abi.getTopicsForIndexedArgs(
       eventAbi,
       indexFilterValues
     )
@@ -83,7 +83,7 @@ const abi_utils = {
       return false
     }
     if (!_.isUndefined(filter.topics)) {
-      return abi_utils.matchesTopics(log.topics, filter.topics)
+      return _abi.matchesTopics(log.topics, filter.topics)
     }
     return true
   },
@@ -92,7 +92,7 @@ const abi_utils = {
     const matchesTopic = _.zipWith(
       logTopics,
       filterTopics,
-      abi_utils.matchesTopic.bind(abi_utils)
+      _abi.matchesTopic.bind(_abi)
     )
     const matchesTopics = _.every(matchesTopic)
     return matchesTopics
@@ -110,4 +110,4 @@ const abi_utils = {
   },
 }
 
-export default abi_utils
+export default _abi

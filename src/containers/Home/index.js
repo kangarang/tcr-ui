@@ -49,8 +49,8 @@ import {
   FileInput,
 } from 'components/StyledHome'
 
-import { convertedToBaseUnit, withCommas } from 'utils/units_utils'
-import vote_utils from 'utils/vote_utils'
+import { convertedToBaseUnit, withCommas } from 'utils/_unit'
+import _vote from 'utils/_vote'
 import { dateHasPassed } from 'utils/format-date'
 
 import ListingRow from './ListingRow'
@@ -154,7 +154,7 @@ class Home extends Component {
   getMethodArgs(methodName, listing, contract, voteOption) {
     return methodName === 'apply'
       ? [
-          vote_utils.getListingHash(this.state.listingName),
+          _vote.getListingHash(this.state.listingName),
           convertedToBaseUnit(this.state.numTokens, 18),
           this.state.listingName,
         ]

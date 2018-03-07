@@ -6,7 +6,7 @@ import { Icon } from 'semantic-ui-react'
 import { jsonTheme } from '../../colors'
 import { CMItem } from 'components/StyledHome'
 import { dateHasPassed } from 'utils/format-date'
-import { baseToConvertedUnit } from 'utils/units_utils'
+import { baseToConvertedUnit } from 'utils/_unit'
 
 export default class ListingRow extends Component {
   constructor(props) {

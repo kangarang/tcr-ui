@@ -6,7 +6,7 @@ import { Button, Text, DropDown } from '@aragon/ui'
 
 import Identicon from 'components/Identicon'
 
-import { withCommas, trimDecimalsThree } from 'utils/units_utils'
+import { withCommas, trimDecimalsThree } from 'utils/_unit'
 
 export default class Navigation extends Component {
   constructor() {

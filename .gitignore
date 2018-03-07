@@ -1,18 +1,15 @@
-/node_modules
+/_utils
 /build
+/node_modules
 /tcr
-/zzz
 
 .DS_Store
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 
-*/secrets.json
 /src/abis/*.json
 
 .firebaserc

@@ -7,9 +7,9 @@ import { newArray, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
-import log_utils from '../utils/log_utils'
-import abi_utils from '../utils/abi_utils'
-import { baseToConvertedUnit } from '../utils/units_utils'
+import log from '../utils/_log'
+import _abi from '../utils/_abi'
+import { baseToConvertedUnit } from '../utils/_unit'
 
 import {
   selectEthjs,
@@ -134,7 +134,7 @@ function* handleLogs(sb, eb, topic, contract) {
       toBlock: eb,
     }
     const filter = yield call(
-      abi_utils.getFilter,
+      _abi.getFilter,
       contract.address,
       topic,
       [],
@@ -168,8 +168,8 @@ function* handleLogs(sb, eb, topic, contract) {
 async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
   return Promise.all(
     decodedLogs.map(async (dLog, ind) => {
-      const block = await log_utils.getBlock(ethjs, rawLogs[ind].blockHash)
-      const txDetails = await log_utils.getTransaction(
+      const block = await log.getBlock(ethjs, rawLogs[ind].blockHash)
+      const txDetails = await log.getTransaction(
         ethjs,
         rawLogs[ind].transactionHash
       )

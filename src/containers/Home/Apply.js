@@ -11,7 +11,7 @@ import translate from 'translations'
 import { SideSplit, SideText } from 'components/Transaction'
 import { MarginDiv } from 'components/StyledHome'
 
-import { withCommas, baseToConvertedUnit, BN } from 'utils/units_utils'
+import { withCommas, baseToConvertedUnit, BN } from 'utils/_unit'
 
 export default class Apply extends Component {
   constructor() {

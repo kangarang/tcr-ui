@@ -2,7 +2,7 @@ import { call, put, all } from 'redux-saga/effects'
 
 import { setContracts, contractError, updateBalancesRequest } from '../actions'
 import { setupRegistry, setupContract } from '../libs/contracts'
-import { baseToConvertedUnit } from '../utils/units_utils';
+import { baseToConvertedUnit } from '../utils/_unit';
 
 export function* contractsSaga(ethjs, account) {
   try {

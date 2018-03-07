@@ -5,7 +5,7 @@ import Img from 'components/Img'
 import Button from 'components/Button'
 import Input from 'components/Input'
 import TopGradient from 'components/TopGradient'
-import { trimDecimalsThree, toEther, withCommas } from 'utils/units_utils'
+import { trimDecimalsThree, toEther, withCommas } from 'utils/_unit'
 
 import { colors } from '../../colors'
 

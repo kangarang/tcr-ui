@@ -1,7 +1,7 @@
 import abi from 'ethereumjs-abi'
 import moment from 'moment'
 
-const vote_utils = {
+const _vote = {
   getEndDateString: integer =>
     moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss'),
 
@@ -31,14 +31,14 @@ const vote_utils = {
   getReceiptValue: (receipt, arg) => receipt.logs[0].args[arg],
 
   getPollIDFromReceipt: receipt =>
-    vote_utils.getReceiptValue(receipt, 'pollID'),
+    _vote.getReceiptValue(receipt, 'pollID'),
 
   getPoll: (voting, pollID) => voting.pollMap.call(pollID),
 
   getVotesFor: async (voting, pollID) => {
-    const poll = await vote_utils.getPoll(voting, pollID)
+    const poll = await _vote.getPoll(voting, pollID)
     return poll[3]
   },
 }
 
-export default vote_utils
+export default _vote

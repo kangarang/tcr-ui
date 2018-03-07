@@ -1,5 +1,5 @@
 import React from 'react'
-import Translate from '../components/Translate'
+import Translate from './Translate'
 // import { getLanguageSelection } from '../selectors/config'
 // import configuredStore from '../store'
 

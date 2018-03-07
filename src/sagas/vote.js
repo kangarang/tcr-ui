@@ -11,10 +11,10 @@ import {
   selectVoting,
 } from '../selectors'
 
-import { randInt, convertedToBaseUnit } from '../utils/units_utils'
+import { randInt, convertedToBaseUnit } from '../utils/_unit'
 
-import vote_utils from '../utils/vote_utils'
-import saveFile from '../utils/file_utils'
+import _vote from '../utils/_vote'
+import saveFile from '../utils/_file
 import { sendTransactionSaga } from './udapp'
 
 export default function* voteSaga() {
@@ -49,7 +49,7 @@ export function* commitVoteSaga(action) {
   const salt = randInt(1e6, 1e8)
 
   // format args
-  const secretHash = vote_utils.getVoteSaltHash(voteOption, salt.toString(10))
+  const secretHash = _vote.getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(
     voting.contract.getInsertPointForNumTokens.call,
     account,
@@ -63,10 +63,10 @@ export function* commitVoteSaga(action) {
   console.log('pollStruct', pollStruct)
 
   // record expiry dates
-  const commitEndDateString = vote_utils.getEndDateString(
+  const commitEndDateString = _vote.getEndDateString(
     pollStruct[0].toNumber()
   )
-  const revealEndDateString = vote_utils.getEndDateString(
+  const revealEndDateString = _vote.getEndDateString(
     pollStruct[1].toNumber()
   )
 

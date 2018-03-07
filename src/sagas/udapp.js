@@ -12,7 +12,7 @@ import {
   selectToken,
 } from '../selectors'
 
-import vote_utils from '../utils/vote_utils'
+import _vote from '../utils/_vote'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMined } from '../actions'
 
@@ -31,7 +31,7 @@ function* callUDappSaga(action) {
 
   // hash the string
   if (method.inputs[0].name === '_listingHash') {
-    args[0] = vote_utils.getListingHash(args[0])
+    args[0] = _vote.getListingHash(args[0])
   }
   const txData = yield call(EthAbi.encodeMethod, method, args)
 
