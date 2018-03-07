@@ -315,10 +315,7 @@ class Home extends Component {
           <SideText icon={'unlock'} small text={'REVEAL VOTE'} />
           <SideText
             small
-            text={
-              this.state.selectedOne &&
-              this.state.selectedOne.get('data')
-            }
+            text={this.state.selectedOne && this.state.selectedOne.get('data')}
           />
 
           <SidePanelSeparator />

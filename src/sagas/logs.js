@@ -3,6 +3,8 @@ import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
+import ipfsAPI from 'ipfs-api'
+
 import { newArray, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
@@ -192,6 +194,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     const event = dLog._eventName
     let numTokens
     let whitelisted
+    let url
 
     if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
       whitelisted = false
@@ -208,6 +211,21 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
       }
       listingHash = dListing.listingHash
       numTokens = dListing.deposit && dListing.deposit.toString()
+    }
+
+    if (event === '_Application') {
+      const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
+      const ipfs = await ipfsAPI(config)
+      const fileThing = await ipfs.files.get(data)
+      let content
+      fileThing.forEach(file => {
+        console.log(file.path)
+        content = file.content.toString('utf8')
+      })
+      content = JSON.parse(content)
+      data = content.name
+      url = content.url
+      console.log(content)
     }
 
     let listing = await contract.listings.call(listingHash)
@@ -240,6 +258,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
     const infoObject = {
       data,
+      url,
       owner: event === '_Application' && txn.from,
       numTokens,
       pollID,
@@ -248,6 +267,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
     return {
       data,
+      url,
       owner: event === '_Application' && txn.from,
       listingHash,
       whitelisted,

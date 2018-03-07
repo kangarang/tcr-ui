@@ -93,7 +93,7 @@ function* registryTxnSaga(action) {
 
   if (methodName === 'apply') {
     const fileHash = yield call(addDataSaga, {
-      payload: { data: args[2], listingHash: args[0] },
+      payload: { name: args[2], listingHash: args[0], url: args[3] || '' },
     })
     args[2] = fileHash
   }
