@@ -42,26 +42,24 @@
     "start": "node server.js",
     "start:prod": "npm run build && node server.js",
     "dev": "npm run lint ./src && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "build": "npm run lint ./src && react-scripts build",
+    "test": "npm run lint ./src && react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "fix": "eslint --fix",
     "lint": "eslint"
   },
   "devDependencies": {
     "babel-eslint": "8.2.2",
-    "babel-jest": "^22.4.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
+    "babel-jest": "22.4.1",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-react": "6.24.1",
     "eslint": "4.18.1",
     "eslint-plugin-react": "7.7.0",
-    "jest": "^22.4.2",
-    "react-test-renderer": "^16.2.0"
+    "jest": "22.4.2",
+    "react-test-renderer": "16.2.0"
   },
   "eslintConfig": {
-    "plugins": [
-      "react"
-    ],
+    "plugins": ["react"],
     "parserOptions": {
       "ecmaVersion": 6,
       "sourceType": "module",
