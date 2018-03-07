@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../../colors'
+import { colors } from '../colors'
 
 const Input = styled.input`
   width: 95%;

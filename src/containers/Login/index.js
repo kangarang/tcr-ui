@@ -1,14 +1,22 @@
 import React, { Component } from 'react'
 import ReactModal from 'react-modal'
 
-import { colors } from '../../colors'
-import Img from '../../components/Img'
-import Button from '../../components/Button'
-import Input from '../../components/Input'
-import TopBar from '../../components/TopBar'
-import { trimDecimalsThree, toEther, withCommas } from '../../utils/units_utils'
+import Img from 'components/Img'
+import Button from 'components/Button'
+import Input from 'components/Input'
+import TopGradient from 'components/TopGradient'
+import { trimDecimalsThree, toEther, withCommas } from 'utils/units_utils'
 
-import { Wrapper, PaddedDiv, RightPaddedDiv, LrgDiv, SmlDiv, SmlBoldDiv} from './components/StyledLoginComponents'
+import { colors } from '../../colors'
+
+import {
+  Wrapper,
+  PaddedDiv,
+  RightPaddedDiv,
+  LrgDiv,
+  SmlDiv,
+  SmlBoldDiv,
+} from './components/StyledLoginComponents'
 
 const modalStyles = {
   overlay: {
@@ -116,7 +124,7 @@ class Login extends Component {
           shouldReturnFocusAfterClose={true}
           role="dialog"
         >
-          <TopBar />
+          <TopGradient />
           <Img wrapper={true} src={imgSrc} alt="Token Curated Registries" />
 
           <PaddedDiv>
@@ -159,7 +167,9 @@ class Login extends Component {
           </PaddedDiv>
 
           <RightPaddedDiv>
-            <Button onClick={e => this.handleMainAction(e, messages.mainMethod)}>
+            <Button
+              onClick={e => this.handleMainAction(e, messages.mainMethod)}
+            >
               {'CONFIRM ACCOUNT'}
             </Button>
           </RightPaddedDiv>

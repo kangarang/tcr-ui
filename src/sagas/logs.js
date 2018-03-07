@@ -241,7 +241,6 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     const infoObject = {
       listingString: event === '_Application' && dLog.data,
       owner: event === '_Application' && txn.from,
-      listingHash,
       numTokens,
       pollID,
       sender: txn.from,

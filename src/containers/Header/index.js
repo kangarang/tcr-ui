@@ -20,15 +20,6 @@ import {
 
 import { Icon } from 'semantic-ui-react'
 
-import translate from '../../translations'
-import { jsonTheme } from '../../colors'
-
-import Identicon from '../../components/Identicon'
-import SideSplit from './components/SideSplit'
-import SideText from './components/SideText'
-import ListingRow from '../ListingRow'
-// import SideTextInput from './components/SideTextInput'
-
 import {
   AppBar,
   AppBarWrapper,
@@ -37,7 +28,16 @@ import {
   HomeWrapper,
   CMItem,
   FileInput,
-} from './components/StyledHome'
+} from 'components/StyledHome'
+
+import { SideSplit, SideText } from 'components/Transaction'
+import translate from '../../translations'
+import { jsonTheme } from '../../colors'
+
+import Identicon from '../../components/Identicon'
+import ListingRow from '../ListingRow'
+// import SideTextInput from './components/SideTextInput'
+
 
 import {
   setupEthereum,

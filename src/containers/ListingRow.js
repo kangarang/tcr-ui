@@ -4,9 +4,9 @@ import { TableRow, TableCell, Text, ContextMenu, Countdown } from '@aragon/ui'
 import { Icon } from 'semantic-ui-react'
 
 import { jsonTheme } from '../colors'
-import { CMItem } from './Home/components/StyledHome'
-import { dateHasPassed } from '../utils/format-date'
-import { baseToConvertedUnit } from '../utils/units_utils'
+import { CMItem } from 'components/StyledHome'
+import { dateHasPassed } from 'utils/format-date'
+import { baseToConvertedUnit } from 'utils/units_utils'
 
 export default class ListingRow extends Component {
   constructor(props) {
@@ -36,20 +36,6 @@ export default class ListingRow extends Component {
             'Ready to update'
           )}
         </TableCell>
-        {!this.state.expand && (
-          <TableCell onClick={this.handleToggleExpandDetails}>
-            <Text>
-              <a
-                target="_blank"
-                href={`https://rinkeby.etherscan.io/address/${this.props.listing.get(
-                  'owner'
-                )}`}
-              >
-                {this.props.listing.get('owner')}
-              </a>
-            </Text>
-          </TableCell>
-        )}
         {this.state.expand ? (
           <TableCell>
             <JSONTree

@@ -3,13 +3,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { AragonApp } from '@aragon/ui'
 
+import Home from 'containers/Home'
+
 import { colors } from '../colors'
-
-import Home from '../containers/Home'
-
-import TopBar from './TopBar'
-
 import '../global-styles'
+
+import TopGradient from './TopGradient'
 
 const Wrapper = styled.div`
   background-color: ${colors.offWhite};
@@ -24,7 +23,7 @@ const AppWrapper = styled.div`
 `
 const App = () => (
   <Wrapper>
-    <TopBar />
+    <TopGradient />
     <AppWrapper>
       <AragonApp publicUrl="/aragon-ui/">
         <Home />

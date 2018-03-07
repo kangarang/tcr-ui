@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import JSONTree from 'react-json-tree'
-
 import {
   SidePanel,
   SidePanelSeparator,
@@ -14,35 +13,17 @@ import {
   TableRow,
   TableCell,
   Text,
-  TextInput,
   Countdown,
 } from '@aragon/ui'
-
 import { Icon } from 'semantic-ui-react'
-
-import translate from '../../translations'
+import translate from 'translations'
 import { jsonTheme } from '../../colors'
-
-import SideSplit from './components/SideSplit'
-import SideText from './components/SideText'
-import Navigation from './components/Navigation'
-import ListingRow from '../ListingRow'
-// import SideTextInput from './components/SideTextInput'
-
-import {
-  MarginDiv,
-  HomeWrapper,
-  CMItem,
-  FileInput,
-} from './components/StyledHome'
-
 import {
   setupEthereum,
   requestModalMethod,
   sendTransaction,
   callRequested,
-} from '../../actions'
-
+} from 'actions'
 import {
   selectEthjs,
   selectAccount,
@@ -57,16 +38,27 @@ import {
   selectWhitelist,
   selectError,
   selectMiningStatus,
-} from '../../selectors'
+} from 'selectors'
+import { convertedToBaseUnit, withCommas } from 'utils/units_utils'
+import vote_utils from 'utils/vote_utils'
+import { dateHasPassed } from 'utils/format-date'
+
+import { SideSplit, SideText } from 'components/Transaction'
+import Navigation from 'components/Navigation'
 
 import {
-  baseToConvertedUnit,
-  convertedToBaseUnit,
-  withCommas,
-  BN,
-} from '../../utils/units_utils'
-import vote_utils from '../../utils/vote_utils'
-import { dateHasPassed } from '../../utils/format-date'
+  MarginDiv,
+  HomeWrapper,
+  CMItem,
+  FileInput,
+} from 'components/StyledHome'
+
+import ListingRow from '../ListingRow'
+
+import Apply from './Apply'
+import Challenge from './Challenge'
+import CommitVote from './CommitVote'
+// import SideTextInput from './components/SideTextInput'
 
 class Home extends Component {
   constructor(props) {
@@ -232,313 +224,46 @@ class Home extends Component {
 
     return (
       <div>
-        {/* TODO: test */}
         <Navigation {...this.props} openSidePanel={this.openSidePanel} />
 
-        <SidePanel
-          title="Apply a Listing into the Registry"
+        <Apply
           opened={this.state.opened}
-          onClose={this.closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Application Period'}
-            leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
-            rightTitle={'Minimum Deposit'}
-            rightItem={
-              <div>{`${parameters.get('minDeposit')} ${token.symbol}`}</div>
-            }
-          />
+          closeSidePanel={this.closeSidePanel}
+          parameters={parameters}
+          token={token}
+          balances={balances}
+          visibleApprove={this.state.visibleApprove}
+          openApprove={this.openApprove}
+          handleInputChange={this.handleInputChange}
+          handleSendTransaction={this.handleSendTransaction}
+        />
 
-          <SideSplit
-            leftTitle={'Token Balance'}
-            leftItem={balances.get('token')}
-            rightTitle={'Registry Allowance'}
-            rightItem={withCommas(balances.get('registryAllowance'))}
-          />
+        <Challenge
+          opened={this.state.opened}
+          closeSidePanel={this.closeSidePanel}
+          parameters={parameters}
+          token={token}
+          balances={balances}
+          visibleApprove={this.state.visibleApprove}
+          openApprove={this.openApprove}
+          openChallenge={this.state.openChallenge}
+          selectedOne={this.state.selectedOne}
+          handleInputChange={this.handleInputChange}
+          handleSendTransaction={this.handleSendTransaction}
+        />
 
-          <SideSplit
-            leftTitle={'Voting Rights'}
-            leftItem={balances.get('votingRights')}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
-          />
-
-          <SideText
-            small
-            title={'QUESTION'}
-            text={translate('sidebar_apply_question')}
-            icon={'question circle outline'}
-          />
-          <SideText
-            small
-            title={'INSTRUCTIONS'}
-            text={translate('sidebar_apply_instructions')}
-            icon={'check circle'}
-          />
-
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'LISTING NAME'}
-            </Text>
-            <TextInput
-              onChange={e => this.handleInputChange(e, 'listingName')}
-              wide
-              type="text"
-            />
-          </MarginDiv>
-
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'TOKEN AMOUNT'}
-            </Text>
-            <TextInput
-              onChange={e => this.handleInputChange(e, 'numTokens')}
-              wide
-              type="number"
-            />
-          </MarginDiv>
-
-          <MarginDiv>
-            <Button
-              onClick={e => this.handleSendTransaction('apply')}
-              mode="strong"
-            >
-              {'Apply Listing'}
-            </Button>
-          </MarginDiv>
-
-          <SidePanelSeparator />
-
-          {/* if you wanna see approve, you'll see it */}
-          {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
-          <MarginDiv>
-            {this.state.visibleApprove ? (
-              <Button
-                onClick={e =>
-                  this.handleSendTransaction('approve', null, 'registry')
-                }
-                mode="strong"
-              >
-                {'Approve tokens for Registry'}
-              </Button>
-            ) : (
-              <div>
-                {BN(balances.get('registryAllowance')).lt(
-                  BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
-                ) ? (
-                  <div>
-                    <Text color="red">{'YOU NEED TO APPROVE'}</Text>
-                    <Button
-                      onClick={e =>
-                        this.handleSendTransaction('approve', null, 'registry')
-                      }
-                      mode="strong"
-                    >
-                      {'Approve tokens for Registry'}
-                    </Button>
-                  </div>
-                ) : (
-                  <Button onClick={this.openApprove} mode="">
-                    {'Show approve'}
-                  </Button>
-                )}
-              </div>
-            )}
-          </MarginDiv>
-        </SidePanel>
-
-        <SidePanel
-          title="Challenge listing"
-          opened={this.state.openChallenge}
-          onClose={this.closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Challenge Period'}
-            leftItem={
-              <div>{`Commit: ${parameters.get(
-                'commitStageLen'
-              )} seconds & Reveal: ${parameters.get(
-                'revealStageLen'
-              )} seconds`}</div>
-            }
-            rightTitle={'Minimum Deposit'}
-            rightItem={
-              <div>
-                {baseToConvertedUnit(
-                  parameters.get('minDeposit'),
-                  18
-                ).toString()}{' '}
-                {token.symbol}
-              </div>
-            }
-          />
-
-          <SideSplit
-            leftTitle={'Token Balance'}
-            leftItem={balances.get('token')}
-            rightTitle={'Registry Allowance'}
-            rightItem={withCommas(balances.get('registryAllowance'))}
-          />
-
-          <SideText
-            small
-            title={'LISTING'}
-            text={
-              this.state.selectedOne &&
-              this.state.selectedOne.get('listingString')
-            }
-          />
-
-          <SideText
-            small
-            title={'WARNING'}
-            text={translate('sidebar_challenge_instructions')}
-            icon={'exclamation triangle'}
-          />
-
-          <SidePanelSeparator />
-
-          <MarginDiv>
-            {Number(balances.get('registryAllowance')) <
-            baseToConvertedUnit(parameters.get('minDeposit'), 18) ? (
-              <MarginDiv>
-                <MarginDiv>
-                  <Text color="grey" smallcaps>
-                    {'TOKEN AMOUNT TO APPROVE'}
-                  </Text>
-                  <TextInput
-                    onChange={e => this.handleInputChange(e, 'numTokens')}
-                    wide
-                    type="number"
-                  />
-                </MarginDiv>
-                <MarginDiv>
-                  <Button
-                    onClick={e =>
-                      this.handleSendTransaction('approve', null, 'registry')
-                    }
-                    mode="strong"
-                    wide
-                  >
-                    {'Approve tokens for Registry'}
-                  </Button>
-                </MarginDiv>
-              </MarginDiv>
-            ) : (
-              <Button
-                onClick={e => this.handleSendTransaction('challenge')}
-                mode="strong"
-                wide
-              >
-                {'CHALLENGE'}
-              </Button>
-            )}
-          </MarginDiv>
-        </SidePanel>
-
-        <SidePanel
-          title="Commit Vote"
-          opened={this.state.openCommitVote}
-          onClose={this.closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Poll ID'}
-            leftItem={
-              this.state.selectedOne &&
-              this.state.selectedOne.getIn(['latest', 'pollID'])
-            }
-            rightTitle={'Token Balance'}
-            rightItem={withCommas(balances.get('token'))}
-          />
-
-          {/* TODO: show inc/dec numTokens depending on user input */}
-          <SideSplit
-            leftTitle={'Voting Rights'}
-            leftItem={balances.get('votingRights')}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
-          />
-
-          <SideText
-            small
-            title={'COMMIT VOTE'}
-            text={
-              this.state.selectedOne &&
-              this.state.selectedOne.get('listingString')
-            }
-            icon={'lock'}
-          />
-
-          <SidePanelSeparator />
-
-          <MarginDiv>
-            <SideText text={'Token Amount'} small />
-            <TextInput
-              onChange={e => this.handleInputChange(e, 'numTokens')}
-              wide
-              type="number"
-            />
-
-            {balances.get('votingRights') === '0' ? (
-              <MarginDiv>
-                <SideText
-                  text={translate('sidebar_requestVotingRights_instructions')}
-                />
-                <Button
-                  onClick={e =>
-                    this.handleSendTransaction('requestVotingRights')
-                  }
-                  mode="strong"
-                  wide
-                >
-                  {'Request Voting Rights'}
-                </Button>
-              </MarginDiv>
-            ) : (
-              <MarginDiv>
-                <SideText text={translate('sidebar_commitVote_instructions')} />
-                <Button
-                  onClick={e =>
-                    this.handleSendTransaction('commitVote', null, null, '1')
-                  }
-                  emphasis="positive"
-                  mode="strong"
-                >
-                  {'Support the applicant'}
-                </Button>{' '}
-                <Button
-                  onClick={e =>
-                    this.handleSendTransaction('commitVote', null, null, '0')
-                  }
-                  emphasis="negative"
-                  mode="strong"
-                >
-                  {'Oppose the applicant'}
-                </Button>
-              </MarginDiv>
-            )}
-          </MarginDiv>
-
-          <MarginDiv>
-            <SideText text={translate('sidebar_approve_instructions')} />
-            <Button
-              onClick={e =>
-                this.handleSendTransaction('approve', null, 'voting')
-              }
-              mode="strong"
-              wide
-            >
-              {'Approve tokens for Voting'}
-            </Button>
-          </MarginDiv>
-
-          <JSONTree
-            invertTheme={false}
-            theme={jsonTheme}
-            data={balances}
-            shouldExpandNode={(keyName, data, level) => false}
-          />
-        </SidePanel>
+        <CommitVote
+          closeSidePanel={this.closeSidePanel}
+          parameters={parameters}
+          token={token}
+          balances={balances}
+          visibleApprove={this.state.visibleApprove}
+          openApprove={this.openApprove}
+          openCommitVote={this.state.openCommitVote}
+          selectedOne={this.state.selectedOne}
+          handleInputChange={this.handleInputChange}
+          handleSendTransaction={this.handleSendTransaction}
+        />
 
         <SidePanel
           title="Reveal Vote"
@@ -645,7 +370,6 @@ class Home extends Component {
         </SidePanel>
 
         <HomeWrapper>
-
           <div>
             {'CANDIDATES'}
             <Table
@@ -653,8 +377,7 @@ class Home extends Component {
                 <TableRow>
                   <TableHeader title="Listing" />
                   <TableHeader title="Time Remaining" />
-                  <TableHeader title="Submitted by" />
-                  <TableHeader title="" />
+                  <TableHeader title="Details" />
                   <TableHeader title="Tokens required to challenge" />
                   <TableHeader title="Badges" />
                   <TableHeader title="Actions" />
@@ -683,8 +406,7 @@ class Home extends Component {
                 <TableRow>
                   <TableHeader title="Listing" />
                   <TableHeader title="Time Remaining" />
-                  <TableHeader title="Submitted by" />
-                  <TableHeader title="" />
+                  <TableHeader title="Details" />
                   <TableHeader title="Badges" />
                   <TableHeader title="Actions" />
                 </TableRow>
