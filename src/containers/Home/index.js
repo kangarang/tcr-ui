@@ -39,13 +39,9 @@ import {
   selectError,
   selectMiningStatus,
 } from 'selectors'
-import { convertedToBaseUnit, withCommas } from 'utils/units_utils'
-import vote_utils from 'utils/vote_utils'
-import { dateHasPassed } from 'utils/format-date'
 
 import { SideSplit, SideText } from 'components/Transaction'
 import Navigation from 'components/Navigation'
-
 import {
   MarginDiv,
   HomeWrapper,
@@ -53,12 +49,14 @@ import {
   FileInput,
 } from 'components/StyledHome'
 
-import ListingRow from '../ListingRow'
+import { convertedToBaseUnit, withCommas } from 'utils/units_utils'
+import vote_utils from 'utils/vote_utils'
+import { dateHasPassed } from 'utils/format-date'
 
+import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
-// import SideTextInput from './components/SideTextInput'
 
 class Home extends Component {
   constructor(props) {
@@ -205,10 +203,6 @@ class Home extends Component {
     // this.setState({
     //   miningStatus: true
     // })
-    // var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
-
-    // or connect with multiaddr
-    // var ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
   }
 
   render() {
@@ -394,6 +388,7 @@ class Home extends Component {
                   handleSendTransaction={this.handleSendTransaction}
                   openSidePanel={this.openSidePanel}
                   listingHash={candidate.get('listingHash')}
+                  listingType={'candidates'}
                 />
               ))}
             </Table>
@@ -413,123 +408,17 @@ class Home extends Component {
               }
             >
               {faceoffs.map(one => (
-                <TableRow key={one.get('listingHash')}>
-                  <TableCell>
-                    <Text>{one.get('listingString')}</Text>
-                  </TableCell>
-
-                  <TableCell>
-                    {!dateHasPassed(one.getIn(['latest', 'commitEndDate'])) ? (
-                      <Countdown
-                        end={one.getIn(['latest', 'commitExpiry', 'date'])}
-                      />
-                    ) : !dateHasPassed(
-                      one.getIn(['latest', 'revealEndDate'])
-                    ) ? (
-                      <Countdown
-                        end={one.getIn(['latest', 'revealExpiry', 'date'])}
-                      />
-                    ) : (
-                      'Ready to update'
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    <JSONTree
-                      invertTheme={false}
-                      theme={jsonTheme}
-                      data={one}
-                      shouldExpandNode={(keyName, data, level) => false}
-                    />
-                  </TableCell>
-
-                  <TableCell>
-                    {one.get('owner') === account ? (
-                      <div>
-                        <Icon
-                          name="exclamation circle"
-                          size="large"
-                          color="orange"
-                        />
-                        <Icon name="check circle" size="large" color="blue" />
-                      </div>
-                    ) : (
-                      <Icon
-                        name="exclamation circle"
-                        size="large"
-                        color="orange"
-                      />
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    <ContextMenu>
-                      {!dateHasPassed(
-                        one.getIn(['latest', 'commitEndDate'])
-                      ) && (
-                        <CMItem
-                          onClick={e =>
-                            this.openSidePanel(one, 'openCommitVote')
-                          }
-                        >
-                          <Icon
-                            name="check circle"
-                            size="large"
-                            color="orange"
-                          />
-                          {'Commit Token Vote'}
-                        </CMItem>
-                      )}
-                      {dateHasPassed(one.getIn(['latest', 'commitEndDate'])) &&
-                        !dateHasPassed(
-                          one.getIn(['latest', 'revealEndDate'])
-                        ) && (
-                          <CMItem
-                            onClick={e =>
-                              this.openSidePanel(one, 'openRevealVote')
-                            }
-                          >
-                            <Icon name="unlock" size="large" color="orange" />
-                            {'Reveal Token Vote'}
-                          </CMItem>
-                        )}
-                      {dateHasPassed(
-                        one.getIn(['latest', 'revealEndDate'])
-                      ) && (
-                        <div>
-                          <CMItem
-                            onClick={e =>
-                              this.handleSendTransaction('updateStatus', one)
-                            }
-                          >
-                            <Icon name="magic" size="large" color="purple" />
-                            <div>{'Update Status'}</div>
-                          </CMItem>
-                          <CMItem
-                            onClick={e =>
-                              this.handleSendTransaction('rescueTokens', one)
-                            }
-                          >
-                            <Icon
-                              name="exclamation circle"
-                              size="large"
-                              color="orange"
-                            />
-                            {'Rescue Tokens'}
-                          </CMItem>
-                          <CMItem
-                            onClick={e =>
-                              this.openSidePanel(one, 'openClaimVoterReward')
-                            }
-                          >
-                            <Icon name="check" size="large" color="orange" />
-                            {'Claim Voter Reward'}
-                          </CMItem>
-                        </div>
-                      )}
-                    </ContextMenu>
-                  </TableCell>
-                </TableRow>
+                <ListingRow
+                  key={one.get('listingHash')}
+                  listing={one}
+                  parameters={parameters}
+                  token={token}
+                  account={account}
+                  handleSendTransaction={this.handleSendTransaction}
+                  openSidePanel={this.openSidePanel}
+                  listingHash={one.get('listingHash')}
+                  listingType={'faceoffs'}
+                />
               ))}
             </Table>
           </div>

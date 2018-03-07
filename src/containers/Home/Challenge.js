@@ -11,9 +11,9 @@ import {
 import translate from 'translations'
 
 import { SideSplit, SideText } from 'components/Transaction'
-import { withCommas, baseToConvertedUnit } from 'utils/units_utils'
-
 import { MarginDiv } from 'components/StyledHome'
+
+import { withCommas, baseToConvertedUnit } from 'utils/units_utils'
 
 export default class Challenge extends Component {
   render() {

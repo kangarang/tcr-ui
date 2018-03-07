@@ -31,11 +31,11 @@ import {
 } from 'components/StyledHome'
 
 import { SideSplit, SideText } from 'components/Transaction'
-import translate from '../../translations'
+import translate from 'translations'
 import { jsonTheme } from '../../colors'
 
-import Identicon from '../../components/Identicon'
-import ListingRow from '../ListingRow'
+import Identicon from 'components/Identicon'
+import ListingRow from '../Home/ListingRow'
 // import SideTextInput from './components/SideTextInput'
 
 

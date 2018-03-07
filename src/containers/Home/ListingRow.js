@@ -3,7 +3,7 @@ import JSONTree from 'react-json-tree'
 import { TableRow, TableCell, Text, ContextMenu, Countdown } from '@aragon/ui'
 import { Icon } from 'semantic-ui-react'
 
-import { jsonTheme } from '../colors'
+import { jsonTheme } from '../../colors'
 import { CMItem } from 'components/StyledHome'
 import { dateHasPassed } from 'utils/format-date'
 import { baseToConvertedUnit } from 'utils/units_utils'
@@ -25,16 +25,43 @@ export default class ListingRow extends Component {
   render() {
     return (
       <TableRow key={this.props.listingHash}>
-        {/* stats */}
         <TableCell onClick={this.handleToggleExpandDetails}>
           <Text>{this.props.listing.get('listingString')}</Text>
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
-          {!dateHasPassed(this.props.listing.getIn(['appExpiry', 'date'])) ? (
-            <Countdown end={this.props.listing.getIn(['appExpiry', 'date'])} />
-          ) : (
-            'Ready to update'
-          )}
+          {this.props.listingType === 'candidates' &&
+            (!dateHasPassed(this.props.listing.getIn(['appExpiry', 'date'])) ? (
+              <Countdown
+                end={this.props.listing.getIn(['appExpiry', 'date'])}
+              />
+            ) : (
+              'Ready to update'
+            ))}
+
+          {this.props.listingType === 'faceoffs' &&
+            (!dateHasPassed(
+              this.props.listing.getIn(['latest', 'commitEndDate'])
+            ) ? (
+              <Countdown
+                end={this.props.listing.getIn([
+                  'latest',
+                  'commitExpiry',
+                  'date',
+                ])}
+              />
+            ) : !dateHasPassed(
+              this.props.listing.getIn(['latest', 'revealEndDate'])
+            ) ? (
+              <Countdown
+                end={this.props.listing.getIn([
+                  'latest',
+                  'revealExpiry',
+                  'date',
+                ])}
+              />
+            ) : (
+              false
+            ))}
         </TableCell>
         {this.state.expand ? (
           <TableCell>
@@ -52,10 +79,12 @@ export default class ListingRow extends Component {
           </TableCell>
         )}
         <TableCell onClick={this.handleToggleExpandDetails}>
-          {baseToConvertedUnit(
-            this.props.parameters.get('minDeposit'),
-            this.props.token.decimals
-          ).toString()}
+          {this.props.listingType === 'candidates'
+            ? baseToConvertedUnit(
+                this.props.parameters.get('minDeposit'),
+                this.props.token.decimals
+              ).toString()
+            : false}
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
           <div>

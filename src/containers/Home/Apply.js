@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-
 import {
   SidePanel,
   SidePanelSeparator,
@@ -7,13 +6,12 @@ import {
   Text,
   TextInput,
 } from '@aragon/ui'
-
 import translate from 'translations'
 
 import { SideSplit, SideText } from 'components/Transaction'
-import { withCommas, baseToConvertedUnit, BN } from 'utils/units_utils'
-
 import { MarginDiv } from 'components/StyledHome'
+
+import { withCommas, baseToConvertedUnit, BN } from 'utils/units_utils'
 
 export default class Apply extends Component {
   constructor() {
