@@ -397,11 +397,10 @@ In short, IPLD is JSON documents with named merkle-links that can be traversed
 
 **IPLD Canonical Format**
 
-* a deterministic description on a serialized format that ensures the same logical object is always serialized to the exact same sequence of bits. This is critical for merkle-linking, and all cryptographic applications.
+* a deterministic description on a serialized format that ensures the same logical object is always serialized to the exact same sequence of bits. This is critical for merkle-linking, and all cryptographic applications
+* [more details](https://github.com/ipld/specs/tree/master/ipld#canonical-format)
 
 ### Datastructure Examples
-
-It is important that IPLD be a simple, nimble, and flexible format that does not get in the way of users defining new or importing old datastractures. For this purpose, below I will show a few example data structures.
 
 <details>
 <summary>EXPAND</summary>
