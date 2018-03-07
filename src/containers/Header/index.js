@@ -70,7 +70,7 @@ import {
   trimDecimalsThree,
 } from '../../utils/_unit'
 import _vote from '../../utils/_vote'
-import { dateHasPassed } from '../../utils/format-date'
+import { dateHasPassed } from '../../utils/_datetime'
 
 class Header extends Component {
   constructor(props) {

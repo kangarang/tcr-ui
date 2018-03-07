@@ -14,7 +14,7 @@ import {
 import { randInt, convertedToBaseUnit } from '../utils/_unit'
 
 import _vote from '../utils/_vote'
-import saveFile from '../utils/_file
+import saveFile from '../utils/_file'
 import { sendTransactionSaga } from './udapp'
 
 export default function* voteSaga() {
@@ -43,7 +43,7 @@ export function* commitVoteSaga(action) {
   const pollID = args[0]
   const voteOption = args[1]
   const numTokens = args[2]
-  const listingString = args[3]
+  const data = args[3]
   console.log('args', args)
   // const numTokens = convertedToBaseUnit(args[2], 18)
   const salt = randInt(1e6, 1e8)
@@ -74,7 +74,7 @@ export function* commitVoteSaga(action) {
     salt: salt.toString(10),
     voteOption,
     pollID,
-    listing: listingString,
+    data,
     commitEnd: commitEndDateString,
     revealEnd: revealEndDateString,
     secretHash,
@@ -83,7 +83,7 @@ export function* commitVoteSaga(action) {
 
   console.log('commit json:', json)
 
-  const listingUnderscored = listingString.replace('.', '_')
+  const listingUnderscored = data.replace('.', '_')
   const filename = `${listingUnderscored}_pollID-${pollID}.json`
 
   // saveFile(json, filename)

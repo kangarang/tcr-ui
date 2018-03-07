@@ -66,7 +66,7 @@ export default class Challenge extends Component {
           <SideText
             small
             title={'LISTING'}
-            text={selectedOne && selectedOne.get('listingString')}
+            text={selectedOne && selectedOne.get('data')}
           />
 
           <SideText

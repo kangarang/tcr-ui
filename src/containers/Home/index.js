@@ -13,7 +13,7 @@ import {
   TableRow,
   TableCell,
   Text,
-  Countdown,
+  DropDown,
 } from '@aragon/ui'
 import { Icon } from 'semantic-ui-react'
 import translate from 'translations'
@@ -42,16 +42,17 @@ import {
 
 import { SideSplit, SideText } from 'components/Transaction'
 import Navigation from 'components/Navigation'
+import Identicon from 'components/Identicon'
 import {
   MarginDiv,
   HomeWrapper,
   CMItem,
   FileInput,
+  OverFlowDiv,
 } from 'components/StyledHome'
 
-import { convertedToBaseUnit, withCommas } from 'utils/_unit'
+import { convertedToBaseUnit, withCommas, trimDecimalsThree } from 'utils/_unit'
 import _vote from 'utils/_vote'
-import { dateHasPassed } from 'utils/format-date'
 
 import ListingRow from './ListingRow'
 import Apply from './Apply'
@@ -161,7 +162,7 @@ class Home extends Component {
       : methodName === 'challenge'
         ? [
             this.state.selectedOne.get('listingHash'),
-            this.state.selectedOne.get('listingString'),
+            this.state.selectedOne.get('data'),
           ]
         : methodName === 'updateStatus'
           ? [listing.get('listingHash')]
@@ -179,7 +180,7 @@ class Home extends Component {
                       this.state.selectedOne.getIn(['latest', 'pollID']),
                       voteOption,
                       this.state.numTokens,
-                      this.state.selectedOne.get('listingString'),
+                      this.state.selectedOne.get('data'),
                     ]
                   : methodName === 'revealVote'
                     ? [
@@ -214,8 +215,39 @@ class Home extends Component {
       balances,
       parameters,
       token,
+      networkID,
+      miningStatus,
     } = this.props
 
+    const items = [
+      <Identicon address={account} diameter={30} />,
+      <OverFlowDiv>{`Account: ${account}`}</OverFlowDiv>,
+      <div>
+        {`Ether Balance: ${withCommas(
+          trimDecimalsThree(balances.get('ETH'))
+        )} ΞTH`}
+      </div>,
+      <div>
+        {`${token.name} Balance: ${withCommas(
+          trimDecimalsThree(balances.get('token'))
+        )} ${token.symbol}`}
+      </div>,
+      <div>{`Network: ${
+        networkID === '4'
+          ? 'Rinkeby'
+          : networkID === '420' ? 'Ganache' : networkID
+      }`}</div>,
+      <Text color="red" weight="bold">
+        {miningStatus && 'MINING'}
+      </Text>,
+    ]
+    const dropDown = (
+      <DropDown
+        items={items}
+        active={this.state.activeItem}
+        onChange={this.handleChange}
+      />
+    )
     return (
       <div>
         <Navigation {...this.props} openSidePanel={this.openSidePanel} />
@@ -285,7 +317,7 @@ class Home extends Component {
             small
             text={
               this.state.selectedOne &&
-              this.state.selectedOne.get('listingString')
+              this.state.selectedOne.get('data')
             }
           />
 
@@ -438,7 +470,7 @@ class Home extends Component {
               {whitelist.map(one => (
                 <TableRow key={one.get('listingHash')}>
                   <TableCell>
-                    <Text>{one.get('listingString')}</Text>
+                    <Text>{one.get('data')}</Text>
                   </TableCell>
 
                   <TableCell>{one.getIn(['latest', 'numTokens'])}</TableCell>

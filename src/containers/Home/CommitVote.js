@@ -48,7 +48,7 @@ export default class Challenge extends Component {
           <SideText
             small
             title={'COMMIT VOTE'}
-            text={selectedOne && selectedOne.get('listingString')}
+            text={selectedOne && selectedOne.get('data')}
             icon={'lock'}
           />
 

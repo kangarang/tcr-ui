@@ -5,7 +5,7 @@ import { Icon } from 'semantic-ui-react'
 
 import { jsonTheme } from '../../colors'
 import { CMItem } from 'components/StyledHome'
-import { dateHasPassed } from 'utils/format-date'
+import { dateHasPassed } from 'utils/_datetime'
 import { baseToConvertedUnit } from 'utils/_unit'
 
 export default class ListingRow extends Component {
@@ -26,7 +26,7 @@ export default class ListingRow extends Component {
     return (
       <TableRow key={this.props.listingHash}>
         <TableCell onClick={this.handleToggleExpandDetails}>
-          <Text>{this.props.listing.get('listingString')}</Text>
+          <Text>{this.props.listing.get('data')}</Text>
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
           {this.props.listingType === 'candidates' &&

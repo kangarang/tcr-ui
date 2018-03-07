@@ -20,6 +20,7 @@ import logSaga from './sagas/logs'
 import tokenSaga from './sagas/token'
 import udappSaga from './sagas/udapp'
 import voteSaga from './sagas/vote'
+import ipfsSaga from './sagas/ipfs'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -65,6 +66,7 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(tokenSaga)
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(udappSaga)
+  sagaMiddleware.run(ipfsSaga)
 
   // // Make reducers hot reloadable, see http://mxs.is/googmo
   // /* istanbul ignore next */
