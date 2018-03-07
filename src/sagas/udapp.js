@@ -15,6 +15,7 @@ import {
 import _vote from '../utils/_vote'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMined } from '../actions'
+import { addDataSaga } from './ipfs'
 
 function* callUDappSaga(action) {
   console.log('call requested:', action)
@@ -80,7 +81,7 @@ function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
   const methodName = action.payload.methodName
 
-  const args = action.payload.args.map(rg => {
+  let args = action.payload.args.map(rg => {
     if (_.isObject(rg)) {
       return rg.toString()
     } else if (_.isString(rg)) {
@@ -89,6 +90,13 @@ function* registryTxnSaga(action) {
     // TODO: more typechecking
     return rg
   })
+
+  if (methodName === 'apply') {
+    const fileHash = yield call(addDataSaga, {
+      payload: { data: args[2], listingHash: args[0] },
+    })
+    args[2] = fileHash
+  }
 
   yield call(sendTransactionSaga, registry, methodName, args)
   // const txData = EthAbi.encodeMethod(action.payload.method, action.payload.args)

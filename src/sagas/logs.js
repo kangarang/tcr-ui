@@ -19,7 +19,7 @@ import {
   selectAllListings,
 } from '../selectors'
 
-import { convertUnixTimeLeft, dateHasPassed } from '../utils/format-date'
+import { convertUnixTimeLeft, dateHasPassed } from '../utils/_datetime'
 import { fromJS } from 'immutable'
 
 let lastReadBlockNumber = 0
@@ -188,7 +188,7 @@ async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
 
 async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
   try {
-    let { listingHash, challengeID } = dLog
+    let { listingHash, challengeID, data } = dLog
     const event = dLog._eventName
     let numTokens
     let whitelisted
@@ -239,18 +239,16 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
       revealExpiry = convertUnixTimeLeft(revealEndDate)
     }
     const infoObject = {
-      listingString: event === '_Application' && dLog.data,
+      data,
       owner: event === '_Application' && txn.from,
       numTokens,
       pollID,
       sender: txn.from,
       ts: ts.toString(10),
     }
-
     return {
-      listingString: event === '_Application' && dLog.data,
+      data,
       owner: event === '_Application' && txn.from,
-
       listingHash,
       whitelisted,
       appExpiry,
