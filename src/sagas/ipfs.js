@@ -4,13 +4,17 @@ import { IPFS_ADD_DATA_REQUEST } from '../actions/constants'
 
 export default function* ipfsSaga() {
   yield takeEvery(IPFS_ADD_DATA_REQUEST, addDataSaga)
-  // yield call(addDataSaga, {
-  //   payload: {
-  //     data: 'consensysclassic.net',
-  //     listingHash:
-  //       '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
-  //   },
-  // })
+  yield call(addDataSaga, {
+    payload: {
+      listingHash:
+        '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
+      data: 'consensysclassic.net',
+    },
+    // payload: {
+    //   listingHash: '0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0',
+    //   data: 'AdToken',
+    // }
+  })
 }
 export function* addDataSaga(action) {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
