@@ -11,7 +11,7 @@ export function* addDataSaga(action) {
 
   const { name, listingHash, url } = action.payload
 
-  const fileHash = yield new Promise((resolve, reject) => {
+  const CID = yield new Promise((resolve, reject) => {
     const obj = {
       id: listingHash,
       name,
@@ -23,16 +23,16 @@ export function* addDataSaga(action) {
     })
   })
 
-  const fileThing = yield call(ipfs.files.get, fileHash[0].hash)
+  const ipfsPath = yield call(ipfs.files.get, CID[0].hash)
 
   let content
-  yield fileThing.forEach(file => {
+  yield ipfsPath.forEach(file => {
     console.log(file.path)
     content = file.content.toString('utf8')
   })
   console.log('content', content)
 
-  return fileHash[0].hash
+  return CID[0].hash
   // list keys
   // const keys = yield call(ipfs.key.list)
   // console.log('keys', keys)

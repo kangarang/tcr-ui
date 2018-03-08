@@ -514,9 +514,17 @@ In short, IPLD is JSON documents with named merkle-links that can be traversed
 
 ---
 
+NOTE: this part is required
+
 ## IPFS
 
 InterPlanetary File System
+
+https://medium.com/@ConsenSys/an-introduction-to-ipfs-9bba4860abd0
+
+“When you have IPFS, you can start looking at everything else in one specific way and you realize that you can replace it all” — Juan Benet
+
+IPFS uses content addressing at the HTTP layer. This is the practice of saying instead of creating an identifier that addresses things by location, we’re going to address it by some representation of the content itself. This means that the content is going to determine the address. The mechanism is to take a file, hash it cryptographically so you end up with a very small and secure representation of the file which ensures that someone can not just come up with another file that has the same hash and use that as the address. The address of a file in IPFS usually starts with a hash that identifies some root object and then a path walking down. Instead of a server, you are talking to a specific object and then you are looking at a path within that object.
 
 **IPFS Pseudocode**:
 
@@ -533,17 +541,18 @@ const obj = {
   data: listingString,
 }
 
-const ipfsHash = ipfs.files.add(Buffer.from(JSON.stringify(obj)))
-// ipfsHash: QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o
+const CID = ipfs.files.add(Buffer.from(JSON.stringify(obj)))
+// CID: QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o
 
-registry.apply(listingHash, 50000, ipfsHash)
+registry.apply(listingHash, 50000, CID)
 
 // mining...
 
 // on the client side...
 
-// event: _Application(listingHash, deposit, data)
-// event: _Application('0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0', 50000, 'QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o')
+// event _Application(listingHash, deposit, data)
+// _Application('0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0', 50000, 'QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o')
+
 
 const eventResult = [
   '0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0',
@@ -551,12 +560,12 @@ const eventResult = [
   'QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o',
 ]
 
-const listing = registry.listings.call(eventResult[0])
+// const listing = registry.listings.call(eventResult[0])
 // listing: [applicationExpiry, whitelisted, owner, unstakedDeposit, challengeID]
 
-const ipfsLink = ipfs.files.get(eventResult[2])
+const ipfsPath = ipfs.files.get(eventResult[2])
 
-ipfsLink.forEach(file => {
+ipfsPath.forEach(file => {
   console.log(file.path)
   // QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o
   console.log(file.content.toString('utf8'))
@@ -570,7 +579,7 @@ ipfsLink.forEach(file => {
 <summary>another example</summary>
 
 ```js
-const hash = new Promise((resolve, reject) => {
+const CID = new Promise((resolve, reject) => {
   const ipfsObj = {
     id: '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
     data: 'consensysclassic.net',
@@ -578,15 +587,15 @@ const hash = new Promise((resolve, reject) => {
   ipfs.files.add(Buffer.from(JSON.stringify(ipfsObj)), (err, result) => {
     if (err) reject(new Error(err))
     console.log('result', result)
-    // cid / hash / path: Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+    // CID: Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
     resolve(result)
   })
 })
 
 // Fetch a file or an entire directory tree from IPFS that is addressed by a valid IPFS Path.
-const thing = ipfs.files.get(hash[0].hash)
+const ipfsPath = ipfs.files.get(CID[0].hash)
 
-thing.forEach(file => {
+ipfsPath.forEach(file => {
   console.log(file.path)
   // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
   console.log(file.content.toString('utf8'))
