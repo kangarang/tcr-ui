@@ -50,7 +50,7 @@ export default class Challenge extends Component {
                 {baseToConvertedUnit(
                   parameters.get('minDeposit'),
                   18
-                ).toString()}{' '}
+                )}{' '}
                 {token.symbol}
               </div>
             }

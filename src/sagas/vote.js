@@ -27,7 +27,7 @@ export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
     const tokens = yield call(convertedToBaseUnit, action.payload.args[0], 18)
-    const args = [tokens.toString(10)]
+    const args = [tokens]
     yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
   } catch (error) {
     console.log('request voting rights error:', error)

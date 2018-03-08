@@ -235,8 +235,8 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
 
     let listing = await contract.listings.call(listingHash)
-    numTokens = listing[3]
-      ? baseToConvertedUnit(listing[3], 18).toString()
+    numTokens = listing[3].toString(10)
+      ? baseToConvertedUnit(listing[3], 18)
       : false
 
     if (listing) {

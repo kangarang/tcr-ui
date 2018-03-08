@@ -38,19 +38,16 @@ function* updateBalancesSaga() {
     ])
 
     const ETH = toEther(ethBalance)
-    const tokenBalance = baseToConvertedUnit(
-      tokenBalanceRaw,
-      token.decimals
-    ).toString(10)
+    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw, token.decimals)
     const registryAllowance = baseToConvertedUnit(
       registryAllowanceRaw,
       token.decimals
-    ).toString(10)
+    )
     const votingAllowance = baseToConvertedUnit(
       votingAllowanceRaw,
       token.decimals
-    ).toString(10)
-    const votingRights = baseToConvertedUnit(votingRightsRaw, token.decimals).toString(10)
+    )
+    const votingRights = baseToConvertedUnit(votingRightsRaw, token.decimals)
 
     yield put(
       updateBalances({

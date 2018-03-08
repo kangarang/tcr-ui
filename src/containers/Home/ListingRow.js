@@ -83,7 +83,7 @@ export default class ListingRow extends Component {
             ? baseToConvertedUnit(
                 this.props.parameters.get('minDeposit'),
                 this.props.token.decimals
-              ).toString()
+              )
             : false}
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>

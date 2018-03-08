@@ -63,7 +63,6 @@ import {
 } from '../../selectors'
 
 import {
-  baseToConvertedUnit,
   convertedToBaseUnit,
   withCommas,
   BN,
