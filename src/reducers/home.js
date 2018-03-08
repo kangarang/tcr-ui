@@ -11,6 +11,8 @@ import {
   DELETE_LISTINGS,
   SEND_TRANSACTION,
   TXN_MINED,
+  IPFS_ABI_RETRIEVED,
+  SET_REGISTRY_CONTRACT,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -31,13 +33,18 @@ const initialState = fromJS({
     token: { name: '' },
     voting: {},
     parameterizer: {},
+    tokenName: '',
+    registryName: '',
+    tokenSymbol: '',
+    tokenDecimals: '18',
   },
-  parameters: { minDeposit: '', applyStageLen: '' },
+  parameters: { minDeposit: '0', applyStageLen: '0' },
   listings: [],
   txnStatus: false,
   latestTxn: false,
   miningStatus: false,
   vFilter: false,
+  ipfs: {},
 })
 
 function homeReducer(state = initialState, action) {
@@ -58,6 +65,11 @@ function homeReducer(state = initialState, action) {
         .set('ethjs', fromJS(action.payload.ethjs))
         .set('account', fromJS(action.payload.account))
         .set('networkID', fromJS(action.payload.networkID))
+    case IPFS_ABI_RETRIEVED:
+      return state.setIn(['ipfs', action.payload.id], fromJS(action.payload))
+    // case SET_REGISTRY_CONTRACT:
+    //   return state
+    //     .setIn(['contracts', 'registry'], fromJS(action.payload))
     case SET_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))
@@ -67,7 +79,7 @@ function homeReducer(state = initialState, action) {
       return state.set('balances', fromJS(action.payload.balances))
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
-      // TODO: semantics: set listings
+    // TODO: semantics: set listings
     case NEW_ARRAY:
       return state.set('listings', fromJS(action.payload))
     case DELETE_LISTINGS:

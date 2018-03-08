@@ -24,12 +24,19 @@ import {
   UPDATE_BALANCES,
   TXN_MINED,
   TXN_REVERTED,
+  SET_REGISTRY_CONTRACT,
 } from './constants'
 
 export function setupEthereum(network) {
   return {
     type: GET_ETHEREUM,
     network,
+  }
+}
+export function setRegistryContract(payload) {
+  return {
+    type: SET_REGISTRY_CONTRACT,
+    payload,
   }
 }
 export function setContracts(payload) {
@@ -181,4 +188,3 @@ export function updateItems(payload) {
     payload,
   }
 }
-

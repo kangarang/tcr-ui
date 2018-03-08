@@ -11,6 +11,7 @@ npm-debug.log*
 !.elasticbeanstalk/*.global.yml
 
 /src/abis/*.json
+/src/abis/addresses.md
 
 .firebaserc
 firebase.json

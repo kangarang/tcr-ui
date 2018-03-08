@@ -1,21 +1,66 @@
-import { call, put, takeEvery } from 'redux-saga/effects'
+import { select, call, put, takeEvery } from 'redux-saga/effects'
 import ipfsAPI from 'ipfs-api'
 import { IPFS_ADD_DATA_REQUEST } from '../actions/constants'
+import { ipfsAbiRetrieved } from '../actions/ipfs'
+import { setRegistryContract } from '../actions'
+import { selectEthjs, selectAccount } from '../selectors'
+import { setupRegistry } from '../libs/contracts'
 
 export default function* ipfsSaga() {
   yield takeEvery(IPFS_ADD_DATA_REQUEST, addDataSaga)
 }
+export function* addAbiSaga(action) {
+  const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
+  const ipfs = yield call(ipfsAPI, config)
+
+  console.log('action.payload', action.payload)
+
+  const CID = yield new Promise((resolve, reject) => {
+    const obj = {
+      id: action.payload.args[0].contractName,
+      abi: action.payload.args[0],
+    }
+    ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
+      if (err) reject(new Error(err))
+      resolve(result)
+    })
+  })
+
+  const ipfsPath = yield call(ipfs.files.get, CID[0].hash)
+
+  let content
+  yield ipfsPath.forEach(file => {
+    console.log(file.path)
+    content = file.content.toString('utf8')
+  })
+
+  const ipfsJSON = JSON.parse(content)
+
+  yield put(ipfsAbiRetrieved(ipfsJSON))
+
+  if (ipfsJSON.id === 'Registry') {
+    yield call(ipfsRegistrySaga, ipfsJSON)
+  }
+}
+
+function* ipfsRegistrySaga(ipfsJSON) {
+  const ethjs = yield select(selectEthjs)
+  const account = yield select(selectAccount)
+  const registry = yield call(setupRegistry, ethjs, account, ipfsJSON.abi)
+  yield put(setRegistryContract(registry))
+}
+
 export function* addDataSaga(action) {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = yield call(ipfsAPI, config)
 
-  const { name, listingHash, url } = action.payload
+  const { name, listingHash, data } = action.payload
 
   const CID = yield new Promise((resolve, reject) => {
     const obj = {
       id: listingHash,
       name,
-      url,
+      data,
     }
     ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
       if (err) reject(new Error(err))
