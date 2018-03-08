@@ -8,7 +8,7 @@ import {
   selectToken,
   selectVoting,
 } from '../selectors'
-import { baseToConvertedUnit, toEther } from '../utils/_unit'
+import { baseToConvertedUnit, toEther } from '../utils/_units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)

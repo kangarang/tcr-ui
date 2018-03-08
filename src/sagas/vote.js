@@ -11,7 +11,7 @@ import {
   selectVoting,
 } from '../selectors'
 
-import { randInt, convertedToBaseUnit } from '../utils/_unit'
+import { randInt, convertedToBaseUnit } from '../utils/_units'
 
 import _vote from '../utils/_vote'
 import saveFile from '../utils/_file'

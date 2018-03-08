@@ -51,7 +51,7 @@ import {
   OverFlowDiv,
 } from 'components/StyledHome'
 
-import { convertedToBaseUnit, withCommas, trimDecimalsThree } from 'utils/_unit'
+import { convertedToBaseUnit, withCommas, trimDecimalsThree } from 'utils/_units'
 import _vote from 'utils/_vote'
 
 import ListingRow from './ListingRow'

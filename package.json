@@ -16,6 +16,7 @@
     "immutable": "3.8.2",
     "ipfs-api": "18.1.1",
     "jazzicon": "1.5.0",
+    "jest-cli": "22.4.2",
     "js-sha3": "0.7.0",
     "lodash": "4.17.4",
     "moment": "2.20.1",
@@ -43,12 +44,13 @@
     "start:prod": "npm run build && node server.js",
     "dev": "npm run lint ./src && react-scripts start",
     "build": "npm run lint ./src && react-scripts build",
-    "test": "npm run lint ./src && react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "fix": "eslint --fix",
     "lint": "eslint"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "babel-eslint": "8.2.2",
     "babel-jest": "22.4.1",
     "babel-preset-env": "1.6.1",
@@ -56,10 +58,13 @@
     "eslint": "4.18.1",
     "eslint-plugin-react": "7.7.0",
     "jest": "22.4.2",
-    "react-test-renderer": "16.2.0"
+    "react-test-renderer": "16.2.0",
+    "regenerator-runtime": "^0.11.1"
   },
   "eslintConfig": {
-    "plugins": ["react"],
+    "plugins": [
+      "react"
+    ],
     "parserOptions": {
       "ecmaVersion": 6,
       "sourceType": "module",

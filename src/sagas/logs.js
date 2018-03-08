@@ -11,7 +11,7 @@ import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
 import log from '../utils/_log'
 import _abi from '../utils/_abi'
-import { baseToConvertedUnit } from '../utils/_unit'
+import { baseToConvertedUnit } from '../utils/_units'
 
 import {
   selectEthjs,

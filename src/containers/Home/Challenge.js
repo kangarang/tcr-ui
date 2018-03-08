@@ -13,7 +13,7 @@ import translate from 'translations'
 import { SideSplit, SideText } from 'components/Transaction'
 import { MarginDiv } from 'components/StyledHome'
 
-import { withCommas, baseToConvertedUnit } from 'utils/_unit'
+import { withCommas, baseToConvertedUnit } from 'utils/_units'
 
 export default class Challenge extends Component {
   render() {

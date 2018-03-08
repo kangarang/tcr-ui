@@ -68,7 +68,7 @@ import {
   withCommas,
   BN,
   trimDecimalsThree,
-} from '../../utils/_unit'
+} from '../../utils/_units'
 import _vote from '../../utils/_vote'
 import { dateHasPassed } from '../../utils/_datetime'
 
