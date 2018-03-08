@@ -77,7 +77,7 @@ class Header extends Component {
     this.state = {
       opened: false,
       selectedOne: false,
-      revealedVote: false,
+      fileInput: false,
       methodName: false,
       visibleApprove: false,
       miningStatus: false,
@@ -117,7 +117,7 @@ class Header extends Component {
   getVoterReward = async (pollID, salt) => {
     let vR
     try {
-      vR = await this.props.registry.contract.voterReward.call(
+      vR = await this.props.registry.voterReward.call(
         this.props.account,
         pollID,
         salt
@@ -139,7 +139,7 @@ class Header extends Component {
 
       try {
         this.setState({
-          revealedVote: json,
+          fileInput: json,
         })
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
@@ -207,7 +207,7 @@ class Header extends Component {
             </AppBar>
           ) : (
             <AppBar>
-              <div>{registry.name}</div>
+              <div>{contracts.get('registryName')}</div>
 
               <div>{`Network: ${
                 networkID === '4'
@@ -228,9 +228,9 @@ class Header extends Component {
                 )} ΞTH`}
               </div>
               <div>
-                {`${token.name} Balance: ${withCommas(
+                {`${contracts.get('tokenName')} Balance: ${withCommas(
                   trimDecimalsThree(balances.get('token'))
-                )} ${token.symbol}`}
+                )} ${contracts.get('tokenSymbol')}`}
               </div>
             </AppBar>
           )}

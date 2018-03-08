@@ -4,7 +4,7 @@ import { AppBar, AppBarWrapper } from './StyledHome'
 
 import { Button, Text, Section } from '@aragon/ui'
 
-export default ({ error, openSidePanel, registry }) => (
+export default ({ error, openSidePanel, contracts }) => (
   <AppBarWrapper>
     {error ? (
       <AppBar>
@@ -15,7 +15,7 @@ export default ({ error, openSidePanel, registry }) => (
         <Button mode="strong" onClick={openSidePanel}>
           {'Start an application'}
         </Button>
-        <Section>{registry.name}</Section>
+        <Section>{contracts.get('registryName')}</Section>
         <Section>{'LINKS'}</Section>
       </AppBar>
     )}

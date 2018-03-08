@@ -20,6 +20,7 @@ export default class Challenge extends Component {
     const {
       closeSidePanel,
       token,
+      contracts,
       parameters,
       balances,
       handleInputChange,
@@ -51,7 +52,7 @@ export default class Challenge extends Component {
                   parameters.get('minDeposit'),
                   18
                 )}{' '}
-                {token.symbol}
+                {contracts.get('tokenSymbol')}
               </div>
             }
           />

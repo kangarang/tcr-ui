@@ -30,6 +30,7 @@ export default class Apply extends Component {
       opened,
       closeSidePanel,
       token,
+      contracts,
       parameters,
       balances,
       handleInputChange,
@@ -49,7 +50,7 @@ export default class Apply extends Component {
             leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
             rightTitle={'Minimum Deposit'}
             rightItem={
-              <div>{`${parameters.get('minDeposit')} ${token.symbol}`}</div>
+              <div>{`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}</div>
             }
           />
 

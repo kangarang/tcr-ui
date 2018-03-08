@@ -82,7 +82,7 @@ export default class ListingRow extends Component {
           {this.props.listingType === 'candidates'
             ? baseToConvertedUnit(
                 this.props.parameters.get('minDeposit'),
-                this.props.token.decimals
+                this.props.contracts.get('tokenDecimals')
               )
             : false}
         </TableCell>
