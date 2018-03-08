@@ -602,10 +602,9 @@ thing.forEach(file => {
 
 These workflow diagrams were created by our wonderful designer, Eva Shon.
 
-![Simple overview](./src/assets/simple-overview.png)
+![Simple overview](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/simple-overview.png)
 
-![Detailed workflow](./src/assets/detailed-workflow.png)
-
+![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
 ---
 
 ### License
