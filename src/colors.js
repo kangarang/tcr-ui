@@ -25,9 +25,8 @@ export const colors = {
     blue4: '#005F6B',
     blue3: '#008C9E',
     blue2: '#00B4CC',
-    blue1: '#00DFFC'
-  }
-
+    blue1: '#00DFFC',
+  },
 }
 
 export const jsonTheme = {
@@ -48,5 +47,5 @@ export const jsonTheme = {
   base0C: '#a1efe4',
   base0D: '#66d9ef',
   base0E: '#ae81ff',
-  base0F: '#cc6633'
+  base0F: '#cc6633',
 }

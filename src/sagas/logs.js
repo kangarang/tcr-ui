@@ -167,7 +167,13 @@ function* handleLogs(sb, eb, topic, contract) {
 }
 
 // TODO: tests
-async function buildListings(decodedLogs, ethjs, rawLogs, contract, voting) {
+export async function buildListings(
+  decodedLogs,
+  ethjs,
+  rawLogs,
+  contract,
+  voting
+) {
   return Promise.all(
     decodedLogs.map(async (dLog, ind) => {
       const block = await log.getBlock(ethjs, rawLogs[ind].blockHash)

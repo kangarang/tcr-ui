@@ -30,8 +30,7 @@ const _vote = {
 
   getReceiptValue: (receipt, arg) => receipt.logs[0].args[arg],
 
-  getPollIDFromReceipt: receipt =>
-    _vote.getReceiptValue(receipt, 'pollID'),
+  getPollIDFromReceipt: receipt => _vote.getReceiptValue(receipt, 'pollID'),
 
   getPoll: (voting, pollID) => voting.pollMap.call(pollID),
 
