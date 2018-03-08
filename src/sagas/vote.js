@@ -51,7 +51,7 @@ export function* commitVoteSaga(action) {
   // format args
   const secretHash = _vote.getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(
-    voting.contract.getInsertPointForNumTokens.call,
+    voting.getInsertPointForNumTokens.call,
     account,
     numTokens
   )
@@ -59,7 +59,7 @@ export function* commitVoteSaga(action) {
   const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
   // grab the poll from the mapping
-  const pollStruct = yield call(voting.contract.pollMap.call, pollID)
+  const pollStruct = yield call(voting.pollMap.call, pollID)
   console.log('pollStruct', pollStruct)
 
   // record expiry dates

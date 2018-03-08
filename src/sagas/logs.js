@@ -39,7 +39,7 @@ function* getFreshLogs() {
       lastReadBlockNumber,
       'latest',
       '',
-      registry.contract
+      registry
     )
 
     const newListings = yield call(updateListings, [], listings)
@@ -110,7 +110,7 @@ function* pollLogsSaga(action) {
       action.payload.startBlock,
       action.payload.endBock,
       '',
-      registry.contract
+      registry
     )
     if (newListings.length === 0) {
       return
@@ -200,7 +200,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     const event = dLog._eventName
     let numTokens
     let whitelisted
-    let url
+    let ipfsData
 
     if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
       whitelisted = false
@@ -229,9 +229,9 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
         content = file.content.toString('utf8')
       })
       content = JSON.parse(content)
-      data = content.name
-      url = content.url
-      console.log(content)
+      data = content.data
+      ipfsData = content.data
+      console.log('ipfs log content:', content)
     }
 
     let listing = await contract.listings.call(listingHash)
@@ -256,7 +256,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
 
     if (pollID) {
       pollID = pollID.toString()
-      const poll = await voting.contract.pollMap(pollID)
+      const poll = await voting.pollMap(pollID)
       commitEndDate = poll[0].toNumber()
       commitExpiry = convertUnixTimeLeft(commitEndDate)
       revealEndDate = poll[1].toNumber()
@@ -264,7 +264,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
     const infoObject = {
       data,
-      url,
+      ipfsData,
       owner: event === '_Application' && txn.from,
       numTokens,
       pollID,
@@ -273,7 +273,7 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
     return {
       data,
-      url,
+      ipfsData,
       owner: event === '_Application' && txn.from,
       listingHash,
       whitelisted,

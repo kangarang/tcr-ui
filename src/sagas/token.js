@@ -7,6 +7,7 @@ import {
   selectRegistry,
   selectToken,
   selectVoting,
+  selectAllContracts,
 } from '../selectors'
 import { baseToConvertedUnit, toEther } from '../utils/_units'
 
@@ -22,6 +23,7 @@ function* updateBalancesSaga() {
     const registry = yield select(selectRegistry)
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
+    const contracts = yield select(selectAllContracts)
 
     const [
       ethBalance,
@@ -31,23 +33,23 @@ function* updateBalancesSaga() {
       votingRightsRaw,
     ] = yield all([
       call(ethjs.getBalance, owner),
-      call(token.contract.balanceOf.call, owner),
-      call(token.contract.allowance.call, owner, registry.address),
-      call(token.contract.allowance.call, owner, voting.address),
-      call(voting.contract.voteTokenBalance.call, owner),
+      call(token.balanceOf.call, owner),
+      call(token.allowance.call, owner, registry.address),
+      call(token.allowance.call, owner, voting.address),
+      call(voting.voteTokenBalance.call, owner),
     ])
 
     const ETH = toEther(ethBalance)
-    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw, token.decimals)
+    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw, contracts.get('tokenDecimals'))
     const registryAllowance = baseToConvertedUnit(
       registryAllowanceRaw,
-      token.decimals
+      contracts.get('tokenDecimals')
     )
     const votingAllowance = baseToConvertedUnit(
       votingAllowanceRaw,
-      token.decimals
+      contracts.get('tokenDecimals')
     )
-    const votingRights = baseToConvertedUnit(votingRightsRaw, token.decimals)
+    const votingRights = baseToConvertedUnit(votingRightsRaw, contracts.get('tokenDecimals'))
 
     yield put(
       updateBalances({

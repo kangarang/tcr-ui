@@ -46,17 +46,17 @@ export const selectParameterizer = createSelector(
 )
 
 export const selectVotingMethods = createSelector(selectVoting, voting =>
-  (voting.contract ? voting.contract.abi : []).filter(
+  (voting ? voting.abi : []).filter(
     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
   )
 )
 export const selectRegistryMethods = createSelector(selectRegistry, registry =>
-  (registry.contract ? registry.contract.abi : []).filter(
+  (registry ? registry.abi : []).filter(
     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
   )
 )
 export const selectTokenMethods = createSelector(selectToken, token =>
-  (token.contract ? token.contract.abi : []).filter(
+  (token ? token.abi : []).filter(
     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
   )
 )

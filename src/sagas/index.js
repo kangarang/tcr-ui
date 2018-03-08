@@ -4,7 +4,7 @@ import { setWallet, loginError } from '../actions'
 import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 
 import { setEthjs } from '../libs/provider'
-import { contractsSaga } from './contracts'
+import { initialRegistrySaga } from './contracts'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)
@@ -19,7 +19,7 @@ function* genesis() {
       yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
     } else {
       yield put(setWallet({ ethjs, account, networkID }))
-      yield call(contractsSaga, ethjs, account)
+      yield call(initialRegistrySaga, ethjs, account)
     }
   } catch (err) {
     console.log('Genesis error:', err)

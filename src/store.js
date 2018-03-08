@@ -21,6 +21,7 @@ import tokenSaga from './sagas/token'
 import udappSaga from './sagas/udapp'
 import voteSaga from './sagas/vote'
 import ipfsSaga from './sagas/ipfs'
+import contractsSaga from './sagas/contracts'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -64,6 +65,7 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)
   sagaMiddleware.run(tokenSaga)
+  sagaMiddleware.run(contractsSaga)
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(udappSaga)
   sagaMiddleware.run(ipfsSaga)

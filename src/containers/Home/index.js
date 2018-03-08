@@ -51,13 +51,18 @@ import {
   OverFlowDiv,
 } from 'components/StyledHome'
 
-import { convertedToBaseUnit, withCommas, trimDecimalsThree } from 'utils/_units'
+import {
+  convertedToBaseUnit,
+  withCommas,
+  trimDecimalsThree,
+} from 'utils/_units'
 import _vote from 'utils/_vote'
 
 import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
+import { selectAllContracts } from '../../selectors';
 
 class Home extends Component {
   constructor(props) {
@@ -72,7 +77,7 @@ class Home extends Component {
       openRevealVote: false,
       openClaimVoterReward: false,
       selectedOne: false,
-      revealedVote: false,
+      fileInput: false,
       methodName: false,
       visibleApprove: false,
       voterReward: '0',
@@ -113,7 +118,7 @@ class Home extends Component {
   getVoterReward = async (pollID, salt) => {
     let vR
     try {
-      vR = await this.props.registry.contract.voterReward.call(
+      vR = await this.props.registry.voterReward.call(
         this.props.account,
         pollID,
         salt
@@ -125,6 +130,24 @@ class Home extends Component {
       voterReward: vR.toString(10),
     })
   }
+  handleAbiFileInput = e => {
+    const file = e.target.files[0]
+    const fr = new window.FileReader()
+
+    fr.onload = () => {
+      const contents = fr.result
+      const json = JSON.parse(contents)
+      try {
+        this.setState({
+          fileInput: json,
+        })
+      } catch (error) {
+        throw new Error('Invalid Commit JSON file')
+      }
+    }
+
+    fr.readAsText(file)
+  }
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
@@ -135,7 +158,7 @@ class Home extends Component {
 
       try {
         this.setState({
-          revealedVote: json,
+          fileInput: json,
         })
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
@@ -185,13 +208,17 @@ class Home extends Component {
                   : methodName === 'revealVote'
                     ? [
                         this.state.selectedOne.getIn(['latest', 'pollID']),
-                        this.state.revealedVote.voteOption,
-                        this.state.revealedVote.salt,
+                        this.state.fileInput.voteOption,
+                        this.state.fileInput.salt,
                       ]
                     : methodName === 'claimVoterReward'
                       ? [
                           this.state.selectedOne.getIn(['latest', 'pollID']),
-                          this.state.revealedVote.salt,
+                          this.state.fileInput.salt,
+                        ]
+                    : methodName === 'uploadAbi'
+                      ? [
+                          this.state.fileInput,
                         ]
                       : false
   }
@@ -215,6 +242,7 @@ class Home extends Component {
       balances,
       parameters,
       token,
+      contracts,
       networkID,
       miningStatus,
     } = this.props
@@ -228,9 +256,9 @@ class Home extends Component {
         )} ΞTH`}
       </div>,
       <div>
-        {`${token.name} Balance: ${withCommas(
+        {`${contracts.get('tokenName')} Balance: ${withCommas(
           trimDecimalsThree(balances.get('token'))
-        )} ${token.symbol}`}
+        )} ${contracts.get('tokenSymbol')}`}
       </div>,
       <div>{`Network: ${
         networkID === '4'
@@ -257,6 +285,7 @@ class Home extends Component {
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
+          contracts={contracts}
           balances={balances}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
@@ -269,6 +298,7 @@ class Home extends Component {
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
+          contracts={contracts}
           balances={balances}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
@@ -282,6 +312,7 @@ class Home extends Component {
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
+          contracts={contracts}
           balances={balances}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
@@ -413,6 +444,7 @@ class Home extends Component {
                   listing={candidate}
                   parameters={parameters}
                   token={token}
+                  contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
                   openSidePanel={this.openSidePanel}
@@ -442,6 +474,7 @@ class Home extends Component {
                   listing={one}
                   parameters={parameters}
                   token={token}
+                  contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
                   openSidePanel={this.openSidePanel}
@@ -507,6 +540,10 @@ class Home extends Component {
               ))}
             </Table>
           </div>
+
+          <FileInput type="file" name="file" onChange={this.handleAbiFileInput} />
+
+          <Button onClick={e => this.handleSendTransaction('uploadAbi')}>{'Upload abi'}</Button>
         </HomeWrapper>
       </div>
     )
@@ -531,6 +568,7 @@ const mapStateToProps = createStructuredSelector({
   balances: selectBalances,
   miningStatus: selectMiningStatus,
 
+  contracts: selectAllContracts,
   registry: selectRegistry,
   token: selectToken,
   voting: selectVoting,

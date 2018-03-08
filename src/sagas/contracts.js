@@ -1,17 +1,37 @@
-import { call, put, all } from 'redux-saga/effects'
+import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
-import { setContracts, contractError, updateBalancesRequest } from '../actions'
+import abis from '../abis'
+
+import {
+  setContracts,
+  contractError,
+  updateBalancesRequest,
+  setRegistryContract,
+} from '../actions'
+
 import { setupRegistry, setupContract } from '../libs/contracts'
 import { baseToConvertedUnit } from '../utils/_units'
+import { SET_REGISTRY_CONTRACT } from '../actions/constants'
+import { selectEthjs, selectAccount } from '../selectors'
 
-export function* contractsSaga(ethjs, account) {
+export default function* root() {
+  yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
+}
+
+export function* initialRegistrySaga(ethjs, account) {
+  const registry = yield call(setupRegistry, ethjs, account, abis.registry)
+  yield put(setRegistryContract(registry))
+}
+
+export function* contractsSaga(action) {
+  const ethjs = yield select(selectEthjs)
+  const account = yield select(selectAccount)
+  const registry = action.payload
   try {
-    const registry = yield call(setupRegistry, ethjs, account)
-
     let [token, parameterizer, voting] = yield all([
-      call(setupContract, ethjs, account, registry.contract, 'token'),
-      call(setupContract, ethjs, account, registry.contract, 'parameterizer'),
-      call(setupContract, ethjs, account, registry.contract, 'voting'),
+      call(setupContract, ethjs, account, abis.token, registry, 'token'),
+      call(setupContract, ethjs, account, abis.parameterizer, registry, 'parameterizer'),
+      call(setupContract, ethjs, account, abis.voting, registry, 'voting'),
     ])
 
     const [
@@ -25,34 +45,38 @@ export function* contractsSaga(ethjs, account) {
       tokenSymbol,
       registryName,
     ] = yield all([
-      call(parameterizer.contract.get.call, 'minDeposit'),
-      call(parameterizer.contract.get.call, 'applyStageLen'),
-      call(parameterizer.contract.get.call, 'commitStageLen'),
-      call(parameterizer.contract.get.call, 'revealStageLen'),
-      call(parameterizer.contract.get.call, 'dispensationPct'),
-      call(token.contract.name.call),
-      call(token.contract.decimals.call),
-      call(token.contract.symbol.call),
-      call(registry.contract.name.call),
+      call(parameterizer.get.call, 'minDeposit'),
+      call(parameterizer.get.call, 'applyStageLen'),
+      call(parameterizer.get.call, 'commitStageLen'),
+      call(parameterizer.get.call, 'revealStageLen'),
+      call(parameterizer.get.call, 'dispensationPct'),
+      call(token.name.call),
+      call(token.decimals.call),
+      call(token.symbol.call),
+      call(registry.name.call),
     ])
 
     const parameters = {
-      minDeposit: baseToConvertedUnit(minDeposit.toString(10), tokenDecimals),
+      minDeposit: baseToConvertedUnit(minDeposit.toString(10), tokenDecimals.toString(10)),
       applyStageLen: applyStageLen.toString(10),
       commitStageLen: commitStageLen.toString(10),
       revealStageLen: revealStageLen.toString(10),
       dispensationPct: dispensationPct.toString(10),
     }
 
-    token.symbol = yield tokenSymbol
-    token.name = yield tokenName
-    token.decimals = yield tokenDecimals
-    registry.name = yield registryName
-
     yield put(
       setContracts({
         parameters,
-        contracts: { registry, token, voting, parameterizer },
+        contracts: {
+          registry,
+          token,
+          voting,
+          parameterizer,
+          tokenSymbol: tokenSymbol,
+          tokenName: tokenName,
+          tokenDecimals: tokenDecimals.toString(10),
+          registryName,
+        },
       })
     )
     yield put(updateBalancesRequest())
