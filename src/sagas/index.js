@@ -15,10 +15,16 @@ function* genesis() {
     const ethjs = yield call(setEthjs)
     const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
+    const network =
+      networkID === '4'
+        ? 'RINKEBY'
+        : networkID === '1'
+          ? 'MAIN NET'
+          : networkID === '420' ? 'GANACHE' : 'UNKNOWN NETWORK'
     if (account === undefined) {
       yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
     } else {
-      yield put(setWallet({ ethjs, account, networkID }))
+      yield put(setWallet({ ethjs, account, network }))
       yield call(initialRegistrySaga, ethjs, account)
     }
   } catch (err) {

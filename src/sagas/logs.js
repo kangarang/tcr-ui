@@ -15,7 +15,7 @@ import { baseToConvertedUnit } from '../utils/_units'
 
 import {
   selectEthjs,
-  selectNetworkID,
+  selectNetwork,
   selectRegistry,
   selectVoting,
   selectAllListings,
@@ -57,7 +57,7 @@ function* getFreshLogs() {
   yield fork(pollController)
 }
 function* pollController() {
-  const network = yield select(selectNetworkID)
+  const network = yield select(selectNetwork)
   let pollInterval = 5000 // 5 seconds
 
   if (network === '420') {

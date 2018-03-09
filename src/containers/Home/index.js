@@ -27,7 +27,7 @@ import {
 import {
   selectEthjs,
   selectAccount,
-  selectNetworkID,
+  selectNetwork,
   selectBalances,
   selectRegistry,
   selectToken,
@@ -62,7 +62,7 @@ import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
-import { selectAllContracts } from '../../selectors';
+import { selectAllContracts } from '../../selectors'
 
 class Home extends Component {
   constructor(props) {
@@ -216,11 +216,9 @@ class Home extends Component {
                           this.state.selectedOne.getIn(['latest', 'pollID']),
                           this.state.fileInput.salt,
                         ]
-                    : methodName === 'uploadAbi'
-                      ? [
-                          this.state.fileInput,
-                        ]
-                      : false
+                      : methodName === 'uploadAbi'
+                        ? [this.state.fileInput]
+                        : false
   }
 
   handleSendTransaction = (methodName, listing, contract, voteOption) => {
@@ -243,39 +241,10 @@ class Home extends Component {
       parameters,
       token,
       contracts,
-      networkID,
+      network,
       miningStatus,
     } = this.props
 
-    const items = [
-      <Identicon address={account} diameter={30} />,
-      <OverFlowDiv>{`Account: ${account}`}</OverFlowDiv>,
-      <div>
-        {`Ether Balance: ${withCommas(
-          trimDecimalsThree(balances.get('ETH'))
-        )} ΞTH`}
-      </div>,
-      <div>
-        {`${contracts.get('tokenName')} Balance: ${withCommas(
-          trimDecimalsThree(balances.get('token'))
-        )} ${contracts.get('tokenSymbol')}`}
-      </div>,
-      <div>{`Network: ${
-        networkID === '4'
-          ? 'Rinkeby'
-          : networkID === '420' ? 'Ganache' : networkID
-      }`}</div>,
-      <Text color="red" weight="bold">
-        {miningStatus && 'MINING'}
-      </Text>,
-    ]
-    const dropDown = (
-      <DropDown
-        items={items}
-        active={this.state.activeItem}
-        onChange={this.handleChange}
-      />
-    )
     return (
       <div>
         <Navigation {...this.props} openSidePanel={this.openSidePanel} />
@@ -294,7 +263,7 @@ class Home extends Component {
         />
 
         <Challenge
-          opened={this.state.opened}
+          opened={this.state.openChallenge}
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
@@ -541,9 +510,15 @@ class Home extends Component {
             </Table>
           </div>
 
-          <FileInput type="file" name="file" onChange={this.handleAbiFileInput} />
+          <FileInput
+            type="file"
+            name="file"
+            onChange={this.handleAbiFileInput}
+          />
 
-          <Button onClick={e => this.handleSendTransaction('uploadAbi')}>{'Upload abi'}</Button>
+          <Button onClick={e => this.handleSendTransaction('uploadAbi')}>
+            {'Upload abi'}
+          </Button>
         </HomeWrapper>
       </div>
     )
@@ -563,7 +538,7 @@ const mapStateToProps = createStructuredSelector({
   error: selectError,
   ethjs: selectEthjs,
   account: selectAccount,
-  networkID: selectNetworkID,
+  network: selectNetwork,
 
   balances: selectBalances,
   miningStatus: selectMiningStatus,

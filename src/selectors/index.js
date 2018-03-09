@@ -18,8 +18,8 @@ export const selectAccount = createSelector(selectHome, homeState =>
 export const selectMiningStatus = createSelector(selectHome, homeState =>
   homeState.get('miningStatus')
 )
-export const selectNetworkID = createSelector(selectHome, homeState =>
-  homeState.get('networkID')
+export const selectNetwork = createSelector(selectHome, homeState =>
+  homeState.get('network')
 )
 
 // Balances

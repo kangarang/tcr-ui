@@ -49,7 +49,7 @@ import {
 import {
   selectEthjs,
   selectAccount,
-  selectNetworkID,
+  selectNetwork,
   selectBalances,
   selectRegistry,
   selectToken,
@@ -189,7 +189,7 @@ class Header extends Component {
     const {
       error,
       account,
-      networkID,
+      network,
       balances,
       parameters,
       registry,
@@ -210,9 +210,9 @@ class Header extends Component {
               <div>{contracts.get('registryName')}</div>
 
               <div>{`Network: ${
-                networkID === '4'
+                network === '4'
                   ? 'Rinkeby'
-                  : networkID === '420' ? 'Ganache' : networkID
+                  : network === '420' ? 'Ganache' : network
               }`}</div>
 
               <Identicon address={account} diameter={30} />
@@ -250,7 +250,7 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   error: selectError,
   account: selectAccount,
-  networkID: selectNetworkID,
+  network: selectNetwork,
   balances: selectBalances,
   token: selectToken,
   registry: selectRegistry,

@@ -18,7 +18,7 @@ import {
 const initialState = fromJS({
   ethjs: {},
   account: '',
-  networkID: '',
+  network: '',
   balances: {
     ETH: '0',
     token: '0',
@@ -64,7 +64,7 @@ function homeReducer(state = initialState, action) {
         .set('error', fromJS(false))
         .set('ethjs', fromJS(action.payload.ethjs))
         .set('account', fromJS(action.payload.account))
-        .set('networkID', fromJS(action.payload.networkID))
+        .set('network', fromJS(action.payload.network))
     case IPFS_ABI_RETRIEVED:
       return state.setIn(['ipfs', action.payload.id], fromJS(action.payload))
     // case SET_REGISTRY_CONTRACT:
