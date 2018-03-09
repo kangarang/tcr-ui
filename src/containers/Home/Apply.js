@@ -13,142 +13,126 @@ import { MarginDiv } from 'components/StyledHome'
 
 import { withCommas, baseToConvertedUnit, BN } from 'utils/_units'
 
-export default class Apply extends Component {
-  constructor() {
-    super()
-    this.state = {
-      activeItem: 0,
-    }
-  }
+export default ({
+  opened,
+  closeSidePanel,
+  token,
+  contracts,
+  parameters,
+  balances,
+  handleInputChange,
+  handleSendTransaction,
+  openApprove,
+  visibleApprove,
+}) => (
+  <div>
+    <SidePanel
+      title="Apply a Listing into the Registry"
+      opened={opened}
+      onClose={closeSidePanel}
+    >
+      <SideSplit
+        leftTitle={'Application Period'}
+        leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
+        rightTitle={'Minimum Deposit'}
+        rightItem={
+          <div>{`${parameters.get('minDeposit')} ${contracts.get(
+            'tokenSymbol'
+          )}`}</div>
+        }
+      />
 
-  handleChange(index) {
-    this.setState({ activeItem: index })
-  }
+      <SideSplit
+        leftTitle={'Token Balance'}
+        leftItem={balances.get('token')}
+        rightTitle={'Registry Allowance'}
+        rightItem={withCommas(balances.get('registryAllowance'))}
+      />
 
-  render() {
-    const {
-      opened,
-      closeSidePanel,
-      token,
-      contracts,
-      parameters,
-      balances,
-      handleInputChange,
-      handleSendTransaction,
-      openApprove,
-      visibleApprove,
-    } = this.props
-    return (
-      <div>
-        <SidePanel
-          title="Apply a Listing into the Registry"
-          opened={opened}
-          onClose={closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Application Period'}
-            leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
-            rightTitle={'Minimum Deposit'}
-            rightItem={
-              <div>{`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}</div>
-            }
-          />
+      <SideSplit
+        leftTitle={'Voting Rights'}
+        leftItem={balances.get('votingRights')}
+        rightTitle={'Voting Allowance'}
+        rightItem={withCommas(balances.get('votingAllowance'))}
+      />
 
-          <SideSplit
-            leftTitle={'Token Balance'}
-            leftItem={balances.get('token')}
-            rightTitle={'Registry Allowance'}
-            rightItem={withCommas(balances.get('registryAllowance'))}
-          />
+      <SideText
+        small
+        title={'QUESTION'}
+        text={translate('sidebar_apply_question')}
+        icon={'question circle outline'}
+      />
+      <SideText
+        small
+        title={'INSTRUCTIONS'}
+        text={translate('sidebar_apply_instructions')}
+        icon={'check circle'}
+      />
 
-          <SideSplit
-            leftTitle={'Voting Rights'}
-            leftItem={balances.get('votingRights')}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
-          />
+      <MarginDiv>
+        <Text color="grey" smallcaps>
+          {'LISTING NAME'}
+        </Text>
+        <TextInput
+          onChange={e => handleInputChange(e, 'listingName')}
+          wide
+          type="text"
+        />
+      </MarginDiv>
 
-          <SideText
-            small
-            title={'QUESTION'}
-            text={translate('sidebar_apply_question')}
-            icon={'question circle outline'}
-          />
-          <SideText
-            small
-            title={'INSTRUCTIONS'}
-            text={translate('sidebar_apply_instructions')}
-            icon={'check circle'}
-          />
+      <MarginDiv>
+        <Text color="grey" smallcaps>
+          {'TOKEN AMOUNT'}
+        </Text>
+        <TextInput
+          onChange={e => handleInputChange(e, 'numTokens')}
+          wide
+          type="number"
+        />
+      </MarginDiv>
 
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'LISTING NAME'}
-            </Text>
-            <TextInput
-              onChange={e => handleInputChange(e, 'listingName')}
-              wide
-              type="text"
-            />
-          </MarginDiv>
+      <MarginDiv>
+        <Button onClick={e => handleSendTransaction('apply')} mode="strong">
+          {'Apply Listing'}
+        </Button>
+      </MarginDiv>
 
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'TOKEN AMOUNT'}
-            </Text>
-            <TextInput
-              onChange={e => handleInputChange(e, 'numTokens')}
-              wide
-              type="number"
-            />
-          </MarginDiv>
+      <SidePanelSeparator />
 
-          <MarginDiv>
-            <Button onClick={e => handleSendTransaction('apply')} mode="strong">
-              {'Apply Listing'}
-            </Button>
-          </MarginDiv>
-
-          <SidePanelSeparator />
-
-          {/* if you wanna see approve, you'll see it */}
-          {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
-          <MarginDiv>
-            {visibleApprove ? (
-              <Button
-                onClick={e =>
-                  handleSendTransaction('approve', null, 'registry')
-                }
-                mode="strong"
-              >
-                {'Approve tokens for Registry'}
-              </Button>
-            ) : (
+      {/* if you wanna see approve, you'll see it */}
+      {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
+      <MarginDiv>
+        {visibleApprove ? (
+          <Button
+            onClick={e => handleSendTransaction('approve', null, 'registry')}
+            mode="strong"
+          >
+            {'Approve tokens for Registry'}
+          </Button>
+        ) : (
+          <div>
+            {BN(balances.get('registryAllowance')).lt(
+              BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
+            ) ? (
               <div>
-                {BN(balances.get('registryAllowance')).lt(
-                  BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
-                ) ? (
-                  <div>
-                    <Text color="red">{'YOU NEED TO APPROVE'}</Text>
-                    <Button
-                      onClick={e =>
-                        handleSendTransaction('approve', null, 'registry')
-                      }
-                      mode="strong"
-                    >
-                      {'Approve tokens for Registry'}
-                    </Button>
-                  </div>
-                ) : (
-                  <Button onClick={openApprove} mode="">
-                    {'Show approve'}
-                  </Button>
-                )}
+                <Text color="red">{'YOU NEED TO APPROVE'}</Text>
+                <Button
+                  onClick={e =>
+                    handleSendTransaction('approve', null, 'registry')
+                  }
+                  mode="strong"
+                >
+                  {'Approve tokens for Registry'}
+                </Button>
               </div>
+            ) : (
+              <Button onClick={openApprove} mode="">
+                {'Show approve'}
+              </Button>
             )}
-          </MarginDiv>
-        </SidePanel>
-      </div>
-    )
-  }
-}
+          </div>
+        )}
+      </MarginDiv>
+    </SidePanel>
+  </div>
+)
