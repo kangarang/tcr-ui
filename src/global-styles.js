@@ -85,7 +85,7 @@ const globalStyles = `
     body {
       line-height: 1.5em;
       color: ${colors.offBlack};
-      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
       margin: 0;
     }
   }

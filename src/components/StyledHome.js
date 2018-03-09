@@ -6,11 +6,11 @@ export const AppBarWrapper = styled.div`
 `
 export const AppBar = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 4em;
-  background-color: ${colors.offWhite};
+  background-color: white;
   border-bottom: 1px solid ${colors.orange};
   padding: 0 3em;
   & > div {

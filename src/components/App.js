@@ -9,6 +9,24 @@ import { colors } from '../colors'
 import '../global-styles'
 
 import TopGradient from './TopGradient'
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+})
 
 const Wrapper = styled.div`
   background-color: ${colors.offWhite};
@@ -26,7 +44,9 @@ const App = () => (
     <TopGradient />
     <AppWrapper>
       <AragonApp publicUrl="/aragon-ui/">
-        <Home />
+        <MuiThemeProvider theme={theme}>
+          <Home />
+        </MuiThemeProvider>
       </AragonApp>
     </AppWrapper>
   </Wrapper>
