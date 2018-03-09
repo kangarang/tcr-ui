@@ -42,7 +42,7 @@ function* executeSaga(action) {
         checkIfDeployed,
         ethjs,
         account,
-        regContract.contract,
+        regContract,
         registry
       )
       console.log('deployed', deployed)

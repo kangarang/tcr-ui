@@ -158,7 +158,7 @@ export function* sendTransactionSaga(contract, method, args) {
       return rg
     })
 
-    const receipt = yield call(contract.contract[method], ...newArgs)
+    const receipt = yield call(contract[method], ...newArgs)
 
     if (receipt.receipt.status !== '0x00') {
       yield put(txnMined(receipt))
