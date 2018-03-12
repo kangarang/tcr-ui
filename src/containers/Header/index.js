@@ -68,7 +68,7 @@ import {
   BN,
   trimDecimalsThree,
 } from '../../utils/_units'
-import _vote from '../../utils/_vote'
+import _hash from '../../utils/_hash'
 import { dateHasPassed } from '../../utils/_datetime'
 
 class Header extends Component {
@@ -159,7 +159,7 @@ class Header extends Component {
   getMethodArgs(methodName, listing, contract, voteOption) {
     return methodName === 'apply'
       ? [
-          _vote.getListingHash(this.state.listingName),
+          _hash.getListingHash(this.state.listingName),
           convertedToBaseUnit(this.state.numTokens, 18),
           this.state.listingName,
         ]

@@ -26,7 +26,7 @@ export default class ListingRow extends Component {
     return (
       <TableRow key={this.props.listingHash}>
         <TableCell onClick={this.handleToggleExpandDetails}>
-          <Text>{this.props.listing.get('data')}</Text>
+          <Text>{this.props.listing.get('ipfsID')}</Text>
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
           {this.props.listingType === 'candidates' &&
@@ -68,7 +68,7 @@ export default class ListingRow extends Component {
             <JSONTree
               invertTheme={false}
               theme={jsonTheme}
-              data={this.props.listing.get('infoObject')}
+              data={this.props.listing}
               keyName={'root'}
               level={0}
             />

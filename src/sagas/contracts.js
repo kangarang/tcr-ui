@@ -2,6 +2,10 @@ import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
 import abis from '../abis'
 
+import { setupRegistry, setupContract } from 'libs/contracts'
+import { baseToConvertedUnit } from 'utils/_units'
+import { SET_REGISTRY_CONTRACT } from 'actions/constants'
+
 import {
   setContracts,
   contractError,
@@ -9,9 +13,6 @@ import {
   setRegistryContract,
 } from '../actions'
 
-import { setupRegistry, setupContract } from '../libs/contracts'
-import { baseToConvertedUnit } from '../utils/_units'
-import { SET_REGISTRY_CONTRACT } from '../actions/constants'
 import { selectEthjs, selectAccount } from '../selectors'
 
 export default function* root() {
@@ -19,8 +20,19 @@ export default function* root() {
 }
 
 export function* initialRegistrySaga(ethjs, account) {
-  const registry = yield call(setupRegistry, ethjs, account, abis.registry)
-  yield put(setRegistryContract(registry))
+  try {
+    const networkID = yield call(ethjs.net_version)
+    const registry = yield call(
+      setupRegistry,
+      ethjs.currentProvider,
+      account,
+      abis.registry,
+      abis.registry.networks[networkID].address
+    )
+    yield put(setRegistryContract(registry))
+  } catch (err) {
+    console.log('init registry saga err', err)
+  }
 }
 
 export function* contractsSaga(action) {
@@ -29,9 +41,30 @@ export function* contractsSaga(action) {
   const registry = action.payload
   try {
     let [token, parameterizer, voting] = yield all([
-      call(setupContract, ethjs, account, abis.token, registry, 'token'),
-      call(setupContract, ethjs, account, abis.parameterizer, registry, 'parameterizer'),
-      call(setupContract, ethjs, account, abis.voting, registry, 'voting'),
+      call(
+        setupContract,
+        ethjs.currentProvider,
+        account,
+        abis.token,
+        registry,
+        'token'
+      ),
+      call(
+        setupContract,
+        ethjs.currentProvider,
+        account,
+        abis.parameterizer,
+        registry,
+        'parameterizer'
+      ),
+      call(
+        setupContract,
+        ethjs.currentProvider,
+        account,
+        abis.voting,
+        registry,
+        'voting'
+      ),
     ])
 
     const [
@@ -57,7 +90,10 @@ export function* contractsSaga(action) {
     ])
 
     const parameters = {
-      minDeposit: baseToConvertedUnit(minDeposit.toString(10), tokenDecimals.toString(10)),
+      minDeposit: baseToConvertedUnit(
+        minDeposit.toString(10),
+        tokenDecimals.toString(10)
+      ),
       applyStageLen: applyStageLen.toString(10),
       commitStageLen: commitStageLen.toString(10),
       revealStageLen: revealStageLen.toString(10),

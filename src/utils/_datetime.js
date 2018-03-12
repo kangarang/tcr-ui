@@ -10,6 +10,10 @@ export function convertUnix(integer) {
   return formatDate(moment.unix(integer).toDate())
 }
 
+export function getEndDateString(integer) {
+  return moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss')
+}
+
 export function dateHasPassed(unixTimestamp) {
   const date = moment().utc()
   return date.unix() >= unixTimestamp

@@ -6,17 +6,17 @@ const getDefaults = account => ({
   gasPrice: 25000000000,
 })
 
-export async function setupRegistry(eth, account, abi) {
+export async function setupRegistry(provider, account, abi, address) {
   const Registry = contract(abi)
-  Registry.setProvider(eth.currentProvider)
+  Registry.setProvider(provider)
   Registry.defaults(getDefaults(account))
 
-  return Registry.deployed()
+  return Registry.at(address)
 }
 
-export async function setupContract(eth, account, abi, registry, sc) {
+export async function setupContract(provider, account, abi, registry, sc) {
   const Contract = contract(abi)
-  Contract.setProvider(eth.currentProvider)
+  Contract.setProvider(provider)
   Contract.defaults(getDefaults(account))
 
   const address = await registry[sc].call()

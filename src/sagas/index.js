@@ -19,8 +19,8 @@ function* genesis() {
       networkID === '4'
         ? 'RINKEBY'
         : networkID === '1'
-          ? 'MAIN NET'
-          : networkID === '420' ? 'GANACHE' : 'UNKNOWN NETWORK'
+          ? 'MAIN'
+          : networkID === '420' ? 'GANACHE' : 'UNKNOWN'
     if (account === undefined) {
       yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
     } else {
