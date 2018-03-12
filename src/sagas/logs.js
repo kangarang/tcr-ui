@@ -1,11 +1,10 @@
 import { select, takeLatest, fork, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
+
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
-import ipfsAPI from 'ipfs-api'
-
-import { newArray, pollLogsRequest, updateBalancesRequest } from '../actions'
+import { setListings, pollLogsRequest, updateBalancesRequest } from '../actions'
 
 import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
 
@@ -22,20 +21,20 @@ import {
 } from '../selectors'
 
 import { convertUnixTimeLeft, dateHasPassed } from '../utils/_datetime'
-import { fromJS } from 'immutable'
 
-let lastReadBlockNumber = 0
+import { buildListings, updateListings } from './listings'
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
-  yield takeLatest(POLL_LOGS_REQUEST, pollLogsSaga)
+  yield takeLatest(POLL_LOGS_REQUEST, pollLogsAndUpdateListingsSaga)
 }
 
+let lastReadBlockNumber = 0
 function* getFreshLogs() {
   try {
     const registry = yield select(selectRegistry)
     const listings = yield call(
-      handleLogs,
+      logsToListingsSaga,
       lastReadBlockNumber,
       'latest',
       '',
@@ -45,7 +44,7 @@ function* getFreshLogs() {
     const newListings = yield call(updateListings, [], listings)
 
     if (newListings.size > 0) {
-      yield put(newArray(newListings))
+      yield put(setListings(newListings))
       yield put(updateBalancesRequest())
     }
   } catch (err) {
@@ -54,16 +53,14 @@ function* getFreshLogs() {
     // yield put(logsError('logs error', err))
   }
 
-  yield fork(pollController)
+  yield fork(pollingIntervalSaga)
 }
-function* pollController() {
-  const network = yield select(selectNetwork)
+function* pollingIntervalSaga() {
   let pollInterval = 5000 // 5 seconds
-
+  const network = yield select(selectNetwork)
   if (network === '420') {
     pollInterval = 2000
   }
-
   while (true) {
     try {
       yield call(delay, pollInterval)
@@ -79,46 +76,36 @@ function* pollController() {
     }
   }
 }
-
-function updateListings(listings, newListings) {
-  const latestListings = fromJS(newListings).reduce((acc, val) => {
-    const index = acc.findIndex(
-      it => it.get('listingHash') === val.get('listingHash')
-    )
-    // New listing
-    if (index === -1) {
-      return acc.push(val)
-    }
-    // Check to see if the event is the more recent
-    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
-      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
-    }
-    // Not unique, not more recent, return List
-    return acc
-  }, fromJS(listings))
-  return latestListings
-}
-
-function* pollLogsSaga(action) {
+// TODO: reduce duplicate code in getFreshLogs
+// TODO: add comments
+function* pollLogsAndUpdateListingsSaga(action) {
   try {
     const ethjs = yield select(selectEthjs)
     const registry = yield select(selectRegistry)
     const allListings = yield select(selectAllListings)
+
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
+
+    // decodes logs & builds the context of each listing
     const newListings = yield call(
-      handleLogs,
+      logsToListingsSaga,
       action.payload.startBlock,
       action.payload.endBock,
       '',
       registry
     )
+
     if (newListings.length === 0) {
+      console.log('no updates...')
       return
     }
-    console.log('allListings', allListings)
+    console.log('newListings:', newListings)
+
+    // replaces the state with updated listings
     const latestListings = yield call(updateListings, allListings, newListings)
-    // TODO: semantics: setListings
-    yield put(newArray(latestListings))
+    console.log('latestListings:', latestListings)
+
+    yield put(setListings(latestListings))
     yield put(updateBalancesRequest())
   } catch (err) {
     console.log('Poll logs error:', err)
@@ -127,7 +114,8 @@ function* pollLogsSaga(action) {
 }
 
 // TODO: tests
-function* handleLogs(sb, eb, topic, contract) {
+// TODO: comments
+function* logsToListingsSaga(sb, eb, topic, contract) {
   try {
     const ethjs = yield select(selectEthjs)
     const voting = yield select(selectVoting)
@@ -150,7 +138,8 @@ function* handleLogs(sb, eb, topic, contract) {
     }
     const decoder = yield call(EthAbi.logDecoder, contract.abi)
     const decodedLogs = yield call(decoder, rawLogs)
-    console.log('decodedLogs', decodedLogs)
+    console.log('decodedLogs:', decodedLogs)
+
     const listings = (yield call(
       buildListings,
       decodedLogs,
@@ -159,144 +148,11 @@ function* handleLogs(sb, eb, topic, contract) {
       contract,
       voting
     )).filter(lawg => !(lawg === false))
+    console.log('listings:', listings)
+
     return listings
   } catch (err) {
     console.log('Handle logs error:', err)
     // yield put(logsError('logs error', err))
-  }
-}
-
-// TODO: tests
-export async function buildListings(
-  decodedLogs,
-  ethjs,
-  rawLogs,
-  contract,
-  voting
-) {
-  return Promise.all(
-    decodedLogs.map(async (dLog, ind) => {
-      const block = await log.getBlock(ethjs, rawLogs[ind].blockHash)
-      const txDetails = await log.getTransaction(
-        ethjs,
-        rawLogs[ind].transactionHash
-      )
-      return buildListing(
-        contract,
-        block.timestamp,
-        dLog,
-        ind,
-        txDetails,
-        voting,
-        decodedLogs
-      )
-    })
-  )
-}
-
-async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
-  try {
-    let { listingHash, challengeID, data } = dLog
-    const event = dLog._eventName
-    let numTokens
-    let whitelisted
-    let ipfsData
-
-    if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
-      whitelisted = false
-      numTokens = 0
-    }
-
-    if (event === '_RewardClaimed') {
-      // pull from the old logs to find the listingHash
-      const dListing = decodedLogs.filter(
-        li => li.pollID && li.pollID.toString() === challengeID.toString()
-      )[0]
-      if (!dListing) {
-        return false
-      }
-      listingHash = dListing.listingHash
-      numTokens = dListing.deposit && dListing.deposit.toString()
-    }
-
-    if (event === '_Application') {
-      const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
-      const ipfs = await ipfsAPI(config)
-      const fileThing = await ipfs.files.get(data)
-      let content
-      fileThing.forEach(file => {
-        console.log(file.path)
-        content = file.content.toString('utf8')
-      })
-      content = JSON.parse(content)
-      data = content.data
-      ipfsData = content.data
-      console.log('ipfs log content:', content)
-    }
-
-    let listing = await contract.listings.call(listingHash)
-    numTokens = listing[3].toString(10)
-      ? baseToConvertedUnit(listing[3], 18)
-      : false
-
-    if (listing) {
-      whitelisted = listing[1]
-    }
-
-    let commitEndDate
-    let commitExpiry
-    let revealEndDate
-    let revealExpiry
-
-    let aeUnix = listing[0].toNumber()
-    const appExpiry = convertUnixTimeLeft(aeUnix)
-    const appExpired = dateHasPassed(aeUnix)
-
-    let pollID = dLog.pollID || dLog.challengeID
-
-    if (pollID) {
-      pollID = pollID.toString()
-      const poll = await voting.pollMap(pollID)
-      commitEndDate = poll[0].toNumber()
-      commitExpiry = convertUnixTimeLeft(commitEndDate)
-      revealEndDate = poll[1].toNumber()
-      revealExpiry = convertUnixTimeLeft(revealEndDate)
-    }
-    const infoObject = {
-      data,
-      ipfsData,
-      owner: event === '_Application' && txn.from,
-      numTokens,
-      pollID,
-      sender: txn.from,
-      ts: ts.toString(10),
-    }
-    return {
-      data,
-      ipfsData,
-      owner: event === '_Application' && txn.from,
-      listingHash,
-      whitelisted,
-      appExpiry,
-      appExpired,
-
-      latest: {
-        txHash: txn.hash,
-        blockHash: txn.blockHash,
-        blockNumber: txn.blockNumber.toNumber(10),
-        numTokens,
-        pollID,
-        sender: txn.from,
-        event,
-        ts,
-        commitEndDate,
-        commitExpiry,
-        revealEndDate,
-        revealExpiry,
-      },
-      infoObject,
-    }
-  } catch (err) {
-    console.log('build listing error', err)
   }
 }

@@ -3,7 +3,7 @@ import Ethjs from 'ethjs'
 let provider
 let ethjs
 
-export function setProvider() {
+function setProvider() {
   if (
     typeof window.web3 !== 'undefined' &&
     typeof window.web3.currentProvider !== 'undefined'
