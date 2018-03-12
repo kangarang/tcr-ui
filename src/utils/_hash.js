@@ -1,11 +1,10 @@
-import abi from 'ethereumjs-abi'
+import utils from 'ethers/utils'
 
 const _hash = {
   getVoteSaltHash: (vote, salt) =>
-    `0x${abi.soliditySHA3(['uint', 'uint'], [vote, salt]).toString('hex')}`,
+    utils.solidityKeccak256(['uint', 'uint'], [vote, salt]),
 
-  getListingHash: listing =>
-    `0x${abi.soliditySHA3(['string'], [listing]).toString('hex')}`,
+  getListingHash: listing => utils.solidityKeccak256(['string'], [listing]),
 }
 
 export default _hash

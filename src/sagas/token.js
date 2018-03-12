@@ -9,7 +9,7 @@ import {
   selectVoting,
   selectAllContracts,
 } from '../selectors'
-import { baseToConvertedUnit, toEther } from '../utils/_units'
+import { baseToConvertedUnit } from '../utils/_units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
@@ -39,8 +39,11 @@ function* updateBalancesSaga() {
       call(voting.voteTokenBalance.call, owner),
     ])
 
-    const ETH = toEther(ethBalance)
-    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw, contracts.get('tokenDecimals'))
+    const ETH = baseToConvertedUnit(ethBalance, contracts.get('tokenDecimals'))
+    const tokenBalance = baseToConvertedUnit(
+      tokenBalanceRaw,
+      contracts.get('tokenDecimals')
+    )
     const registryAllowance = baseToConvertedUnit(
       registryAllowanceRaw,
       contracts.get('tokenDecimals')
@@ -49,7 +52,10 @@ function* updateBalancesSaga() {
       votingAllowanceRaw,
       contracts.get('tokenDecimals')
     )
-    const votingRights = baseToConvertedUnit(votingRightsRaw, contracts.get('tokenDecimals'))
+    const votingRights = baseToConvertedUnit(
+      votingRightsRaw,
+      contracts.get('tokenDecimals')
+    )
 
     yield put(
       updateBalances({

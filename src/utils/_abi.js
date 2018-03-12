@@ -1,8 +1,5 @@
-import ethUtil from 'ethereumjs-util'
+import utils from 'ethers/utils'
 import _ from 'lodash'
-import jsSHA3 from 'js-sha3'
-
-const TOPIC_LENGTH = 32
 
 // adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
@@ -26,14 +23,12 @@ const _abi = {
     } else {
       eventAbi = _.find(abi, { name: eventName })
     }
-    const eventSignature = _abi.getEventSignatureFromAbiByName(
+    const eventString = _abi.getEventStringFromAbiName(
       eventAbi,
       eventName
     )
-    // TODO: semantics for event signature
-    const topicForEventSignature = ethUtil.addHexPrefix(
-      jsSHA3.keccak256(eventSignature)
-    )
+    const eventSignature = utils.id(eventString)
+    const topicForEventSignature = utils.hexlify(eventSignature)
     const topicsForIndexedArgs = _abi.getTopicsForIndexedArgs(
       eventAbi,
       indexFilterValues
@@ -52,7 +47,7 @@ const _abi = {
     return filter
   },
 
-  getEventSignatureFromAbiByName: (eventAbi, eventName) => {
+  getEventStringFromAbiName: (eventAbi, eventName) => {
     const types = _.map(eventAbi.inputs, 'type')
     const signature = `${eventAbi.name}(${types.join(',')})`
     return signature
@@ -69,10 +64,7 @@ const _abi = {
         topics.push(null)
       } else {
         const value = indexFilterValues[eventInput.name]
-        const buffer = ethUtil.toBuffer(value)
-        const paddedBuffer = ethUtil.setLengthLeft(buffer, TOPIC_LENGTH)
-        const topic = ethUtil.bufferToHex(paddedBuffer)
-        topics.push(topic)
+        topics.push(value)
       }
     }
     return topics

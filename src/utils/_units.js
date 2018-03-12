@@ -1,5 +1,20 @@
-import Eth from 'ethjs'
+import BNJS from 'bn.js'
 import _ from 'lodash'
+
+// TODO: typecheck
+export const BN = small => {
+  return new BNJS(small.toString(10), 10)
+}
+// Trim to 3 trailing decimals
+export const trimDecimalsThree = n =>
+  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
+// Adds commas every 3 digits
+export const withCommas = number => {
+  let sides = []
+  sides = number.toString().split('.')
+  sides[0] = sides[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return sides.join('.')
+}
 
 // Random integer for salt
 export const randInt = (min, max) => {
@@ -11,22 +26,6 @@ export const randInt = (min, max) => {
     throw new TypeError('All args should have been numbers')
   }
   return Math.floor(Math.random() * (max - min + 1) + min)
-}
-
-export const BN = small => new Eth.BN(small.toString(10), 10)
-// BN helpers
-export const toWei = ether => Eth.toWei(ether, 'ether')
-export const toEther = wei => Eth.fromWei(wei, 'ether')
-
-// Trim to 3 trailing decimals
-export const trimDecimalsThree = n =>
-  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
-// Adds commas every 3 digits
-export const withCommas = number => {
-  let sides = []
-  sides = number.toString().split('.')
-  sides[0] = sides[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return sides.join('.')
 }
 
 // blockchain -> human
@@ -53,9 +52,3 @@ export const convertedToBaseUnit = (amount, decimals) => {
   const baseUnit = BN(amount).mul(decimalPower)
   return baseUnit.toString(10)
 }
-
-export const bytesToHex = byteArray =>
-  `0x${byteArray.reduce(
-    (hexString, byte) => hexString + byte.toString(16),
-    ''
-  )}`

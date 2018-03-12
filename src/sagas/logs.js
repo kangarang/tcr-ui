@@ -119,11 +119,15 @@ function* logsToListingsSaga(sb, eb, topic, contract) {
       fromBlock: new Eth.BN(sb),
       toBlock: eb,
     }
+    const indexedFilterValues = {
+      // listingHash:
+      //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
+    }
     const filter = yield call(
       _abi.getFilter,
       contract.address,
       topic,
-      [],
+      indexedFilterValues,
       contract.abi,
       blockRange
     )

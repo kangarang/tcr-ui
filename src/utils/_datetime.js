@@ -1,7 +1,6 @@
 import moment from 'moment'
 
-// Thank you Augur!
-// https://github.com/AugurProject/augur/tree/seadragon/src/utils
+// adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
 
 export function convertUnixTimeLeft(integer) {
   return timeLeft(moment.unix(integer).toDate())
