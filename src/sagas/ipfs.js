@@ -35,6 +35,7 @@ export function* addAbiSaga(action) {
   })
 
   const ipfsJSON = JSON.parse(content)
+  console.log('ipfsJSON', ipfsJSON)
 
   yield put(ipfsAbiRetrieved(ipfsJSON))
 

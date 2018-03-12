@@ -4,7 +4,7 @@
 
 TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a Registry of high-quality entries
 
-The vision of this project is to build a registry-agnostic, highly-configurable, client-side user interface to interact and transact with Ethereum TCRs
+The vision of this project is to build a registry-agnostic client-side user interface to interact and transact with Ethereum TCRs
 
 ---
 
@@ -104,120 +104,187 @@ Deploy UI to elastic beanstalk (ask for credentials)
 
 ---
 
-## Credits
+## Transactions (in generally chronologic order):
 
-UI Components
+```
+token.approve(address _spender, uint _value)
+```
 
-[aragon-ui](https://github.com/aragon/aragon-ui/tree/master/src/components)
-
-[aragon-ui/styles](https://scene.zeplin.io/project/59a827960d4c4cb2274007f5)
-
-Utils
-
-[0x.js](https://github.com/0xProject/0x.js/tree/development/packages)
-
-[Augur](https://github.com/AugurProject/augur/tree/seadragon/src/utils)
-
-[MyCrypto](https://github.com/MyCryptoHQ/MyCrypto/tree/develop/common/utils)
-
-[UDAPP](https://github.com/kumavis/udapp)
+* allows `_spender` to transfer tokens on behalf of `msg.sender`, up to `_value`
+* in our case, `_spender` is Registry, PLCRVoting, or Parameterizer
+* `msg.sender`: any
 
 ---
 
-### TCR endpoints
-
-#### Token:
-
 ```
-Transactions:
-  .approve(address _spender, uint _value)
-  .transferFrom(address _from, address _to, uint _value)
-  .transfer(address _to, uint _value)
-
-Calls:
-  .balanceOf(address _owner) -> BN
-  .allowance(address _owner, address _spender) -> BN
+  registry.apply(bytes32 _listingHash, uint _amount, string _data)
 ```
 
-#### Registry:
+* applies a Listing to the Registry
+* `msg.sender`: becomes Listing owner
+
+---
 
 ```
-Transactions:
-// registry-related
-  .apply(bytes32 _listingHash, uint _amount, string _data)
-  .challenge(bytes32 _listingHash, string _data)
-  .deposit(bytes32 _listingHash, uint _amount)
-  .withdraw(bytes32 _listingHash, uint _amount)
-  .exit(bytes32 _listingHash)
-  .updateStatus(bytes32 _listingHash)
-
-// token-related
-  .claimVoterReward(uint _challengeID, uint _salt)
-
-Calls:
-// registry-related
-  .appWasMade(bytes32 _listingHash) -> Boolean
-  .canBeWhitelisted(bytes32 _listingHash) -> Boolean
-  .isWhitelisted(bytes32 _listingHash) -> Boolean
-  .isExpired(uint _termDate) -> Boolean
-  .listings(bytes32 _listingHash) -> Listing struct (Array)
-
-// token-related
-  .challengeWinnerReward(uint _challengeID) -> BN
-  .voterCanClaimReward(uint _challengeID, address _address) -> Boolean
-
-// voting-related
-  .challenges(uint _challengeID) -> Challenge struct (Array)
-  .challengeExists(bytes32 _listingHash) -> Boolean
-  .challengeCanBeResolved(bytes32 _listingHash) -> Boolean
-  .voterReward(address _address, uint _challengeID, uint _salt)
+  registry.challenge(bytes32 _listingHash, string _data)
 ```
 
-#### PLCR Voting
+* challenges a Listing (either in-application or whitelisted)
+
+---
 
 ```
-Transactions:
-// token-related
-  .requestVotingRights(uint _numTokens)
-  .withdrawVotingRights(uint _numTokens)
-  .rescueTokens(uint _pollID)
-
-// voting-related
-  .commitVote(uint _pollID, bytes32 _secretHash, uint _numTokens, uint _prevPollID)
-  .revealVote(uint _pollID, uint _voteOption, uint _salt)
-
-(parameterizer-related)
-  .startPoll(uint _voteQuorum, uint _commitDuration, uint _revealDuration)
-
-Calls:
-// token-related
-  .getLockedTokens(address _voter) -> BN
-  .getInsertPointForNumTokens(address _address, uint _numTokens) -> BN
-  .getNumPassingTokens(address _address, uint _pollID, uint _salt) -> BN
-  .getNumTokens(address _voter, uint _pollID) -> BN
-  .getTotalNumberOfTokensForWinningOption(uint _pollID) -> BN
-  .voteTokenBalance(address _voter) -> BN
-
-// voting-related
-  .hasBeenRevealed(address _voter, uint _pollID) -> Boolean
-  .commitPeriodActive(address uint _pollID) -> Boolean
-  .revealPeriodActive(uint _pollID) -> Boolean
-  .isExpired(uint _terminationDate) -> Boolean
-  .isPassed(uint _pollID) -> Boolean
-  .pollEnded(uint _pollID) -> Boolean
-  .pollExists(uint _pollID) -> Boolean
-  .getCommitHash(address _voter, uint _pollID) -> bytes32
-
-  .pollMap(uint _pollID) -> Poll struct (Array)
-  .validPosition(uint _prevID, uint _nextID, address _address, uint _numTokens) -> Boolean
+  registry.deposit(bytes32 _listingHash, uint _amount)
 ```
 
-#### Parameterizer
+* increases the deposit stake associated with a Listing
+* `msg.sender`: must be Listing owner
+
+---
 
 ```
-Calls:
-  .proposals(uint _pollID) -> Poll struct (indended data change)
-  .challenges(uint _challengeID) -> Challenge struct
+  registry.withdraw(bytes32 _listingHash, uint _amount)
+```
+
+* decreases the deposit stake associated with a listing
+* `msg.sender`: must be Listing owner
+
+---
+
+```
+  registry.exit(bytes32 _listingHash)
+```
+
+* removes a registered Listing from the registry
+* `msg.sender`: must be owner of listing
+
+---
+
+```
+  registry.updateStatus(bytes32 _listingHash)
+```
+
+* resolves a Listing's status
+  * in-application or challenged -> removed or whitelisted
+* `msg.sender`: any
+
+Note:
+
+Scenario 1. IF there IS NOT a challenge:
+a. the Listing is whitelisted
+
+Scenario 2. IF there IS a challenge:
+
+a. if the challenger won, challenger is auto-transferred the challenge reward
+
+b. if the applicant won, the challenge reward is added to the Listing's deposit stake, available to be withdrawn using `registry.withdraw`
+
+---
+
+```
+  voting.requestVotingRights(uint _numTokens)
+```
+
+* transfers tokens from msg.sender -> PLCRVoting contract
+* `msg.sender`: token holder with allowance > `_numTokens`
+
+---
+
+```
+  voting.commitVote(uint _pollID, bytes32 _secretHash, uint _numTokens, uint _prevPollID)
+```
+
+* submit a secret vote
+* `msg.sender`: token holder with votingRights > `_numTokens`
+
+---
+
+```
+  voting.revealVote(uint _pollID, uint _voteOption, uint _salt)
+```
+
+* reveal a secret vote
+* `msg.sender`: token holder that previously committed a vote in `_pollID`
+
+---
+
+```
+  registry.claimVoterReward(uint _challengeID, uint _salt)
+```
+
+* lorem ipsum
+* `msg.sender`: 
+
+---
+
+```
+  voting.withdrawVotingRights(uint _numTokens)
+```
+
+* lorem ipsum
+* `msg.sender`: 
+
+---
+
+```
+  voting.rescueTokens(uint _pollID)
+```
+
+* lorem ipsum
+* `msg.sender`: 
+
+---
+
+```
+  parameterizer.startPoll(uint _voteQuorum, uint _commitDuration, uint _revealDuration)
+```
+
+* lorem ipsum
+* `msg.sender`: 
+
+---
+
+## Calls:
+
+```
+  token.balanceOf.call(address _owner) -> BN
+  token.allowance.call(address _owner, address _spender) -> BN
+
+  registry.appWasMade.call(bytes32 _listingHash) -> Boolean
+  registry.canBeWhitelisted.call(bytes32 _listingHash) -> Boolean
+  registry.isWhitelisted.call(bytes32 _listingHash) -> Boolean
+  registry.isExpired.call(uint _termDate) -> Boolean
+  registry.listings.call(bytes32 _listingHash) -> Listing struct (Array)
+
+  registry.challengeWinnerReward.call(uint _challengeID) -> BN
+  registry.voterCanClaimReward.call(uint _challengeID, address _address) -> Boolean
+
+  registry.challenges.call(uint _challengeID) -> Challenge struct (Array)
+  registry.challengeExists.call(bytes32 _listingHash) -> Boolean
+  registry.challengeCanBeResolved.call(bytes32 _listingHash) -> Boolean
+  registry.voterReward.call(address _address, uint _challengeID, uint _salt)
+
+  voting.getLockedTokens(address _voter) -> BN
+  voting.getInsertPointForNumTokens(address _address, uint _numTokens) -> BN
+  voting.getNumPassingTokens(address _address, uint _pollID, uint _salt) -> BN
+  voting.getNumTokens(address _voter, uint _pollID) -> BN
+  voting.getTotalNumberOfTokensForWinningOption(uint _pollID) -> BN
+  voting.voteTokenBalance(address _voter) -> BN
+
+  voting.hasBeenRevealed(address _voter, uint _pollID) -> Boolean
+  voting.commitPeriodActive(address uint _pollID) -> Boolean
+  voting.revealPeriodActive(uint _pollID) -> Boolean
+  voting.isExpired(uint _terminationDate) -> Boolean
+  voting.isPassed(uint _pollID) -> Boolean
+  voting.pollEnded(uint _pollID) -> Boolean
+  voting.pollExists(uint _pollID) -> Boolean
+  voting.getCommitHash(address _voter, uint _pollID) -> bytes32
+
+  voting.pollMap(uint _pollID) -> Poll struct (Array)
+  voting.validPosition(uint _prevID, uint _nextID, address _address, uint _numTokens) -> Boolean
+
+  parameterizer.proposals(uint _pollID) -> Poll struct (indended data change)
+  parameterizer.challenges(uint _challengeID) -> Challenge struct
 ```
 
 ---
@@ -233,38 +300,37 @@ _Application(bytes32 listingHash, uint deposit, string data)
   -> new Listing in Application stage
 
 _Challenge(bytes32 listingHash, uint deposit, uint pollID, string data)
-  -> change from Application stage -> Voting stage
+  -> Application stage -> Voting stage
 
-_ChallengeFailed(uint challengeID)
 _NewListingWhitelisted(bytes32 listingHash)
-  -> change from Application -or- Voting stage -> Registry stage
+  -> Application stage -or- Voting stage -> Registry stage
 
-_ChallengeSucceeded(uint challengeID)
 _ApplicationRemoved(bytes32 listingHash)
 _ListingRemoved(bytes32 listingHash)
-  -> delete Listing
+  -> remove Listing from view
 
 _RewardClaimed(address voter, uint challengeID, uint reward)
 _Deposit(bytes32 listingHash, uint added, uint newTotal)
 _Withdrawal(bytes32 listingHash, uint withdrew, uint newTotal)
-  -> ETH/TOKEN-related
+  -> adjust Listing's deposit accordingly
 ```
 
 #### PLCR Voting
 
 ```
 PollCreated(uint voteQuorum, uint commitDuration, uint revealDuration, uint pollID)
-  -> new voting_item (comes with _Challenge)
+  -> new parameterization proposal
 
 VoteCommitted(address voter, uint pollID, uint numTokens)
-  -> change voting_item
+  -> increase committed numTokens for pollID
 
 VoteRevealed(address voter, uint pollID, uint numTokens, uint choice)
-  -> change voting_item
+  -> decrease committed numTokens for pollID
+  -> increase revealed numTokens for pollID
 
 VotingRightsGranted(address voter, uint numTokens)
 VotingRightsWithdrawn(address voter, uint numTokens)
-  -> ETH/TOKEN-related
+  -> user-specific
 ```
 
 ---
@@ -311,7 +377,68 @@ If the majority of votes is AGAINST the `Listing`, the `Listing` is removed from
 
 ---
 
+## IPFS
+
+InterPlanetary File System
+
+https://medium.com/@ConsenSys/an-introduction-to-ipfs-9bba4860abd0
+
+“When you have IPFS, you can start looking at everything else in one specific way and you realize that you can replace it all” — Juan Benet
+
+"IPFS uses content addressing at the HTTP layer. This is the practice of saying instead of creating an identifier that addresses things by location, we’re going to address it by some representation of the content itself. This means that the content is going to determine the address. The mechanism is to take a file, hash it cryptographically so you end up with a very small and secure representation of the file which ensures that someone can not just come up with another file that has the same hash and use that as the address. The address of a file in IPFS usually starts with a hash that identifies some root object and then a path walking down. Instead of a server, you are talking to a specific object and then you are looking at a path within that object."
+
+**EXAMPLE**:
+
+<details>
+<summary>IPFS Pseudocode example</summary>
+
+```js
+const listingString = 'consensysclassic.net'
+
+const obj = {
+  id: listingString,
+}
+
+const CID = ipfs.files.add(Buffer.from(JSON.stringify(obj)))
+// CID: Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+
+const listingHash = keccak256(listingString)
+// 0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2
+registry.apply(listingHash, 50000, CID)
+
+// mining...
+
+// on the client side...
+
+// event _Application(listingHash, deposit, data)
+// _Application('0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2', 50000, 'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7')
+
+const eventResult = [
+  '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
+  50000,
+  'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7',
+]
+
+// const listing = registry.listings.call(eventResult[0])
+// listing: [applicationExpiry, whitelisted, owner, unstakedDeposit, challengeID]
+
+const ipfsPath = ipfs.files.get(eventResult[2])
+
+ipfsPath.forEach(file => {
+  console.log(file.path)
+  // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+  console.log(file.content.toString('utf8'))
+  // {"id":"consensysclassic.net"}
+})
+```
+
+</details>
+
+---
+
 ## IPLD
+
+**This section is research. Not required**
 
 InterPlanetary Linked Data
 
@@ -333,10 +460,10 @@ In short, IPLD is JSON documents with named merkle-links that can be traversed
 
 * A link between two objects which is content-addressed with the cryptographic hash of the target object, and embedded in the source object
 * A merkle-link is represented in the IPLD object model by a map containing a single key / mapped to a "link value"
-* For example:
+* **EXAMPLE**:
 
 <details>
-<summary>EXPAND</summary>
+<summary>Merkle Links example</summary>
 
 ```js
 // A link, represented in json as a "link object"
@@ -400,10 +527,10 @@ In short, IPLD is JSON documents with named merkle-links that can be traversed
 * a deterministic description on a serialized format that ensures the same logical object is always serialized to the exact same sequence of bits. This is critical for merkle-linking, and all cryptographic applications
 * [more details](https://github.com/ipld/specs/tree/master/ipld#canonical-format)
 
-### Datastructure Examples
+**EXAMPLE:**
 
 <details>
-<summary>EXPAND</summary>
+<summary>Datastructure examples</summary>
 
 **Unix Filesystem**
 
@@ -514,96 +641,25 @@ In short, IPLD is JSON documents with named merkle-links that can be traversed
 
 ---
 
-NOTE: this part is required
+## Credits
 
-## IPFS
+UI Components
 
-InterPlanetary File System
+[aragon-ui](https://github.com/aragon/aragon-ui/tree/master/src/components)
 
-https://medium.com/@ConsenSys/an-introduction-to-ipfs-9bba4860abd0
+[material-ui](https://material-ui-next.com/)
 
-“When you have IPFS, you can start looking at everything else in one specific way and you realize that you can replace it all” — Juan Benet
+[semantic-ui](https://react.semantic-ui.com/)
 
-IPFS uses content addressing at the HTTP layer. This is the practice of saying instead of creating an identifier that addresses things by location, we’re going to address it by some representation of the content itself. This means that the content is going to determine the address. The mechanism is to take a file, hash it cryptographically so you end up with a very small and secure representation of the file which ensures that someone can not just come up with another file that has the same hash and use that as the address. The address of a file in IPFS usually starts with a hash that identifies some root object and then a path walking down. Instead of a server, you are talking to a specific object and then you are looking at a path within that object.
+Utils
 
-**IPFS Pseudocode**:
+[0x.js](https://github.com/0xProject/0x.js/tree/development/packages)
 
-<details>
-<summary>EXPAND</summary>
+[Augur](https://github.com/AugurProject/augur/tree/seadragon/src/utils)
 
-```js
-const listingString = 'AdToken'
-const listingHash = keccak256(listingString)
-// 0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0
+[MyCrypto](https://github.com/MyCryptoHQ/MyCrypto/tree/develop/common/utils)
 
-const obj = {
-  id: listingHash,
-  data: listingString,
-}
-
-const CID = ipfs.files.add(Buffer.from(JSON.stringify(obj)))
-// CID: QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o
-
-registry.apply(listingHash, 50000, CID)
-
-// mining...
-
-// on the client side...
-
-// event _Application(listingHash, deposit, data)
-// _Application('0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0', 50000, 'QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o')
-
-
-const eventResult = [
-  '0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0',
-  50000,
-  'QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o',
-]
-
-// const listing = registry.listings.call(eventResult[0])
-// listing: [applicationExpiry, whitelisted, owner, unstakedDeposit, challengeID]
-
-const ipfsPath = ipfs.files.get(eventResult[2])
-
-ipfsPath.forEach(file => {
-  console.log(file.path)
-  // QmQBZmEJzdEujzo33P1L4KE25NFLMUJMTW9aNCwmcLx61o
-  console.log(file.content.toString('utf8'))
-  // {"id":"0xab0d37198f6c323cc472eb6435b34943e99cff49fc9c765a0bc8fa7d09d087f0","data":"AdToken"}
-})
-```
-
-</details>
-
-<details>
-<summary>another example</summary>
-
-```js
-const CID = new Promise((resolve, reject) => {
-  const ipfsObj = {
-    id: '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
-    data: 'consensysclassic.net',
-  }
-  ipfs.files.add(Buffer.from(JSON.stringify(ipfsObj)), (err, result) => {
-    if (err) reject(new Error(err))
-    console.log('result', result)
-    // CID: Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
-    resolve(result)
-  })
-})
-
-// Fetch a file or an entire directory tree from IPFS that is addressed by a valid IPFS Path.
-const ipfsPath = ipfs.files.get(CID[0].hash)
-
-ipfsPath.forEach(file => {
-  console.log(file.path)
-  // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
-  console.log(file.content.toString('utf8'))
-  // {"id":"0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2","data":"consensysclassic.net"}
-})
-```
-
-</details>
+[UDAPP](https://github.com/kumavis/udapp)
 
 ---
 
@@ -613,8 +669,7 @@ These workflow diagrams were created by our wonderful designer, Eva Shon.
 
 ![Simple overview](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/simple-overview.png)
 
-![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
----
+## ![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
 
 ### License
 
