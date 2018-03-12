@@ -15,7 +15,7 @@ import {
 import _vote from '../utils/_vote'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMined } from '../actions'
-import { addDataSaga, addAbiSaga } from './ipfs'
+import { ipfsAddDataSaga } from './ipfs'
 
 function* callUDappSaga(action) {
   console.log('call requested:', action)
@@ -70,8 +70,6 @@ function* handleSendTransaction(action) {
     yield call(requestVotingRightsSaga, action)
   } else if (methodName === 'commitVote') {
     yield call(commitVoteSaga, action)
-  } else if (methodName === 'uploadAbi') {
-    yield call(addAbiSaga, action)
   } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else {
@@ -94,7 +92,7 @@ function* registryTxnSaga(action) {
   })
 
   if (methodName === 'apply') {
-    const fileHash = yield call(addDataSaga, {
+    const fileHash = yield call(ipfsAddDataSaga, {
       payload: { name: args[2], listingHash: args[0], data: args[3] || '' },
     })
     args[2] = fileHash

@@ -48,10 +48,7 @@ import {
   FileInput,
 } from 'components/StyledHome'
 
-import {
-  convertedToBaseUnit,
-  withCommas,
-} from 'utils/_units'
+import { convertedToBaseUnit, withCommas } from 'utils/_units'
 import _vote from 'utils/_vote'
 
 import ListingRow from './ListingRow'
@@ -126,24 +123,6 @@ class Home extends Component {
       voterReward: vR.toString(10),
     })
   }
-  handleAbiFileInput = e => {
-    const file = e.target.files[0]
-    const fr = new window.FileReader()
-
-    fr.onload = () => {
-      const contents = fr.result
-      const json = JSON.parse(contents)
-      try {
-        this.setState({
-          fileInput: json,
-        })
-      } catch (error) {
-        throw new Error('Invalid Commit JSON file')
-      }
-    }
-
-    fr.readAsText(file)
-  }
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
@@ -212,9 +191,7 @@ class Home extends Component {
                           this.state.selectedOne.getIn(['latest', 'pollID']),
                           this.state.fileInput.salt,
                         ]
-                      : methodName === 'uploadAbi'
-                        ? [this.state.fileInput]
-                        : false
+                      : false
   }
 
   handleSendTransaction = (methodName, listing, contract, voteOption) => {
@@ -505,16 +482,6 @@ class Home extends Component {
               ))}
             </Table>
           </div>
-
-          <FileInput
-            type="file"
-            name="file"
-            onChange={this.handleAbiFileInput}
-          />
-
-          <Button onClick={e => this.handleSendTransaction('uploadAbi')}>
-            {'Upload abi'}
-          </Button>
         </HomeWrapper>
       </div>
     )
