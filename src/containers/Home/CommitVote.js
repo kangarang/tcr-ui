@@ -6,7 +6,7 @@ import { SidePanel, SidePanelSeparator, Button, TextInput } from '@aragon/ui'
 import { jsonTheme } from '../../colors'
 import translate from 'translations'
 
-import { SideSplit, SideText } from 'components/Transaction'
+import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 
 import { withCommas } from 'utils/_units'

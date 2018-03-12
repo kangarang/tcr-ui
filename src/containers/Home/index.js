@@ -39,7 +39,7 @@ import {
   selectMiningStatus,
 } from 'selectors'
 
-import { SideSplit, SideText } from 'components/Transaction'
+import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import Navigation from 'components/Navigation'
 import {
   MarginDiv,

@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux-immutable'
 import home from './home'
-import miningStatus from './miningStatus'
+import transaction from './transaction'
 import udapp from './udapp'
 import stats from './stats'
 
 export default function createReducer() {
   return combineReducers({
     home,
-    miningStatus,
+    transaction,
     udapp,
     stats,
   })

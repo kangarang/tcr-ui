@@ -10,7 +10,7 @@ import {
 
 import translate from 'translations'
 
-import { SideSplit, SideText } from 'components/Transaction'
+import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 
 import { withCommas, baseToConvertedUnit } from 'utils/_units'
