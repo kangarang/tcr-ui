@@ -18,8 +18,6 @@ export default class Challenge extends Component {
       balances,
       handleInputChange,
       handleSendTransaction,
-      openApprove,
-      visibleApprove,
       selectedOne,
       openCommitVote,
     } = this.props

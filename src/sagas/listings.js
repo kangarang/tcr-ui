@@ -1,10 +1,9 @@
 import { fromJS } from 'immutable'
 import ipfsAPI from 'ipfs-api'
 
-import log from '../utils/_log'
-import { baseToConvertedUnit } from '../utils/_units'
-
-import { convertUnixTimeLeft, dateHasPassed } from '../utils/_datetime'
+import _logs from 'utils/_logs'
+import { baseToConvertedUnit } from 'utils/_units'
+import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
 
 export function updateListings(listings, newListings) {
   const latestListings = fromJS(newListings).reduce((acc, val) => {
@@ -37,8 +36,8 @@ export async function buildListings(
 ) {
   return Promise.all(
     decodedLogs.map(async (dLog, ind) => {
-      const block = await log.getBlock(ethjs, rawLogs[ind].blockHash)
-      const txDetails = await log.getTransaction(
+      const block = await _logs.getBlock(ethjs, rawLogs[ind].blockHash)
+      const txDetails = await _logs.getTransaction(
         ethjs,
         rawLogs[ind].transactionHash
       )

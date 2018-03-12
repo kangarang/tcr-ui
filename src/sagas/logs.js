@@ -4,13 +4,11 @@ import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 import Eth from 'ethjs'
 
+import { SET_CONTRACTS, POLL_LOGS_REQUEST } from 'actions/constants'
+
+import _abi from 'utils/_abi'
+
 import { setListings, pollLogsRequest, updateBalancesRequest } from '../actions'
-
-import { SET_CONTRACTS, POLL_LOGS_REQUEST } from '../actions/constants'
-
-import log from '../utils/_log'
-import _abi from '../utils/_abi'
-import { baseToConvertedUnit } from '../utils/_units'
 
 import {
   selectEthjs,
@@ -19,8 +17,6 @@ import {
   selectVoting,
   selectAllListings,
 } from '../selectors'
-
-import { convertUnixTimeLeft, dateHasPassed } from '../utils/_datetime'
 
 import { buildListings, updateListings } from './listings'
 

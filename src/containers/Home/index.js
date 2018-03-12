@@ -13,7 +13,6 @@ import {
   TableRow,
   TableCell,
   Text,
-  DropDown,
 } from '@aragon/ui'
 import { Icon } from 'semantic-ui-react'
 import translate from 'translations'
@@ -42,19 +41,16 @@ import {
 
 import { SideSplit, SideText } from 'components/Transaction'
 import Navigation from 'components/Navigation'
-import Identicon from 'components/Identicon'
 import {
   MarginDiv,
   HomeWrapper,
   CMItem,
   FileInput,
-  OverFlowDiv,
 } from 'components/StyledHome'
 
 import {
   convertedToBaseUnit,
   withCommas,
-  trimDecimalsThree,
 } from 'utils/_units'
 import _vote from 'utils/_vote'
 

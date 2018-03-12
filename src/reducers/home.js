@@ -12,7 +12,7 @@ import {
   SEND_TRANSACTION,
   TXN_MINED,
   IPFS_ABI_RETRIEVED,
-  SET_REGISTRY_CONTRACT,
+  // SET_REGISTRY_CONTRACT,
 } from '../actions/constants'
 
 const initialState = fromJS({
