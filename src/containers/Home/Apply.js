@@ -11,7 +11,8 @@ import translate from 'translations'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 
-import { withCommas, baseToConvertedUnit, BN } from 'utils/_units'
+import { baseToConvertedUnit, BN } from 'utils/_units'
+import { withCommas } from 'utils/_values'
 
 export default ({
   opened,

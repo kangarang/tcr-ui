@@ -20,6 +20,7 @@ import {
   FileInput,
   OverFlowDiv,
 } from 'components/StyledHome'
+import { withCommas, trimDecimalsThree } from '../../utils/_values'
 
 class Stats extends Component {
   constructor(props) {

@@ -11,12 +11,12 @@ import {
   selectVoting,
 } from '../selectors'
 
-import { randInt, convertedToBaseUnit } from '../utils/_units'
+import { convertedToBaseUnit } from 'utils/_units'
+import { getVoteSaltHash, randInt } from 'utils/_values'
+import saveFile from 'utils/_file'
+import { getEndDateString } from 'utils/_datetime'
 
-import _hash from '../utils/_hash'
-import saveFile from '../utils/_file'
 import { sendTransactionSaga } from './udapp'
-import { getEndDateString } from '../utils/_datetime';
 
 export default function* voteSaga() {
   yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)
@@ -50,7 +50,7 @@ export function* commitVoteSaga(action) {
   const salt = randInt(1e6, 1e8)
 
   // format args
-  const secretHash = _hash.getVoteSaltHash(voteOption, salt.toString(10))
+  const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(
     voting.getInsertPointForNumTokens.call,
     account,

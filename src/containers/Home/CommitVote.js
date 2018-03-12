@@ -9,7 +9,7 @@ import translate from 'translations'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 
-import { withCommas } from 'utils/_units'
+import { withCommas } from 'utils/_values'
 
 export default class Challenge extends Component {
   render() {

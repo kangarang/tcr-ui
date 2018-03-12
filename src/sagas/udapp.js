@@ -12,7 +12,7 @@ import {
   selectToken,
 } from '../selectors'
 
-import _hash from '../utils/_hash'
+import { getListingHash } from 'utils/_values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMined } from '../actions'
 import { ipfsAddSaga } from './ipfs'
@@ -32,7 +32,7 @@ function* callUDappSaga(action) {
 
   // hash the string
   if (method.inputs[0].name === '_listingHash') {
-    args[0] = _hash.getListingHash(args[0])
+    args[0] = getListingHash(args[0])
   }
   const txData = yield call(EthAbi.encodeMethod, method, args)
 
@@ -96,7 +96,7 @@ function* registryTxnSaga(action) {
       payload: { id: args[0], data: args[2] },
     })
     // hash the string
-    args[0] = _hash.getListingHash(args[0])
+    args[0] = getListingHash(args[0])
     // use ipfs CID as the _data field in the application
     args[2] = fileHash
   }

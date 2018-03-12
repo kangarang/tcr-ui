@@ -48,7 +48,8 @@ import {
   FileInput,
 } from 'components/StyledHome'
 
-import { convertedToBaseUnit, withCommas } from 'utils/_units'
+import { convertedToBaseUnit } from 'utils/_units'
+import { withCommas } from 'utils/_values'
 
 import ListingRow from './ListingRow'
 import Apply from './Apply'
