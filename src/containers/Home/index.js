@@ -49,7 +49,6 @@ import {
 } from 'components/StyledHome'
 
 import { convertedToBaseUnit, withCommas } from 'utils/_units'
-import _hash from 'utils/_hash'
 
 import ListingRow from './ListingRow'
 import Apply from './Apply'

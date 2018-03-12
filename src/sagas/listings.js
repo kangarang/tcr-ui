@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import ipfsAPI from 'ipfs-api'
 
 import _logs from 'utils/_logs'
 import { baseToConvertedUnit } from 'utils/_units'
