@@ -7,7 +7,7 @@ import {
   SET_CONTRACTS,
   UPDATE_BALANCES,
   REQUEST_MODAL_METHOD,
-  NEW_ARRAY,
+  SET_LISTINGS,
   DELETE_LISTINGS,
   SEND_TRANSACTION,
   TXN_MINED,
@@ -80,7 +80,7 @@ function homeReducer(state = initialState, action) {
     case REQUEST_MODAL_METHOD:
       return state.set('request', fromJS(action.payload))
     // TODO: semantics: set listings
-    case NEW_ARRAY:
+    case SET_LISTINGS:
       return state.set('listings', fromJS(action.payload))
     case DELETE_LISTINGS:
       return deleteObjectInArray(state, action.payload)

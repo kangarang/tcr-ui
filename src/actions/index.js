@@ -12,7 +12,7 @@ import {
   SET_TOKENS_ALLOWED,
   GET_ETH_PROVIDER,
   POLL_LOGS_REQUEST,
-  NEW_ARRAY,
+  SET_LISTINGS,
   CHANGE_ITEMS,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
@@ -176,9 +176,9 @@ export function setTokensAllowed(payload) {
     payload,
   }
 }
-export function newArray(payload) {
+export function setListings(payload) {
   return {
-    type: NEW_ARRAY,
+    type: SET_LISTINGS,
     payload,
   }
 }
