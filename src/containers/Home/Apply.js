@@ -114,13 +114,12 @@ export default ({
         </Button>
         {miningStatus && <TxnProgress />}
         {latestTxn && (
-          <JSONTree
-            invertTheme={false}
-            theme={jsonTheme}
-            data={latestTxn}
-            keyName={'root'}
-            level={0}
-          />
+          <a
+            target="_blank"
+            href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}
+          >
+            {latestTxn.get('tx')}
+          </a>
         )}
       </MarginDiv>
 

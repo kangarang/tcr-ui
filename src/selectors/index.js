@@ -95,7 +95,6 @@ export const selectCandidates = createSelector(selectAllListings, listings =>
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
   listings.filter(
     li =>
-      !li.get('whitelisted') &&
       li.get('data') &&
       li.getIn(['latest', 'pollID']) &&
       !li.getIn(['latest', 'event']).includes('Removed')
@@ -107,6 +106,7 @@ export const selectWhitelist = createSelector(selectAllListings, listings =>
     li =>
       li.get('whitelisted') &&
       li.get('data') &&
-      !li.getIn(['latest', 'event']).includes('Removed')
+      !li.getIn(['latest', 'event']).includes('Removed') &&
+      !li.getIn(['latest', 'event']).includes('_Challenge')
   )
 )
