@@ -10,9 +10,9 @@ The vision of this project is to build a registry-agnostic client-side user inte
 
 ## Resources
 
-### Wiki
+### Wiki / Docs
 
-[Check out the Wiki for code samples, contract endpoints, events, IPFS, and more!](https://github.com/kangarang/tcr-ui/wiki)
+[Check out the Wiki for code samples, contract endpoints, events, IPFS, and more docs!](https://github.com/kangarang/tcr-ui/wiki)
 
 ### Articles
 
@@ -99,16 +99,6 @@ Start development server: `http://localhost:3000`
 
 ---
 
-## Workflow diagrams
-
-These workflow diagrams were created by our wonderful designer, Eva Shon
-
-![Simple overview](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/simple-overview.png)
-
-## ![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
-
----
-
 ## Credits
 
 UI Components
@@ -128,6 +118,16 @@ Utils
 [MyCrypto](https://github.com/MyCryptoHQ/MyCrypto/tree/develop/common/utils)
 
 [UDAPP](https://github.com/kumavis/udapp)
+
+---
+
+## Workflow diagrams
+
+These workflow diagrams were created by our wonderful designer, Eva Shon
+
+![Simple overview](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/simple-overview.png)
+
+## ![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
 
 ---
 
