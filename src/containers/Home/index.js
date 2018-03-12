@@ -49,7 +49,7 @@ import {
 } from 'components/StyledHome'
 
 import { convertedToBaseUnit, withCommas } from 'utils/_units'
-import _vote from 'utils/_vote'
+import _hash from 'utils/_hash'
 
 import ListingRow from './ListingRow'
 import Apply from './Apply'
@@ -64,6 +64,7 @@ class Home extends Component {
       activeItem: 0,
       opened: false,
       listingName: '',
+      data: '',
       numTokens: '',
       openChallenge: false,
       openCommitVote: false,
@@ -153,9 +154,9 @@ class Home extends Component {
   getMethodArgs(methodName, listing, contract, voteOption) {
     return methodName === 'apply'
       ? [
-          _vote.getListingHash(this.state.listingName),
-          convertedToBaseUnit(this.state.numTokens, 18),
           this.state.listingName,
+          convertedToBaseUnit(this.state.numTokens, 18),
+          this.state.data,
         ]
       : methodName === 'challenge'
         ? [
@@ -214,8 +215,6 @@ class Home extends Component {
       parameters,
       token,
       contracts,
-      network,
-      miningStatus,
     } = this.props
 
     return (
@@ -442,7 +441,7 @@ class Home extends Component {
               {whitelist.map(one => (
                 <TableRow key={one.get('listingHash')}>
                   <TableCell>
-                    <Text>{one.get('data')}</Text>
+                    <Text>{one.get('ipfsID')}</Text>
                   </TableCell>
 
                   <TableCell>{one.getIn(['latest', 'numTokens'])}</TableCell>

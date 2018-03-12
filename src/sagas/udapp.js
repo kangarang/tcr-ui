@@ -12,10 +12,10 @@ import {
   selectToken,
 } from '../selectors'
 
-import _vote from '../utils/_vote'
+import _hash from '../utils/_hash'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMined } from '../actions'
-import { ipfsAddDataSaga } from './ipfs'
+import { ipfsAddSaga } from './ipfs'
 
 function* callUDappSaga(action) {
   console.log('call requested:', action)
@@ -32,7 +32,7 @@ function* callUDappSaga(action) {
 
   // hash the string
   if (method.inputs[0].name === '_listingHash') {
-    args[0] = _vote.getListingHash(args[0])
+    args[0] = _hash.getListingHash(args[0])
   }
   const txData = yield call(EthAbi.encodeMethod, method, args)
 
@@ -81,20 +81,23 @@ function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
   const methodName = action.payload.methodName
 
-  let args = action.payload.args.map(rg => {
-    if (_.isObject(rg)) {
-      return rg.toString()
-    } else if (_.isString(rg)) {
-      return rg
+  let args = action.payload.args.map(arg => {
+    if (_.isObject(arg)) {
+      return arg.toString()
+    } else if (_.isString(arg)) {
+      return arg
     }
     // TODO: more typechecking
-    return rg
+    return arg
   })
 
   if (methodName === 'apply') {
-    const fileHash = yield call(ipfsAddDataSaga, {
-      payload: { name: args[2], listingHash: args[0], data: args[3] || '' },
+    const fileHash = yield call(ipfsAddSaga, {
+      payload: { id: args[0], data: args[2] },
     })
+    // hash the string
+    args[0] = _hash.getListingHash(args[0])
+    // use ipfs CID as the _data field in the application
     args[2] = fileHash
   }
 
@@ -125,26 +128,6 @@ export function* sendContractTxn(action) {
   }
 }
 
-export function* sendEthjsTransactionSaga(data, to) {
-  try {
-    const ethjs = yield select(selectEthjs)
-    const from = yield select(selectAccount)
-    const nonce = yield call(ethjs.getTransactionCount, from)
-    const payload = {
-      to,
-      from,
-      gas: 450000,
-      gasPrice: 25000000000,
-      nonce,
-      data,
-    }
-    const txHash = yield call(ethjs.sendTransaction, payload)
-    return txHash
-  } catch (error) {
-    console.log('error', error)
-  }
-}
-
 export function* sendTransactionSaga(contract, method, args) {
   try {
     const newArgs = args.map(rg => {
@@ -169,3 +152,24 @@ export function* sendTransactionSaga(contract, method, args) {
     console.log('error', error)
   }
 }
+
+// on hold
+// export function* sendEthjsTransactionSaga(data, to) {
+//   try {
+//     const ethjs = yield select(selectEthjs)
+//     const from = yield select(selectAccount)
+//     const nonce = yield call(ethjs.getTransactionCount, from)
+//     const payload = {
+//       to,
+//       from,
+//       gas: 450000,
+//       gasPrice: 25000000000,
+//       nonce,
+//       data,
+//     }
+//     const txHash = yield call(ethjs.sendTransaction, payload)
+//     return txHash
+//   } catch (error) {
+//     console.log('error', error)
+//   }
+// }

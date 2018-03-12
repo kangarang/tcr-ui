@@ -13,9 +13,10 @@ import {
 
 import { randInt, convertedToBaseUnit } from '../utils/_units'
 
-import _vote from '../utils/_vote'
+import _hash from '../utils/_hash'
 import saveFile from '../utils/_file'
 import { sendTransactionSaga } from './udapp'
+import { getEndDateString } from '../utils/_datetime';
 
 export default function* voteSaga() {
   yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)
@@ -49,7 +50,7 @@ export function* commitVoteSaga(action) {
   const salt = randInt(1e6, 1e8)
 
   // format args
-  const secretHash = _vote.getVoteSaltHash(voteOption, salt.toString(10))
+  const secretHash = _hash.getVoteSaltHash(voteOption, salt.toString(10))
   const prevPollID = yield call(
     voting.getInsertPointForNumTokens.call,
     account,
@@ -63,12 +64,8 @@ export function* commitVoteSaga(action) {
   console.log('pollStruct', pollStruct)
 
   // record expiry dates
-  const commitEndDateString = _vote.getEndDateString(
-    pollStruct[0].toNumber()
-  )
-  const revealEndDateString = _vote.getEndDateString(
-    pollStruct[1].toNumber()
-  )
+  const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
+  const revealEndDateString = getEndDateString(pollStruct[1].toNumber())
 
   const json = {
     salt: salt.toString(10),

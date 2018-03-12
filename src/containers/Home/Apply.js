@@ -92,6 +92,17 @@ export default ({
       </MarginDiv>
 
       <MarginDiv>
+        <Text color="grey" smallcaps>
+          {'IPFS DATA'}
+        </Text>
+        <TextInput
+          onChange={e => handleInputChange(e, 'data')}
+          wide
+          type="text"
+        />
+      </MarginDiv>
+      
+      <MarginDiv>
         <Button onClick={e => handleSendTransaction('apply')} mode="strong">
           {'Apply Listing'}
         </Button>

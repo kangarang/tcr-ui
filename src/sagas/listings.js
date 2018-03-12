@@ -4,6 +4,7 @@ import ipfsAPI from 'ipfs-api'
 import _logs from 'utils/_logs'
 import { baseToConvertedUnit } from 'utils/_units'
 import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
+import { getIPFSData } from 'libs/ipfs'
 
 export function updateListings(listings, newListings) {
   const latestListings = fromJS(newListings).reduce((acc, val) => {
@@ -55,6 +56,7 @@ export async function buildListings(
 }
 
 // TODO: tests
+// TODO: convert to saga?
 // TODO: add comments
 async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
   try {
@@ -62,7 +64,9 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     const event = dLog._eventName
     let numTokens
     let whitelisted
+    let ipfsContent
     let ipfsData
+    let ipfsID
 
     if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
       whitelisted = false
@@ -82,18 +86,13 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
     }
 
     if (event === '_Application') {
-      const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
-      const ipfs = await ipfsAPI(config)
-      const fileThing = await ipfs.files.get(data)
-      let content
-      fileThing.forEach(file => {
-        console.log(file.path)
-        content = file.content.toString('utf8')
-      })
-      content = JSON.parse(content)
-      data = content.data
+      const content = await getIPFSData(data)
+      console.log('ipfs content retrieved:', content)
+      ipfsContent = content
+      ipfsID = content.id // string
       ipfsData = content.data
-      console.log('ipfs log content:', content)
+        ? content.data
+        : content.registry && content.registry // listings
     }
 
     let listing = await contract.listings.call(listingHash)
@@ -124,18 +123,11 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
       revealEndDate = poll[1].toNumber()
       revealExpiry = convertUnixTimeLeft(revealEndDate)
     }
-    const infoObject = {
-      data,
-      ipfsData,
-      owner: event === '_Application' && txn.from,
-      numTokens,
-      pollID,
-      sender: txn.from,
-      ts: ts.toString(10),
-    }
     return {
       data,
+      ipfsContent,
       ipfsData,
+      ipfsID,
       owner: event === '_Application' && txn.from,
       listingHash,
       whitelisted,
@@ -150,13 +142,12 @@ async function buildListing(contract, ts, dLog, i, txn, voting, decodedLogs) {
         pollID,
         sender: txn.from,
         event,
-        ts,
+        ts: ts.toString(10),
         commitEndDate,
         commitExpiry,
         revealEndDate,
         revealExpiry,
       },
-      infoObject,
     }
   } catch (err) {
     console.log('build listing error', err)
