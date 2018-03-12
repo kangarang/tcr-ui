@@ -1,19 +1,17 @@
-import Ethjs from 'ethjs'
+import providers from 'ethers/providers'
 
 let provider
-let ethjs
 
-function setProvider() {
+export function setProvider() {
   if (
     typeof window.web3 !== 'undefined' &&
     typeof window.web3.currentProvider !== 'undefined'
   ) {
     // metamask
-    provider = window.web3.currentProvider
+    provider = new providers.Web3Provider(window.web3.currentProvider, 'rinkeby')
     return provider
   }
-  // ganache-cli
-  provider = Ethjs.HttpProvider(`http://localhost:8545`)
+  provider = providers.getDefaultProvider('rinkeby')
   return provider
 }
 
@@ -22,16 +20,4 @@ export function getCurrentProvider() {
     return provider
   }
   return new Error('provider not set yet')
-}
-
-export function setEthjs() {
-  ethjs = new Ethjs(setProvider())
-  return ethjs
-}
-
-export function getEthjs() {
-  if (typeof ethjs !== 'undefined') {
-    return ethjs
-  }
-  return new Error('ethjs not set yet')
 }

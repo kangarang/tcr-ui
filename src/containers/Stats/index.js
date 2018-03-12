@@ -94,7 +94,7 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
-  ethjs: selectEthjs,
+  provider: selectProvider,
   account: selectAccount,
   network: selectNetwork,
 

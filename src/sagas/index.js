@@ -3,7 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import { setWallet, loginError } from '../actions'
 import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 
-import { setEthjs } from '../libs/provider'
+import { setProvider } from '../libs/provider'
 import { initialRegistrySaga } from './contracts'
 
 export default function* rootSaga() {
@@ -12,20 +12,21 @@ export default function* rootSaga() {
 
 function* genesis() {
   try {
-    const ethjs = yield call(setEthjs)
-    const account = (yield call(ethjs.accounts))[0]
-    const networkID = yield call(ethjs.net_version)
+    const provider = yield call(setProvider)
+    console.log('provider', provider)
+    const account = (yield provider.listAccounts())[0]
+    console.log('account', account)
     const network =
-      networkID === '4'
+      provider.chainId === 4
         ? 'RINKEBY'
-        : networkID === '1'
+        : provider.chainId === 1
           ? 'MAIN'
-          : networkID === '420' ? 'GANACHE' : 'UNKNOWN'
+          : provider.chainId === '420' ? 'GANACHE' : 'UNKNOWN'
     if (account === undefined) {
       yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
     } else {
-      yield put(setWallet({ ethjs, account, network }))
-      yield call(initialRegistrySaga, ethjs, account)
+      yield put(setWallet({ provider, account, network }))
+      yield call(initialRegistrySaga, provider, account)
     }
   } catch (err) {
     console.log('Genesis error:', err)

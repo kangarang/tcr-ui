@@ -1,24 +1,16 @@
-import contract from 'truffle-contract'
+import ethers from 'ethers'
 
-const getDefaults = account => ({
-  from: account,
-  gas: 300000,
-  gasPrice: 25000000000,
-})
+export async function setupRegistry(provider, abi, address) {
+  const accounts = await provider.listAccounts()
+  const signer = await provider.getSigner(accounts[0])
 
-export async function setupRegistry(provider, account, abi, address) {
-  const Registry = contract(abi)
-  Registry.setProvider(provider)
-  Registry.defaults(getDefaults(account))
-
-  return Registry.at(address)
+  return new ethers.Contract(address, abi, signer)
 }
 
-export async function setupContract(provider, account, abi, registry, sc) {
-  const Contract = contract(abi)
-  Contract.setProvider(provider)
-  Contract.defaults(getDefaults(account))
+export async function setupContract(provider, abi, registry, sc) {
+  const accounts = await provider.listAccounts()
+  const signer = await provider.getSigner(accounts[0])
 
-  const address = await registry[sc].call()
-  return Contract.at(address)
+  const address = await registry.functions[sc]()
+  return new ethers.Contract(address, abi, signer)
 }

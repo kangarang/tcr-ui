@@ -14,7 +14,7 @@ import {
 } from '../actions/constants'
 
 const initialState = fromJS({
-  ethjs: {},
+  provider: {},
   account: '',
   network: '',
   balances: {
@@ -51,7 +51,7 @@ function homeReducer(state = initialState, action) {
     case SET_WALLET:
       return state
         .set('error', fromJS(false))
-        .set('ethjs', fromJS(action.payload.ethjs))
+        .set('provider', fromJS(action.payload.provider))
         .set('account', fromJS(action.payload.account))
         .set('network', fromJS(action.payload.network))
     case IPFS_ABI_RETRIEVED:

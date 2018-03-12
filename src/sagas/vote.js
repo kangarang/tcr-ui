@@ -6,7 +6,6 @@ import {
 } from '../actions/constants'
 
 import {
-  // selectEthjs,
   selectAccount,
   selectVoting,
 } from '../selectors'
@@ -45,23 +44,19 @@ export function* commitVoteSaga(action) {
   const voteOption = args[1]
   const numTokens = args[2]
   const data = args[3]
-  console.log('args', args)
+  // console.log('args', args)
   // const numTokens = convertedToBaseUnit(args[2], 18)
   const salt = randInt(1e6, 1e8)
 
   // format args
   const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
-  const prevPollID = yield call(
-    voting.getInsertPointForNumTokens.call,
-    account,
-    numTokens
-  )
-  console.log('prevPollID', prevPollID)
+  const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens)
+  // console.log('prevPollID', prevPollID)
   const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
   // grab the poll from the mapping
-  const pollStruct = yield call(voting.pollMap.call, pollID)
-  console.log('pollStruct', pollStruct)
+  const pollStruct = yield voting.pollMap(pollID)
+  // console.log('pollStruct', pollStruct)
 
   // record expiry dates
   const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
@@ -83,20 +78,16 @@ export function* commitVoteSaga(action) {
   const listingUnderscored = data.replace('.', '_')
   const filename = `${listingUnderscored}_pollID-${pollID}.json`
 
-  // saveFile(json, filename)
+  saveFile(json, filename)
 
-  const receipt = yield call(
+  yield call(
     sendTransactionSaga,
     voting,
     'commitVote',
     finalArgs
   )
 
-  if (receipt.receipt.status !== '0x00') {
-    saveFile(json, filename)
-  } else {
-    console.log('ERROR')
-  }
+  saveFile(json, filename)
 }
 
 export function* revealVoteSaga(action) {

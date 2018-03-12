@@ -1,5 +1,4 @@
 import React from 'react'
-import JSONTree from 'react-json-tree'
 import {
   SidePanel,
   SidePanelSeparator,
@@ -15,7 +14,6 @@ import { MarginDiv } from 'components/StyledHome'
 import { baseToConvertedUnit, BN } from 'utils/_units'
 import { withCommas } from 'utils/_values'
 import TxnProgress from '../Transaction/TxnProgress'
-import { jsonTheme } from '../../colors'
 
 export default ({
   opened,

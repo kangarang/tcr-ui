@@ -13,7 +13,7 @@ import {
   setRegistryContract,
 } from '../actions'
 
-import { selectEthjs, selectAccount } from '../selectors'
+import { selectProvider } from '../selectors'
 import { CHOOSE_TCR } from '../actions/constants';
 
 export default function* root() {
@@ -23,13 +23,11 @@ export default function* root() {
 
 function* chooseTCRSaga(action) {
   try {
-    const ethjs = yield select(selectEthjs)
-    const account = yield select(selectAccount)
+    const provider = yield select(selectProvider)
     const registry = yield call(
       setupRegistry,
-      ethjs.currentProvider,
-      account,
-      abis.registry,
+      provider,
+      abis.registry.abi,
       action.payload
     )
     yield put(setRegistryContract(registry))
@@ -38,15 +36,14 @@ function* chooseTCRSaga(action) {
   }
 }
 
-export function* initialRegistrySaga(ethjs, account) {
+export function* initialRegistrySaga(provider) {
   try {
-    const networkID = yield call(ethjs.net_version)
+    const networkID = provider.chainId
     const registry = yield call(
       setupRegistry,
-      ethjs.currentProvider,
-      account,
-      abis.registry,
-      abis.registry.networks[networkID].address
+      provider,
+      abis.registry.abi,
+      abis.registry.networks[networkID.toString()].address
     )
     yield put(setRegistryContract(registry))
   } catch (err) {
@@ -55,32 +52,29 @@ export function* initialRegistrySaga(ethjs, account) {
 }
 
 export function* contractsSaga(action) {
-  const ethjs = yield select(selectEthjs)
-  const account = yield select(selectAccount)
+  const provider = yield select(selectProvider)
   const registry = action.payload
+  console.log('registry', registry)
   try {
     let [token, parameterizer, voting] = yield all([
       call(
         setupContract,
-        ethjs.currentProvider,
-        account,
-        abis.token,
+        provider,
+        abis.token.abi,
         registry,
         'token'
       ),
       call(
         setupContract,
-        ethjs.currentProvider,
-        account,
-        abis.parameterizer,
+        provider,
+        abis.parameterizer.abi,
         registry,
         'parameterizer'
       ),
       call(
         setupContract,
-        ethjs.currentProvider,
-        account,
-        abis.voting,
+        provider,
+        abis.voting.abi,
         registry,
         'voting'
       ),
@@ -97,15 +91,15 @@ export function* contractsSaga(action) {
       tokenSymbol,
       registryName,
     ] = yield all([
-      call(parameterizer.get.call, 'minDeposit'),
-      call(parameterizer.get.call, 'applyStageLen'),
-      call(parameterizer.get.call, 'commitStageLen'),
-      call(parameterizer.get.call, 'revealStageLen'),
-      call(parameterizer.get.call, 'dispensationPct'),
-      call(token.name.call),
-      call(token.decimals.call),
-      call(token.symbol.call),
-      call(registry.name.call),
+      call(parameterizer.get, 'minDeposit'),
+      call(parameterizer.get, 'applyStageLen'),
+      call(parameterizer.get, 'commitStageLen'),
+      call(parameterizer.get, 'revealStageLen'),
+      call(parameterizer.get, 'dispensationPct'),
+      call(token.name),
+      call(token.decimals),
+      call(token.symbol),
+      call(registry.name),
     ])
 
     const parameters = {

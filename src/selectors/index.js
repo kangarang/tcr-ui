@@ -5,8 +5,8 @@ export const selectHome = state => state.get('home')
 export const selectError = createSelector(selectHome, homeState =>
   homeState.get('error')
 )
-export const selectEthjs = createSelector(selectHome, homeState =>
-  homeState.get('ethjs')
+export const selectProvider = createSelector(selectHome, homeState =>
+  homeState.get('provider')
 )
 export const selectAccount = createSelector(selectHome, homeState =>
   homeState.get('account')

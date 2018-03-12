@@ -25,7 +25,7 @@ import {
   chooseTCR,
 } from 'actions'
 import {
-  selectEthjs,
+  selectProvider,
   selectAccount,
   selectNetwork,
   selectBalances,
@@ -518,7 +518,7 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
-  ethjs: selectEthjs,
+  provider: selectProvider,
   account: selectAccount,
   network: selectNetwork,
 

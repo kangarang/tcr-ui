@@ -1,8 +1,8 @@
-import { call, put, select, all, takeEvery } from 'redux-saga/effects'
+import { put, select, all, takeEvery } from 'redux-saga/effects'
 import { updateBalances } from '../actions'
 import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
 import {
-  selectEthjs,
+  selectProvider,
   selectAccount,
   selectRegistry,
   selectToken,
@@ -18,7 +18,7 @@ export default function* tokenSaga() {
 // TODO: tests
 function* updateBalancesSaga() {
   try {
-    const ethjs = yield select(selectEthjs)
+    const provider = yield select(selectProvider)
     const owner = yield select(selectAccount)
     const registry = yield select(selectRegistry)
     const token = yield select(selectToken)
@@ -32,14 +32,15 @@ function* updateBalancesSaga() {
       votingAllowanceRaw,
       votingRightsRaw,
     ] = yield all([
-      call(ethjs.getBalance, owner),
-      call(token.balanceOf.call, owner),
-      call(token.allowance.call, owner, registry.address),
-      call(token.allowance.call, owner, voting.address),
-      call(voting.voteTokenBalance.call, owner),
+      provider.getBalance(owner),
+      token.functions.balanceOf(owner),
+      token.functions.allowance(owner, registry.address),
+      token.functions.allowance(owner, voting.address),
+      voting.functions.voteTokenBalance(owner),
     ])
 
     const ETH = baseToConvertedUnit(ethBalance, contracts.get('tokenDecimals'))
+
     const tokenBalance = baseToConvertedUnit(
       tokenBalanceRaw,
       contracts.get('tokenDecimals')
@@ -56,17 +57,18 @@ function* updateBalancesSaga() {
       votingRightsRaw,
       contracts.get('tokenDecimals')
     )
+    const balances = {
+      ETH,
+      token: tokenBalance,
+      registryAllowance,
+      votingAllowance,
+      votingRights,
+      voterReward: '0',
+    }
 
     yield put(
       updateBalances({
-        balances: {
-          ETH,
-          token: tokenBalance,
-          registryAllowance,
-          votingAllowance,
-          votingRights,
-          voterReward: '0',
-        },
+        balances,
       })
     )
   } catch (err) {

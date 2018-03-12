@@ -1,158 +1,182 @@
-import { select, takeLatest, fork, call, put } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { select, takeLatest, all, call, put } from 'redux-saga/effects'
 
-import EthAbi from 'ethjs-abi'
-import Eth from 'ethjs'
+import { fromJS } from 'immutable'
+import _ from 'lodash'
 
-import { SET_CONTRACTS, POLL_LOGS_REQUEST } from 'actions/constants'
+import { SET_CONTRACTS } from 'actions/constants'
 
-import _abi from 'utils/_abi'
+import { baseToConvertedUnit } from 'utils/_units'
+import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
+import { getIPFSData } from 'libs/ipfs'
 
-import { setListings, pollLogsRequest, updateBalancesRequest } from '../actions'
+import { setListings } from '../actions'
 
 import {
-  selectEthjs,
-  selectNetwork,
+  selectProvider,
   selectRegistry,
   selectVoting,
-  selectAllListings,
 } from '../selectors'
-
-import { buildListings, updateListings } from './listings'
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
-  yield takeLatest(POLL_LOGS_REQUEST, pollLogsAndUpdateListingsSaga)
 }
 
 let lastReadBlockNumber = 0
+
 function* getFreshLogs() {
-  try {
-    lastReadBlockNumber = 0
-    const registry = yield select(selectRegistry)
-    const listings = yield call(
-      logsToListingsSaga,
-      lastReadBlockNumber,
-      'latest',
-      '',
-      registry
-    )
+  const registry = yield select(selectRegistry)
+  const voting = yield select(selectVoting)
+  const provider = yield select(selectProvider)
 
-    const newListings = yield call(updateListings, [], listings)
+  const {
+    _Application,
+    _Challenge,
+    _NewListingWhitelisted,
+    _ApplicationRemoved,
+    _ListingRemoved,
+  } = registry.interface.events
 
-    if (newListings.size > 0) {
-      yield put(setListings(newListings))
-      yield put(updateBalancesRequest())
-    }
-  } catch (err) {
-    console.log('Fresh log error:', err)
-    throw new Error(err.message)
-    // yield put(logsError('logs error', err))
-  }
-  yield fork(pollingIntervalSaga)
-}
-function* pollingIntervalSaga() {
-  let pollInterval = 5000 // 5 seconds
-  const network = yield select(selectNetwork)
-  if (network === '420') {
-    pollInterval = 2000
-  }
-  while (true) {
-    try {
-      yield call(delay, pollInterval)
-      yield put(
-        pollLogsRequest({
-          startBlock: lastReadBlockNumber,
-          endBlock: 'latest',
-        })
-      )
-    } catch (err) {
-      console.log('Polling Log Saga error', err)
-      // yield put(logsError('polling logs error', err))
-    }
-  }
-}
-// TODO: reduce duplicate code in getFreshLogs
-// TODO: add comments
-function* pollLogsAndUpdateListingsSaga(action) {
-  try {
-    const ethjs = yield select(selectEthjs)
-    const registry = yield select(selectRegistry)
-    const allListings = yield select(selectAllListings)
+  const AllEvents = [
+    _Application,
+    _Challenge,
+    _NewListingWhitelisted,
+    _ApplicationRemoved,
+    _ListingRemoved,
+  ]
 
-    lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
-
-    // decodes logs & builds the context of each listing
-    const newListings = yield call(
-      logsToListingsSaga,
-      action.payload.startBlock,
-      action.payload.endBock,
-      '',
-      registry
-    )
-
-    if (newListings.length === 0) {
-      console.log('no updates...')
-      return
-    }
-    console.log('newListings:', newListings)
-
-    // replaces the state with updated listings
-    const latestListings = yield call(updateListings, allListings, newListings)
-    console.log('latestListings:', latestListings)
-
-    yield put(setListings(latestListings))
-    yield put(updateBalancesRequest())
-  } catch (err) {
-    console.log('Poll logs error:', err)
-    // yield put(logsError('logs error', err))
-  }
+  const freshListings = yield all(
+    AllEvents.map(ContractEvent => {
+      return convertLogsToListings(provider, registry, ContractEvent, voting)
+    })
+  )
+  const flattened = _.flatten(freshListings)
+  const updatedListings = yield call(updateListings, [], flattened)
+  yield put(setListings(updatedListings))
 }
 
-// TODO: tests
-// TODO: comments
-function* logsToListingsSaga(sb, eb, topic, contract) {
-  try {
-    const ethjs = yield select(selectEthjs)
-    const voting = yield select(selectVoting)
-    const blockRange = yield {
-      fromBlock: new Eth.BN(sb),
-      toBlock: eb,
-    }
-    const indexedFilterValues = {
-      // listingHash:
-      //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
-    }
-    const filter = yield call(
-      _abi.getFilter,
-      contract.address,
-      topic,
-      indexedFilterValues,
-      contract.abi,
-      blockRange
+function updateListings(listings, newListings) {
+  const latestListings = fromJS(newListings).reduce((acc, val) => {
+    const index = acc.findIndex(
+      it => it.get('listingHash') === val.get('listingHash')
     )
-
-    const rawLogs = yield call(ethjs.getLogs, filter)
-    if (rawLogs.length === 0) {
-      return []
+    // New listing
+    if (index === -1) {
+      return acc.push(val)
     }
-    const decoder = yield call(EthAbi.logDecoder, contract.abi)
-    const decodedLogs = yield call(decoder, rawLogs)
-    console.log('decodedLogs:', decodedLogs)
+    // Check to see if the event is the more recent
+    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
+      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
+    }
+    // Not unique, not more recent, return List
+    return acc
+  }, fromJS(listings))
 
-    const listings = (yield call(
-      buildListings,
-      decodedLogs,
-      ethjs,
-      rawLogs,
-      contract,
-      voting
-    )).filter(lawg => !(lawg === false))
-    console.log('listings:', listings)
+  return latestListings
+}
 
-    return listings
-  } catch (err) {
-    console.log('Handle logs error:', err)
-    // yield put(logsError('logs error', err))
+async function convertLogsToListings(provider, registry, ContractEvent, voting) {
+  const logs = await provider.getLogs({
+    fromBlock: lastReadBlockNumber,
+    toBlock: 'latest',
+    address: registry.address,
+    topics: ContractEvent.topics,
+  })
+  const event = ContractEvent.name
+  console.log('logs', event, logs)
+
+  let listings = []
+  for (const log of logs) {
+    const logData = ContractEvent.parse(log.topics, log.data)
+    const block = await provider.getBlock(log.blockHash)
+    const tx = await provider.getTransaction(log.transactionHash)
+
+    // console.log('logData, block, txDetails', logData, block, tx)
+
+    let { listingHash, challengeID, data } = logData
+    let numTokens
+    let whitelisted
+    let ipfsContent
+    let ipfsData
+    let ipfsID
+
+    if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
+      whitelisted = false
+      numTokens = 0
+    }
+
+    // TODO: see if you can check the status before getting ipfs data
+    if (event === '_Application') {
+      const content = await getIPFSData(data)
+      console.log('ipfs content retrieved:', content)
+      ipfsContent = content
+      ipfsID = content.id // string
+      ipfsData = content.data
+        ? content.data
+        : content.registry && content.registry // listings
+    }
+
+    let listing = await registry.listings(listingHash)
+    numTokens = listing[3].toString(10)
+      ? baseToConvertedUnit(listing[3], 18)
+      : false
+
+    if (listing) {
+      whitelisted = listing[1]
+    }
+
+    let commitEndDate
+    let commitExpiry
+    let revealEndDate
+    let revealExpiry
+
+    let aeUnix = listing[0].toNumber()
+    const appExpiry = convertUnixTimeLeft(aeUnix)
+    const appExpired = dateHasPassed(aeUnix)
+
+    let pollID = logData.pollID || challengeID
+
+    if (pollID) {
+      pollID = pollID.toString()
+      const poll = await voting.pollMap(pollID)
+      commitEndDate = poll[0].toNumber()
+      commitExpiry = convertUnixTimeLeft(commitEndDate)
+      revealEndDate = poll[1].toNumber()
+      revealExpiry = convertUnixTimeLeft(revealEndDate)
+    }
+    let appInfo = {
+      listingHash,
+      data,
+      appExpiry,
+      whitelisted,
+    }
+    if (event === '_Application') {
+      appInfo = {
+        ...appInfo,
+        owner: event === '_Application' && tx.from,
+        ipfsContent,
+        ipfsData,
+        ipfsID,
+      }
+    }
+    const li = {
+      ...appInfo,
+      latest: {
+        appExpired,
+        txHash: tx.hash,
+        blockHash: block.hash,
+        blockNumber: block.number,
+        ts: block.timestamp,
+        sender: tx.from,
+        event,
+        pollID,
+        numTokens,
+        commitEndDate,
+        commitExpiry,
+        revealEndDate,
+        revealExpiry,
+      },
+    }
+    listings.push(li)
   }
+  return listings
 }
