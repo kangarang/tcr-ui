@@ -22,8 +22,6 @@ import {
   CALL_REQUESTED,
   UPDATE_BALANCES_REQUEST,
   UPDATE_BALANCES,
-  TXN_MINED,
-  TXN_REVERTED,
   SET_REGISTRY_CONTRACT,
 } from './constants'
 
@@ -129,18 +127,6 @@ export function setMinDeposit(minDeposit) {
 export function callRequested(payload) {
   return {
     type: CALL_REQUESTED,
-    payload,
-  }
-}
-export function txnMined(payload) {
-  return {
-    type: TXN_MINED,
-    payload,
-  }
-}
-export function txnReverted(payload) {
-  return {
-    type: TXN_REVERTED,
     payload,
   }
 }

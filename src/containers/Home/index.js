@@ -36,7 +36,7 @@ import {
   selectFaceoffs,
   selectWhitelist,
   selectError,
-  selectMiningStatus,
+  selectAllContracts,
 } from 'selectors'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
@@ -55,7 +55,8 @@ import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
-import { selectAllContracts } from '../../selectors'
+import { selectLatestTxn, selectMiningStatus } from '../../selectors/transaction'
+import TxnProgress from '../Transaction/TxnProgress'
 
 class Home extends Component {
   constructor(props) {
@@ -75,7 +76,6 @@ class Home extends Component {
       methodName: false,
       visibleApprove: false,
       voterReward: '0',
-      // miningStatus: false,
       expand: '',
     }
   }
@@ -200,9 +200,6 @@ class Home extends Component {
     if (args) {
       this.props.onSendTransaction({ methodName, args, listing, contract })
     }
-    // this.setState({
-    //   miningStatus: true
-    // })
   }
 
   render() {
@@ -215,6 +212,8 @@ class Home extends Component {
       parameters,
       token,
       contracts,
+      miningStatus,
+      latestTxn,
     } = this.props
 
     return (
@@ -232,6 +231,8 @@ class Home extends Component {
           openApprove={this.openApprove}
           handleInputChange={this.handleInputChange}
           handleSendTransaction={this.handleSendTransaction}
+          miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
 
         <Challenge
@@ -247,6 +248,8 @@ class Home extends Component {
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleSendTransaction={this.handleSendTransaction}
+          miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
 
         <CommitVote
@@ -261,6 +264,8 @@ class Home extends Component {
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleSendTransaction={this.handleSendTransaction}
+          miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
 
         <SidePanel
@@ -312,6 +317,7 @@ class Home extends Component {
               {'Reveal Vote'}
             </Button>
           </MarginDiv>
+          {miningStatus && <TxnProgress />}
         </SidePanel>
 
         <SidePanel
@@ -362,6 +368,7 @@ class Home extends Component {
               {'Claim Voter Reward'}
             </Button>
           </MarginDiv>
+          {miningStatus && <TxnProgress />}
         </SidePanel>
 
         <HomeWrapper>
@@ -388,9 +395,10 @@ class Home extends Component {
                   contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={this.openSidePanel}
+                  openSidePanel={e => this.openSidePanel(candidate, 'openChallenge')}
                   listingHash={candidate.get('listingHash')}
                   listingType={'candidates'}
+                  copy={'Challenge Listing'}
                 />
               ))}
             </Table>
@@ -418,9 +426,10 @@ class Home extends Component {
                   contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={this.openSidePanel}
+                  openSidePanel={e => this.openSidePanel(one, 'openCommitVote')}
                   listingHash={one.get('listingHash')}
                   listingType={'faceoffs'}
+                  copy={'Commit Vote'}
                 />
               ))}
             </Table>
@@ -504,6 +513,7 @@ const mapStateToProps = createStructuredSelector({
 
   balances: selectBalances,
   miningStatus: selectMiningStatus,
+  latestTxn: selectLatestTxn,
 
   contracts: selectAllContracts,
   registry: selectRegistry,

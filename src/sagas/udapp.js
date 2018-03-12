@@ -14,8 +14,9 @@ import {
 
 import { getListingHash } from 'utils/_values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
-import { txnMined } from '../actions'
+import { txnMining, txnMined, clearTxn } from '../actions/transactions'
 import { ipfsAddSaga } from './ipfs'
+import { delay } from 'redux-saga';
 
 function* callUDappSaga(action) {
   console.log('call requested:', action)
@@ -139,10 +140,13 @@ export function* sendTransactionSaga(contract, method, args) {
       return rg
     })
 
+    yield put(txnMining())
     const receipt = yield call(contract[method], ...newArgs)
 
     if (receipt.receipt.status !== '0x00') {
       yield put(txnMined(receipt))
+      yield call(delay, 5000)
+      yield put(clearTxn(receipt))
     } else {
       console.log('ERROR')
     }

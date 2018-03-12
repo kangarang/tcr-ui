@@ -1,19 +1,23 @@
 import { fromJS } from 'immutable'
 
-import { SEND_TRANSACTION, TXN_MINED, TXN_REVERTED } from '../actions/constants'
+import { TXN_MINED, TXN_MINING, CLEAR_TXN } from '../actions/constants'
 
 const initialState = fromJS({
   miningStatus: false,
+  latestTxn: {}
 })
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SEND_TRANSACTION:
+    case TXN_MINING:
       return state.set('miningStatus', fromJS(true))
     case TXN_MINED:
-      return state.set('miningStatus', fromJS(false))
-    case TXN_REVERTED:
-      return state.set('miningStatus', fromJS(false))
+      return state
+        .set('latestTxn', fromJS(action.payload))
+    case CLEAR_TXN:
+      return state
+        .set('miningStatus', fromJS(false))
+        .set('latestTxn', fromJS({}))
     default:
       return state
   }

@@ -6,6 +6,10 @@ import {
   TX_REVEAL_VOTE,
   TX_UPDATE_STATUS,
   TX_REQUEST_VOTING_RIGHTS,
+  TXN_MINING,
+  CLEAR_TXN,
+  TXN_MINED,
+  TXN_REVERTED,
 } from './constants'
 
 export function requestApproval(amount) {
@@ -15,14 +19,24 @@ export function requestApproval(amount) {
   }
 }
 
-
+export function txnMining(payload) {
+  return {
+    type: TXN_MINING,
+    payload,
+  }
+}
+export function clearTxn(payload) {
+  return {
+    type: CLEAR_TXN,
+    payload,
+  }
+}
 export function txRequestVotingRights(payload) {
   return {
     type: TX_REQUEST_VOTING_RIGHTS,
     payload,
   }
 }
-
 
 export function updateStatus(listing) {
   return {
@@ -52,6 +66,19 @@ export function txChallenge(payload) {
 export function txApply(payload) {
   return {
     type: TX_APPLY,
+    payload,
+  }
+}
+
+export function txnMined(payload) {
+  return {
+    type: TXN_MINED,
+    payload,
+  }
+}
+export function txnReverted(payload) {
+  return {
+    type: TXN_REVERTED,
     payload,
   }
 }

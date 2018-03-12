@@ -1,4 +1,5 @@
 import React from 'react'
+import JSONTree from 'react-json-tree'
 import {
   SidePanel,
   SidePanelSeparator,
@@ -13,6 +14,8 @@ import { MarginDiv } from 'components/StyledHome'
 
 import { baseToConvertedUnit, BN } from 'utils/_units'
 import { withCommas } from 'utils/_values'
+import TxnProgress from '../Transaction/TxnProgress'
+import { jsonTheme } from '../../colors'
 
 export default ({
   opened,
@@ -25,6 +28,8 @@ export default ({
   handleSendTransaction,
   openApprove,
   visibleApprove,
+  miningStatus,
+  latestTxn,
 }) => (
   <div>
     <SidePanel
@@ -102,11 +107,21 @@ export default ({
           type="text"
         />
       </MarginDiv>
-      
+
       <MarginDiv>
         <Button onClick={e => handleSendTransaction('apply')} mode="strong">
           {'Apply Listing'}
         </Button>
+        {miningStatus && <TxnProgress />}
+        {latestTxn && (
+          <JSONTree
+            invertTheme={false}
+            theme={jsonTheme}
+            data={latestTxn}
+            keyName={'root'}
+            level={0}
+          />
+        )}
       </MarginDiv>
 
       <SidePanelSeparator />
@@ -115,12 +130,15 @@ export default ({
       {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
       <MarginDiv>
         {visibleApprove ? (
-          <Button
-            onClick={e => handleSendTransaction('approve', null, 'registry')}
-            mode="strong"
-          >
-            {'Approve tokens for Registry'}
-          </Button>
+          <div>
+            <Button
+              onClick={e => handleSendTransaction('approve', null, 'registry')}
+              mode="strong"
+            >
+              {'Approve tokens for Registry'}
+            </Button>
+            {miningStatus && <TxnProgress />}
+          </div>
         ) : (
           <div>
             {BN(balances.get('registryAllowance')).lt(
@@ -136,6 +154,7 @@ export default ({
                 >
                   {'Approve tokens for Registry'}
                 </Button>
+                {miningStatus && <TxnProgress />}
               </div>
             ) : (
               <Button onClick={openApprove} mode="">

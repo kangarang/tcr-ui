@@ -12,6 +12,7 @@ import translate from 'translations'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
+import TxnProgress from '../Transaction/TxnProgress'
 
 import { baseToConvertedUnit } from 'utils/_units'
 import { withCommas } from 'utils/_values'
@@ -27,6 +28,7 @@ export default ({
   openChallenge,
   visibleApprove,
   selectedOne,
+  miningStatus,
 }) => (
   <div>
     <SidePanel
@@ -105,6 +107,7 @@ export default ({
         >
           {'CHALLENGE'}
         </Button>
+        {miningStatus && <TxnProgress />}
       </MarginDiv>
     </SidePanel>
   </div>

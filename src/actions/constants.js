@@ -32,7 +32,9 @@ export const POLL_LOGS_REQUEST = 'POLL_LOGS_REQUEST--|--Contract'
 
 // call / txn
 export const SEND_TRANSACTION = 'SEND_TRANSACTION--|--Home'
-export const TXN_MINED = 'TXN_MINED--|--Home'
+export const TXN_MINED = 'TXN_MINED--|--Transaction'
+export const CLEAR_TXN = 'CLEAR_TXN--|--Transaction'
+export const TXN_MINING = 'TXN_MINING--|--Transaction'
 export const TXN_REVERTED = 'TXN_REVERTED--|--Home'
 export const CALL_REQUESTED = 'CALL_REQUESTED--|--Home'
 

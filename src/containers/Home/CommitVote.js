@@ -8,6 +8,7 @@ import translate from 'translations'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
+import TxnProgress from '../Transaction/TxnProgress'
 
 import { withCommas } from 'utils/_values'
 
@@ -20,6 +21,7 @@ export default class Challenge extends Component {
       handleSendTransaction,
       selectedOne,
       openCommitVote,
+      miningStatus,
     } = this.props
     return (
       <div>
@@ -97,6 +99,8 @@ export default class Challenge extends Component {
               </MarginDiv>
             )}
           </MarginDiv>
+
+          {miningStatus && <TxnProgress />}
 
           <MarginDiv>
             <SideText text={translate('sidebar_approve_instructions')} />

@@ -112,12 +112,10 @@ export default class ListingRow extends Component {
               </CMItem>
             )}
             <CMItem
-              onClick={e =>
-                this.props.openSidePanel(this.props.listing, 'openChallenge')
-              }
+              onClick={this.props.openSidePanel}
             >
               <Icon name="exclamation circle" size="large" color="red" />
-              {'Challenge Listing'}
+              {this.props.copy}
             </CMItem>
           </ContextMenu>
         </TableCell>
