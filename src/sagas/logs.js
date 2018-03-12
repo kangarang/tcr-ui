@@ -11,11 +11,7 @@ import { getIPFSData } from 'libs/ipfs'
 
 import { setListings } from '../actions'
 
-import {
-  selectProvider,
-  selectRegistry,
-  selectVoting,
-} from '../selectors'
+import { selectProvider, selectRegistry, selectVoting } from '../selectors'
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, getFreshLogs)
@@ -50,7 +46,9 @@ function* getFreshLogs() {
     })
   )
   const flattened = _.flatten(freshListings)
+  console.log('flattened', flattened)
   const updatedListings = yield call(updateListings, [], flattened)
+  console.log('updatedListings', updatedListings.toJS())
   yield put(setListings(updatedListings))
 }
 
@@ -74,7 +72,12 @@ function updateListings(listings, newListings) {
   return latestListings
 }
 
-async function convertLogsToListings(provider, registry, ContractEvent, voting) {
+async function convertLogsToListings(
+  provider,
+  registry,
+  ContractEvent,
+  voting
+) {
   const logs = await provider.getLogs({
     fromBlock: lastReadBlockNumber,
     toBlock: 'latest',
@@ -82,7 +85,7 @@ async function convertLogsToListings(provider, registry, ContractEvent, voting) 
     topics: ContractEvent.topics,
   })
   const event = ContractEvent.name
-  console.log('logs', event, logs)
+  console.log(event, logs)
 
   let listings = []
   for (const log of logs) {
@@ -107,7 +110,7 @@ async function convertLogsToListings(provider, registry, ContractEvent, voting) 
     // TODO: see if you can check the status before getting ipfs data
     if (event === '_Application') {
       const content = await getIPFSData(data)
-      console.log('ipfs content retrieved:', content)
+      // console.log('ipfs content retrieved:', content)
       ipfsContent = content
       ipfsID = content.id // string
       ipfsData = content.data
@@ -180,3 +183,10 @@ async function convertLogsToListings(provider, registry, ContractEvent, voting) 
   }
   return listings
 }
+
+// Get notified when a contract event is logged
+// var eventTopic = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
+// provider.on([ eventTopic ], function(log) {
+//     console.log('Event Log');
+//     console.log(log);
+// });

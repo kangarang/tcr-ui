@@ -98,7 +98,7 @@ export default class ListingRow extends Component {
         {/* actions */}
         <TableCell>
           <ContextMenu>
-            {this.props.listing.get('appExpired') && (
+            {this.props.listing.getIn(['latest', 'appExpired']) && (
               <CMItem
                 onClick={e =>
                   this.props.handleSendTransaction(

@@ -15,7 +15,7 @@ import { getVoteSaltHash, randInt } from 'utils/_values'
 import saveFile from 'utils/_file'
 import { getEndDateString } from 'utils/_datetime'
 
-import { sendTransactionSaga } from './udapp'
+import { sendTransactionSaga } from './transaction'
 
 export default function* voteSaga() {
   yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)

@@ -18,7 +18,7 @@ import createReducer from './reducers'
 import rootSaga from './sagas'
 import logSaga from './sagas/logs'
 import tokenSaga from './sagas/token'
-import udappSaga from './sagas/udapp'
+import transactionSaga from './sagas/transaction'
 import voteSaga from './sagas/vote'
 import ipfsSaga from './sagas/ipfs'
 import contractsSaga from './sagas/contracts'
@@ -67,7 +67,7 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(tokenSaga)
   sagaMiddleware.run(contractsSaga)
   sagaMiddleware.run(voteSaga)
-  sagaMiddleware.run(udappSaga)
+  sagaMiddleware.run(transactionSaga)
   sagaMiddleware.run(ipfsSaga)
 
   // // Make reducers hot reloadable, see http://mxs.is/googmo

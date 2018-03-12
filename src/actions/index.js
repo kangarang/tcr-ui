@@ -1,7 +1,7 @@
 import {
   CONTRACT_ERROR,
   LOGS_ERROR,
-  UDAPP_ERROR,
+  TRANSACTION_ERROR,
   LOGIN_ERROR,
   GET_ETHEREUM,
   // SET_ETHEREUM_PROVIDER,
@@ -74,9 +74,9 @@ export function updateBalances(payload) {
 //   }
 // }
 
-export function udappError(error) {
+export function transactionError(error) {
   return {
-    type: UDAPP_ERROR,
+    type: TRANSACTION_ERROR,
     error,
   }
 }

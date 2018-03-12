@@ -35,7 +35,7 @@ export default ({
       </Text>
     </MarginDiv>
     <MarginDiv>
-      <Text>{translate('sidebar_udapp_instructions')}</Text>
+      <Text>{translate('sidebar_transaction_instructions')}</Text>
     </MarginDiv>
 
     <SidePanelSeparator />

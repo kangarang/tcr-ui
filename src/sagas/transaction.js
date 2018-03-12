@@ -17,7 +17,7 @@ import { txnMining, txnMined, clearTxn } from '../actions/transactions'
 import { ipfsAddSaga } from './ipfs'
 import { delay } from 'redux-saga'
 
-function* callUDappSaga(action) {
+function* callSaga(action) {
   console.log('call requested:', action)
   const account = yield select(selectAccount)
   console.log('account', account)
@@ -43,9 +43,9 @@ function* callUDappSaga(action) {
   // alert(callResult)
 }
 
-export default function* udappSaga() {
+export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
-  yield takeEvery(CALL_REQUESTED, callUDappSaga)
+  yield takeEvery(CALL_REQUESTED, callSaga)
 }
 
 // TODO: write tests for these sagas. against abis
@@ -132,7 +132,7 @@ export function* sendTransactionSaga(contract, method, args) {
     yield put(txnMining())
 
     const minedTxn = yield provider.waitForTransaction(receipt.hash).then(function(transaction) {
-      console.log('Transaction Mined: ' + transaction)
+      console.log('Transaction Mined: ' + JSON.stringify(transaction))
     })
 
     yield put(txnMined(minedTxn))

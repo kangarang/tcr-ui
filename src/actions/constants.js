@@ -8,7 +8,7 @@ export const REFRESH_ETH_STORE = 'REFRESH_ETH_STORE--|--ETH'
 export const CONTRACT_ERROR = 'CONTRACT_ERROR--|--Error'
 export const LOGS_ERROR = 'LOGS_ERROR--|--Error'
 export const LOGIN_ERROR = 'LOGIN_ERROR--|--Error'
-export const UDAPP_ERROR = 'UDAPP_ERROR--|--Error'
+export const TRANSACTION_ERROR = 'TRANSACTION_ERROR--|--Error'
 
 export const SET_WALLET = 'SET_WALLET--|--Home'
 export const SET_CONTRACTS = 'SET_CONTRACTS--|--Home'

@@ -10,7 +10,7 @@
       "What is the domain of the Listing you wish to apply into the Registry? How many tokens will you stake with the application?",
     "sidebar_challenge_instructions":
       "Challenging a listing application requires you to stake the MIN_DEPOSIT amount. Once challenged, the application will go into the voting process.",
-    "sidebar_udapp_instructions":
+    "sidebar_transaction_instructions":
       "Enter the inputs of methods you want to query the blockchain",
     "sidebar_commitVote_instructions":
       "Enter how many tokens you wish to commit your vote to SUPPORT or OPPOSE the listing applicant. You will be given the opportunity to download a file which contains your secret vote information. Hold onto this file! You will need it to reveal your secret vote.",
