@@ -14,9 +14,28 @@ import {
 } from '../actions'
 
 import { selectEthjs, selectAccount } from '../selectors'
+import { CHOOSE_TCR } from '../actions/constants';
 
 export default function* root() {
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
+  yield takeLatest(CHOOSE_TCR, chooseTCRSaga)
+}
+
+function* chooseTCRSaga(action) {
+  try {
+    const ethjs = yield select(selectEthjs)
+    const account = yield select(selectAccount)
+    const registry = yield call(
+      setupRegistry,
+      ethjs.currentProvider,
+      account,
+      abis.registry,
+      action.payload
+    )
+    yield put(setRegistryContract(registry))
+  } catch (err) {
+    console.log('choose tcr err', err)
+  }
 }
 
 export function* initialRegistrySaga(ethjs, account) {

@@ -28,6 +28,7 @@ export default function* logsSaga() {
 let lastReadBlockNumber = 0
 function* getFreshLogs() {
   try {
+    lastReadBlockNumber = 0
     const registry = yield select(selectRegistry)
     const listings = yield call(
       logsToListingsSaga,
@@ -48,7 +49,6 @@ function* getFreshLogs() {
     throw new Error(err.message)
     // yield put(logsError('logs error', err))
   }
-
   yield fork(pollingIntervalSaga)
 }
 function* pollingIntervalSaga() {

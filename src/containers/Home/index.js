@@ -22,6 +22,7 @@ import {
   requestModalMethod,
   sendTransaction,
   callRequested,
+  chooseTCR,
 } from 'actions'
 import {
   selectEthjs,
@@ -95,6 +96,9 @@ class Home extends Component {
   }
   openApprove = () => {
     this.setState({ visibleApprove: true })
+  }
+  chooseTCR = (one) => {
+    this.props.onChooseTCR(one)
   }
   openSidePanel = (one, openThis) => {
     if (!openThis) {
@@ -477,6 +481,12 @@ class Home extends Component {
                         {'Challenge Listing'}
                       </CMItem>
                       <CMItem
+                        onClick={e => this.chooseTCR(one.get('ipfsData'))}
+                      >
+                        <Icon name="check" size="large" color="green" />
+                        {'Choose this TCR'}
+                      </CMItem>
+                      <CMItem
                         onClick={e =>
                           this.openSidePanel(one, 'openClaimVoterReward')
                         }
@@ -499,6 +509,7 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
+    onChooseTCR: tcr => dispatch(chooseTCR(tcr)),
     onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
     onCall: payload => dispatch(callRequested(payload)),

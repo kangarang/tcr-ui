@@ -23,12 +23,19 @@ import {
   UPDATE_BALANCES_REQUEST,
   UPDATE_BALANCES,
   SET_REGISTRY_CONTRACT,
+  CHOOSE_TCR,
 } from './constants'
 
 export function setupEthereum(network) {
   return {
     type: GET_ETHEREUM,
     network,
+  }
+}
+export function chooseTCR(payload) {
+  return {
+    type: CHOOSE_TCR,
+    payload,
   }
 }
 export function setRegistryContract(payload) {

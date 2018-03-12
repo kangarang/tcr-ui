@@ -9,10 +9,8 @@ import {
   REQUEST_MODAL_METHOD,
   SET_LISTINGS,
   DELETE_LISTINGS,
-  SEND_TRANSACTION,
-  TXN_MINED,
   IPFS_ABI_RETRIEVED,
-  // SET_REGISTRY_CONTRACT,
+  SET_REGISTRY_CONTRACT,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -58,9 +56,9 @@ function homeReducer(state = initialState, action) {
         .set('network', fromJS(action.payload.network))
     case IPFS_ABI_RETRIEVED:
       return state.setIn(['ipfs', action.payload.id], fromJS(action.payload))
-    // case SET_REGISTRY_CONTRACT:
-    //   return state
-    //     .setIn(['contracts', 'registry'], fromJS(action.payload))
+    case SET_REGISTRY_CONTRACT:
+      return state
+        .setIn(['contracts', 'registry'], fromJS(action.payload))
     case SET_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))

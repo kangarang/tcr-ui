@@ -22,15 +22,15 @@ export function timeLeft(d) {
   const diff = dd - rightNow
 
   // UTC Time Formatting
-  const utcTime = [date.getUTCHours(), date.getUTCMinutes()]
-  const utcAMPM = ampm(utcTime[0])
-  const utcTimeTwelve = getTwelveHour(utcTime)
+  // const utcTime = [date.getUTCHours(), date.getUTCMinutes()]
+  // const utcAMPM = ampm(utcTime[0])
+  // const utcTimeTwelve = getTwelveHour(utcTime)
 
   // Local Time Formatting
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])
   const localTimeTwelve = getTwelveHour(localTime)
-  const localOffset = date.getTimezoneOffset() / 60 * -1
+  // const localOffset = date.getTimezoneOffset() / 60 * -1
 
   return {
     // "February 17, 2018 1:42 PM (UTC -7)"
@@ -87,18 +87,4 @@ const months = [
   'October',
   'November',
   'December',
-]
-const shortMonths = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sept',
-  'Oct',
-  'Nov',
-  'Dec',
 ]

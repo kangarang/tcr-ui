@@ -14,7 +14,6 @@ import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import TxnProgress from '../Transaction/TxnProgress'
 
-import { baseToConvertedUnit } from 'utils/_units'
 import { withCommas } from 'utils/_values'
 
 export default ({
@@ -48,8 +47,7 @@ export default ({
         rightTitle={'Minimum Deposit'}
         rightItem={
           <div>
-            {baseToConvertedUnit(parameters.get('minDeposit'), 18)}{' '}
-            {contracts.get('tokenSymbol')}
+            {`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}
           </div>
         }
       />
@@ -77,12 +75,10 @@ export default ({
       <SidePanelSeparator />
 
       <MarginDiv>
-        {/* {Number(balances.get('registryAllowance')) <
-            baseToConvertedUnit(parameters.get('minDeposit'), 18) ? ( */}
         <MarginDiv>
           <MarginDiv>
             <Text color="grey" smallcaps>
-              {'TOKEN AMOUNT TO APPROVE'}
+              {'TOKEN AMOUNT'}
             </Text>
             <TextInput
               onChange={e => handleInputChange(e, 'numTokens')}
