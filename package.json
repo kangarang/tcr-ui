@@ -2,7 +2,7 @@
   "name": "tcr-ui",
   "author": "kangarang",
   "version": "0.3.5",
-  "description": "A client shell to transact with Token-Curated Registries",
+  "description": "A client-side shell to interact with Ethereum Token-Curated Registries",
   "repository": "https://github.com/kangarang/tcr-ui",
   "engines": {
     "node": ">= 8.0.0",
@@ -43,8 +43,8 @@
     "styled-components": "2.3.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "start:prod": "npm run build && node server.js",
+    "start": "NODE_PATH=./src node server.js",
+    "start:prod": "npm run build && NODE_PATH=./src node server.js",
     "dev": "npm run lint ./src && NODE_PATH=./src react-scripts start",
     "build": "npm run lint ./src && NODE_PATH=./src react-scripts build",
     "test": "react-scripts test --env=jsdom",
@@ -53,7 +53,7 @@
     "lint": "eslint"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "6.26.0",
     "babel-eslint": "8.2.2",
     "babel-jest": "22.4.1",
     "babel-preset-env": "1.6.1",
@@ -63,7 +63,7 @@
     "jest": "22.4.2",
     "jest-cli": "22.4.2",
     "react-test-renderer": "16.2.0",
-    "regenerator-runtime": "^0.11.1"
+    "regenerator-runtime": "0.11.1"
   },
   "eslintConfig": {
     "plugins": [
