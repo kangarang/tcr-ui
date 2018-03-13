@@ -5,7 +5,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { AragonApp } from '@aragon/ui'
 
 import Home from 'containers/Home'
-import TopGradient from './TopGradient'
 import '../global-styles'
 
 const theme = createMuiTheme({
@@ -34,7 +33,6 @@ const AppWrapper = styled.div`
 `
 const App = () => (
   <div>
-    <TopGradient />
     <AppWrapper>
       <AragonApp publicUrl="/aragon-ui/">
         <MuiThemeProvider theme={theme}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Section } from '@aragon/ui'
+import { Button, Text } from '@aragon/ui'
 
 import { AppBar, AppBarWrapper } from './StyledHome'
 
@@ -14,8 +14,10 @@ export default ({ error, openSidePanel, contracts }) => (
         <Button mode="strong" onClick={openSidePanel}>
           {'Start an application'}
         </Button>
-        <Section>{contracts.get('registryName')}</Section>
-        <Section>{'LINKS'}</Section>
+        <Text size="xlarge" weight="bold">
+          {contracts.get('registryName')}
+        </Text>
+        <Text>{'LINKS'}</Text>
       </AppBar>
     )}
   </AppBarWrapper>

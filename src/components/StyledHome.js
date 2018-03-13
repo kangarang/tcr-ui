@@ -11,7 +11,6 @@ export const AppBar = styled.div`
   width: 100%;
   height: 4em;
   background-color: white;
-  border-bottom: 1px solid ${colors.orange};
   padding: 0 3em;
   & > div {
     margin: 0 1em;

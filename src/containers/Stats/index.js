@@ -1,4 +1,7 @@
-import react, { Component } from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createStructuredSelector } from 'reselect'
 
 import {
   SidePanel,
@@ -13,23 +16,15 @@ import {
   DropDown,
 } from '@aragon/ui'
 import Identicon from 'components/Identicon'
-import {
-  MarginDiv,
-  HomeWrapper,
-  CMItem,
-  FileInput,
-  OverFlowDiv,
-} from 'components/StyledHome'
 import { withCommas, trimDecimalsThree } from '../../utils/_values'
+import styled from 'styled-components'
+import { colors } from '../../global-styles'
 
 class Stats extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeItem: 0,
-    }
+  state = {
+    activeItem: 0,
   }
-  handleChange(index) {
+  handleChange = index => {
     this.setState({ activeItem: index })
   }
   render() {
@@ -54,65 +49,49 @@ class Stats extends Component {
 
     const items = [
       <Identicon address={account} diameter={30} />,
-      <OverFlowDiv>{`Account: ${account}`}</OverFlowDiv>,
+      <div>{`Account: ${account}`}</div>,
       <div>{network}</div>,
       <div>{ethBalance}</div>,
       <div>{tokenBalance}</div>,
-      <Text color="red" weight="bold">
-        {miningStatus && 'MINING'}
-      </Text>,
     ]
 
     return (
-      <div>
-        <div>{`${candidates.size}`}</div>
-        <div>{`${faceoffs.size}`}</div>
-        <div>{`${whitelist.size}`}</div>
-        <div>
-          <div>{network}</div>
-          <div>{ethBalance}</div>
-          <div>{tokenBalance}</div>
+      <StatsContainer>
+        <StatsItem>{`TOTAL APPLICATIONS ${candidates.size}`}</StatsItem>
+        <StatsItem>{`TOTAL CHALLENGES ${faceoffs.size}`}</StatsItem>
+        <StatsItem>{`TOTAL REGISTERED ${whitelist.size}`}</StatsItem>
+        <UserInfo>
+          <UserItem>{network}</UserItem>
+          <UserItem>{ethBalance}</UserItem>
+          <UserItem>{tokenBalance}</UserItem>
           <DropDown
             items={items}
             active={this.state.activeItem}
             onChange={this.handleChange}
           />
-        </div>
-      </div>
+        </UserInfo>
+      </StatsContainer>
     )
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    onSetupEthereum: network => dispatch(setupEthereum(network)),
-    onRequestModalMethod: e => dispatch(requestModalMethod(e)),
-    onSendTransaction: payload => dispatch(sendTransaction(payload)),
-    onCall: payload => dispatch(callRequested(payload)),
-  }
-}
+const StatsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 5em;
+  background-color: white;
+  color: ${colors.offBlack};
+  border: 1px solid black;
+`
+const StatsItem = styled.div`
+  padding: 0 1em;
+  border-right: 1px solid black;
+  font-size: 1.2em;
+`
+const UserInfo = styled.div`
+  display: flex;
+`
+const UserItem = styled.div``
 
-const mapStateToProps = createStructuredSelector({
-  error: selectError,
-  provider: selectProvider,
-  account: selectAccount,
-  network: selectNetwork,
-
-  balances: selectBalances,
-  miningStatus: selectMiningStatus,
-
-  contracts: selectAllContracts,
-  registry: selectRegistry,
-  token: selectToken,
-  voting: selectVoting,
-
-  parameters: selectParameters,
-
-  candidates: selectCandidates,
-  faceoffs: selectFaceoffs,
-  whitelist: selectWhitelist,
-})
-
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
-
-export default compose(withConnect)(Stats)
+export default Stats

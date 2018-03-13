@@ -58,6 +58,7 @@ import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
 import TxnProgress from '../Transaction/TxnProgress'
+import Stats from '../Stats'
 
 class Home extends Component {
   constructor(props) {
@@ -223,6 +224,8 @@ class Home extends Component {
     return (
       <div>
         <Navigation {...this.props} openSidePanel={this.openSidePanel} />
+
+        <Stats {...this.props} />
 
         <Apply
           opened={this.state.opened}
