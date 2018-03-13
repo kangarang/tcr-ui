@@ -1,14 +1,12 @@
 import 'babel-polyfill'
 import React from 'react'
 import styled from 'styled-components'
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { AragonApp } from '@aragon/ui'
 
 import Home from 'containers/Home'
-
-import '../global-styles'
-
 import TopGradient from './TopGradient'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import '../global-styles'
 
 const theme = createMuiTheme({
   palette: {

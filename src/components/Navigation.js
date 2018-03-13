@@ -1,8 +1,7 @@
 import React from 'react'
+import { Button, Section } from '@aragon/ui'
 
 import { AppBar, AppBarWrapper } from './StyledHome'
-
-import { Button, Section } from '@aragon/ui'
 
 export default ({ error, openSidePanel, contracts }) => (
   <AppBarWrapper>

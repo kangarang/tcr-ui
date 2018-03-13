@@ -15,7 +15,7 @@ import {
   Text,
 } from '@aragon/ui'
 import translate from 'translations'
-import { jsonTheme } from '../../global-styles'
+import { jsonTheme } from 'global-styles'
 import {
   setupEthereum,
   requestModalMethod,

@@ -22,8 +22,6 @@ class Nav extends Component {
       <NavBar>
         <NavLink to="/" />
         <NavLink to="/" />
-        <NavLink to="/" />
-        <NavLink to="/" />
         <NavLink strict to="/">
           Home
         </NavLink>
