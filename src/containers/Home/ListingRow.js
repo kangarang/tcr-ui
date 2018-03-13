@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import JSONTree from 'react-json-tree'
 import { TableRow, TableCell, Text, ContextMenu, Countdown } from '@aragon/ui'
-import { Icon } from 'semantic-ui-react'
 
 import { jsonTheme } from '../../colors'
 import { CMItem } from 'components/StyledHome'
@@ -88,9 +87,7 @@ export default class ListingRow extends Component {
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
           <div>
-            <Icon name="exclamation circle" size="large" color="yellow" />
             {this.props.listing.get('owner') === this.props.account && (
-              <Icon name="check circle" size="large" color="blue" />
             )}
           </div>
         </TableCell>
@@ -107,14 +104,12 @@ export default class ListingRow extends Component {
                   )
                 }
               >
-                <Icon name="magic" size="large" color="purple" />
                 {'Update Status'}
               </CMItem>
             )}
             <CMItem
               onClick={this.props.openSidePanel}
             >
-              <Icon name="exclamation circle" size="large" color="red" />
               {this.props.copy}
             </CMItem>
           </ContextMenu>

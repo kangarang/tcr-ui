@@ -109,8 +109,6 @@ UI Components
 
 [material-ui](https://material-ui-next.com/)
 
-[semantic-ui](https://react.semantic-ui.com/)
-
 Utils
 
 [0x.js](https://github.com/0xProject/0x.js/tree/development/packages)

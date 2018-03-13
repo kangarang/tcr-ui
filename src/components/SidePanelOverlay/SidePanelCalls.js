@@ -9,7 +9,6 @@ import {
   TextInput,
 } from '@aragon/ui'
 
-import { Icon } from 'semantic-ui-react'
 import translate from 'translations'
 
 const MarginDiv = styled.div`
@@ -29,7 +28,6 @@ export default ({
     onClose={closeSidePanel}
   >
     <MarginDiv>
-      <Icon name="check circle" size="small" />
       <Text color="grey" smallcaps>
         {'INSTRUCTIONS'}
       </Text>

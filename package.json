@@ -38,8 +38,6 @@
     "redux-logger": "3.0.6",
     "redux-saga": "0.16.0",
     "reselect": "3.0.1",
-    "semantic-ui-css": "2.3.0",
-    "semantic-ui-react": "0.78.3",
     "styled-components": "2.3.0"
   },
   "scripts": {

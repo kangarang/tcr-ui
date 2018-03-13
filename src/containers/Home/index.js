@@ -14,7 +14,6 @@ import {
   TableCell,
   Text,
 } from '@aragon/ui'
-import { Icon } from 'semantic-ui-react'
 import translate from 'translations'
 import { jsonTheme } from '../../colors'
 import {
@@ -294,7 +293,7 @@ class Home extends Component {
             rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <SideText icon={'unlock'} small text={'REVEAL VOTE'} />
+          <SideText small text={'REVEAL VOTE'} />
           <SideText
             small
             text={this.state.selectedOne && this.state.selectedOne.get('data')}
@@ -302,7 +301,7 @@ class Home extends Component {
 
           <SidePanelSeparator />
 
-          <SideText icon={'check circle'} small text={'INSTRUCTIONS'} />
+          <SideText small text={'INSTRUCTIONS'} />
 
           <SideText text={translate('sidebar_revealVote_instructions')} />
 
@@ -346,12 +345,12 @@ class Home extends Component {
             rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <SideText icon={'unlock'} small text={'CLAIM VOTER REWARD'} />
+          <SideText small text={'CLAIM VOTER REWARD'} />
           <SideText small text={this.state.voterReward} />
 
           <SidePanelSeparator />
 
-          <SideText icon={'check circle'} small text={'INSTRUCTIONS'} />
+          <SideText small text={'INSTRUCTIONS'} />
 
           <SideText text={translate('sidebar_claimVoterReward_instructions')} />
 
@@ -476,17 +475,11 @@ class Home extends Component {
                       <CMItem
                         onClick={e => this.openSidePanel(one, 'openChallenge')}
                       >
-                        <Icon
-                          name="remove circle outline"
-                          size="large"
-                          color="orange"
-                        />
                         {'Challenge Listing'}
                       </CMItem>
                       <CMItem
                         onClick={e => this.chooseTCR(one.get('ipfsData'))}
                       >
-                        <Icon name="check" size="large" color="green" />
                         {'Choose this TCR'}
                       </CMItem>
                       <CMItem
@@ -494,7 +487,6 @@ class Home extends Component {
                           this.openSidePanel(one, 'openClaimVoterReward')
                         }
                       >
-                        <Icon name="check" size="large" color="orange" />
                         {'Claim Voter Reward'}
                       </CMItem>
                     </ContextMenu>

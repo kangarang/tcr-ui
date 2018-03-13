@@ -49,7 +49,6 @@ export default class Challenge extends Component {
             small
             title={'COMMIT VOTE'}
             text={selectedOne && selectedOne.get('data')}
-            icon={'lock'}
           />
 
           <SidePanelSeparator />

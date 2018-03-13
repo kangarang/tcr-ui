@@ -69,7 +69,6 @@ export default ({
         small
         title={'WARNING'}
         text={translate('sidebar_challenge_instructions')}
-        icon={'exclamation triangle'}
       />
 
       <SidePanelSeparator />

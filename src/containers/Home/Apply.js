@@ -64,13 +64,11 @@ export default ({
         small
         title={'QUESTION'}
         text={translate('sidebar_apply_question')}
-        icon={'question circle outline'}
       />
       <SideText
         small
         title={'INSTRUCTIONS'}
         text={translate('sidebar_apply_instructions')}
-        icon={'check circle'}
       />
 
       <MarginDiv>
