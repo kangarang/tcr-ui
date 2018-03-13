@@ -3,7 +3,7 @@ import JSONTree from 'react-json-tree'
 
 import { SidePanel, SidePanelSeparator, Button, TextInput } from '@aragon/ui'
 
-import { jsonTheme } from '../../colors'
+import { jsonTheme } from '../../global-styles'
 import translate from 'translations'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'

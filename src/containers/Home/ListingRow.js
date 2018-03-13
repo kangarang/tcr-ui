@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import JSONTree from 'react-json-tree'
 import { TableRow, TableCell, Text, ContextMenu, Countdown } from '@aragon/ui'
 
-import { jsonTheme } from '../../colors'
+import { jsonTheme } from '../../global-styles'
 import { CMItem } from 'components/StyledHome'
 import { dateHasPassed } from 'utils/_datetime'
 import { baseToConvertedUnit } from 'utils/_units'
@@ -86,10 +86,7 @@ export default class ListingRow extends Component {
             : false}
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
-          <div>
-            {this.props.listing.get('owner') === this.props.account && (
-            )}
-          </div>
+        {'fdfsd'}
         </TableCell>
 
         {/* actions */}

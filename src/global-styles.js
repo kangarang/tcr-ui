@@ -1,85 +1,37 @@
 import { injectGlobal } from 'styled-components'
-import { colors } from './colors'
-import { theme } from '@aragon/ui'
+
+export const colors = {
+  purple: '#52427c',
+  offWhite: '#eee',
+  offBlack: '#222',
+  lightBlue: '#6ba3ff',
+  darkBlue: '#203260',
+  magenta: '#ff387a',
+  neonLime: '#a8ff37',
+  orange: '#ffaf36',
+  turquoise: '#4be5ce',
+  prism: '#15afba',
+  darkRed: '#9A4540',
+  paleBlue: '#5C8ED4',
+  greyText: '#929292',
+  blackBg: '#121214',
+  blue3: '#406394',
+  blue2: '#A4BEE7',
+  blue1: '#98A4D2',
+  greyBg: '#E8EAEA',
+  seafoamBg: '#A5C4BE',
+  yellowBg: '#EFEFD3',
+  neonYellow: '#FFFF00',
+  palletOne: {
+    grey: '#343838',
+    blue4: '#005F6B',
+    blue3: '#008C9E',
+    blue2: '#00B4CC',
+    blue1: '#00DFFC',
+  },
+}
 
 const globalStyles = `
-  body {
-    background: linear-gradient(
-      130deg,
-      ${theme.mainBgGradientStart},
-      ${theme.mainBgGradientEnd}
-    );
-  }
-  code[class*='language-'],
-  pre[class*='language-'] {
-    color: hsl(194, 56%, 98%);
-    direction: ltr;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-    -webkit-hyphens: none;
-    -moz-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
-  }
-  /* Code blocks */
-  pre[class*='language-'] {
-    padding: 1em;
-    margin: 0.5em 0;
-    overflow: auto;
-    background: hsl(194, 7%, 25%);
-  }
-  .token.comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    color: slategray;
-  }
-  .token.punctuation {
-    color: hsl(193, 80%, 45%);
-  }
-  .namespace {
-    opacity: 0.7;
-  }
-  .token.property,
-  .token.tag {
-    color: hsl(43, 96%, 85%);
-  }
-  .token.boolean,
-  .token.number {
-    color: hsl(43, 100%, 96%);
-  }
-  .token.keyword,
-  .token.selector,
-  .token.attr-name {
-    color: hsl(0, 94%, 80%);
-  }
-  .token.operator,
-  .token.entity,
-  .token.url,
-  .language-css .token.string,
-  .style .token.string {
-    color: #f8f8f2;
-  }
-  .token.atrule,
-  .token.attr-value,
-  .token.string {
-    color: hsl(167, 72%, 60%);
-  }
-  .token.regex,
-  .token.important {
-    color: #fd971f;
-  }
-  .token.important {
-    font-weight: bold;
-  }
-  .token.entity {
-    cursor: help;
-  }
-
   html {
     margin: 0;
     body {
@@ -101,4 +53,25 @@ const globalStyles = `
 
 export default () => {
   injectGlobal`${globalStyles}`
+}
+
+export const jsonTheme = {
+  scheme: 'monokai',
+  author: 'wimer hazenberg (http://www.monokai.nl)',
+  base00: '#272822',
+  base01: '#383830',
+  base02: '#49483e',
+  base03: '#75715e',
+  base04: '#a59f85',
+  base05: '#f8f8f2',
+  base06: '#f5f4f1',
+  base07: '#f9f8f5',
+  base08: '#f92672',
+  base09: '#fd971f',
+  base0A: '#f4bf75',
+  base0B: '#a6e22e',
+  base0C: '#a1efe4',
+  base0D: '#66d9ef',
+  base0E: '#ae81ff',
+  base0F: '#cc6633',
 }

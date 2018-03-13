@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { colors } from '../colors'
+import { colors } from '../global-styles'
 
 export const Container = styled.div`
   display: grid;

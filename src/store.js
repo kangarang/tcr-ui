@@ -68,12 +68,12 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(transactionSaga)
 
-  // // Make reducers hot reloadable, see http://mxs.is/googmo
-  // /* istanbul ignore next */
+  // Make reducers hot reloadable, see http://mxs.is/googmo
+  /* istanbul ignore next */
   // if (module.hot) {
   //   module.hot.accept('./reducers', () => {
-  //     store.replaceReducer(createReducer(store.injectedReducers));
-  //   });
+  //     store.replaceReducer(createReducer(store.injectedReducers))
+  //   })
   // }
 
   return store
