@@ -1,18 +1,6 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { createStructuredSelector } from 'reselect'
 
 import {
-  SidePanel,
-  SidePanelSeparator,
-  Button,
-  ContextMenu,
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  Text,
   DropDown,
 } from '@aragon/ui'
 import Identicon from 'components/Identicon'

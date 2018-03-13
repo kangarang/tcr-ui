@@ -69,10 +69,6 @@ class Home extends Component {
       listingName: '',
       data: '',
       numTokens: '',
-      openChallenge: false,
-      openCommitVote: false,
-      openRevealVote: false,
-      openClaimVoterReward: false,
       selectedOne: false,
       fileInput: false,
       methodName: false,
@@ -89,10 +85,6 @@ class Home extends Component {
   closeSidePanel = () => {
     this.setState({
       opened: false,
-      openChallenge: false,
-      openCommitVote: false,
-      openRevealVote: false,
-      openClaimVoterReward: false,
     })
   }
   openApprove = () => {
@@ -102,16 +94,10 @@ class Home extends Component {
     this.props.onChooseTCR(one)
   }
   openSidePanel = (one, openThis) => {
-    if (!openThis) {
-      this.setState({
-        opened: true,
-      })
-    } else {
-      this.setState({
-        selectedOne: one,
-        [openThis]: true,
-      })
-    }
+    this.setState({
+      selectedOne: one,
+      opened: openThis,
+    })
   }
 
   getVoterReward = async (pollID, salt) => {
@@ -223,12 +209,15 @@ class Home extends Component {
 
     return (
       <div>
-        <Navigation {...this.props} openSidePanel={this.openSidePanel} />
+        <Navigation
+          {...this.props}
+          openSidePanel={e => this.openSidePanel(null, 'apply')}
+        />
 
         <Stats {...this.props} />
 
         <Apply
-          opened={this.state.opened}
+          opened={this.state.opened === 'apply'}
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
@@ -243,7 +232,7 @@ class Home extends Component {
         />
 
         <Challenge
-          opened={this.state.openChallenge}
+          opened={this.state.opened === 'challenge'}
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
@@ -251,7 +240,6 @@ class Home extends Component {
           balances={balances}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
-          openChallenge={this.state.openChallenge}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleSendTransaction={this.handleSendTransaction}
@@ -260,6 +248,7 @@ class Home extends Component {
         />
 
         <CommitVote
+          opened={this.state.opened === 'commitVote'}
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
           token={token}
@@ -267,7 +256,6 @@ class Home extends Component {
           balances={balances}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
-          openCommitVote={this.state.openCommitVote}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleSendTransaction={this.handleSendTransaction}
@@ -277,7 +265,7 @@ class Home extends Component {
 
         <SidePanel
           title="Reveal Vote"
-          opened={this.state.openRevealVote}
+          opened={this.state.opened === 'revealVote'}
           onClose={this.closeSidePanel}
         >
           <SideSplit
@@ -329,7 +317,7 @@ class Home extends Component {
 
         <SidePanel
           title="Claim Voter Reward"
-          opened={this.state.openClaimVoterReward}
+          opened={this.state.opened === 'claimVoterReward'}
           onClose={this.closeSidePanel}
         >
           <SideSplit
@@ -403,7 +391,7 @@ class Home extends Component {
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
                   openSidePanel={e =>
-                    this.openSidePanel(candidate, 'openChallenge')
+                    this.openSidePanel(candidate, 'challenge')
                   }
                   listingHash={candidate.get('listingHash')}
                   listingType={'candidates'}
@@ -435,7 +423,7 @@ class Home extends Component {
                   contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={e => this.openSidePanel(one, 'openCommitVote')}
+                  openSidePanel={e => this.openSidePanel(one, 'commitVote')}
                   listingHash={one.get('listingHash')}
                   listingType={'faceoffs'}
                   copy={'Commit Vote'}
@@ -476,7 +464,7 @@ class Home extends Component {
                   <TableCell>
                     <ContextMenu>
                       <CMItem
-                        onClick={e => this.openSidePanel(one, 'openChallenge')}
+                        onClick={e => this.openSidePanel(one, 'challenge')}
                       >
                         {'Challenge Listing'}
                       </CMItem>
@@ -487,7 +475,7 @@ class Home extends Component {
                       </CMItem>
                       <CMItem
                         onClick={e =>
-                          this.openSidePanel(one, 'openClaimVoterReward')
+                          this.openSidePanel(one, 'claimVoterReward')
                         }
                       >
                         {'Claim Voter Reward'}

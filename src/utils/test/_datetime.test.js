@@ -14,7 +14,6 @@ test('should return false for a massive date', () => {
 test('should return zero for the same date', () => {
   const noww = moment().utc().unix() // 1520904331
   const converted = convertUnixTimeLeft(noww)
-  console.log('converted', converted)
   expect(converted.timeleft).toBe(0)
 })
 

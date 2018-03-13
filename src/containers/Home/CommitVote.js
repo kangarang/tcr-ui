@@ -20,14 +20,14 @@ export default class Challenge extends Component {
       handleInputChange,
       handleSendTransaction,
       selectedOne,
-      openCommitVote,
+      opened,
       miningStatus,
     } = this.props
     return (
       <div>
         <SidePanel
           title="Commit Vote"
-          opened={openCommitVote}
+          opened={opened}
           onClose={closeSidePanel}
         >
           <SideSplit

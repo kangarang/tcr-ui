@@ -90,14 +90,28 @@ async function decodeLogs(
     const logData = ContractEvent.parse(log.topics, log.data)
     const block = await provider.getBlock(log.blockHash)
     const tx = await provider.getTransaction(log.transactionHash)
-    const listing = await convertLogToListing(logData, block, tx, event, registry, voting)
+    const listing = await convertLogToListing(
+      logData,
+      block,
+      tx,
+      event,
+      registry,
+      voting
+    )
     listings.push(listing)
   }
   return listings
 }
 
 // TODO: separate concerns. Type check
-async function convertLogToListing(logData, block, tx, event, registry, voting) {
+async function convertLogToListing(
+  logData,
+  block,
+  tx,
+  event,
+  registry,
+  voting
+) {
   let { listingHash, challengeID, data, pollID, numTokens } = logData
   let whitelisted
   let ipfsContent

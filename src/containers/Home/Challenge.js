@@ -17,6 +17,7 @@ import TxnProgress from '../Transaction/TxnProgress'
 import { withCommas } from 'utils/_values'
 
 export default ({
+  opened,
   closeSidePanel,
   token,
   contracts,
@@ -24,7 +25,6 @@ export default ({
   balances,
   handleInputChange,
   handleSendTransaction,
-  openChallenge,
   visibleApprove,
   selectedOne,
   miningStatus,
@@ -32,7 +32,7 @@ export default ({
   <div>
     <SidePanel
       title="Challenge listing"
-      opened={openChallenge}
+      opened={opened}
       onClose={closeSidePanel}
     >
       <SideSplit

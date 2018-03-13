@@ -9,9 +9,11 @@ export function setProvider() {
   ) {
     // metamask
     provider = new providers.Web3Provider(window.web3.currentProvider, 'rinkeby')
+    console.log('web3 provider', provider)
     return provider
   }
-  provider = providers.getDefaultProvider('rinkeby')
+  provider = new providers.getDefaultProvider('rinkeby')
+  console.log('default provider', provider)
   return provider
 }
 

@@ -11,6 +11,7 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "0.5.0",
+    "@governx/governx-lib": "^1.1.1",
     "babel-polyfill": "6.26.0",
     "bluebird": "3.5.1",
     "bn.js": "4.11.8",
@@ -45,7 +46,7 @@
     "start:prod": "npm run build && NODE_PATH=./src node server.js",
     "dev": "npm run lint ./src && NODE_PATH=./src react-scripts start",
     "build": "npm run lint ./src && NODE_PATH=./src react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "NODE_PATH=./src react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "fix": "eslint --fix",
     "lint": "eslint"
