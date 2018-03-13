@@ -14,34 +14,8 @@ import {
 import { getListingHash } from 'utils/_values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
 import { txnMining, txnMined, clearTxn } from '../actions/transactions'
-import { ipfsAddSaga } from './ipfs'
+import { ipfsAddData } from 'libs/ipfs'
 import { delay } from 'redux-saga'
-
-function* callSaga(action) {
-  console.log('call requested:', action)
-  const account = yield select(selectAccount)
-  console.log('account', account)
-  // const { method, args, contract } = action.payload
-
-  // let c
-  // if (contract === 'registry') {
-  //   c = yield select(selectRegistry)
-  // } else if (contract === 'voting') {
-  //   c = yield select(selectVoting)
-  // }
-
-  // // hash the string
-  // if (method.inputs[0].name === '_listingHash') {
-  //   args[0] = getListingHash(args[0])
-  // }
-  // const decint = parseInt(result, 10)
-  // const hexint = parseInt(result, 16)
-  // console.log('CALL result (dec):', decint)
-  // console.log('CALL result (hex):', hexint)
-
-  // const callResult = hexint === 0 ? 'false' : hexint === 1 ? 'true' : decint
-  // alert(callResult)
-}
 
 export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
@@ -64,7 +38,19 @@ function* handleSendTransaction(action) {
   } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
   } else {
-    yield call(sendContractTxn, action)
+    const { methodName, args, contract } = action.payload
+    let c
+    if (contract === 'registry') {
+      c = yield select(selectRegistry)
+    } else if (contract === 'voting') {
+      c = yield select(selectVoting)
+    } else if (contract === 'token') {
+      c = yield select(selectToken)
+    }
+    if (methodName === 'approve') {
+      c = yield select(selectToken)
+    }
+    yield call(sendTransactionSaga, c, methodName, args)
   }
 }
 
@@ -83,8 +69,9 @@ function* registryTxnSaga(action) {
   })
 
   if (methodName === 'apply') {
-    const fileHash = yield call(ipfsAddSaga, {
-      payload: { id: args[0], data: args[2] },
+    const fileHash = yield call(ipfsAddData, {
+      id: args[0], // listing string (name)
+      data: args[2], // data (address)
     })
     // hash the string
     args[0] = getListingHash(args[0])
@@ -93,26 +80,6 @@ function* registryTxnSaga(action) {
   }
 
   yield call(sendTransactionSaga, registry, methodName, args)
-}
-
-export function* sendContractTxn(action) {
-  try {
-    const { methodName, args, contract } = action.payload
-    let c
-    if (contract === 'registry') {
-      c = yield select(selectRegistry)
-    } else if (contract === 'voting') {
-      c = yield select(selectVoting)
-    } else if (contract === 'token') {
-      c = yield select(selectToken)
-    }
-    if (methodName === 'approve') {
-      c = yield select(selectToken)
-    }
-    yield call(sendTransactionSaga, c, methodName, args)
-  } catch (error) {
-    console.log('error', error)
-  }
 }
 
 export function* sendTransactionSaga(contract, method, args) {
@@ -131,9 +98,11 @@ export function* sendTransactionSaga(contract, method, args) {
     console.log('receipt', receipt)
     yield put(txnMining())
 
-    const minedTxn = yield provider.waitForTransaction(receipt.hash).then(function(transaction) {
-      console.log('Transaction Mined: ' + JSON.stringify(transaction))
-    })
+    const minedTxn = yield provider
+      .waitForTransaction(receipt.hash)
+      .then(function(transaction) {
+        console.log('Transaction Mined: ' + transaction.hash)
+      })
 
     yield put(txnMined(minedTxn))
     yield call(delay, 3000)

@@ -38,6 +38,8 @@ import {
   selectWhitelist,
   selectError,
   selectAllContracts,
+  selectLatestTxn,
+  selectMiningStatus,
 } from 'selectors'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
@@ -56,7 +58,6 @@ import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
-import { selectLatestTxn, selectMiningStatus } from '../../selectors/transaction'
 import TxnProgress from '../Transaction/TxnProgress'
 
 class Home extends Component {
@@ -97,7 +98,7 @@ class Home extends Component {
   openApprove = () => {
     this.setState({ visibleApprove: true })
   }
-  chooseTCR = (one) => {
+  chooseTCR = one => {
     this.props.onChooseTCR(one)
   }
   openSidePanel = (one, openThis) => {
@@ -399,7 +400,9 @@ class Home extends Component {
                   contracts={contracts}
                   account={account}
                   handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={e => this.openSidePanel(candidate, 'openChallenge')}
+                  openSidePanel={e =>
+                    this.openSidePanel(candidate, 'openChallenge')
+                  }
                   listingHash={candidate.get('listingHash')}
                   listingType={'candidates'}
                   copy={'Challenge Listing'}
