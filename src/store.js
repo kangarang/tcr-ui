@@ -20,7 +20,6 @@ import logSaga from './sagas/logs'
 import tokenSaga from './sagas/token'
 import transactionSaga from './sagas/transaction'
 import voteSaga from './sagas/vote'
-import ipfsSaga from './sagas/ipfs'
 import contractsSaga from './sagas/contracts'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -68,7 +67,6 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(contractsSaga)
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(transactionSaga)
-  sagaMiddleware.run(ipfsSaga)
 
   // // Make reducers hot reloadable, see http://mxs.is/googmo
   // /* istanbul ignore next */

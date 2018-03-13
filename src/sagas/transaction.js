@@ -1,11 +1,10 @@
 import _ from 'lodash'
 
 import { select, put, call, takeEvery } from 'redux-saga/effects'
-import { SEND_TRANSACTION, CALL_REQUESTED } from '../actions/constants'
+import { SEND_TRANSACTION } from '../actions/constants'
 
 import {
   selectProvider,
-  selectAccount,
   selectRegistry,
   selectVoting,
   selectToken,
@@ -19,7 +18,6 @@ import { delay } from 'redux-saga'
 
 export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
-  yield takeEvery(CALL_REQUESTED, callSaga)
 }
 
 // TODO: write tests for these sagas. against abis
