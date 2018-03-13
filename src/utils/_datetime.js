@@ -1,48 +1,44 @@
+import _ from 'lodash'
 import moment from 'moment'
 
 export function getEndDateString(integer) {
   return moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss')
 }
 export function dateHasPassed(unixTimestamp) {
-  const date = moment().utc()
+  const date = moment().utc() // moment.utc("2018-03-13T01:24:07.827+00:00")
+  // 1520904108 >= unixTimestamp
   return date.unix() >= unixTimestamp
 }
 
 // adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
 export function convertUnixTimeLeft(integer) {
+  if (!_.isNumber(integer)) {
+    return new Error('need integer!')
+  }
   return timeLeft(moment.unix(integer).toDate())
 }
-export function timeLeft(d) {
+function timeLeft(d) {
   const date = d instanceof Date ? d : new Date(0)
+  const timestamp = date.getTime() / 1000
 
-  const rightNow = moment()
-    .utc()
-    .unix()
-  const dd = date.getTime() / 1000
-  const diff = dd - rightNow
+  const timeleft =
+    timestamp -
+    moment()
+      .utc()
+      .unix()
 
-  // UTC Time Formatting
-  // const utcTime = [date.getUTCHours(), date.getUTCMinutes()]
-  // const utcAMPM = ampm(utcTime[0])
-  // const utcTimeTwelve = getTwelveHour(utcTime)
-
-  // Local Time Formatting
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])
   const localTimeTwelve = getTwelveHour(localTime)
-  // const localOffset = date.getTimezoneOffset() / 60 * -1
 
   return {
-    // "February 17, 2018 1:42 PM (UTC -7)"
     formattedLocal: `${
       months[date.getMonth()]
     } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
       ':'
     )} ${localAMPM}`,
-    // 1518900156
-    timestamp: date.getTime() / 1000,
-    timeleft: diff,
-    date,
+    timeleft,
+    timestamp,
   }
 }
 
