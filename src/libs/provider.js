@@ -8,7 +8,10 @@ export function setProvider() {
     typeof window.web3.currentProvider !== 'undefined'
   ) {
     // metamask
-    provider = new providers.Web3Provider(window.web3.currentProvider, 'rinkeby')
+    provider = new providers.Web3Provider(
+      window.web3.currentProvider,
+      'rinkeby'
+    )
     console.log('web3 provider', provider)
     return provider
   }

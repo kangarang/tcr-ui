@@ -25,11 +25,7 @@ export default class Challenge extends Component {
     } = this.props
     return (
       <div>
-        <SidePanel
-          title="Commit Vote"
-          opened={opened}
-          onClose={closeSidePanel}
-        >
+        <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SideSplit
             leftTitle={'Poll ID'}
             leftItem={selectedOne && selectedOne.getIn(['latest', 'pollID'])}

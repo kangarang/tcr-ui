@@ -3,6 +3,7 @@
 /node_modules
 /tcr
 /wiki
+/.vscode
 
 .DS_Store
 npm-debug.log*

@@ -57,8 +57,7 @@ function homeReducer(state = initialState, action) {
     case IPFS_ABI_RETRIEVED:
       return state.setIn(['ipfs', action.payload.id], fromJS(action.payload))
     case SET_REGISTRY_CONTRACT:
-      return state
-        .setIn(['contracts', 'registry'], fromJS(action.payload))
+      return state.setIn(['contracts', 'registry'], fromJS(action.payload))
     case SET_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 
-import {
-  DropDown,
-} from '@aragon/ui'
+import { DropDown } from '@aragon/ui'
 import Identicon from 'components/Identicon'
 import { withCommas, trimDecimalsThree } from '../../utils/_values'
 import styled from 'styled-components'
@@ -24,7 +22,6 @@ class Stats extends Component {
       balances,
       contracts,
       network,
-      miningStatus,
     } = this.props
 
     const ethBalance = `${withCommas(
@@ -37,10 +34,10 @@ class Stats extends Component {
 
     const items = [
       <Identicon address={account} diameter={30} />,
-      <div>{`Account: ${account}`}</div>,
-      <div>{network}</div>,
-      <div>{ethBalance}</div>,
-      <div>{tokenBalance}</div>,
+      // <div>{`Account: ${account}`}</div>,
+      // <div>{network}</div>,
+      // <div>{ethBalance}</div>,
+      // <div>{tokenBalance}</div>,
     ]
 
     return (
