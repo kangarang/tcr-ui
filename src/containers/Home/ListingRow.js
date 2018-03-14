@@ -4,7 +4,6 @@ import { TableRow, TableCell, Text, ContextMenu, Countdown } from '@aragon/ui'
 
 import { jsonTheme } from '../../global-styles'
 import { CMItem } from 'components/StyledHome'
-import { dateHasPassed } from 'utils/_datetime'
 import { baseToConvertedUnit } from 'utils/_units'
 
 export default class ListingRow extends Component {
@@ -29,7 +28,7 @@ export default class ListingRow extends Component {
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
           {this.props.listingType === 'candidates' &&
-            (!dateHasPassed(this.props.listing.getIn(['appExpiry', 'date'])) ? (
+            (!this.props.listing.getIn(['appExpiry', 'date']) ? (
               <Countdown
                 end={this.props.listing.getIn(['appExpiry', 'date'])}
               />
@@ -38,9 +37,7 @@ export default class ListingRow extends Component {
             ))}
 
           {this.props.listingType === 'faceoffs' &&
-            (!dateHasPassed(
-              this.props.listing.getIn(['latest', 'commitEndDate'])
-            ) ? (
+            (!this.props.listing.getIn(['latest', 'commitExpired']) ? (
               <Countdown
                 end={this.props.listing.getIn([
                   'latest',
@@ -48,9 +45,7 @@ export default class ListingRow extends Component {
                   'date',
                 ])}
               />
-            ) : !dateHasPassed(
-              this.props.listing.getIn(['latest', 'revealEndDate'])
-            ) ? (
+            ) : !this.props.listing.getIn(['latest', 'revealExpired']) ? (
               <Countdown
                 end={this.props.listing.getIn([
                   'latest',
@@ -86,7 +81,7 @@ export default class ListingRow extends Component {
             : false}
         </TableCell>
         <TableCell onClick={this.handleToggleExpandDetails}>
-        {'fdfsd'}
+          {'fdfsd'}
         </TableCell>
 
         {/* actions */}
@@ -104,9 +99,7 @@ export default class ListingRow extends Component {
                 {'Update Status'}
               </CMItem>
             )}
-            <CMItem
-              onClick={this.props.openSidePanel}
-            >
+            <CMItem onClick={this.props.openSidePanel}>
               {this.props.copy}
             </CMItem>
           </ContextMenu>

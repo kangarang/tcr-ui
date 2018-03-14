@@ -22,6 +22,7 @@ let lastReadBlockNumber = 0
 function* setupEventsSaga() {
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
+  console.log('voting', voting)
 
   const {
     _Application,
@@ -112,6 +113,7 @@ async function convertLogToListing(
   registry,
   voting
 ) {
+  console.log('logData', logData)
   let { listingHash, challengeID, data, pollID, numTokens } = logData
   let whitelisted
   let ipfsContent
@@ -127,9 +129,11 @@ async function convertLogToListing(
   }
 
   // TODO: see if you can check the status before getting ipfs data
-  if (event === '_Application') {
+  // TODO: type check to make sure the data is actually an ipfs multihash
+  if (event === '_Application' && data.includes('Qm')) {
+    console.log('data', data)
     const content = await getIPFSData(data)
-    // console.log('ipfs content retrieved:', content)
+    console.log('ipfs content retrieved:', content)
     ipfsContent = content
     ipfsID = content.id // string
     ipfsData = content.data
@@ -148,8 +152,10 @@ async function convertLogToListing(
 
   let commitEndDate
   let commitExpiry
+  let commitExpired
   let revealEndDate
   let revealExpiry
+  let revealExpired
 
   let aeUnix = listing[0].toNumber()
   const appExpiry = convertUnixTimeLeft(aeUnix)
@@ -160,8 +166,10 @@ async function convertLogToListing(
     const poll = await voting.pollMap(pollID)
     commitEndDate = poll[0].toNumber()
     commitExpiry = convertUnixTimeLeft(commitEndDate)
+    commitExpired = dateHasPassed(commitEndDate)
     revealEndDate = poll[1].toNumber()
     revealExpiry = convertUnixTimeLeft(revealEndDate)
+    revealExpired = dateHasPassed(revealEndDate)
   }
   let appInfo = {
     listingHash,
@@ -190,10 +198,10 @@ async function convertLogToListing(
       event,
       pollID: pollID ? pollID : challengeID ? challengeID : false,
       numTokens,
-      commitEndDate,
       commitExpiry,
-      revealEndDate,
+      commitExpired,
       revealExpiry,
+      revealExpired,
     },
   }
 }

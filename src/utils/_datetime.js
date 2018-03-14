@@ -39,6 +39,7 @@ function timeLeft(d) {
     )} ${localAMPM}`,
     timeleft,
     timestamp,
+    date,
   }
 }
 

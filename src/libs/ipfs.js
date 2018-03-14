@@ -1,6 +1,7 @@
 import ipfsAPI from 'ipfs-api'
-import abis from '../abis'
+// import abis from '../abis'
 
+// TODO: type checking
 export const getIPFSData = async multihash => {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = await ipfsAPI(config)
@@ -14,14 +15,15 @@ export const getIPFSData = async multihash => {
   return content
 }
 
-const tcrotcr = {
-  id: 'Prospect Park',
-  registry: abis.registry,
-  token: abis.token,
-  voting: abis.voting,
-  parameterizer: abis.parameterizer,
-}
+// const tcrotcr = {
+//   id: 'Prospect Park',
+//   registry: abis.registry,
+//   token: abis.token,
+//   voting: abis.voting,
+//   parameterizer: abis.parameterizer,
+// }
 
+// TODO: type checking
 export async function ipfsAddData(obj) {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = ipfsAPI(config)
@@ -36,5 +38,5 @@ export async function ipfsAddData(obj) {
 
   const content = await getIPFSData(CID[0].hash)
   console.log('ipfs content added:', content)
-  return content
+  return CID[0].hash
 }
