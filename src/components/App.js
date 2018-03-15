@@ -28,8 +28,8 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100vw;
+  margin: 0;
 `
 const App = () => (
   <div>

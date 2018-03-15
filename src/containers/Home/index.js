@@ -42,7 +42,7 @@ import {
 } from 'selectors'
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
-import Navigation from 'components/Navigation'
+import AppBar from 'components/AppBar'
 import {
   MarginDiv,
   HomeWrapper,
@@ -209,7 +209,7 @@ class Home extends Component {
 
     return (
       <div>
-        <Navigation
+        <AppBar
           {...this.props}
           openSidePanel={e => this.openSidePanel(null, 'apply')}
         />

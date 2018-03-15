@@ -17,7 +17,6 @@ class Stats extends Component {
     const {
       account,
       candidates,
-      faceoffs,
       whitelist,
       balances,
       contracts,
@@ -41,42 +40,72 @@ class Stats extends Component {
     ]
 
     return (
-      <StatsContainer>
-        <StatsItem>{`TOTAL APPLICATIONS ${candidates.size}`}</StatsItem>
-        <StatsItem>{`TOTAL CHALLENGES ${faceoffs.size}`}</StatsItem>
-        <StatsItem>{`TOTAL REGISTERED ${whitelist.size}`}</StatsItem>
-        <UserInfo>
+      <GridContainer>
+        <GridItem>
+          <CapsDiv>{'total applications'}</CapsDiv>
+          <BoldDiv>{candidates.size}</BoldDiv>
+        </GridItem>
+
+        <GridItem>
+          <CapsDiv>{'total tokens at stake'}</CapsDiv>
+          <BoldDiv>{'3500'}</BoldDiv>
+        </GridItem>
+
+        <GridItem>
+          <CapsDiv>{'listings in registry'}</CapsDiv>
+          <BoldDiv>{whitelist.size}</BoldDiv>
+        </GridItem>
+
+        <UserInfoGridItem>
           <UserItem>{network}</UserItem>
           <UserItem>{ethBalance}</UserItem>
           <UserItem>{tokenBalance}</UserItem>
+
           <DropDown
             items={items}
             active={this.state.activeItem}
             onChange={this.handleChange}
           />
-        </UserInfo>
-      </StatsContainer>
+        </UserInfoGridItem>
+      </GridContainer>
     )
   }
 }
 
-const StatsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 9fr 6fr 6fr 11fr;
+  grid-column-gap: 2px;
   align-items: center;
-  height: 5em;
-  background-color: white;
+  height: 5.5em;
   color: ${colors.offBlack};
+  background-color: lightgrey; // grid-line color
   border: 1px solid black;
 `
-const StatsItem = styled.div`
-  padding: 0 1em;
-  border-right: 1px solid black;
-  font-size: 1.2em;
-`
-const UserInfo = styled.div`
+const GridItem = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  height: 100%;
+  padding: 0 2em;
+  background-color: white;
 `
-const UserItem = styled.div``
+const CapsDiv = styled.div`
+  text-transform: uppercase;
+`
+const BoldDiv = styled.div`
+  color: black;
+  font-weight: bold;
+`
+const UserInfoGridItem = styled(GridItem)`
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`
+const UserItem = styled.div`
+  margin: 1em;
+`
 
 export default Stats

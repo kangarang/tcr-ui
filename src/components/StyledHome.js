@@ -1,21 +1,6 @@
 import styled from 'styled-components'
 import { colors } from '../global-styles'
 
-export const AppBarWrapper = styled.div`
-  flex-shrink: 0;
-`
-export const AppBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 4em;
-  background-color: white;
-  padding: 0 3em;
-  & > div {
-    margin: 0 1em;
-  }
-`
 export const MarginDiv = styled.div`
   margin: 1em 0;
 `
