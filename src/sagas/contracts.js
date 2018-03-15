@@ -1,20 +1,16 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
-import abis from '../abis'
-
-import { setupRegistry, setupContract } from 'libs/contracts'
-import { baseToConvertedUnit } from 'utils/_units'
-import { SET_REGISTRY_CONTRACT } from 'actions/constants'
-
+import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from 'actions/constants'
 import {
   setContracts,
   contractError,
   updateBalancesRequest,
   setRegistryContract,
 } from '../actions'
-
+import { setupRegistry, setupContract } from 'libs/contracts'
+import { baseToConvertedUnit } from 'utils/_units'
+import abis from '../abis'
 import { selectProvider } from '../selectors'
-import { CHOOSE_TCR } from '../actions/constants';
 
 export default function* root() {
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
@@ -57,13 +53,7 @@ export function* contractsSaga(action) {
   console.log('registry', registry)
   try {
     let [token, parameterizer, voting] = yield all([
-      call(
-        setupContract,
-        provider,
-        abis.token.abi,
-        registry,
-        'token'
-      ),
+      call(setupContract, provider, abis.token.abi, registry, 'token'),
       call(
         setupContract,
         provider,
@@ -71,13 +61,7 @@ export function* contractsSaga(action) {
         registry,
         'parameterizer'
       ),
-      call(
-        setupContract,
-        provider,
-        abis.voting.abi,
-        registry,
-        'voting'
-      ),
+      call(setupContract, provider, abis.voting.abi, registry, 'voting'),
     ])
 
     const [

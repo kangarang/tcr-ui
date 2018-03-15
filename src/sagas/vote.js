@@ -5,17 +5,14 @@ import {
   TX_REVEAL_VOTE,
 } from '../actions/constants'
 
-import {
-  selectAccount,
-  selectVoting,
-} from '../selectors'
+import { selectAccount, selectVoting } from '../selectors'
 
 import { convertedToBaseUnit } from 'utils/_units'
 import { getVoteSaltHash, randInt } from 'utils/_values'
 import saveFile from 'utils/_file'
 import { getEndDateString } from 'utils/_datetime'
 
-import { sendTransactionSaga } from './transaction'
+import { sendTransactionSaga } from 'sagas/transaction'
 
 export default function* voteSaga() {
   yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)
@@ -80,12 +77,7 @@ export function* commitVoteSaga(action) {
 
   saveFile(json, filename)
 
-  yield call(
-    sendTransactionSaga,
-    voting,
-    'commitVote',
-    finalArgs
-  )
+  yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
 
   saveFile(json, filename)
 }

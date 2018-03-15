@@ -1,16 +1,14 @@
 import { select, takeLatest, all, call, put } from 'redux-saga/effects'
-
 import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 import { SET_CONTRACTS } from 'actions/constants'
 
+import { getIPFSData } from 'libs/ipfs'
 import { baseToConvertedUnit } from 'utils/_units'
 import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
-import { getIPFSData } from 'libs/ipfs'
 
 import { setListings } from '../actions'
-
 import { selectProvider, selectRegistry, selectVoting } from '../selectors'
 
 export default function* logsSaga() {

@@ -1,6 +1,7 @@
 {
   "short_name": "TCR UI",
-  "name": "A client-side shell to interact with Ethereum Token-Curated Registries",
+  "name":
+    "A client-side shell to interact with Ethereum Token-Curated Registries",
   "icons": [
     {
       "src": "favicon.ico",

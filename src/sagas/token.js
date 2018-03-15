@@ -1,6 +1,6 @@
 import { put, select, all, takeEvery } from 'redux-saga/effects'
+import { UPDATE_BALANCES_REQUEST } from 'actions/constants'
 import { updateBalances } from '../actions'
-import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
 import {
   selectProvider,
   selectAccount,
@@ -9,7 +9,7 @@ import {
   selectVoting,
   selectAllContracts,
 } from '../selectors'
-import { baseToConvertedUnit } from '../utils/_units'
+import { baseToConvertedUnit } from 'utils/_units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)

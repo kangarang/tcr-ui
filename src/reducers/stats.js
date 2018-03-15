@@ -1,10 +1,7 @@
 import { fromJS } from 'immutable'
 
 const initialState = fromJS({
-  txnStatus: {
-    open: false,
-    message: '',
-  },
+  stats: [],
 })
 
 export default (state = initialState, action) => {

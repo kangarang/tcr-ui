@@ -2,7 +2,8 @@
   "name": "tcr-ui",
   "author": "kangarang",
   "version": "0.3.5",
-  "description": "A client-side shell to interact with Ethereum Token-Curated Registries",
+  "description":
+    "A client-side shell to interact with Ethereum Token-Curated Registries",
   "repository": "https://github.com/kangarang/tcr-ui",
   "engines": {
     "node": ">= 8.0.0",
@@ -63,9 +64,7 @@
     "regenerator-runtime": "0.11.1"
   },
   "eslintConfig": {
-    "plugins": [
-      "react"
-    ],
+    "plugins": ["react"],
     "parserOptions": {
       "ecmaVersion": 6,
       "sourceType": "module",
