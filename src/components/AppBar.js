@@ -14,7 +14,11 @@ const GridContainer = styled.div`
   padding: 1em;
 `
 
-const GridItem = styled.div`
+const GridItem = styled.div``
+
+const BoldDiv = styled.div`
+  color: black;
+  font-weight: bold;
 `
 
 export default ({ error, openSidePanel, contracts }) => (
@@ -26,19 +30,19 @@ export default ({ error, openSidePanel, contracts }) => (
     ) : (
       <GridContainer>
         <GridItem gc={1}>
-          <Button mode="strong" onClick={openSidePanel}>
-            {'Start an application'}
+          <Button mode="" onClick={openSidePanel}>
+            <BoldDiv>{'Start an application'}</BoldDiv>
           </Button>
         </GridItem>
 
         <GridItem gc={2}>
           <Text size="xlarge" weight="bold">
-            {contracts.get('registryName')}
+            <BoldDiv>{contracts.get('registryName')}</BoldDiv>
           </Text>
         </GridItem>
 
         <GridItem gc={3}>
-          <Text>{'LINKS'}</Text>
+          <BoldDiv>{'Challenge Vote Activities About TCR'}</BoldDiv>
         </GridItem>
       </GridContainer>
     )}

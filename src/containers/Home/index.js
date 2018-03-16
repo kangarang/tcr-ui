@@ -57,6 +57,7 @@ import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
+import Tabs from '../Tabs'
 import TxnProgress from '../Transaction/TxnProgress'
 import Stats from '../Stats'
 
@@ -365,6 +366,12 @@ class Home extends Component {
           </MarginDiv>
           {miningStatus && <TxnProgress />}
         </SidePanel>
+
+        <Tabs
+          candidates={candidates}
+          faceoffs={faceoffs}
+          whitelist={whitelist}
+        />
 
         <HomeWrapper>
           <div>

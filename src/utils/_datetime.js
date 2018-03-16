@@ -26,6 +26,7 @@ function timeLeft(d) {
     moment()
       .utc()
       .unix()
+  const timesince = moment().utc().unix() - timestamp
 
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])
@@ -38,6 +39,7 @@ function timeLeft(d) {
       ':'
     )} ${localAMPM}`,
     timeleft,
+    timesince,
     timestamp,
     date,
   }

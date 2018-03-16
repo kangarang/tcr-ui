@@ -10,6 +10,7 @@ import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
 
 import { setListings } from '../actions'
 import { selectProvider, selectRegistry, selectVoting } from '../selectors'
+import { getEndDateString } from '../utils/_datetime';
 
 export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventsSaga)
@@ -192,6 +193,7 @@ async function convertLogToListing(
       blockHash: block.hash,
       blockNumber: block.number,
       ts: block.timestamp,
+      timesince: appExpiry.timesince,
       sender: tx.from,
       event,
       pollID: pollID ? pollID : challengeID ? challengeID : false,
