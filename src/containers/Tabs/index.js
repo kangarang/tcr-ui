@@ -52,7 +52,7 @@ class SimpleTabs extends Component {
         </AppBar>
         {value === 0 && (
           <TabContainer>
-            <Container>
+            <FlexContainer>
               {whitelist.map(one => (
                 <Listing
                   listingHash={one.get('listingHash')}
@@ -62,7 +62,7 @@ class SimpleTabs extends Component {
                   latest={one.get('latest')}
                 />
               ))}
-            </Container>
+            </FlexContainer>
           </TabContainer>
         )}
         {value === 1 && <TabContainer>For Challenge</TabContainer>}
@@ -71,7 +71,7 @@ class SimpleTabs extends Component {
     )
   }
 }
-const Container = styled.div`
+const FlexContainer = styled.div`
   display: flex;
 `
 
