@@ -2,8 +2,7 @@
   "name": "tcr-ui",
   "author": "kangarang",
   "version": "0.3.5",
-  "description":
-    "A client-side shell to interact with Ethereum Token-Curated Registries",
+  "description": "A client-side shell to interact with token-curated registries",
   "repository": "https://github.com/kangarang/tcr-ui",
   "engines": {
     "node": ">= 8.0.0",
@@ -22,6 +21,7 @@
     "history": "4.7.2",
     "immutable": "3.8.2",
     "ipfs-api": "18.1.1",
+    "ipfs-mini": "1.1.2",
     "jazzicon": "1.5.0",
     "jsonfile": "4.0.0",
     "lodash": "4.17.4",
