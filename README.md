@@ -10,9 +10,7 @@ The vision of this project is to build a registry-agnostic client-side user inte
 
 ---
 
-## Resources
-
-### Docs
+## Docs
 
 **State Changes**
 
@@ -28,6 +26,10 @@ The vision of this project is to build a registry-agnostic client-side user inte
 
 - [IPFS](./docs/IPFS.md)
 - [IPLD](./docs/IPLD.md)
+
+---
+
+## Resources
 
 ### Articles
 
