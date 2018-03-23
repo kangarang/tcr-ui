@@ -12,9 +12,22 @@ The vision of this project is to build a registry-agnostic client-side user inte
 
 ## Resources
 
-### Wiki / Docs
+### Docs
 
-[Check out the Wiki for code samples, contract endpoints, events, IPFS, and more docs!](https://github.com/kangarang/tcr-ui/wiki)
+**State Changes**
+
+- [Lifecycle of a Listing](./docs/Lifecycle-of-a-Listing.md)
+- [Events](./docs/Events.md)
+
+**TCR Endpoints**
+
+- [Transactions](./docs/Transactions.md)
+- [Calls](./docs/Calls.md)
+
+**InterPlanetary Shenanigans**
+
+- [IPFS](./docs/IPFS.md)
+- [IPLD](./docs/IPLD.md)
 
 ### Articles
 
