@@ -8,10 +8,6 @@ export const OverFlowDiv = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-export const HomeWrapper = styled.div`
-  padding: 2em;
-`
-
 export const CMItem = styled.div`
   display: flex;
   justify-content: space-between;

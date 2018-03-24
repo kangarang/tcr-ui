@@ -2,20 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import JSONTree from 'react-json-tree'
 import {
   SidePanel,
   SidePanelSeparator,
   Button,
-  ContextMenu,
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  Text,
 } from '@aragon/ui'
 import translate from 'translations'
-import { jsonTheme } from 'global-styles'
 import {
   setupEthereum,
   requestModalMethod,
@@ -43,17 +35,11 @@ import {
 
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import AppBar from 'components/AppBar'
-import {
-  MarginDiv,
-  HomeWrapper,
-  CMItem,
-  FileInput,
-} from 'components/StyledHome'
+import { MarginDiv, FileInput } from 'components/StyledHome'
 
 import { convertedToBaseUnit } from 'utils/_units'
 import { withCommas } from 'utils/_values'
 
-import ListingRow from './ListingRow'
 import Apply from './Apply'
 import Challenge from './Challenge'
 import CommitVote from './CommitVote'
@@ -199,7 +185,7 @@ class Home extends Component {
       candidates,
       faceoffs,
       whitelist,
-      account,
+      // account,
       balances,
       parameters,
       token,
@@ -371,129 +357,9 @@ class Home extends Component {
           candidates={candidates}
           faceoffs={faceoffs}
           whitelist={whitelist}
+          openSidePanel={this.openSidePanel}
+          chooseTCR={this.chooseTCR}
         />
-
-        <HomeWrapper>
-          <div>
-            {'CANDIDATES'}
-            <Table
-              header={
-                <TableRow>
-                  <TableHeader title="Listing" />
-                  <TableHeader title="Time Remaining" />
-                  <TableHeader title="Details" />
-                  <TableHeader title="Tokens required to challenge" />
-                  <TableHeader title="Badges" />
-                  <TableHeader title="Actions" />
-                </TableRow>
-              }
-            >
-              {candidates.map(candidate => (
-                <ListingRow
-                  key={candidate.get('listingHash')}
-                  listing={candidate}
-                  parameters={parameters}
-                  token={token}
-                  contracts={contracts}
-                  account={account}
-                  handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={e =>
-                    this.openSidePanel(candidate, 'challenge')
-                  }
-                  listingHash={candidate.get('listingHash')}
-                  listingType={'candidates'}
-                  copy={'Challenge Listing'}
-                />
-              ))}
-            </Table>
-          </div>
-
-          <div>
-            {'CHALLENGES'}
-            <Table
-              header={
-                <TableRow>
-                  <TableHeader title="Listing" />
-                  <TableHeader title="Time Remaining" />
-                  <TableHeader title="Details" />
-                  <TableHeader title="Badges" />
-                  <TableHeader title="Actions" />
-                </TableRow>
-              }
-            >
-              {faceoffs.map(one => (
-                <ListingRow
-                  key={one.get('listingHash')}
-                  listing={one}
-                  parameters={parameters}
-                  token={token}
-                  contracts={contracts}
-                  account={account}
-                  handleSendTransaction={this.handleSendTransaction}
-                  openSidePanel={e => this.openSidePanel(one, 'commitVote')}
-                  listingHash={one.get('listingHash')}
-                  listingType={'faceoffs'}
-                  copy={'Commit Vote'}
-                />
-              ))}
-            </Table>
-          </div>
-
-          <div>
-            {'REGISTRY'}
-            <Table
-              header={
-                <TableRow>
-                  <TableHeader title="Listing" />
-                  <TableHeader title="Deposit" />
-                  <TableHeader title="Registered on block" />
-                  <TableHeader title="Actions" />
-                </TableRow>
-              }
-            >
-              {whitelist.map(one => (
-                <TableRow key={one.get('listingHash')}>
-                  <TableCell>
-                    <Text>{one.get('ipfsID')}</Text>
-                  </TableCell>
-
-                  <TableCell>{one.getIn(['latest', 'numTokens'])}</TableCell>
-
-                  <TableCell>
-                    <JSONTree
-                      invertTheme={false}
-                      theme={jsonTheme}
-                      data={one}
-                      shouldExpandNode={(keyName, data, level) => false}
-                    />
-                  </TableCell>
-
-                  <TableCell>
-                    <ContextMenu>
-                      <CMItem
-                        onClick={e => this.openSidePanel(one, 'challenge')}
-                      >
-                        {'Challenge Listing'}
-                      </CMItem>
-                      <CMItem
-                        onClick={e => this.chooseTCR(one.get('ipfsData'))}
-                      >
-                        {'Choose this TCR'}
-                      </CMItem>
-                      <CMItem
-                        onClick={e =>
-                          this.openSidePanel(one, 'claimVoterReward')
-                        }
-                      >
-                        {'Claim Voter Reward'}
-                      </CMItem>
-                    </ContextMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </Table>
-          </div>
-        </HomeWrapper>
       </div>
     )
   }
