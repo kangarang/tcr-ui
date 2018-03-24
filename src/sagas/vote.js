@@ -35,7 +35,7 @@ export function* commitVoteSaga(action) {
   const account = yield select(selectAccount)
   const voting = yield select(selectVoting)
 
-  console.log('commit vote saga:', action)
+  // console.log('commit vote saga:', action)
   const { args } = action.payload
   const pollID = args[0]
   const voteOption = args[1]
@@ -43,6 +43,8 @@ export function* commitVoteSaga(action) {
   const data = args[3]
   // console.log('args', args)
   // const numTokens = convertedToBaseUnit(args[2], 18)
+
+  // TODO: fix
   const salt = randInt(1e6, 1e8)
 
   // format args
@@ -70,7 +72,7 @@ export function* commitVoteSaga(action) {
     numTokens,
   }
 
-  console.log('commit json:', json)
+  // console.log('commit json:', json)
 
   const listingUnderscored = data.replace('.', '_')
   const filename = `${listingUnderscored}_pollID-${pollID}.json`

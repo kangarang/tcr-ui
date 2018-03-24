@@ -25,7 +25,7 @@ export default function* transactionSaga() {
 }
 
 // TODO: write tests for these sagas. against abis
-function* handleSendTransaction(action) {
+export function* handleSendTransaction(action) {
   const methodName = action.payload.methodName
   if (
     methodName === 'apply' ||
@@ -56,7 +56,7 @@ function* handleSendTransaction(action) {
   }
 }
 
-function* registryTxnSaga(action) {
+export function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
   const methodName = action.payload.methodName
 
@@ -97,7 +97,7 @@ export function* sendTransactionSaga(contract, method, args) {
     })
 
     const receipt = yield call(contract.functions[method], ...newArgs)
-    console.log('receipt', receipt)
+    // console.log('receipt', receipt)
     yield put(txnMining())
 
     const minedTxn = yield provider

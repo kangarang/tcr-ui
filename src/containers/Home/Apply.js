@@ -1,15 +1,15 @@
 import React from 'react'
 import {
-  SidePanel,
   SidePanelSeparator,
-  Button,
   Text,
   TextInput,
 } from '@aragon/ui'
 import translate from 'translations'
 
+import SidePanel from 'containers/Transaction/SidePanel'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
+import Button from 'components/Button'
 
 import { baseToConvertedUnit, BN } from 'utils/_units'
 import { withCommas } from 'utils/_values'

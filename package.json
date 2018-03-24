@@ -32,6 +32,7 @@
     "react-dom": "16.2.0",
     "react-json-tree": "0.11.0",
     "react-markdown": "3.1.4",
+    "react-motion": "^0.5.2",
     "react-redux": "5.0.6",
     "react-router-dom": "4.2.2",
     "react-scripts": "1.0.17",
@@ -64,7 +65,9 @@
     "regenerator-runtime": "0.11.1"
   },
   "eslintConfig": {
-    "plugins": ["react"],
+    "plugins": [
+      "react"
+    ],
     "parserOptions": {
       "ecmaVersion": 6,
       "sourceType": "module",

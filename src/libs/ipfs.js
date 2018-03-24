@@ -8,7 +8,7 @@ export const getIPFSData = async multihash => {
 
   let content
   ipfsPath.forEach(file => {
-    console.log(file.path)
+    // console.log(file.path)
     content = JSON.parse(file.content.toString('utf8'))
   })
   return content
@@ -28,6 +28,6 @@ export async function ipfsAddData(obj) {
   })
 
   const content = await getIPFSData(CID[0].hash)
-  console.log('ipfs content added:', content)
+  // console.log('ipfs content added:', content)
   return CID[0].hash
 }

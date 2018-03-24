@@ -16,7 +16,6 @@ let lastReadBlockNumber = 0
 function* setupEventsSaga() {
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
-  console.log('voting', voting)
 
   const {
     _Application,
@@ -46,6 +45,7 @@ function* getHistorySaga(AllEvents, contractAddress) {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
+
   const freshListings = yield all(
     AllEvents.map(ContractEvent => {
       return decodeLogs(
@@ -61,6 +61,7 @@ function* getHistorySaga(AllEvents, contractAddress) {
   console.log('flattened', flattened)
   const updatedListings = yield call(updateListings, [], flattened)
   console.log('updatedListings', updatedListings.toJS())
+
   yield put(setListings(updatedListings))
 }
 
@@ -83,8 +84,10 @@ async function decodeLogs(
   let listings = []
   for (const log of logs) {
     const logData = ContractEvent.parse(log.topics, log.data)
+
     const block = await provider.getBlock(log.blockHash)
     const tx = await provider.getTransaction(log.transactionHash)
+
     const listing = await convertLogToListing(
       logData,
       block,

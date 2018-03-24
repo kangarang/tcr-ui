@@ -3,7 +3,7 @@ import { injectGlobal } from 'styled-components'
 export const colors = {
   purple: '#52427c',
   offWhite: '#eee',
-  offBlack: '#222',
+  offBlack: '#333',
   lightBlue: '#6ba3ff',
   darkBlue: '#203260',
   magenta: '#ff387a',
@@ -28,6 +28,10 @@ export const colors = {
     blue3: '#008C9E',
     blue2: '#00B4CC',
     blue1: '#00DFFC',
+  },
+  buttonGradient: {
+    right: '#8FD3F4',
+    left: '#84FAB0',
   },
 }
 

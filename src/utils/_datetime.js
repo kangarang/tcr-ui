@@ -15,9 +15,10 @@ export function convertUnixTimeLeft(integer) {
   if (!_.isNumber(integer)) {
     return new Error('need integer!')
   }
-  return timeLeft(moment.unix(integer).toDate())
+  return buildTimeObject(moment.unix(integer).toDate())
 }
-function timeLeft(d) {
+
+function buildTimeObject(d) {
   const date = d instanceof Date ? d : new Date(0)
   const timestamp = date.getTime() / 1000
 

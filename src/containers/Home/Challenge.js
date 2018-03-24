@@ -1,17 +1,18 @@
 import React from 'react'
 
 import {
-  SidePanel,
   SidePanelSeparator,
-  Button,
   Text,
   TextInput,
+  // Button,
 } from '@aragon/ui'
 
 import translate from 'translations'
 
+import SidePanel from 'containers/Transaction/SidePanel'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
+import Button from 'components/Button'
 import TxnProgress from '../Transaction/TxnProgress'
 
 import { withCommas } from 'utils/_values'
@@ -62,7 +63,7 @@ export default ({
       <SideText
         small
         title={'LISTING'}
-        text={selectedOne && selectedOne.get('data')}
+        text={selectedOne && selectedOne.get('ipfsID')}
       />
 
       <SideText

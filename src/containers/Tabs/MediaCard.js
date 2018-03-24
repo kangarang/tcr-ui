@@ -7,11 +7,13 @@ import Typography from 'material-ui/Typography'
 
 const styles = {
   card: {
-    width: 150,
+    width: 190,
     margin: 5,
+    padding: '1em',
   },
   media: {
-    height: 150,
+    height: 140,
+    margin: 5,
   },
 }
 
@@ -32,29 +34,34 @@ function MediaCard(props) {
   } = props
 
   return (
-    <Card className={classes.card}>
-      <CardMedia
-        className={classes.media}
-        image={imgSrc}
-        title={`Listing image ${ipfsID}`}
-      />
+    <div>
+      <Card className={classes.card}>
+        <CardMedia
+          className={classes.media}
+          image={imgSrc}
+          title={`Listing image ${ipfsID}`}
+        />
 
-      <CardContent>
-        <Typography variant="title" component="h3">
-          {ipfsID}
-        </Typography>
+        <CardContent>
+          <Typography variant="title" component="h3">
+            {ipfsID}
+          </Typography>
 
-        <Typography component="p">{`BY: ${owner.substring(0, 8)}`}</Typography>
-        <Typography component="p">{latest.get('timesince')}</Typography>
-      </CardContent>
+          <Typography component="p">{`BY: ${owner.substring(
+            0,
+            8
+          )}`}</Typography>
+          <Typography component="p">{latest.get('timesince')}</Typography>
+        </CardContent>
 
-      <CardActions>
-        <Button onClick={openSidePanel} size="medium" color="primary">
-          {actionCopy}
-        </Button>
-        {/* <Button onClick={e => chooseTCR(ipfsData)}>{'Choose this TCR'}</Button> */}
-      </CardActions>
-    </Card>
+        <CardActions>
+          <Button onClick={openSidePanel} size="medium" color="primary">
+            {actionCopy}
+          </Button>
+          {/* <Button onClick={e => chooseTCR(ipfsData)}>{'Choose this TCR'}</Button> */}
+        </CardActions>
+      </Card>
+    </div>
   )
 }
 

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import JSONTree from 'react-json-tree'
 
-import { SidePanel, SidePanelSeparator, Button, TextInput } from '@aragon/ui'
+import { SidePanelSeparator, TextInput } from '@aragon/ui'
 
 import { jsonTheme } from '../../global-styles'
 import translate from 'translations'
 
+import SidePanel from 'containers/Transaction/SidePanel'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
+import Button from 'components/Button'
 import TxnProgress from '../Transaction/TxnProgress'
 
 import { withCommas } from 'utils/_values'
@@ -44,7 +46,7 @@ export default class Challenge extends Component {
           <SideText
             small
             title={'COMMIT VOTE'}
-            text={selectedOne && selectedOne.get('data')}
+            text={selectedOne && selectedOne.get('ipfsID')}
           />
 
           <SidePanelSeparator />

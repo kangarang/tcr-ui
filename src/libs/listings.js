@@ -14,7 +14,6 @@ export async function convertLogToListing(
   registry,
   voting
 ) {
-  console.log('logData', logData)
   let { listingHash, challengeID, data, pollID, numTokens } = logData
   let whitelisted
   let ipfsContent
@@ -32,9 +31,9 @@ export async function convertLogToListing(
   // TODO: see if you can check the status before getting ipfs data
   // TODO: type check to make sure the data is actually an ipfs multihash
   if (event === '_Application' && data.includes('Qm')) {
-    console.log('data', data)
+    // console.log('data', data)
     const content = await getIPFSData(data)
-    console.log('ipfs content retrieved:', content)
+    // console.log('ipfs content retrieved:', content)
     ipfsContent = content
     ipfsID = content.id // string
     ipfsData = content.data

@@ -2,12 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import {
-  SidePanel,
-  SidePanelSeparator,
-  Button,
-} from '@aragon/ui'
+import { SidePanelSeparator, Button } from '@aragon/ui'
 import translate from 'translations'
+import SidePanel from 'containers/Transaction/SidePanel'
 import {
   setupEthereum,
   requestModalMethod,
@@ -157,7 +154,7 @@ class Home extends Component {
                       this.state.selectedOne.getIn(['latest', 'pollID']),
                       voteOption,
                       this.state.numTokens,
-                      this.state.selectedOne.get('data'),
+                      this.state.selectedOne.get('ipfsID'),
                     ]
                   : methodName === 'revealVote'
                     ? [
@@ -186,6 +183,7 @@ class Home extends Component {
       faceoffs,
       whitelist,
       // account,
+      registry,
       balances,
       parameters,
       token,
@@ -274,7 +272,7 @@ class Home extends Component {
           <SideText small text={'REVEAL VOTE'} />
           <SideText
             small
-            text={this.state.selectedOne && this.state.selectedOne.get('data')}
+            text={this.state.selectedOne && this.state.selectedOne.get('ipfsID')}
           />
 
           <SidePanelSeparator />
@@ -354,11 +352,13 @@ class Home extends Component {
         </SidePanel>
 
         <Tabs
+          registry={registry}
           candidates={candidates}
           faceoffs={faceoffs}
           whitelist={whitelist}
           openSidePanel={this.openSidePanel}
           chooseTCR={this.chooseTCR}
+          handleSendTransaction={this.handleSendTransaction}
         />
       </div>
     )

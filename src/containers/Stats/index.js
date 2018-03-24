@@ -33,7 +33,7 @@ class Stats extends Component {
       network,
     } = this.props
 
-    const items = []
+    // const items = []
 
     return (
       <GridContainer>

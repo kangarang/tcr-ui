@@ -52,12 +52,10 @@ class SimpleTabs extends Component {
             value={value}
             onChange={this.handleChange}
             indicatorColor="primary"
-            textColor="black"
-            // fullWidth
           >
             <Tab label="registry" />
             <Tab label="applications" />
-            <Tab label="voting" href="#basic-tabs" />
+            <Tab label="voting" />
           </Tabs>
         </AppBar>
 

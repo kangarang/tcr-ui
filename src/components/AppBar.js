@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Button, Text } from '@aragon/ui'
+import { Text } from '@aragon/ui'
+import Button from 'components/Button'
+import { colors } from '../global-styles'
 
 const Wrapper = styled.div`
   flex-shrink: 0;
@@ -17,7 +19,7 @@ const GridContainer = styled.div`
 const GridItem = styled.div``
 
 const BoldDiv = styled.div`
-  color: black;
+  color: ${colors.offBlack};
   font-weight: bold;
 `
 
@@ -30,7 +32,7 @@ export default ({ error, openSidePanel, contracts }) => (
     ) : (
       <GridContainer>
         <GridItem gc={1}>
-          <Button mode="" onClick={openSidePanel}>
+          <Button onClick={openSidePanel}>
             <BoldDiv>{'Start an application'}</BoldDiv>
           </Button>
         </GridItem>

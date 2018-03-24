@@ -6,6 +6,7 @@ import { AragonApp } from '@aragon/ui'
 
 import Home from 'containers/Home'
 import '../global-styles'
+import { colors } from '../global-styles'
 
 const theme = createMuiTheme({
   palette: {
@@ -20,6 +21,17 @@ const theme = createMuiTheme({
       main: '#f44336',
       dark: '#ba000d',
       contrastText: '#000',
+    },
+  },
+  overrides: {
+    MuiTabIndicator: {
+      root: {
+        background: `linear-gradient(to right, ${
+          colors.buttonGradient.left
+        } 0%, ${colors.buttonGradient.right} 100%)`,
+        border: 0,
+        height: 3,
+      },
     },
   },
 })

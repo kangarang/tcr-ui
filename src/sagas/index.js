@@ -14,9 +14,9 @@ export default function* rootSaga() {
 export function* genesis() {
   try {
     const provider = yield call(setProvider)
-    console.log('provider', provider)
+    // console.log('provider', provider)
     const account = (yield provider.listAccounts())[0]
-    console.log('account', account)
+    // console.log('account', account)
     const network =
       provider.chainId === 4
         ? 'rinkeby'
@@ -30,7 +30,7 @@ export function* genesis() {
       yield put(setWallet({ provider, account, network }))
       // TODO: remove abis and just get the meta tcr to initialize the ui
       yield call(initialRegistrySaga, provider, account)
-      yield call(governXSaga)
+      // yield call(governXSaga)
     }
   } catch (err) {
     console.log('Genesis error:', err)
@@ -41,7 +41,7 @@ export function* genesis() {
 function* governXSaga() {
   const registry = yield select(selectRegistry)
   const account = yield select(selectAccount)
-  console.log('registry, account', registry, account)
+  // console.log('registry, account', registry, account)
   // const { tcr } = new Organization({
   //   address: registry.address,
   //   from: account,
