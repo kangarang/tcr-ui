@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-
-import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
+import { withStyles } from 'material-ui/styles'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import Typography from 'material-ui/Typography'
 
 import imgSrc from 'assets/eth.svg'
+
 import MediaCard from './MediaCard'
 
 function TabContainer(props) {

@@ -1,16 +1,14 @@
 import React from 'react'
-
 import {
   SidePanelSeparator,
   Text,
   TextInput,
-  // Button,
 } from '@aragon/ui'
-
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
+
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'

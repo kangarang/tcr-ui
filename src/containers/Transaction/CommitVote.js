@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
-import JSONTree from 'react-json-tree'
-
 import { SidePanelSeparator, TextInput } from '@aragon/ui'
-
-import { jsonTheme } from '../../global-styles'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
+
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
@@ -95,21 +92,10 @@ export default class Challenge extends Component {
 
           <MarginDiv>
             <SideText text={translate('sidebar_approve_instructions')} />
-            <Button
-              onClick={e => handleApprove('voting')}
-              mode="strong"
-              wide
-            >
+            <Button onClick={e => handleApprove('voting')} mode="strong" wide>
               {'Approve tokens for Voting'}
             </Button>
           </MarginDiv>
-
-          <JSONTree
-            invertTheme={false}
-            theme={jsonTheme}
-            data={balances}
-            shouldExpandNode={(keyName, data, level) => false}
-          />
         </SidePanel>
       </div>
     )

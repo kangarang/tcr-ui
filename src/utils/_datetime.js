@@ -1,5 +1,31 @@
+import { differenceInSeconds, format } from 'date-fns'
 import _ from 'lodash'
 import moment from 'moment'
+
+// https://github.com/aragon/aragon-ui/blob/master/src/utils/date.js
+const MINUTE_IN_SECONDS = 60
+const HOUR_IN_SECONDS = MINUTE_IN_SECONDS * 60
+const DAY_IN_SECONDS = HOUR_IN_SECONDS * 24
+
+export const difference = (date1, date2) => {
+  const totalInSeconds = differenceInSeconds(date1, date2)
+
+  let seconds = totalInSeconds
+
+  const days = Math.floor(seconds / DAY_IN_SECONDS)
+  seconds = seconds % DAY_IN_SECONDS
+
+  const hours = Math.floor(seconds / HOUR_IN_SECONDS)
+  seconds = seconds % HOUR_IN_SECONDS
+
+  const minutes = Math.floor(seconds / MINUTE_IN_SECONDS)
+  seconds = seconds % MINUTE_IN_SECONDS
+
+  return { days, hours, minutes, seconds, totalInSeconds }
+}
+
+export const formatHtmlDatetime = date =>
+  format(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 
 export function getEndDateString(integer) {
   return moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss')
@@ -27,7 +53,10 @@ function buildTimeObject(d) {
     moment()
       .utc()
       .unix()
-  const timesince = moment().utc().unix() - timestamp
+  const timesince =
+    moment()
+      .utc()
+      .unix() - timestamp
 
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])

@@ -5,6 +5,7 @@ import { Motion, spring } from 'react-motion'
 import { Text } from '@aragon/ui'
 
 import close from 'assets/close.svg'
+
 import { unselectable } from 'utils/_styles'
 import { getPublicUrl, prefixUrl } from 'utils/_url'
 

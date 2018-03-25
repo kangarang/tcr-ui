@@ -4,7 +4,7 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import { SidePanelSeparator, Button } from '@aragon/ui'
 import translate from 'translations'
-import SidePanel from 'containers/Transaction/SidePanel'
+
 import {
   setupEthereum,
   requestModalMethod,
@@ -12,6 +12,7 @@ import {
   callRequested,
   chooseTCR,
 } from 'actions'
+
 import {
   selectProvider,
   selectAccount,
@@ -30,17 +31,19 @@ import {
   selectMiningStatus,
 } from 'selectors'
 
-import { SideSplit, SideText } from 'components/SidePanelOverlay'
-import AppBar from 'components/AppBar'
-import { MarginDiv, FileInput } from 'components/StyledHome'
-
 import { convertedToBaseUnit } from 'utils/_units'
 import { withCommas } from 'utils/_values'
 
 import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
 import CommitVote from 'containers/Transaction/CommitVote'
+import SidePanel from 'containers/Transaction/SidePanel'
 import TxnProgress from 'containers/Transaction/TxnProgress'
+
+import AppBar from 'components/AppBar'
+import { SideSplit, SideText } from 'components/SidePanelOverlay'
+import { MarginDiv, FileInput } from 'components/StyledHome'
+
 import Stats from '../Stats'
 import Tabs from '../Tabs'
 
@@ -244,11 +247,7 @@ class Home extends Component {
             />
           </MarginDiv>
           <MarginDiv>
-            <Button
-              onClick={this.handleRevealVote}
-              mode="strong"
-              wide
-            >
+            <Button onClick={this.handleRevealVote} mode="strong" wide>
               {'Reveal Vote'}
             </Button>
           </MarginDiv>
@@ -293,11 +292,7 @@ class Home extends Component {
             />
           </MarginDiv>
           <MarginDiv>
-            <Button
-              onClick={this.handleClaimVoterReward}
-              mode="strong"
-              wide
-            >
+            <Button onClick={this.handleClaimVoterReward} mode="strong" wide>
               {'Claim Voter Reward'}
             </Button>
           </MarginDiv>

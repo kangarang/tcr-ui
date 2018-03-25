@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 
 import Button from 'material-ui/Button'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import Fade from 'material-ui/transitions/Fade'
 
 import Identicon from 'components/Identicon'
-import { withCommas, trimDecimalsThree } from '../../utils/_values'
-import styled from 'styled-components'
+import { withCommas, trimDecimalsThree } from 'utils/_values'
 import { colors } from '../../global-styles'
 
 class Stats extends Component {

@@ -1,10 +1,10 @@
 import React from 'react'
 import { withStyles } from 'material-ui/styles'
+import Typography from 'material-ui/Typography'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
-// import Button from 'material-ui/Button'
+
 import Button from 'components/Button'
 import Countdown from 'components/Countdown'
-import Typography from 'material-ui/Typography'
 
 const styles = {
   card: {
