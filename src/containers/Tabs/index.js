@@ -37,6 +37,7 @@ class SimpleTabs extends Component {
   render() {
     const {
       classes,
+      registry,
       candidates,
       faceoffs,
       whitelist,
@@ -76,6 +77,7 @@ class SimpleTabs extends Component {
                   chooseTCR={chooseTCR}
                   actionCopy={'Challenge'}
                   listingType={'whitelist'}
+                  registry={registry}
                 />
               ))}
             </FlexContainer>
@@ -119,6 +121,7 @@ class SimpleTabs extends Component {
                   ipfsData={one.get('ipfsData')}
                   one={one}
                   openSidePanel={e => openSidePanel(one, 'commitVote')}
+                  handleSendTransaction={e => this.props.handleSendTransaction('updateStatus', one, 'registry')}
                   chooseTCR={chooseTCR}
                   actionCopy={'Vote'}
                   listingType={'faceoffs'}

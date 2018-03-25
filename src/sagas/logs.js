@@ -2,7 +2,8 @@ import { select, takeLatest, all, call, put } from 'redux-saga/effects'
 import _ from 'lodash'
 
 import { SET_CONTRACTS } from 'actions/constants'
-import { updateListings, convertLogToListing } from 'libs/listings'
+import { decodeLogs } from 'libs/logs'
+import { updateListings } from 'libs/listings'
 
 import { setListings } from '../actions'
 import { selectProvider, selectRegistry, selectVoting } from '../selectors'
@@ -11,11 +12,8 @@ export default function* logsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventsSaga)
 }
 
-let lastReadBlockNumber = 0
-
-function* setupEventsSaga() {
+export function* setupEventsSaga() {
   const registry = yield select(selectRegistry)
-  const voting = yield select(selectVoting)
 
   const {
     _Application,
@@ -33,27 +31,22 @@ function* setupEventsSaga() {
     _ListingRemoved,
   ]
 
-  yield call(getHistorySaga, AllRegistryEvents, registry.address)
-
-  // const { PollCreated, VoteCommitted, VoteRevealed } = voting.interface.events
-  // const AllVotingEvents = [PollCreated, VoteCommitted, VoteRevealed]
-
-  // yield call(getHistorySaga, AllVotingEvents, voting.address)
+  yield call(getHistorySaga, AllRegistryEvents)
 }
 
-function* getHistorySaga(AllEvents, contractAddress) {
+export function* getHistorySaga(AllEvents) {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
 
   const freshListings = yield all(
-    AllEvents.map(ContractEvent => {
+    AllEvents.map(async ContractEvent => {
       return decodeLogs(
         provider,
         registry,
         ContractEvent,
         voting,
-        contractAddress
+        registry.address
       )
     })
   )
@@ -63,40 +56,4 @@ function* getHistorySaga(AllEvents, contractAddress) {
   console.log('updatedListings', updatedListings.toJS())
 
   yield put(setListings(updatedListings))
-}
-
-async function decodeLogs(
-  provider,
-  registry,
-  ContractEvent,
-  voting,
-  contractAddress
-) {
-  const logs = await provider.getLogs({
-    fromBlock: lastReadBlockNumber,
-    toBlock: 'latest',
-    address: contractAddress,
-    topics: ContractEvent.topics,
-  })
-  const event = ContractEvent.name
-  console.log(event, logs)
-
-  let listings = []
-  for (const log of logs) {
-    const logData = ContractEvent.parse(log.topics, log.data)
-
-    const block = await provider.getBlock(log.blockHash)
-    const tx = await provider.getTransaction(log.transactionHash)
-
-    const listing = await convertLogToListing(
-      logData,
-      block,
-      tx,
-      event,
-      registry,
-      voting
-    )
-    listings.push(listing)
-  }
-  return listings
 }

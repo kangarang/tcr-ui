@@ -21,16 +21,15 @@ function MediaCard(props) {
   const {
     imgSrc,
     classes,
-    // listingHash,
-    // one,
     ipfsID,
-    // ipfsData,
+    ipfsData,
     owner,
     latest,
     openSidePanel,
-    // chooseTCR,
+    chooseTCR,
     actionCopy,
-    // listingType,
+    handleSendTransaction,
+    registry,
   } = props
 
   return (
@@ -55,10 +54,21 @@ function MediaCard(props) {
         </CardContent>
 
         <CardActions>
-          <Button onClick={openSidePanel} size="medium" color="primary">
-            {actionCopy}
-          </Button>
-          {/* <Button onClick={e => chooseTCR(ipfsData)}>{'Choose this TCR'}</Button> */}
+          {registry && registry.address === '0xeac7a44f139dde706126d1c5947945daf999dc3f' ? (
+            <Button onClick={e => chooseTCR(ipfsData)}>{'Select TCR'}</Button>
+          ) : handleSendTransaction ? (
+            <Button
+              onClick={handleSendTransaction}
+              size="medium"
+              color="primary"
+            >
+              {'Update Status'}
+            </Button>
+          ) : (
+            <Button onClick={openSidePanel} size="medium" color="primary">
+              {actionCopy}
+            </Button>
+          )}
         </CardActions>
       </Card>
     </div>

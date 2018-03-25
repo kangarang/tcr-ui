@@ -1,7 +1,7 @@
 {
   "name": "tcr-ui",
   "author": "kangarang",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "A client-side shell to interact with token-curated registries",
   "repository": "https://github.com/kangarang/tcr-ui",
   "engines": {
@@ -48,10 +48,10 @@
     "start:prod": "npm run build && NODE_PATH=./src node server.js",
     "dev": "npm run lint ./src && NODE_PATH=./src react-scripts start",
     "build": "npm run lint ./src && NODE_PATH=./src react-scripts build",
-    "test": "NODE_PATH=./src react-scripts test --env=jsdom",
+    "test": "npm run lint ./src && NODE_PATH=./src react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "fix": "eslint --fix",
-    "lint": "eslint"
+    "fix": "eslint --fix ./src",
+    "lint": "eslint ./src"
   },
   "devDependencies": {
     "babel-core": "6.26.0",

@@ -38,9 +38,11 @@ export function* genesis() {
   }
 }
 
-function* governXSaga() {
+export function* governXSaga() {
   const registry = yield select(selectRegistry)
+  console.log('registry', registry)
   const account = yield select(selectAccount)
+  console.log('account', account)
   // console.log('registry, account', registry, account)
   // const { tcr } = new Organization({
   //   address: registry.address,

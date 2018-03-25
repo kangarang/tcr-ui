@@ -27,7 +27,7 @@ export async function ipfsAddData(obj) {
     })
   })
 
-  const content = await getIPFSData(CID[0].hash)
+  // const content = await getIPFSData(CID[0].hash)
   // console.log('ipfs content added:', content)
   return CID[0].hash
 }

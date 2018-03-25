@@ -24,7 +24,7 @@ export async function convertLogToListing(
     whitelisted = false
     numTokens = 0
   }
-  if (!listingHash && event === 'VoteCommitted') {
+  if ((!listingHash && event === 'VoteCommitted') || event === 'VoteRevealed') {
     return { latest: { sender: tx.voter, pollID, numTokens } }
   }
 
@@ -106,13 +106,6 @@ export async function convertLogToListing(
     },
   }
 }
-
-// Get notified when a contract event is logged
-// var eventTopic = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef';
-// provider.on([ eventTopic ], function(log) {
-//     console.log('Event Log');
-//     console.log(log);
-// });
 
 export function updateListings(listings, newListings) {
   const latestListings = fromJS(newListings).reduce((acc, val) => {
