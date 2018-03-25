@@ -58,6 +58,7 @@ export function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
   const methodName = action.payload.methodName
 
+  // typecheck arguments
   let args = action.payload.args.map(arg => {
     if (_.isObject(arg)) {
       return arg.toString()
@@ -100,9 +101,7 @@ export function* sendTransactionSaga(contract, method, args) {
 
     const minedTxn = yield provider
       .waitForTransaction(receipt.hash)
-      .then(function(transaction) {
-        console.log('Transaction Mined: ' + transaction.hash)
-      })
+      .then(txn => txn)
 
     yield put(txnMined(minedTxn))
     yield call(delay, 3000)

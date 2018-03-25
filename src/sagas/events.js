@@ -7,6 +7,7 @@ import {
   cancelled,
   takeEvery,
 } from 'redux-saga/effects'
+import _ from 'lodash'
 
 import { setListings } from '../actions'
 import { SET_CONTRACTS } from 'actions/constants'
@@ -45,6 +46,7 @@ function* setupEventChannels() {
   const lrTopics = _ListingRemoved.topics
 
   // create channels for each event-topic
+  // const channel = yield call(createChannel, provider, _.concat(aTopics, cTopics, nlwTopics, arTopics, lrTopics), _Application)
   const aChannel = yield call(createChannel, provider, aTopics, _Application)
   const cChannel = yield call(createChannel, provider, cTopics, _Challenge)
   const nlwChannel = yield call(
@@ -81,6 +83,7 @@ function* setupEventChannels() {
 
   try {
     while (true) {
+      // yield takeEvery(channel, handleEventEmission)
       yield takeEvery(aChannel, handleEventEmission)
       yield takeEvery(cChannel, handleEventEmission)
       yield takeEvery(nlwChannel, handleEventEmission)
@@ -93,6 +96,7 @@ function* setupEventChannels() {
   } finally {
     if (yield cancelled()) {
       console.log('LISTENING CANCELLED')
+      // channel.close()
       aChannel.close()
       cChannel.close()
       nlwChannel.close()
@@ -109,9 +113,10 @@ function* setupEventChannels() {
 // for events from sources other than the Redux store
 const createChannel = (provider, eventTopics, ContractEvent) =>
   eventChannel(emitter => {
-    // console.log('event topics:', eventTopics)
+    // console.log(ContractEvent.name, 'topics:', eventTopics)
+    provider.removeAllListeners(eventTopics)
     const event = provider.on(eventTopics, function(log) {
-      console.log(ContractEvent.name, log)
+      console.log(ContractEvent.name)
       emitter({ ContractEvent, log })
     })
     return () => event.stopWatching()

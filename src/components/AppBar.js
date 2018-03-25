@@ -1,7 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Text } from '@aragon/ui'
+
 import Button from 'components/Button'
+
 import { colors } from '../global-styles'
 
 const Wrapper = styled.div`

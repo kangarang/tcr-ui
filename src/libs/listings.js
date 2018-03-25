@@ -49,6 +49,9 @@ export async function convertLogToListing(
   if (listing) {
     whitelisted = listing[1]
   }
+  if (event === '_NewListingWhitelisted') {
+    whitelisted = true
+  }
 
   let commitEndDate
   let commitExpiry

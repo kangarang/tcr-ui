@@ -43,8 +43,8 @@ class Stats extends Component {
         </GridItem>
 
         <GridItem>
-          <CapsDiv>{'total tokens at stake'}</CapsDiv>
-          <BoldDiv>{'3500'}</BoldDiv>
+          <CapsDiv>{`total ${contracts.get('tokenSymbol')} at stake`}</CapsDiv>
+          <BoldDiv>{'?'}</BoldDiv>
         </GridItem>
 
         <GridItem>

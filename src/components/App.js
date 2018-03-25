@@ -1,10 +1,11 @@
 import 'babel-polyfill'
 import React from 'react'
 import styled from 'styled-components'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { AragonApp } from '@aragon/ui'
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 
 import Home from 'containers/Home'
+
 import '../global-styles'
 import { colors } from '../global-styles'
 

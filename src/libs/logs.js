@@ -1,6 +1,6 @@
 import { convertLogToListing } from 'libs/listings'
 
-let lastReadBlockNumber = 0
+let lastReadBlockNumber = 1917000
 
 export async function decodeLogs(
   provider,
