@@ -1,5 +1,7 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
+import abis from '../abis'
+
 import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from 'actions/constants'
 import {
   setContracts,
@@ -7,43 +9,35 @@ import {
   updateBalancesRequest,
   setRegistryContract,
 } from '../actions'
-import { setupRegistry, setupContract } from 'libs/contracts'
-import { baseToConvertedUnit } from 'utils/_units'
-import abis from '../abis'
+
 import { selectProvider } from '../selectors'
+
+import { setupRegistry, setupContract } from 'libs/contracts'
+
+import { baseToConvertedUnit } from 'utils/_units'
 
 export default function* root() {
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
-  yield takeLatest(CHOOSE_TCR, chooseTCRSaga)
+  yield takeLatest(CHOOSE_TCR, registrySaga)
 }
 
-function* chooseTCRSaga(action) {
+export function* registrySaga(action) {
   try {
     const provider = yield select(selectProvider)
-    const registry = yield call(
-      setupRegistry,
-      provider,
-      abis.registry.abi,
-      action.payload
-    )
-    yield put(setRegistryContract(registry))
-  } catch (err) {
-    console.log('choose tcr err', err)
-  }
-}
-
-export function* initialRegistrySaga(provider) {
-  try {
     const networkID = provider.chainId
+    let address = action.payload
+    if (!address) {
+      address = abis.registry.networks[networkID.toString()].address
+    }
     const registry = yield call(
       setupRegistry,
       provider,
       abis.registry.abi,
-      abis.registry.networks[networkID.toString()].address
+      address,
     )
     yield put(setRegistryContract(registry))
   } catch (err) {
-    console.log('init registry saga err', err)
+    console.log('registry saga err', err)
   }
 }
 

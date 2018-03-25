@@ -4,7 +4,7 @@ import { call, put, select, takeLatest } from 'redux-saga/effects'
 import { GET_ETHEREUM, LOGIN_ERROR } from 'actions/constants'
 import { setWallet, loginError } from '../actions'
 import { setProvider } from 'libs/provider'
-import { initialRegistrySaga } from 'sagas/contracts'
+import { registrySaga } from 'sagas/contracts'
 import { selectRegistry, selectAccount } from '../selectors'
 
 export default function* rootSaga() {
@@ -24,17 +24,12 @@ export function* genesis() {
           ? 'main'
           : provider.chainId === '420' ? 'ganache' : 'unknown'
 
-    if (account === undefined) {
-      yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
-    } else {
-      yield put(setWallet({ provider, account, network }))
-      // TODO: remove abis and just get the meta tcr to initialize the ui
-      yield call(initialRegistrySaga, provider, account)
-      // yield call(governXSaga)
-    }
+    yield put(setWallet({ provider, account, network }))
+    yield call(registrySaga, provider)
+    // yield call(governXSaga)
   } catch (err) {
     console.log('Genesis error:', err)
-    yield put(loginError({ type: LOGIN_ERROR, message: err.message }))
+    yield put(loginError({ type: LOGIN_ERROR, message: 'Need MetaMask' }))
   }
 }
 
