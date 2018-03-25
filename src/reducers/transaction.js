@@ -10,7 +10,9 @@ const initialState = fromJS({
 export default (state = initialState, action) => {
   switch (action.type) {
     case TXN_MINING:
-      return state.set('miningStatus', fromJS(true))
+      return state
+        .set('miningStatus', fromJS(true))
+        .set('latestTxn', fromJS(action.payload))
     case TXN_MINED:
       return state.set('latestTxn', fromJS(action.payload))
     case CLEAR_TXN:
