@@ -3,11 +3,12 @@ import { withStyles } from 'material-ui/styles'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 // import Button from 'material-ui/Button'
 import Button from 'components/Button'
+import Countdown from 'components/Countdown'
 import Typography from 'material-ui/Typography'
 
 const styles = {
   card: {
-    width: 190,
+    width: 240,
     margin: 5,
     padding: '1em',
   },
@@ -20,16 +21,15 @@ const styles = {
 function MediaCard(props) {
   const {
     imgSrc,
+    one,
     classes,
-    ipfsID,
-    ipfsData,
-    owner,
-    latest,
     openSidePanel,
     chooseTCR,
-    actionCopy,
-    handleSendTransaction,
+    handleUpdateStatus,
     registry,
+    listingType,
+    updateTrigger,
+    revealTrigger,
   } = props
 
   return (
@@ -38,37 +38,77 @@ function MediaCard(props) {
         <CardMedia
           className={classes.media}
           image={imgSrc}
-          title={`Listing image ${ipfsID}`}
+          title={`Listing image ${one.get('ipfsID')}`}
         />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {ipfsID}
+            {one.get('ipfsID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${owner.substring(
-            0,
-            8
-          )}`}</Typography>
-          <Typography component="p">{latest.get('timesince')}</Typography>
+          <Typography component="p">{`BY: ${one
+            .get('owner')
+            .substring(0, 8)}`}</Typography>
+          <Typography component="p">
+            {one.getIn(['appExpiry', 'formattedLocal'])}
+          </Typography>
         </CardContent>
 
         <CardActions>
-          {registry && registry.address === '0xeac7a44f139dde706126d1c5947945daf999dc3f' ? (
-            <Button onClick={e => chooseTCR(ipfsData)}>{'Select TCR'}</Button>
-          ) : handleSendTransaction ? (
-            <Button
-              onClick={handleSendTransaction}
-              size="medium"
-              color="primary"
-            >
-              {'Update Status'}
-            </Button>
-          ) : (
-            <Button onClick={openSidePanel} size="medium" color="primary">
-              {actionCopy}
-            </Button>
-          )}
+          <div>
+            {listingType === 'faceoffs' ? (
+              <div>
+                {!revealTrigger &&
+                  !updateTrigger && (
+                    <Button
+                      onClick={e => openSidePanel(one, 'commitVote')}
+                      size="medium"
+                      color="primary"
+                    >
+                      {'Commit Vote'}
+                    </Button>
+                  )}
+                {revealTrigger &&
+                  !updateTrigger && (
+                    <Button
+                      onClick={e => openSidePanel(one, 'revealVote')}
+                      size="medium"
+                      color="primary"
+                    >
+                      {'Reveal Vote'}
+                    </Button>
+                  )}
+                <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
+                <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
+              </div>
+            ) : (
+              <div>
+                <Button
+                  onClick={e => openSidePanel(one, 'challenge')}
+                  size="medium"
+                  color="primary"
+                >
+                  {'Challenge'}
+                </Button>
+                <Countdown end={one.getIn(['appExpiry', 'date'])} />
+              </div>
+            )}
+            {registry ? (
+              <Button onClick={e => chooseTCR(one.get('ipfsData'))}>
+                {'Select TCR'}
+              </Button>
+            ) : updateTrigger && (
+              <div>
+                <Button
+                  onClick={e => handleUpdateStatus(one)}
+                  size="medium"
+                  color="primary"
+                >
+                  {'Update Status'}
+                </Button>
+              </div>
+            )}
+          </div>
         </CardActions>
       </Card>
     </div>

@@ -43,6 +43,7 @@ class SimpleTabs extends Component {
       whitelist,
       openSidePanel,
       chooseTCR,
+      handleUpdateStatus,
     } = this.props
     const { value } = this.state
 
@@ -66,17 +67,11 @@ class SimpleTabs extends Component {
               {whitelist.map(one => (
                 <MediaCard
                   key={one.get('listingHash')}
-                  listingHash={one.get('listingHash')}
-                  ipfsID={one.get('ipfsID')}
-                  imgSrc={imgSrc}
-                  owner={one.get('owner')}
-                  latest={one.get('latest')}
-                  ipfsData={one.get('ipfsData')}
                   one={one}
-                  openSidePanel={e => openSidePanel(one, 'challenge')}
-                  chooseTCR={chooseTCR}
-                  actionCopy={'Challenge'}
+                  imgSrc={imgSrc}
                   listingType={'whitelist'}
+                  openSidePanel={openSidePanel}
+                  chooseTCR={chooseTCR}
                   registry={registry}
                 />
               ))}
@@ -90,17 +85,12 @@ class SimpleTabs extends Component {
               {candidates.map(one => (
                 <MediaCard
                   key={one.get('listingHash')}
-                  listingHash={one.get('listingHash')}
-                  ipfsID={one.get('ipfsID')}
-                  imgSrc={imgSrc}
-                  owner={one.get('owner')}
-                  latest={one.get('latest')}
-                  ipfsData={one.get('ipfsData')}
                   one={one}
-                  openSidePanel={e => openSidePanel(one, 'challenge')}
-                  chooseTCR={chooseTCR}
-                  actionCopy={'Challenge'}
+                  imgSrc={imgSrc}
                   listingType={'candidates'}
+                  openSidePanel={openSidePanel}
+                  handleUpdateStatus={handleUpdateStatus}
+                  updateTrigger={one.getIn(['latest', 'appExpired'])}
                 />
               ))}
             </FlexContainer>
@@ -113,18 +103,13 @@ class SimpleTabs extends Component {
               {faceoffs.map(one => (
                 <MediaCard
                   key={one.get('listingHash')}
-                  listingHash={one.get('listingHash')}
-                  ipfsID={one.get('ipfsID')}
-                  imgSrc={imgSrc}
-                  owner={one.get('owner')}
-                  latest={one.get('latest')}
-                  ipfsData={one.get('ipfsData')}
                   one={one}
-                  openSidePanel={e => openSidePanel(one, 'commitVote')}
-                  handleSendTransaction={e => this.props.handleSendTransaction('updateStatus', one, 'registry')}
-                  chooseTCR={chooseTCR}
-                  actionCopy={'Vote'}
+                  imgSrc={imgSrc}
                   listingType={'faceoffs'}
+                  openSidePanel={openSidePanel}
+                  handleUpdateStatus={handleUpdateStatus}
+                  updateTrigger={one.getIn(['latest', 'revealExpired'])}
+                  revealTrigger={one.getIn(['latest', 'commitExpired'])}
                 />
               ))}
             </FlexContainer>
