@@ -9,11 +9,11 @@ import {
 
 import translate from 'translations'
 
-import SidePanel from 'containers/Transaction/SidePanel'
+import SidePanel from './SidePanel'
+import TxnProgress from './TxnProgress'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
-import TxnProgress from '../Transaction/TxnProgress'
 
 import { withCommas } from 'utils/_values'
 
@@ -25,7 +25,8 @@ export default ({
   parameters,
   balances,
   handleInputChange,
-  handleSendTransaction,
+  handleApprove,
+  handleChallenge,
   visibleApprove,
   selectedOne,
   miningStatus,
@@ -88,7 +89,7 @@ export default ({
           </MarginDiv>
           <MarginDiv>
             <Button
-              onClick={e => handleSendTransaction('approve', null, 'registry')}
+              onClick={e => handleApprove('registry')}
               mode="strong"
               wide
             >
@@ -97,7 +98,7 @@ export default ({
           </MarginDiv>
         </MarginDiv>
         <Button
-          onClick={e => handleSendTransaction('challenge')}
+          onClick={handleChallenge}
           mode="strong"
           wide
         >

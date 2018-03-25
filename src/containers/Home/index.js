@@ -37,12 +37,12 @@ import { MarginDiv, FileInput } from 'components/StyledHome'
 import { convertedToBaseUnit } from 'utils/_units'
 import { withCommas } from 'utils/_values'
 
-import Apply from './Apply'
-import Challenge from './Challenge'
-import CommitVote from './CommitVote'
-import Tabs from '../Tabs'
-import TxnProgress from '../Transaction/TxnProgress'
+import Apply from 'containers/Transaction/Apply'
+import Challenge from 'containers/Transaction/Challenge'
+import CommitVote from 'containers/Transaction/CommitVote'
+import TxnProgress from 'containers/Transaction/TxnProgress'
 import Stats from '../Stats'
+import Tabs from '../Tabs'
 
 class Home extends Component {
   constructor(props) {
@@ -126,57 +126,6 @@ class Home extends Component {
     })
   }
 
-  getMethodArgs(methodName, listing, contract, voteOption) {
-    return methodName === 'apply'
-      ? [
-          this.state.listingName,
-          convertedToBaseUnit(this.state.numTokens, 18),
-          this.state.data,
-        ]
-      : methodName === 'challenge'
-        ? [
-            this.state.selectedOne.get('listingHash'),
-            this.state.selectedOne.get('data'),
-          ]
-        : methodName === 'updateStatus'
-          ? [listing.get('listingHash')]
-          : methodName === 'rescueTokens'
-            ? [listing.getIn(['latest', 'pollID'])]
-            : methodName === 'approve'
-              ? [
-                  this.props[contract].address,
-                  convertedToBaseUnit(this.state.numTokens, 18),
-                ]
-              : methodName === 'requestVotingRights'
-                ? [this.state.numTokens]
-                : methodName === 'commitVote'
-                  ? [
-                      this.state.selectedOne.getIn(['latest', 'pollID']),
-                      voteOption,
-                      this.state.numTokens,
-                      this.state.selectedOne.get('ipfsID'),
-                    ]
-                  : methodName === 'revealVote'
-                    ? [
-                        this.state.selectedOne.getIn(['latest', 'pollID']),
-                        this.state.fileInput.voteOption,
-                        this.state.fileInput.salt,
-                      ]
-                    : methodName === 'claimVoterReward'
-                      ? [
-                          this.state.selectedOne.getIn(['latest', 'pollID']),
-                          this.state.fileInput.salt,
-                        ]
-                      : false
-  }
-
-  handleSendTransaction = (methodName, listing, contract, voteOption) => {
-    const args = this.getMethodArgs(methodName, listing, contract, voteOption)
-    if (args) {
-      this.props.onSendTransaction({ methodName, args, listing, contract })
-    }
-  }
-
   render() {
     const {
       candidates,
@@ -211,7 +160,8 @@ class Home extends Component {
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
           handleInputChange={this.handleInputChange}
-          handleSendTransaction={this.handleSendTransaction}
+          handleApprove={this.handleApprove}
+          handleApply={this.handleApply}
           miningStatus={miningStatus}
           latestTxn={latestTxn}
         />
@@ -227,7 +177,8 @@ class Home extends Component {
           openApprove={this.openApprove}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
-          handleSendTransaction={this.handleSendTransaction}
+          handleApprove={this.handleApprove}
+          handleChallenge={this.handleChallenge}
           miningStatus={miningStatus}
           latestTxn={latestTxn}
         />
@@ -243,7 +194,9 @@ class Home extends Component {
           openApprove={this.openApprove}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
-          handleSendTransaction={this.handleSendTransaction}
+          handleApprove={this.handleApprove}
+          handleCommitVote={this.handleCommitVote}
+          handleRequestVotingRights={this.handleRequestVotingRights}
           miningStatus={miningStatus}
           latestTxn={latestTxn}
         />
@@ -272,7 +225,9 @@ class Home extends Component {
           <SideText small text={'REVEAL VOTE'} />
           <SideText
             small
-            text={this.state.selectedOne && this.state.selectedOne.get('ipfsID')}
+            text={
+              this.state.selectedOne && this.state.selectedOne.get('ipfsID')
+            }
           />
 
           <SidePanelSeparator />
@@ -290,7 +245,7 @@ class Home extends Component {
           </MarginDiv>
           <MarginDiv>
             <Button
-              onClick={e => this.handleSendTransaction('revealVote')}
+              onClick={this.handleRevealVote}
               mode="strong"
               wide
             >
@@ -339,9 +294,7 @@ class Home extends Component {
           </MarginDiv>
           <MarginDiv>
             <Button
-              onClick={e =>
-                this.handleSendTransaction('claimVoterReward', null, 'registry')
-              }
+              onClick={this.handleClaimVoterReward}
               mode="strong"
               wide
             >
@@ -358,10 +311,70 @@ class Home extends Component {
           whitelist={whitelist}
           openSidePanel={this.openSidePanel}
           chooseTCR={this.chooseTCR}
-          handleSendTransaction={this.handleSendTransaction}
+          handleUpdateStatus={this.handleUpdateStatus}
         />
       </div>
     )
+  }
+
+  // TRANSACTIONS
+  handleApprove = contract => {
+    const args = [
+      this.props[contract].address,
+      convertedToBaseUnit(this.state.numTokens, 18),
+    ]
+    this.props.onSendTransaction({ methodName: 'approve', args })
+  }
+  handleApply = () => {
+    const args = [
+      this.state.listingName,
+      convertedToBaseUnit(this.state.numTokens, 18),
+      this.state.data,
+    ]
+    this.props.onSendTransaction({ methodName: 'apply', args })
+  }
+  handleChallenge = () => {
+    const args = [
+      this.state.selectedOne.get('listingHash'),
+      this.state.selectedOne.get('data'),
+    ]
+    this.props.onSendTransaction({ methodName: 'challenge', args })
+  }
+  handleRequestVotingRights = () => {
+    const args = [this.state.numTokens]
+    this.props.onSendTransaction({ methodName: 'requestVotingRights', args })
+  }
+  handleCommitVote = voteOption => {
+    const args = [
+      this.state.selectedOne.getIn(['latest', 'pollID']),
+      voteOption,
+      this.state.numTokens,
+      this.state.selectedOne.get('ipfsID'),
+    ]
+    this.props.onSendTransaction({ methodName: 'commitVote', args })
+  }
+  handleRevealVote = () => {
+    const args = [
+      this.state.selectedOne.getIn(['latest', 'pollID']),
+      this.state.fileInput.voteOption,
+      this.state.fileInput.salt,
+    ]
+    this.props.onSendTransaction({ methodName: 'revealVote', args })
+  }
+  handleUpdateStatus = listing => {
+    const args = [listing.get('listingHash')]
+    this.props.onSendTransaction({ methodName: 'updateStatus', args })
+  }
+  handleRescueTokens = listing => {
+    const args = [listing.getIn(['latest', 'pollID'])]
+    this.props.onSendTransaction({ methodName: 'rescueTokens', args })
+  }
+  handleClaimVoterReward = () => {
+    const args = [
+      this.state.selectedOne.getIn(['latest', 'pollID']),
+      this.state.fileInput.salt,
+    ]
+    this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
   }
 }
 

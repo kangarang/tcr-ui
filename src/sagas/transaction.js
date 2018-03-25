@@ -26,7 +26,11 @@ export default function* transactionSaga() {
 
 // TODO: write tests for these sagas. against abis
 export function* handleSendTransaction(action) {
-  const methodName = action.payload.methodName
+  const { methodName, args } = action.payload
+  const token = yield select(selectToken)
+  const voting = yield select(selectVoting)
+  const registry = yield select(selectRegistry)
+
   if (
     methodName === 'apply' ||
     methodName === 'challenge' ||
@@ -39,20 +43,14 @@ export function* handleSendTransaction(action) {
     yield call(commitVoteSaga, action)
   } else if (methodName === 'revealVote') {
     yield call(revealVoteSaga, action)
+  } else if (methodName === 'approve') {
+    yield call(sendTransactionSaga, token, methodName, args)
+  } else if (methodName === 'rescueTokens') {
+    yield call(sendTransactionSaga, voting, methodName, args)
+  } else if (methodName === 'claimVoterReward') {
+    yield call(sendTransactionSaga, registry, methodName, args)
   } else {
-    const { methodName, args, contract } = action.payload
-    let c
-    if (contract === 'registry') {
-      c = yield select(selectRegistry)
-    } else if (contract === 'voting') {
-      c = yield select(selectVoting)
-    } else if (contract === 'token') {
-      c = yield select(selectToken)
-    }
-    if (methodName === 'approve') {
-      c = yield select(selectToken)
-    }
-    yield call(sendTransactionSaga, c, methodName, args)
+    console.log('unknown methodName!?!?')
   }
 }
 

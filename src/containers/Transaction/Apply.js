@@ -6,14 +6,14 @@ import {
 } from '@aragon/ui'
 import translate from 'translations'
 
-import SidePanel from 'containers/Transaction/SidePanel'
+import SidePanel from './SidePanel'
+import TxnProgress from './TxnProgress'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
 import { baseToConvertedUnit, BN } from 'utils/_units'
 import { withCommas } from 'utils/_values'
-import TxnProgress from '../Transaction/TxnProgress'
 
 export default ({
   opened,
@@ -23,7 +23,8 @@ export default ({
   parameters,
   balances,
   handleInputChange,
-  handleSendTransaction,
+  handleApply,
+  handleApprove,
   openApprove,
   visibleApprove,
   miningStatus,
@@ -105,7 +106,7 @@ export default ({
       </MarginDiv>
 
       <MarginDiv>
-        <Button onClick={e => handleSendTransaction('apply')} mode="strong">
+        <Button onClick={handleApply} mode="strong">
           {'Apply Listing'}
         </Button>
         {miningStatus && <TxnProgress />}
@@ -127,7 +128,7 @@ export default ({
         {visibleApprove ? (
           <div>
             <Button
-              onClick={e => handleSendTransaction('approve', null, 'registry')}
+              onClick={e => handleApprove('registry')}
               mode="strong"
             >
               {'Approve tokens for Registry'}
@@ -142,9 +143,7 @@ export default ({
               <div>
                 <Text color="red">{'YOU NEED TO APPROVE'}</Text>
                 <Button
-                  onClick={e =>
-                    handleSendTransaction('approve', null, 'registry')
-                  }
+              onClick={e => handleApprove('registry')}
                   mode="strong"
                 >
                   {'Approve tokens for Registry'}

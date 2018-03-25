@@ -5,8 +5,8 @@ import { Motion, spring } from 'react-motion'
 import { Text } from '@aragon/ui'
 
 import close from 'assets/close.svg'
-import unselectable from 'utils/_styles'
-import {getPublicUrl, prefixUrl} from 'utils/_url'
+import { unselectable } from 'utils/_styles'
+import { getPublicUrl, prefixUrl } from 'utils/_url'
 
 const PANEL_WIDTH = 450
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2

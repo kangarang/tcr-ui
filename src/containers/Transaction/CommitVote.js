@@ -6,11 +6,11 @@ import { SidePanelSeparator, TextInput } from '@aragon/ui'
 import { jsonTheme } from '../../global-styles'
 import translate from 'translations'
 
-import SidePanel from 'containers/Transaction/SidePanel'
+import SidePanel from './SidePanel'
+import TxnProgress from './TxnProgress'
 import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
-import TxnProgress from '../Transaction/TxnProgress'
 
 import { withCommas } from 'utils/_values'
 
@@ -20,7 +20,9 @@ export default class Challenge extends Component {
       closeSidePanel,
       balances,
       handleInputChange,
-      handleSendTransaction,
+      handleApprove,
+      handleCommitVote,
+      handleRequestVotingRights,
       selectedOne,
       opened,
       miningStatus,
@@ -64,11 +66,7 @@ export default class Challenge extends Component {
                 <SideText
                   text={translate('sidebar_requestVotingRights_instructions')}
                 />
-                <Button
-                  onClick={e => handleSendTransaction('requestVotingRights')}
-                  mode="strong"
-                  wide
-                >
+                <Button onClick={handleRequestVotingRights} mode="strong" wide>
                   {'Request Voting Rights'}
                 </Button>
               </MarginDiv>
@@ -76,18 +74,14 @@ export default class Challenge extends Component {
               <MarginDiv>
                 <SideText text={translate('sidebar_commitVote_instructions')} />
                 <Button
-                  onClick={e =>
-                    handleSendTransaction('commitVote', null, null, '1')
-                  }
+                  onClick={e => handleCommitVote('1')}
                   emphasis="positive"
                   mode="strong"
                 >
                   {'Support the applicant'}
-                </Button>{' '}
+                </Button>
                 <Button
-                  onClick={e =>
-                    handleSendTransaction('commitVote', null, null, '0')
-                  }
+                  onClick={e => handleCommitVote('0')}
                   emphasis="negative"
                   mode="strong"
                 >
@@ -102,7 +96,7 @@ export default class Challenge extends Component {
           <MarginDiv>
             <SideText text={translate('sidebar_approve_instructions')} />
             <Button
-              onClick={e => handleSendTransaction('approve', null, 'voting')}
+              onClick={e => handleApprove('voting')}
               mode="strong"
               wide
             >
