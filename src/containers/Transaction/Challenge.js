@@ -1,19 +1,16 @@
 import React from 'react'
-import {
-  SidePanelSeparator,
-  Text,
-  TextInput,
-} from '@aragon/ui'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
 
-import { SideSplit, SideText } from 'components/SidePanelOverlay'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
+import Countdown from 'components/Countdown'
 
-import { withCommas } from 'utils/_values'
+import { SideText } from './components'
+import TotalAmount from './components/TotalAmount'
+import SidePanelSeparator from './components/SidePanelSeparator'
 
 export default ({
   opened,
@@ -25,31 +22,55 @@ export default ({
   handleInputChange,
   handleApprove,
   handleChallenge,
-  visibleApprove,
   selectedOne,
   miningStatus,
 }) => (
   <div>
-    <SidePanel
-      title="Challenge listing"
-      opened={opened}
-      onClose={closeSidePanel}
-    >
-      <SideSplit
+    <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
+      <SidePanelSeparator />
+
+      <SideText text={selectedOne && selectedOne.get('ipfsID')} />
+      <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
+
+      <SidePanelSeparator />
+
+      <SideText small color="grey" text={translate('ins_challenge')} />
+
+      <TotalAmount
+        copy={'Total Stake'}
+        minDeposit={parameters.get('minDeposit')}
+        tokenSymbol={contracts.get('tokenSymbol')}
+      />
+
+      <SidePanelSeparator />
+
+      <SideText color="grey" text={translate('mm_challenge')} />
+
+      <MarginDiv>
+        <Button onClick={handleChallenge} mode="strong" wide>
+          {'CHALLENGE'}
+        </Button>
+        {miningStatus && <TxnProgress />}
+      </MarginDiv>
+
+      {/* <MarginDiv>
+          <Text color="grey" smallcaps>
+            {'TOKEN AMOUNT'}
+          </Text>
+          <TextInput onChange={e => handleInputChange(e, 'numTokens')} wide type="number" />
+          <Button onClick={e => handleApprove('registry')} mode="strong" wide>
+            {'Approve tokens for Registry'}
+          </Button>
+        </MarginDiv> */}
+      {/* <SideSplit
         leftTitle={'Challenge Period'}
         leftItem={
-          <div>{`Commit: ${parameters.get(
-            'commitStageLen'
-          )} seconds & Reveal: ${parameters.get(
+          <div>{`Commit: ${parameters.get('commitStageLen')} seconds & Reveal: ${parameters.get(
             'revealStageLen'
           )} seconds`}</div>
         }
         rightTitle={'Minimum Deposit'}
-        rightItem={
-          <div>
-            {`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}
-          </div>
-        }
+        rightItem={<div>{`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}</div>}
       />
 
       <SideSplit
@@ -57,53 +78,7 @@ export default ({
         leftItem={balances.get('token')}
         rightTitle={'Registry Allowance'}
         rightItem={withCommas(balances.get('registryAllowance'))}
-      />
-
-      <SideText
-        small
-        title={'LISTING'}
-        text={selectedOne && selectedOne.get('ipfsID')}
-      />
-
-      <SideText
-        small
-        title={'WARNING'}
-        text={translate('sidebar_challenge_instructions')}
-      />
-
-      <SidePanelSeparator />
-
-      <MarginDiv>
-        <MarginDiv>
-          <MarginDiv>
-            <Text color="grey" smallcaps>
-              {'TOKEN AMOUNT'}
-            </Text>
-            <TextInput
-              onChange={e => handleInputChange(e, 'numTokens')}
-              wide
-              type="number"
-            />
-          </MarginDiv>
-          <MarginDiv>
-            <Button
-              onClick={e => handleApprove('registry')}
-              mode="strong"
-              wide
-            >
-              {'Approve tokens for Registry'}
-            </Button>
-          </MarginDiv>
-        </MarginDiv>
-        <Button
-          onClick={handleChallenge}
-          mode="strong"
-          wide
-        >
-          {'CHALLENGE'}
-        </Button>
-        {miningStatus && <TxnProgress />}
-      </MarginDiv>
+      /> */}
     </SidePanel>
   </div>
 )

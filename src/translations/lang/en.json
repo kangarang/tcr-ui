@@ -1,32 +1,32 @@
 {
   "code": "en",
   "data": {
-    "tx_approve": "Approve tokens for address",
-    "tx_transfer": "Transfer tokens",
+    "txCost_approve": ["1. Transaction fee only"],
+    "txCost_apply": ["1. Transaction fee", "2. Deposit"],
+    "txCost_challenge": ["1. Transaction fee", "2. Deposit"],
 
-    "sidebar_apply_instructions":
-      "To apply for Listing in the Registry, you need to submit the name of the Listing, and send at least the MIN_DEPOSIT. You can deposit more than the MIN_DEPOSIT. If your listing is challenged, only MIN_DEPOSIT will be at stake/risk.",
-    "sidebar_apply_question":
-      "What is the domain of the Listing you wish to apply into the Registry? How many tokens will you stake with the application?",
-    "sidebar_challenge_instructions":
-      "Challenging a listing application requires you to stake the MIN_DEPOSIT amount. Once challenged, the application will go into the voting process.",
-    "sidebar_transaction_instructions":
-      "Enter the inputs of methods you want to query the blockchain",
-    "sidebar_commitVote_instructions":
+    "ins_approve_registry": "Approve the Registry contract to transfer your tokens",
+    "ins_approve_voting": "Approve the Voting contract to transfer your tokens",
+    "ins_apply": "Starting an application requires a minimum deposit of",
+    "ins_challenge":
+      "Challenging a listing application requires you to stake tokens. Once challenged, the application will go into the voting process",
+    "ins_commitVote":
       "Enter how many tokens you wish to commit your vote to SUPPORT or OPPOSE the listing applicant. You will be given the opportunity to download a file which contains your secret vote information. Hold onto this file! You will need it to reveal your secret vote.",
-    "sidebar_revealVote_instructions":
+    "ins_revealVote":
       "In order to reveal your previously committed vote, upload the commit's JSON file or enter the commit's information in the fields below.",
-    "sidebar_claimVoterReward_instructions":
-      "Upload the reveal file to claim your reward",
-    "sidebar_requestVotingRights_instructions":
-      "In order to vote, you must first transfer tokens to the voting contract.",
-    "sidebar_approve_instructions":
-      "Approve the smart contract for the MAX number of tokens specied above",
+    "ins_updateStatus":
+      "Update a listing's status to the registry, or resolve a challenge if one exists",
+    "ins_claimVoterReward": "Upload the reveal file to claim your reward",
+    "ins_requestVotingRights": "Transfer tokens to the voting contract",
+    "ins_withdrawVotingRights": "Transfer tokens from the voting contract",
+    "ins_rescueTokens": "Rescue tokens from a poll that you committed in, but did not reveal in",
 
-    "tx_apply":
-      "Apply a listing with name and deposit. The minimum deposit is ",
-    "pre_apply": ["minDeposit", "approve"],
-    "ins_apply": [
+    "mm_approve": "After you click approve, MetaMask will prompt you to confirm the approval",
+    "mm_apply": "After you click submit, MetaMask will prompt you to confirm your application",
+    "mm_challenge":
+      "After you click challenge, MetaMask will prompt you to confirm the transaction",
+
+    "details_apply": [
       "You can deposit more than the minimum deposit",
       "Your deposit stays with the application",
       "Applications take 3 days, during which any token-holder can challenge your listing application",
@@ -38,87 +38,6 @@
       "If you lose the challenge, you will forfeit minDeposit of your total deposit, and any additional deposit can be retrieved by you",
       "If you want to retreive your deposit once added to the registry, you can do so at any time",
       "However your listing will be removed at that time as well"
-    ],
-
-    "tx_challenge": "Challenge a listing application",
-    "pre_challenge": ["minDeposit", "approve"],
-    "ins_challenge": [
-      "You are challenging this listing",
-      "To challenge, it will cost you tokens",
-      " You need to approve the contract to transact on your behalf",
-      "Once you challenge, the listing will enter a voting period which lasts 6 days",
-      "If you win, you will receive your locked minDeposit + a % of the applicant's original deposit"
-    ],
-
-    "tx_commitVote": "Commit a vote for this challenge",
-    "pre_commitVote": ["requestVotingRights", "approve"],
-    "ins_commitVote": [
-      "Voting is 2 parts",
-      "This is the first part, the commit period",
-      " You need to vote FOR or AGAINST the Listing",
-      "FOR is 1, AGAINST is 0",
-      "Vote with your tokens",
-      "If you lose the vote, you do not lose any tokens",
-      "The more tokens you vote with, the greater winnings you will possibly realize",
-      "Salt"
-    ],
-    "tx_revealVote": "Reveal a vote for this challenge",
-    "pre_revealVote": [],
-    "ins_revealVote": [],
-
-    "tx_exit": "Remove your listing from the registry",
-    "tx_deposit": "Increase your deposit",
-    "tx_withdraw": "Decrease your deposit",
-    "tx_updateStatus":
-      "Update a listing's status to the registry, or resolve a challenge if one exists",
-    "tx_claimReward": "Claim voter reward for a challenge",
-
-    "call_appWasMade": "Check to see if an application was made",
-    "call_canBeWhitelisted":
-      "Check to see if an application can be whitelisted",
-    "call_isWhitelisted": "Check to see if a listing is registered",
-    "call_determineReward":
-      "Check to see how many tokens are awarded to the winning party of a challenge",
-    "call_tokenClaims": "Check to see if a voter has claimed their reward",
-    "call_challengeExists": "Check to see if a challenge exists",
-    "call_challengeCanBeResolved":
-      "Check to see if a challenge can be resolved",
-    "call_voterReward":
-      "Check to see how many tokens you will be awarded for a challenge",
-
-    "tx_requestVotingRights": "Transfer tokens to the voting contract",
-    "tx_withdrawVotingRights": "Transfer tokens from the voting contract",
-    "tx_rescueTokens":
-      "Rescue tokens from a poll that you committed in, but did not reveal in",
-
-    "call_voteTokenBalance":
-      "Get the number of tokens that you have transferred to the voting contract",
-    "call_getLockedTokens":
-      "Get the number of tokens that are currently locked in the voting contract. Includes all tokens associated with challenges with committed and not-revealed votes.",
-    "call_pollExists": "Check to see if a challenge exists",
-    "call_commitPeriodActive": "Check to see if the commit period is active",
-    "call_revealPeriodActive": "Check to see if the reveal period is active",
-    "call_getNumTokens":
-      "Get the number of tokens associated with a voter who voted in a poll",
-    "call_pollEnded": "Check to see if a poll has ended",
-    "call_isPassed": "Check to see if the applicant won a challenge",
-    "call_hasBeenRevealed": "Check to see if a voter has revealed for a poll",
-    "call_getNumPassingTokens":
-      "Get the number of tokens that you voted, if you were in the majority_bloc of a poll",
-    "call_getTotalNumberOfTokensForWinningOption":
-      "Get the total number of tokens that are awarded to the majority_bloc of a poll",
-
-    "input_owner": "Owner",
-    "input_value": "Value",
-    "input_spender": "Contract address",
-    "input_listingHash": "Listing",
-    "input_amount": "Amount",
-    "input_pollID": "Poll ID",
-    "input_prevPollID": "Previous Poll ID",
-    "input_challengeID": "Challenge ID",
-    "input_salt": "Salt",
-    "input_secretHash": "Vote: Applicant(1) Challenger(0)",
-    "input_voteOption": "Vote: Applicant(1) Challenger(0)",
-    "input_numTokens": "Number of Tokens"
+    ]
   }
 }

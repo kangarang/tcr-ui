@@ -4,9 +4,9 @@ import styled from 'styled-components'
 import { Text } from '@aragon/ui'
 
 const MarginDiv = styled.div`
-  margin: 1em 0;
+  margin: 2em 0;
 `
-export default ({ title, text, small }) => (
+export default ({ title, text, small, color }) => (
   <div>
     {title && (
       <MarginDiv>
@@ -16,7 +16,7 @@ export default ({ title, text, small }) => (
       </MarginDiv>
     )}
     <MarginDiv>
-      <Text>{text}</Text>
+      <Text color={color}>{text}</Text>
     </MarginDiv>
   </div>
 )

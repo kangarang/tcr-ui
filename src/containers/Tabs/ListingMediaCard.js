@@ -18,7 +18,7 @@ const styles = {
   },
 }
 
-function MediaCard(props) {
+function ListingMediaCard(props) {
   const {
     imgSrc,
     one,
@@ -115,4 +115,4 @@ function MediaCard(props) {
   )
 }
 
-export default withStyles(styles)(MediaCard)
+export default withStyles(styles)(ListingMediaCard)

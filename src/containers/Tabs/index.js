@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography'
 
 import imgSrc from 'assets/eth.svg'
 
-import MediaCard from './MediaCard'
+import ListingMediaCard from './ListingMediaCard'
 
 function TabContainer(props) {
   return (
@@ -65,7 +65,7 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {whitelist.map(one => (
-                <MediaCard
+                <ListingMediaCard
                   key={one.get('listingHash')}
                   one={one}
                   imgSrc={imgSrc}
@@ -83,7 +83,7 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {candidates.map(one => (
-                <MediaCard
+                <ListingMediaCard
                   key={one.get('listingHash')}
                   one={one}
                   imgSrc={imgSrc}
@@ -101,7 +101,7 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {faceoffs.map(one => (
-                <MediaCard
+                <ListingMediaCard
                   key={one.get('listingHash')}
                   one={one}
                   imgSrc={imgSrc}

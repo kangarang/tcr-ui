@@ -12,7 +12,7 @@ import { getPublicUrl, prefixUrl } from 'utils/_url'
 const PANEL_WIDTH = 450
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
 const PANEL_HIDE_RIGHT = -PANEL_WIDTH * 1.6
-const CONTENT_PADDING = 30
+const CONTENT_PADDING = 50
 const PANEL_INNER_WIDTH = PANEL_WIDTH - CONTENT_PADDING * 2
 
 const StyledSidePanel = styled.div`
@@ -50,10 +50,10 @@ const StyledPanel = styled.aside`
 
 const StyledPanelHeader = styled.header`
   position: relative;
-  padding-top: 15px;
+  padding-top: 30px;
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
-  padding-bottom: 15px;
+  padding-bottom: 20px;
   ${unselectable()};
 `
 

@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import { SidePanelSeparator, Button } from '@aragon/ui'
-import translate from 'translations'
 
 import {
   setupEthereum,
@@ -32,17 +30,13 @@ import {
 } from 'selectors'
 
 import { convertedToBaseUnit } from 'utils/_units'
-import { withCommas } from 'utils/_values'
 
 import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
 import CommitVote from 'containers/Transaction/CommitVote'
-import SidePanel from 'containers/Transaction/SidePanel'
-import TxnProgress from 'containers/Transaction/TxnProgress'
+import RevealVote from 'containers/Transaction/RevealVote'
 
 import AppBar from 'components/AppBar'
-import { SideSplit, SideText } from 'components/SidePanelOverlay'
-import { MarginDiv, FileInput } from 'components/StyledHome'
 
 import Stats from '../Stats'
 import Tabs from '../Tabs'
@@ -120,7 +114,6 @@ class Home extends Component {
 
       this.getVoterReward(json.pollID, json.salt)
     }
-
     fr.readAsText(file)
   }
   handleInputChange = (e, t) => {
@@ -156,15 +149,15 @@ class Home extends Component {
         <Apply
           opened={this.state.opened === 'apply'}
           closeSidePanel={this.closeSidePanel}
-          parameters={parameters}
           token={token}
           contracts={contracts}
+          parameters={parameters}
           balances={balances}
-          visibleApprove={this.state.visibleApprove}
-          openApprove={this.openApprove}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleApply={this.handleApply}
+          visibleApprove={this.state.visibleApprove}
+          openApprove={this.openApprove}
           miningStatus={miningStatus}
           latestTxn={latestTxn}
         />
@@ -172,132 +165,40 @@ class Home extends Component {
         <Challenge
           opened={this.state.opened === 'challenge'}
           closeSidePanel={this.closeSidePanel}
-          parameters={parameters}
           token={token}
           contracts={contracts}
+          parameters={parameters}
           balances={balances}
-          visibleApprove={this.state.visibleApprove}
-          openApprove={this.openApprove}
-          selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleChallenge={this.handleChallenge}
+          selectedOne={this.state.selectedOne}
           miningStatus={miningStatus}
-          latestTxn={latestTxn}
         />
 
         <CommitVote
           opened={this.state.opened === 'commitVote'}
           closeSidePanel={this.closeSidePanel}
-          parameters={parameters}
-          token={token}
-          contracts={contracts}
           balances={balances}
-          visibleApprove={this.state.visibleApprove}
-          openApprove={this.openApprove}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleCommitVote={this.handleCommitVote}
           handleRequestVotingRights={this.handleRequestVotingRights}
           miningStatus={miningStatus}
-          latestTxn={latestTxn}
         />
 
-        <SidePanel
-          title="Reveal Vote"
+        <RevealVote 
           opened={this.state.opened === 'revealVote'}
-          onClose={this.closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Reveal Period'}
-            leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
-            rightTitle={'POLL ID'}
-            rightItem={
-              this.state.selectedOne &&
-              this.state.selectedOne.getIn(['latest', 'pollID'])
-            }
-          />
-          <SideSplit
-            leftTitle={'Token Balance'}
-            leftItem={withCommas(balances.get('token'))}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
-          />
-
-          <SideText small text={'REVEAL VOTE'} />
-          <SideText
-            small
-            text={
-              this.state.selectedOne && this.state.selectedOne.get('ipfsID')
-            }
-          />
-
-          <SidePanelSeparator />
-
-          <SideText small text={'INSTRUCTIONS'} />
-
-          <SideText text={translate('sidebar_revealVote_instructions')} />
-
-          <MarginDiv>
-            <FileInput
-              type="file"
-              name="file"
-              onChange={this.handleFileInput}
-            />
-          </MarginDiv>
-          <MarginDiv>
-            <Button onClick={this.handleRevealVote} mode="strong" wide>
-              {'Reveal Vote'}
-            </Button>
-          </MarginDiv>
-          {miningStatus && <TxnProgress />}
-        </SidePanel>
-
-        <SidePanel
-          title="Claim Voter Reward"
-          opened={this.state.opened === 'claimVoterReward'}
-          onClose={this.closeSidePanel}
-        >
-          <SideSplit
-            leftTitle={'Reveal Period'}
-            leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
-            rightTitle={'POLL ID'}
-            rightItem={
-              this.state.selectedOne &&
-              this.state.selectedOne.getIn(['latest', 'pollID'])
-            }
-          />
-          <SideSplit
-            leftTitle={'Token Balance'}
-            leftItem={withCommas(balances.get('token'))}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
-          />
-
-          <SideText small text={'CLAIM VOTER REWARD'} />
-          <SideText small text={this.state.voterReward} />
-
-          <SidePanelSeparator />
-
-          <SideText small text={'INSTRUCTIONS'} />
-
-          <SideText text={translate('sidebar_claimVoterReward_instructions')} />
-
-          <MarginDiv>
-            <FileInput
-              type="file"
-              name="file"
-              onChange={this.handleFileInput}
-            />
-          </MarginDiv>
-          <MarginDiv>
-            <Button onClick={this.handleClaimVoterReward} mode="strong" wide>
-              {'Claim Voter Reward'}
-            </Button>
-          </MarginDiv>
-          {miningStatus && <TxnProgress />}
-        </SidePanel>
+          closeSidePanel={this.closeSidePanel}
+          parameters={parameters}
+          balances={balances}
+          selectedOne={this.state.selectedOne}
+          handleFileInput={this.handleFileInput}
+          handleApprove={this.handleApprove}
+          handleRevealVote={this.handleRevealVote}
+          miningStatus={miningStatus}
+        />
 
         <Tabs
           registry={registry}

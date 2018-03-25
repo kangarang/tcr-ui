@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 import Button from 'material-ui/Button'
-import Menu, { MenuItem } from 'material-ui/Menu'
+import Menu from 'material-ui/Menu'
 import Fade from 'material-ui/transitions/Fade'
 
 import Identicon from 'components/Identicon'
 import { withCommas, trimDecimalsThree } from 'utils/_values'
-import { colors } from '../../global-styles'
+import { colors } from '../global-styles'
 
 class Stats extends Component {
   state = {
@@ -24,14 +24,7 @@ class Stats extends Component {
 
   render() {
     const { anchorEl } = this.state
-    const {
-      account,
-      candidates,
-      whitelist,
-      balances,
-      contracts,
-      network,
-    } = this.props
+    const { account, candidates, whitelist, balances, contracts, network } = this.props
 
     // const items = []
 
@@ -84,12 +77,12 @@ class Stats extends Component {
               onClose={this.handleClose}
               transition={Fade}
             >
-              <MenuItem onClick={this.handleClose}>
+              {/* <MenuItem onClick={this.handleClose}>
                 <div>{`Account: ${account.substring(0, 10)}...`}</div>
               </MenuItem>
               <MenuItem onClick={this.handleClose}>
                 <div>{network}</div>
-              </MenuItem>
+              </MenuItem> */}
             </Menu>
           </div>
         </UserInfoGridItem>
@@ -134,9 +127,7 @@ const BoldDivGrey = styled(BoldDiv)`
 `
 const BoldDivColored = styled(BoldDiv)`
   color: ${props =>
-    props.network === 'rinkeby'
-      ? 'orange'
-      : props.network === 'main' ? 'turquoise' : 'black'};
+    props.network === 'rinkeby' ? 'orange' : props.network === 'main' ? 'turquoise' : 'black'};
 `
 const UserInfoGridItem = styled(GridItem)`
   flex-direction: row;

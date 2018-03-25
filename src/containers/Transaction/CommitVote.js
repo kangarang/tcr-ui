@@ -1,27 +1,28 @@
 import React, { Component } from 'react'
-import { SidePanelSeparator, TextInput } from '@aragon/ui'
+import { TextInput } from '@aragon/ui'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
 
-import { SideSplit, SideText } from 'components/SidePanelOverlay'
+import { SideSplit, SideText } from './components'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
-import { withCommas } from 'utils/_values'
+import SidePanelSeparator from './components/SidePanelSeparator'
 
-export default class Challenge extends Component {
+import { withCommas } from 'utils/_values'
+export default class CommitVote extends Component {
   render() {
     const {
+      opened,
       closeSidePanel,
       balances,
+      selectedOne,
       handleInputChange,
       handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
-      selectedOne,
-      opened,
       miningStatus,
     } = this.props
     return (

@@ -1,20 +1,25 @@
 import React from 'react'
-import {
-  SidePanelSeparator,
-  Text,
-  TextInput,
-} from '@aragon/ui'
+import { Text, TextInput } from '@aragon/ui'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
 
-import { SideSplit, SideText } from 'components/SidePanelOverlay'
+import { SideText } from './components'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
-import { baseToConvertedUnit, BN } from 'utils/_units'
-import { withCommas } from 'utils/_values'
+import SidePanelSeparator from './components/SidePanelSeparator'
+import TotalAmount from './components/TotalAmount'
+
+// import { baseToConvertedUnit, BN } from 'utils/_units'
+// import { withCommas } from 'utils/_values'
+
+const styles = {
+  textInput: {
+    height: '50px',
+  },
+}
 
 export default ({
   opened,
@@ -24,114 +29,83 @@ export default ({
   parameters,
   balances,
   handleInputChange,
-  handleApply,
   handleApprove,
-  openApprove,
+  handleApply,
   visibleApprove,
+  openApprove,
   miningStatus,
   latestTxn,
 }) => (
   <div>
-    <SidePanel
-      title="Apply a Listing into the Registry"
-      opened={opened}
-      onClose={closeSidePanel}
-    >
-      <SideSplit
-        leftTitle={'Application Period'}
-        leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
-        rightTitle={'Minimum Deposit'}
-        rightItem={
-          <div>{`${parameters.get('minDeposit')} ${contracts.get(
-            'tokenSymbol'
-          )}`}</div>
-        }
-      />
-
-      <SideSplit
-        leftTitle={'Token Balance'}
-        leftItem={balances.get('token')}
-        rightTitle={'Registry Allowance'}
-        rightItem={withCommas(balances.get('registryAllowance'))}
-      />
-
-      <SideSplit
-        leftTitle={'Voting Rights'}
-        leftItem={balances.get('votingRights')}
-        rightTitle={'Voting Allowance'}
-        rightItem={withCommas(balances.get('votingAllowance'))}
-      />
-
-      <SideText
-        small
-        title={'QUESTION'}
-        text={translate('sidebar_apply_question')}
-      />
-      <SideText
-        small
-        title={'INSTRUCTIONS'}
-        text={translate('sidebar_apply_instructions')}
-      />
+    <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
+      <SidePanelSeparator />
 
       <MarginDiv>
         <Text color="grey" smallcaps>
-          {'LISTING NAME'}
+          {'listing'}
         </Text>
         <TextInput
           onChange={e => handleInputChange(e, 'listingName')}
           wide
           type="text"
+          style={styles.textInput}
         />
       </MarginDiv>
 
       <MarginDiv>
         <Text color="grey" smallcaps>
-          {'TOKEN AMOUNT'}
-        </Text>
-        <TextInput
-          onChange={e => handleInputChange(e, 'numTokens')}
-          wide
-          type="number"
-        />
-      </MarginDiv>
-
-      <MarginDiv>
-        <Text color="grey" smallcaps>
-          {'IPFS DATA'}
+          {'meta data'}
         </Text>
         <TextInput
           onChange={e => handleInputChange(e, 'data')}
           wide
           type="text"
+          style={styles.textInput}
         />
       </MarginDiv>
 
+      <SidePanelSeparator />
+
+      <SideText
+        small
+        color="grey"
+        text={translate('ins_apply')}
+      />
+
+      <TotalAmount
+        copy={'Total Deposit'}
+        minDeposit={parameters.get('minDeposit')}
+        tokenSymbol={contracts.get('tokenSymbol')}
+      />
+
+      <SidePanelSeparator />
+
+      <SideText color="grey" text={translate('mm_apply')} />
+
       <MarginDiv>
-        <Button onClick={handleApply} mode="strong">
-          {'Apply Listing'}
-        </Button>
-        {miningStatus && <TxnProgress />}
-        {latestTxn && (
+        <Button onClick={handleApply}>{'SUBMIT APPLICATION'}</Button>
+        {miningStatus && (
+          <div>
+            <SideText color="grey" text={translate('txCost_')} />
+            <TxnProgress />
+          </div>
+        )}
+        {/* {latestTxn && (
           <a
             target="_blank"
             href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}
           >
             {latestTxn.get('tx')}
           </a>
-        )}
+        )} */}
       </MarginDiv>
-
-      <SidePanelSeparator />
 
       {/* if you wanna see approve, you'll see it */}
       {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
-      <MarginDiv>
+      {/* <MarginDiv>
         {visibleApprove ? (
           <div>
-            <Button
-              onClick={e => handleApprove('registry')}
-              mode="strong"
-            >
+            <Button onClick={e => handleApprove('registry')} mode="strong">
               {'Approve tokens for Registry'}
             </Button>
             {miningStatus && <TxnProgress />}
@@ -143,10 +117,7 @@ export default ({
             ) ? (
               <div>
                 <Text color="red">{'YOU NEED TO APPROVE'}</Text>
-                <Button
-              onClick={e => handleApprove('registry')}
-                  mode="strong"
-                >
+                <Button onClick={e => handleApprove('registry')} mode="strong">
                   {'Approve tokens for Registry'}
                 </Button>
                 {miningStatus && <TxnProgress />}
@@ -158,7 +129,40 @@ export default ({
             )}
           </div>
         )}
-      </MarginDiv>
+      </MarginDiv> */}
+
+      {/* <SideSplit
+        leftTitle={'Application Period'}
+        leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
+        rightTitle={'Minimum Deposit'}
+        rightItem={
+          <div>{`${parameters.get('minDeposit')} ${contracts.get(
+            'tokenSymbol'
+          )}`}</div>
+        }
+      />
+      <SideSplit
+        leftTitle={'Token Balance'}
+        leftItem={balances.get('token')}
+        rightTitle={'Registry Allowance'}
+        rightItem={withCommas(balances.get('registryAllowance'))}
+      />
+      <SideSplit
+        leftTitle={'Voting Rights'}
+        leftItem={balances.get('votingRights')}
+        rightTitle={'Voting Allowance'}
+        rightItem={withCommas(balances.get('votingAllowance'))}
+      /> */}
+      {/* <MarginDiv>
+        <Text color="grey" smallcaps>
+          {'TOKEN AMOUNT'}
+        </Text>
+        <TextInput
+          onChange={e => handleInputChange(e, 'numTokens')}
+          wide
+          type="number"
+        />
+      </MarginDiv> */}
     </SidePanel>
   </div>
 )
