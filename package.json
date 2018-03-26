@@ -24,7 +24,6 @@
     "ipfs-api": "18.1.1",
     "ipfs-mini": "1.1.2",
     "jazzicon": "1.5.0",
-    "jsonfile": "4.0.0",
     "lodash": "4.17.4",
     "material-ui": "^1.0.0-beta.36",
     "moment": "2.20.1",
