@@ -28,37 +28,6 @@ The vision of this project is to build a registry-agnostic client-side user inte
 - [IPLD](./docs/IPLD.md)
 
 ---
-
-## Resources
-
-### Articles
-
-[Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
-
-[Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
-
-[Continuous Token-Curated Registries: The Infinity of Lists](https://medium.com/@simondlr/continuous-token-curated-registries-the-infinity-of-lists-69024c9eb70d)
-
-[City Walls & Bo-Taoshi: Exploring the Power of Token-Curated Registries](https://medium.com/@simondlr/city-walls-bo-taoshi-exploring-the-power-of-token-curated-registries-588f208c17d5)
-
-### Code
-
-[TCR](https://github.com/skmgoldin/tcr)
-
-[TCR (forked)](https://github.com/kangarang/tcr)
-
-[PLCR Voting](https://github.com/ConsenSys/PLCRVoting)
-
-[AdChain Registry](https://github.com/AdChain/AdChainRegistry)
-
-[AdChain Registry Dapp](https://github.com/AdChain/AdChainRegistryDapp)
-
-### Communications
-
-[Gitter channel](https://gitter.im/Curation-Markets/Lobby)
-
----
-
 ## Commands
 
 ### **Local blockchain/RPC** (optional)
@@ -70,7 +39,7 @@ The vision of this project is to build a registry-agnostic client-side user inte
   $ ganache-cli
 ```
 
-### **Deploy**
+### **Deploy** (optional)
 
 Clone contracts:
 
@@ -113,6 +82,36 @@ Start development server: `http://localhost:3000`
 ```
   $ npm run dev
 ```
+
+---
+
+## Resources
+
+### Articles
+
+[Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
+
+[Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
+
+[Continuous Token-Curated Registries: The Infinity of Lists](https://medium.com/@simondlr/continuous-token-curated-registries-the-infinity-of-lists-69024c9eb70d)
+
+[City Walls & Bo-Taoshi: Exploring the Power of Token-Curated Registries](https://medium.com/@simondlr/city-walls-bo-taoshi-exploring-the-power-of-token-curated-registries-588f208c17d5)
+
+### Code
+
+[TCR](https://github.com/skmgoldin/tcr)
+
+[TCR (forked)](https://github.com/kangarang/tcr)
+
+[PLCR Voting](https://github.com/ConsenSys/PLCRVoting)
+
+[AdChain Registry](https://github.com/AdChain/AdChainRegistry)
+
+[AdChain Registry Dapp](https://github.com/AdChain/AdChainRegistryDapp)
+
+### Communications
+
+[Gitter channel](https://gitter.im/Curation-Markets/Lobby)
 
 ---
 
