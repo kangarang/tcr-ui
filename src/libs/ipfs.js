@@ -1,6 +1,8 @@
+// TODO: change to ipfs-mini
 import ipfsAPI from 'ipfs-api'
 
 // TODO: type checking
+// TODO: add tests
 export const getIPFSData = async multihash => {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = await ipfsAPI(config)
@@ -15,6 +17,7 @@ export const getIPFSData = async multihash => {
 }
 
 // TODO: type checking
+// TODO: add tests
 export async function ipfsAddData(obj) {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = ipfsAPI(config)

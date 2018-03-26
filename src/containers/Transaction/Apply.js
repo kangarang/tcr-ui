@@ -62,6 +62,13 @@ export default ({
         tokenSymbol={contracts.get('tokenSymbol')}
       />
 
+      {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
+      <SideTextInput
+        title="tokens"
+        type="number"
+        handleInputChange={e => handleInputChange(e, 'numTokens')}
+      />
+
       <SidePanelSeparator />
 
       <SideText color="grey" text={translate('mm_apply')} />

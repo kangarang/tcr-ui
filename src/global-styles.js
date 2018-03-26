@@ -1,8 +1,6 @@
 import { injectGlobal } from 'styled-components'
 
 export const colors = {
-  purple: '#52427c',
-  offWhite: '#eee',
   offBlack: '#333',
   lightBlue: '#6ba3ff',
   darkBlue: '#203260',
