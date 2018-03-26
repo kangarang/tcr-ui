@@ -6,14 +6,7 @@ import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
 import { getIPFSData } from './ipfs'
 
 // TODO: separate concerns. Type check
-export async function convertLogToListing(
-  logData,
-  block,
-  tx,
-  event,
-  registry,
-  voting
-) {
+export async function convertLogToListing(logData, block, tx, event, registry, voting) {
   let { listingHash, challengeID, data, pollID, numTokens } = logData
   let whitelisted
   let ipfsContent
@@ -27,28 +20,20 @@ export async function convertLogToListing(
   if ((!listingHash && event === 'VoteCommitted') || event === 'VoteRevealed') {
     return { latest: { sender: tx.voter, pollID, numTokens } }
   }
-
-  // TODO: see if you can check the status before getting ipfs data
-  // TODO: type check to make sure the data is actually an ipfs multihash
-  if (event === '_Application' && data.includes('Qm')) {
-    // console.log('data', data)
-    const content = await getIPFSData(data)
-    // console.log('ipfs content retrieved:', content)
-    ipfsContent = content
-    ipfsID = content.id // string
-    ipfsData = content.data
-      ? content.data
-      : content.registry && content.registry // listings
-  }
-
   let listing = await registry.listings(listingHash)
-  numTokens = listing[3].toString(10)
-    ? baseToConvertedUnit(listing[3], 18)
-    : false
+  numTokens = listing[3].toString(10) ? baseToConvertedUnit(listing[3], 18) : false
+  whitelisted = listing[1]
+  let aeUnix = listing[0].toNumber()
+  let appExpiry = convertUnixTimeLeft(aeUnix)
+  let appExpired = dateHasPassed(aeUnix)
 
-  if (listing) {
-    whitelisted = listing[1]
+  if (event === '_Application' && data.includes('Qm')) {
+    const content = await getIPFSData(data)
+    ipfsContent = content
+    ipfsID = content.id
+    ipfsData = content.data ? content.data : content.registry && content.registry
   }
+
   if (event === '_NewListingWhitelisted') {
     whitelisted = true
   }
@@ -60,11 +45,10 @@ export async function convertLogToListing(
   let revealExpiry
   let revealExpired
 
-  let aeUnix = listing[0].toNumber()
-  const appExpiry = convertUnixTimeLeft(aeUnix)
-  const appExpired = dateHasPassed(aeUnix)
-
-  if (pollID) {
+  if (pollID || challengeID) {
+    if (challengeID) {
+      pollID = challengeID
+    }
     pollID = pollID.toString()
     const poll = await voting.pollMap(pollID)
     commitEndDate = poll[0].toNumber()
@@ -97,7 +81,7 @@ export async function convertLogToListing(
       blockHash: block.hash,
       blockNumber: block.number,
       ts: block.timestamp,
-      timesince: appExpiry.timesince,
+      timesince: appExpiry && appExpiry.timesince,
       sender: tx.from,
       event,
       pollID: pollID ? pollID : challengeID ? challengeID : false,
@@ -112,20 +96,23 @@ export async function convertLogToListing(
 
 export function updateListings(listings, newListings) {
   const latestListings = fromJS(newListings).reduce((acc, val) => {
-    const index = acc.findIndex(
-      it => it.get('listingHash') === val.get('listingHash')
-    )
-    // New listing
+    const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
+    // case: new listing
+    // add to list, return the list
     if (index === -1) {
       return acc.push(val)
     }
-    // Check to see if the event is the more recent
+    // case: existing listing
+    // if the timestamp is the more recent,
+    // update the listing's `latest` object,
+    // return the list
     if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
       return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
     }
-    // Not unique, not more recent, return List
+    // case: not unique, not more recent
+    // return the list
     return acc
-  }, fromJS(listings))
+  }, fromJS(listings)) // initial value & the shape we want the final output of Array.reduce to look like
 
   return latestListings
 }

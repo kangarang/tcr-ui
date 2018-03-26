@@ -28,8 +28,8 @@ const theme = createMuiTheme({
     MuiTabIndicator: {
       root: {
         background: `linear-gradient(to right, ${
-          colors.buttonGradient.left
-        } 0%, ${colors.buttonGradient.right} 100%)`,
+          colors.gradient.left
+        } 0%, ${colors.gradient.right} 100%)`,
         border: 0,
         height: 3,
       },

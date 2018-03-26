@@ -14,10 +14,10 @@ const FRAME_EVERY = 1000 / 30 // 30 FPS is enough for a ticker
 const formatUnit = v => String(v).padStart(2, '0')
 
 const Countdown = ({ end }) => {
-  const { days, hours, minutes, seconds, totalInSeconds } = difference(
-    end,
-    new Date()
-  )
+  const { days, hours, minutes, seconds, totalInSeconds } = difference(end, new Date())
+  if (totalInSeconds < 0) {
+    return false
+  }
 
   return (
     <Main dateTime={formatHtmlDatetime(end)}>
@@ -26,25 +26,33 @@ const Countdown = ({ end }) => {
       </IconWrapper>
       {totalInSeconds > 0 ? (
         <span>
-          <Part>
-            {formatUnit(days)}
-            <Unit>D</Unit>
-          </Part>
-          <Separator />
-          <Part>
-            {formatUnit(hours)}
-            <Unit>H</Unit>
-          </Part>
-          <Separator>:</Separator>
-          <Part>
-            {formatUnit(minutes)}
-            <Unit>M</Unit>
-          </Part>
-          <Separator>:</Separator>
-          <Part>
-            {formatUnit(seconds)}
-            <Unit>S</Unit>
-          </Part>
+          {days !== 0 && (
+            <Part>
+              {formatUnit(days)}
+              <Unit>D</Unit>
+              <Separator />
+            </Part>
+          )}
+          {hours !== 0 && (
+            <Part>
+              {formatUnit(hours)}
+              <Unit>H</Unit>
+              <Separator>:</Separator>
+            </Part>
+          )}
+          {minutes !== 0 && (
+            <Part>
+              {formatUnit(minutes)}
+              <Unit>M</Unit>
+              <Separator>:</Separator>
+            </Part>
+          )}
+          {seconds !== 0 && (
+            <Part>
+              {formatUnit(seconds)}
+              <Unit>S</Unit>
+            </Part>
+          )}
         </span>
       ) : (
         <TimeOut>Time out</TimeOut>

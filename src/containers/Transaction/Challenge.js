@@ -30,7 +30,10 @@ export default ({
       <SidePanelSeparator />
 
       <SideText text={selectedOne && selectedOne.get('ipfsID')} />
-      <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
+
+      <MarginDiv>
+        <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
+      </MarginDiv>
 
       <SidePanelSeparator />
 
@@ -58,6 +61,11 @@ export default ({
             {'TOKEN AMOUNT'}
           </Text>
           <TextInput onChange={e => handleInputChange(e, 'numTokens')} wide type="number" />
+            <SideTextInput
+              title="token amount"
+              type="number"
+              handleInputChange={e => handleInputChange(e, 'numTokens')}
+            />
           <Button onClick={e => handleApprove('registry')} mode="strong" wide>
             {'Approve tokens for Registry'}
           </Button>

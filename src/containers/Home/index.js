@@ -61,8 +61,6 @@ class Home extends Component {
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-
-  // side panel
   closeSidePanel = () => {
     this.setState({
       opened: false,
@@ -84,11 +82,7 @@ class Home extends Component {
   getVoterReward = async (pollID, salt) => {
     let vR
     try {
-      vR = await this.props.registry.voterReward.call(
-        this.props.account,
-        pollID,
-        salt
-      )
+      vR = await this.props.registry.voterReward.call(this.props.account, pollID, salt)
     } catch (err) {
       vR = 'No reward :('
     }
@@ -139,13 +133,24 @@ class Home extends Component {
 
     return (
       <div>
-        <AppBar
-          {...this.props}
-          openSidePanel={e => this.openSidePanel(null, 'apply')}
-        />
+        {/* apply, title, navigation */}
+        <AppBar {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
 
+        {/* center general stats */}
         <Stats {...this.props} />
 
+        {/* filtered listings */}
+        <Tabs
+          registry={registry}
+          candidates={candidates}
+          faceoffs={faceoffs}
+          whitelist={whitelist}
+          openSidePanel={this.openSidePanel}
+          chooseTCR={this.chooseTCR}
+          handleUpdateStatus={this.handleUpdateStatus}
+        />
+
+        {/* transaction modules */}
         <Apply
           opened={this.state.opened === 'apply'}
           closeSidePanel={this.closeSidePanel}
@@ -188,7 +193,7 @@ class Home extends Component {
           miningStatus={miningStatus}
         />
 
-        <RevealVote 
+        <RevealVote
           opened={this.state.opened === 'revealVote'}
           closeSidePanel={this.closeSidePanel}
           parameters={parameters}
@@ -199,41 +204,26 @@ class Home extends Component {
           handleRevealVote={this.handleRevealVote}
           miningStatus={miningStatus}
         />
-
-        <Tabs
-          registry={registry}
-          candidates={candidates}
-          faceoffs={faceoffs}
-          whitelist={whitelist}
-          openSidePanel={this.openSidePanel}
-          chooseTCR={this.chooseTCR}
-          handleUpdateStatus={this.handleUpdateStatus}
-        />
       </div>
     )
   }
 
   // TRANSACTIONS
   handleApprove = contract => {
-    const args = [
-      this.props[contract].address,
-      convertedToBaseUnit(this.state.numTokens, 18),
-    ]
+    const args = [this.props[contract].address, convertedToBaseUnit(this.state.numTokens, 18)]
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {
     const args = [
       this.state.listingName,
-      convertedToBaseUnit(this.state.numTokens, 18),
+      convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18),
+      // convertedToBaseUnit(this.state.numTokens, 18),
       this.state.data,
     ]
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [
-      this.state.selectedOne.get('listingHash'),
-      this.state.selectedOne.get('data'),
-    ]
+    const args = [this.state.selectedOne.get('listingHash'), this.state.selectedOne.get('data')]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {
@@ -266,10 +256,7 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
   handleClaimVoterReward = () => {
-    const args = [
-      this.state.selectedOne.getIn(['latest', 'pollID']),
-      this.state.fileInput.salt,
-    ]
+    const args = [this.state.selectedOne.getIn(['latest', 'pollID']), this.state.fileInput.salt]
     this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
   }
 }

@@ -29,7 +29,7 @@ function* setupEventChannels() {
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
 
-  // grab all the registry events
+  // grab registry events
   const {
     _Application,
     _Challenge,
@@ -68,16 +68,14 @@ function* setupEventChannels() {
     _ListingRemoved
   )
 
-  // grab all the voting events
+  // grab voting events
   const { VoteCommitted, VoteRevealed } = voting.interface.events
 
   // extract the topics
-  // const pcTopics = PollCreated.topics
   const vcTopics = VoteCommitted.topics
   const vrTopics = VoteRevealed.topics
 
   // create channels for each event-topic
-  // const pcChannel = yield call(createChannel, provider, pcTopics, PollCreated)
   const vcChannel = yield call(createChannel, provider, vcTopics, VoteCommitted)
   const vrChannel = yield call(createChannel, provider, vrTopics, VoteRevealed)
 
@@ -89,7 +87,6 @@ function* setupEventChannels() {
       yield takeEvery(nlwChannel, handleEventEmission)
       yield takeEvery(arChannel, handleEventEmission)
       yield takeEvery(lrChannel, handleEventEmission)
-      // yield takeEvery(pcChannel, handleEventEmission)
       yield takeEvery(vcChannel, handleEventEmission)
       yield takeEvery(vrChannel, handleEventEmission)
     }
@@ -102,7 +99,6 @@ function* setupEventChannels() {
       nlwChannel.close()
       arChannel.close()
       lrChannel.close()
-      // pcChannel.close()
       vcChannel.close()
       vrChannel.close()
     }

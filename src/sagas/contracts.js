@@ -3,12 +3,7 @@ import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 import abis from '../abis'
 
 import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from 'actions/constants'
-import {
-  setContracts,
-  contractError,
-  updateBalancesRequest,
-  setRegistryContract,
-} from '../actions'
+import { setContracts, contractError, updateBalancesRequest, setRegistryContract } from '../actions'
 
 import { selectProvider } from '../selectors'
 
@@ -29,12 +24,12 @@ export function* registrySaga(action) {
     if (!address) {
       address = abis.registry.networks[networkID.toString()].address
     }
-    const registry = yield call(
-      setupRegistry,
-      provider,
-      abis.registry.abi,
-      address,
-    )
+    const registry = yield call(setupRegistry, provider, abis.registry.abi, address)
+    const byteCode = yield provider.getCode(address)
+    if (byteCode !== abis.registry.deployedBytecode) {
+      console.log('mismatch bytecode')
+      // throw new Error('mismatch bytecode')
+    }
     yield put(setRegistryContract(registry))
   } catch (err) {
     console.log('registry saga err', err)
@@ -44,17 +39,11 @@ export function* registrySaga(action) {
 export function* contractsSaga(action) {
   const provider = yield select(selectProvider)
   const registry = action.payload
-  console.log('registry', registry)
+
   try {
     let [token, parameterizer, voting] = yield all([
       call(setupContract, provider, abis.token.abi, registry, 'token'),
-      call(
-        setupContract,
-        provider,
-        abis.parameterizer.abi,
-        registry,
-        'parameterizer'
-      ),
+      call(setupContract, provider, abis.parameterizer.abi, registry, 'parameterizer'),
       call(setupContract, provider, abis.voting.abi, registry, 'voting'),
     ])
 
@@ -81,10 +70,7 @@ export function* contractsSaga(action) {
     ])
 
     const parameters = {
-      minDeposit: baseToConvertedUnit(
-        minDeposit.toString(10),
-        tokenDecimals.toString(10)
-      ),
+      minDeposit: baseToConvertedUnit(minDeposit.toString(10), tokenDecimals.toString(10)),
       applyStageLen: applyStageLen.toString(10),
       commitStageLen: commitStageLen.toString(10),
       revealStageLen: revealStageLen.toString(10),
@@ -99,13 +85,14 @@ export function* contractsSaga(action) {
           token,
           voting,
           parameterizer,
-          tokenSymbol: tokenSymbol,
-          tokenName: tokenName,
+          tokenSymbol,
+          tokenName,
           tokenDecimals: tokenDecimals.toString(10),
           registryName,
         },
       })
     )
+    // refresh balances
     yield put(updateBalancesRequest())
   } catch (err) {
     console.log('err', err)

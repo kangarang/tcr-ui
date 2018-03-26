@@ -29,10 +29,12 @@ export const colors = {
     blue2: '#00B4CC',
     blue1: '#00DFFC',
   },
-  buttonGradient: {
+  gradient: {
     right: '#8FD3F4',
     left: '#84FAB0',
   },
+  lightBg: '#F8FAFB',
+  brightBlue: '#00AFF3'
 }
 
 const globalStyles = `

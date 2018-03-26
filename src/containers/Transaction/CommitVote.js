@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { TextInput } from '@aragon/ui'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
 
-import { SideSplit, SideText } from './components'
+import { SideSplit, SideText, SideTextInput } from './components'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
@@ -35,7 +34,6 @@ export default class CommitVote extends Component {
             rightItem={withCommas(balances.get('token'))}
           />
 
-          {/* TODO: show inc/dec numTokens depending on user input */}
           <SideSplit
             leftTitle={'Voting Rights'}
             leftItem={balances.get('votingRights')}
@@ -43,27 +41,20 @@ export default class CommitVote extends Component {
             rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <SideText
-            small
-            title={'COMMIT VOTE'}
-            text={selectedOne && selectedOne.get('ipfsID')}
-          />
+          <SideText text={selectedOne && selectedOne.get('ipfsID')} />
 
           <SidePanelSeparator />
 
           <MarginDiv>
-            <SideText text={'Token Amount'} small />
-            <TextInput
-              onChange={e => handleInputChange(e, 'numTokens')}
-              wide
+            <SideTextInput
+              title="token amount"
               type="number"
+              handleInputChange={e => handleInputChange(e, 'numTokens')}
             />
 
             {balances.get('votingRights') === '0' ? (
               <MarginDiv>
-                <SideText
-                  text={translate('sidebar_requestVotingRights_instructions')}
-                />
+                <SideText text={translate('sidebar_requestVotingRights_instructions')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>
                   {'Request Voting Rights'}
                 </Button>
@@ -71,18 +62,10 @@ export default class CommitVote extends Component {
             ) : (
               <MarginDiv>
                 <SideText text={translate('sidebar_commitVote_instructions')} />
-                <Button
-                  onClick={e => handleCommitVote('1')}
-                  emphasis="positive"
-                  mode="strong"
-                >
+                <Button onClick={e => handleCommitVote('1')} emphasis="positive" mode="strong">
                   {'Support the applicant'}
                 </Button>
-                <Button
-                  onClick={e => handleCommitVote('0')}
-                  emphasis="negative"
-                  mode="strong"
-                >
+                <Button onClick={e => handleCommitVote('0')} emphasis="negative" mode="strong">
                   {'Oppose the applicant'}
                 </Button>
               </MarginDiv>

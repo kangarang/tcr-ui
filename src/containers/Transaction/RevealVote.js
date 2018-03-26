@@ -21,7 +21,7 @@ export default ({
   selectedOne,
   miningStatus,
 }) => (
-  <SidePanel title="Reveal Vote" opened={opened === 'revealVote'} onClose={closeSidePanel}>
+  <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
     <SideSplit
       leftTitle={'Reveal Period'}
       leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}

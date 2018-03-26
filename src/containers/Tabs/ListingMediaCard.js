@@ -46,12 +46,8 @@ function ListingMediaCard(props) {
             {one.get('ipfsID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${one
-            .get('owner')
-            .substring(0, 8)}`}</Typography>
-          <Typography component="p">
-            {one.getIn(['appExpiry', 'formattedLocal'])}
-          </Typography>
+          <Typography component="p">{`BY: ${one.get('owner').substring(0, 8)}`}</Typography>
+          <Typography component="p">{one.getIn(['appExpiry', 'formattedLocal'])}</Typography>
         </CardContent>
 
         <CardActions>
@@ -60,26 +56,30 @@ function ListingMediaCard(props) {
               <div>
                 {!revealTrigger &&
                   !updateTrigger && (
-                    <Button
-                      onClick={e => openSidePanel(one, 'commitVote')}
-                      size="medium"
-                      color="primary"
-                    >
-                      {'Commit Vote'}
-                    </Button>
+                    <div>
+                      <Button
+                        onClick={e => openSidePanel(one, 'commitVote')}
+                        size="medium"
+                        color="primary"
+                      >
+                        {'Commit Vote'}
+                      </Button>
+                      <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
+                    </div>
                   )}
                 {revealTrigger &&
                   !updateTrigger && (
-                    <Button
-                      onClick={e => openSidePanel(one, 'revealVote')}
-                      size="medium"
-                      color="primary"
-                    >
-                      {'Reveal Vote'}
-                    </Button>
+                    <div>
+                      <Button
+                        onClick={e => openSidePanel(one, 'revealVote')}
+                        size="medium"
+                        color="primary"
+                      >
+                        {'Reveal Vote'}
+                      </Button>
+                      <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
+                    </div>
                   )}
-                <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
-                <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
               </div>
             ) : (
               <div>
@@ -93,20 +93,16 @@ function ListingMediaCard(props) {
                 <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
-            {registry ? (
-              <Button onClick={e => chooseTCR(one.get('ipfsData'))}>
-                {'Select TCR'}
-              </Button>
-            ) : updateTrigger && (
-              <div>
-                <Button
-                  onClick={e => handleUpdateStatus(one)}
-                  size="medium"
-                  color="primary"
-                >
-                  {'Update Status'}
-                </Button>
-              </div>
+            {registry && registry.address === '0xeac7a44f139dde706126d1c5947945daf999dc3f' ? (
+              <Button onClick={e => chooseTCR(one.get('ipfsData'))}>{'Select TCR'}</Button>
+            ) : (
+              updateTrigger && (
+                <div>
+                  <Button onClick={e => handleUpdateStatus(one)} size="medium" color="primary">
+                    {'Update Status'}
+                  </Button>
+                </div>
+              )
             )}
           </div>
         </CardActions>

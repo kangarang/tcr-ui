@@ -8,6 +8,7 @@ import close from 'assets/close.svg'
 
 import { unselectable } from 'utils/_styles'
 import { getPublicUrl, prefixUrl } from 'utils/_url'
+import { colors } from '../../global-styles'
 
 const PANEL_WIDTH = 450
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
@@ -44,7 +45,7 @@ const StyledPanel = styled.aside`
   width: ${PANEL_WIDTH + PANEL_OVERFLOW}px;
   height: 100vh;
   padding-right: ${PANEL_OVERFLOW}px;
-  background: white;
+  background: ${colors.lightBg};
   box-shadow: -2px 0 36px rgba(0, 0, 0, 0.2);
 `
 
@@ -138,21 +139,14 @@ class SidePanel extends Component {
           const styles = this.motionStyles(progress)
           return (
             <StyledSidePanel hidden={progress === 0} opened={opened}>
-              <Overlay
-                opened={opened}
-                style={styles.overlay}
-                onClick={this.handleClose}
-              />
+              <Overlay opened={opened} style={styles.overlay} onClick={this.handleClose} />
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
                   <h1>
                     <Text size="xxlarge">{title}</Text>
                   </h1>
                   {!blocking && (
-                    <StyledPanelCloseButton
-                      type="button"
-                      onClick={this.handleClose}
-                    >
+                    <StyledPanelCloseButton type="button" onClick={this.handleClose}>
                       <img src={prefixUrl(close, publicUrl)} alt="Close" />
                     </StyledPanelCloseButton>
                   )}

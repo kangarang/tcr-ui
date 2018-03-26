@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { colors } from '../global-styles'
 
 export const MarginDiv = styled.div`
-  margin: 1em 0;
+  margin: 2em 0;
 `
 export const OverFlowDiv = styled.div`
   overflow: hidden;

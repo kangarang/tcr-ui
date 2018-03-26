@@ -1,16 +1,16 @@
 import React from 'react'
-import { Text, TextInput } from '@aragon/ui'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
 
-import { SideText } from './components'
+import { SideText, SideTextInput } from './components'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
+import { colors } from '../../global-styles'
 
 // import { baseToConvertedUnit, BN } from 'utils/_units'
 // import { withCommas } from 'utils/_values'
@@ -40,40 +40,24 @@ export default ({
     <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
       <SidePanelSeparator />
 
-      <MarginDiv>
-        <Text color="grey" smallcaps>
-          {'listing'}
-        </Text>
-        <TextInput
-          onChange={e => handleInputChange(e, 'listingName')}
-          wide
-          type="text"
-          style={styles.textInput}
-        />
-      </MarginDiv>
+      <SideTextInput
+        title="listing"
+        type="text"
+        handleInputChange={e => handleInputChange(e, 'listingName')}
+      />
 
-      <MarginDiv>
-        <Text color="grey" smallcaps>
-          {'meta data'}
-        </Text>
-        <TextInput
-          onChange={e => handleInputChange(e, 'data')}
-          wide
-          type="text"
-          style={styles.textInput}
-        />
-      </MarginDiv>
+      <SideTextInput
+        title="data"
+        type="text"
+        handleInputChange={e => handleInputChange(e, 'data')}
+      />
 
       <SidePanelSeparator />
 
-      <SideText
-        small
-        color="grey"
-        text={translate('ins_apply')}
-      />
+      <SideText small color="grey" text={translate('ins_apply')} />
 
       <TotalAmount
-        copy={'Total Deposit'}
+        copy={'Minimum Deposit'}
         minDeposit={parameters.get('minDeposit')}
         tokenSymbol={contracts.get('tokenSymbol')}
       />
@@ -83,7 +67,9 @@ export default ({
       <SideText color="grey" text={translate('mm_apply')} />
 
       <MarginDiv>
-        <Button onClick={handleApply}>{'SUBMIT APPLICATION'}</Button>
+        <Button bgColor={colors.brightBlue} wide fgColor={'white'} onClick={handleApply}>
+          {'SUBMIT APPLICATION'}
+        </Button>
         {miningStatus && (
           <div>
             <SideText color="grey" text={translate('txCost_')} />

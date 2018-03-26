@@ -23,7 +23,7 @@ export function* setupEventsSaga() {
     _ListingRemoved,
   } = registry.interface.events
 
-  const AllRegistryEvents = [
+  const RegistryEvents = [
     _Application,
     _Challenge,
     _NewListingWhitelisted,
@@ -31,16 +31,16 @@ export function* setupEventsSaga() {
     _ListingRemoved,
   ]
 
-  yield call(getHistorySaga, AllRegistryEvents)
+  yield call(getHistorySaga, RegistryEvents)
 }
 
-export function* getHistorySaga(AllEvents) {
+export function* getHistorySaga(ContractEvents) {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
 
   const freshListings = yield all(
-    AllEvents.map(async ContractEvent => {
+    ContractEvents.map(async ContractEvent => {
       return decodeLogs(
         provider,
         registry,
@@ -50,8 +50,10 @@ export function* getHistorySaga(AllEvents) {
       )
     })
   )
+
   const flattened = _.flatten(freshListings)
   console.log('flattened', flattened)
+
   const updatedListings = yield call(updateListings, [], flattened)
   console.log('updatedListings', updatedListings.toJS())
 
