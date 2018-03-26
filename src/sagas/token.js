@@ -39,38 +39,23 @@ function* updateBalancesSaga() {
       voting.functions.voteTokenBalance(owner),
     ])
 
-    const ETH = baseToConvertedUnit(ethBalance, contracts.get('tokenDecimals'))
+    const decimals = contracts.get('tokenDecimals')
+    const [ETH, tokenBalance, registryAllowance, votingAllowance, votingRights] = yield all([
+      baseToConvertedUnit(ethBalance, decimals),
+      baseToConvertedUnit(tokenBalanceRaw, decimals),
+      baseToConvertedUnit(registryAllowanceRaw, decimals),
+      baseToConvertedUnit(votingAllowanceRaw, decimals),
+      baseToConvertedUnit(votingRightsRaw, decimals),
+    ])
 
-    const tokenBalance = baseToConvertedUnit(
-      tokenBalanceRaw,
-      contracts.get('tokenDecimals')
-    )
-    const registryAllowance = baseToConvertedUnit(
-      registryAllowanceRaw,
-      contracts.get('tokenDecimals')
-    )
-    const votingAllowance = baseToConvertedUnit(
-      votingAllowanceRaw,
-      contracts.get('tokenDecimals')
-    )
-    const votingRights = baseToConvertedUnit(
-      votingRightsRaw,
-      contracts.get('tokenDecimals')
-    )
     const balances = {
       ETH,
       token: tokenBalance,
       registryAllowance,
       votingAllowance,
       votingRights,
-      voterReward: '0',
     }
-
-    yield put(
-      updateBalances({
-        balances,
-      })
-    )
+    yield put(updateBalances({ balances }))
   } catch (err) {
     console.log('Update balances error:', err)
   }

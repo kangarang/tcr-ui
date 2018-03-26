@@ -7,7 +7,7 @@
 
     "ins_approve_registry": "Approve the Registry contract to transfer your tokens",
     "ins_approve_voting": "Approve the Voting contract to transfer your tokens",
-    "ins_apply": "Starting an application requires a minimum deposit of",
+    "ins_apply": "Starting an application requires a minimum deposit",
     "ins_challenge":
       "Challenging a listing application requires you to stake tokens. Once challenged, the application will go into the voting process",
     "ins_commitVote":
