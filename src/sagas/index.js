@@ -14,15 +14,15 @@ export default function* rootSaga() {
 export function* genesis() {
   try {
     const provider = yield call(setProvider)
-    // console.log('provider', provider)
+    console.log('genesis. provider:', provider)
     const account = (yield provider.listAccounts())[0]
     // console.log('account', account)
     const network =
       provider.chainId === 4
         ? 'rinkeby'
         : provider.chainId === 1
-          ? 'main'
-          : provider.chainId === '420' ? 'ganache' : 'unknown'
+          ? 'mainnet'
+          : provider.chainId === 420 ? 'ganache' : 'unknown'
 
     yield put(setWallet({ provider, account, network }))
     yield call(registrySaga, provider)
