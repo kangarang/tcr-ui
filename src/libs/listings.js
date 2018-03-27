@@ -18,7 +18,10 @@ export async function convertLogToListing(logData, block, tx, event, registry, v
     numTokens = 0
   }
   if ((!listingHash && event === 'VoteCommitted') || event === 'VoteRevealed') {
-    return { latest: { sender: tx.voter, pollID, numTokens } }
+    return false
+    // return {
+    //   latest: { sender: tx.from, pollID: pollID.toString(), numTokens: numTokens.toString() },
+    // }
   }
   let listing = await registry.listings(listingHash)
   numTokens = listing[3].toString(10) ? baseToConvertedUnit(listing[3], 18) : false
@@ -62,7 +65,6 @@ export async function convertLogToListing(logData, block, tx, event, registry, v
     listingHash,
     data,
     appExpiry,
-    whitelisted,
   }
   if (event === '_Application') {
     appInfo = {
@@ -76,6 +78,7 @@ export async function convertLogToListing(logData, block, tx, event, registry, v
   return {
     ...appInfo,
     latest: {
+      whitelisted,
       appExpired,
       txHash: tx.hash,
       blockHash: block.hash,
@@ -95,12 +98,14 @@ export async function convertLogToListing(logData, block, tx, event, registry, v
 }
 
 export function updateListings(listings, newListings) {
+  // const sortedListings = listings
+  // console.log('sortedListings', sortedListings)
   const latestListings = fromJS(newListings).reduce((acc, val) => {
     const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
     // case: new listing
     // add to list, return the list
     if (index === -1) {
-      return acc.push(val)
+      return acc.push(fromJS(val))
     }
     // case: existing listing
     // if the timestamp is the more recent,

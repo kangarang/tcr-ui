@@ -16,7 +16,6 @@ export function* genesis() {
     const provider = yield call(setProvider)
     console.log('genesis. provider:', provider)
     const account = (yield provider.listAccounts())[0]
-    // console.log('account', account)
     const network =
       provider.chainId === 4
         ? 'rinkeby'

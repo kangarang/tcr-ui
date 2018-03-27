@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import SidePanel from '../SidePanel'
 import { colors } from '../../../global-styles'
 
 const SidePanelSeparator = styled.div`

@@ -19,14 +19,14 @@ export default function* root() {
 export function* registrySaga(action) {
   try {
     const provider = yield select(selectProvider)
-    const networkID = provider.chainId
+    const networkID = provider.chainId.toString()
     let address = action.payload
     if (!address) {
-      address = abis.registry.networks[networkID.toString()].address
+      address = abis.registry.networks[networkID].address
     }
     const registry = yield call(setupRegistry, provider, abis.registry.abi, address)
     const byteCode = yield provider.getCode(address)
-    if (byteCode !== abis.registry.deployedBytecode) {
+    if (byteCode.toString() !== abis.registry.deployedBytecode) {
       console.log('mismatch bytecode')
       // throw new Error('mismatch bytecode')
     }

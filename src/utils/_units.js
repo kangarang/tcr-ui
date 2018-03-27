@@ -10,6 +10,7 @@ export const BN = small => {
 // 1,000,000.000,000,000 -> 1,000,000
 // in: string, BN, number
 // out: string
+// aka: baseUnitsToTokens
 export const baseToConvertedUnit = (amount, decimals) => {
   if (!_.isString(amount) && !_.isObject(amount) && !_.isNumber(amount)) {
     throw new Error('invalid type')
@@ -22,6 +23,7 @@ export const baseToConvertedUnit = (amount, decimals) => {
 // 1,000,000 -> 1,000,000,000,000,000
 // in: string, BN, number
 // out: string
+// aka: tokensToBaseUnits
 export const convertedToBaseUnit = (amount, decimals) => {
   if (!_.isString(amount) && !_.isObject(amount) && !_.isNumber(amount)) {
     throw new Error('invalid type')

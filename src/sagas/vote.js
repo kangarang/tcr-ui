@@ -62,26 +62,26 @@ export function* commitVoteSaga(action) {
   const revealEndDateString = getEndDateString(pollStruct[1].toNumber())
 
   const json = {
-    salt: salt.toString(10),
     voteOption,
-    pollID,
-    data,
+    numTokens,
     commitEnd: commitEndDateString,
     revealEnd: revealEndDateString,
+    pollID,
+    data,
+    salt: salt.toString(10),
     secretHash,
-    numTokens,
   }
 
   // console.log('commit json:', json)
 
-  const listingUnderscored = data.replace('.', '_')
-  const filename = `${listingUnderscored}_pollID-${pollID}.json`
+  const listingDashed = data.replace(' ', '-')
+  const filename = `poll-${pollID}-${listingDashed}.json`
 
   saveFile(json, filename)
 
   yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
 
-  saveFile(json, filename)
+  // saveFile(json, filename)
 }
 
 export function* revealVoteSaga(action) {

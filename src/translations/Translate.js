@@ -11,6 +11,7 @@ export default ({ translationKey }) => {
       escapeHtml={true}
       unwrapDisallowed={true}
       // allowedTypes={['Text', 'Link', 'Emph', 'Strong', 'Code']}
+      allowedTypes={['code', 'link']}
       source={source}
     />
   )

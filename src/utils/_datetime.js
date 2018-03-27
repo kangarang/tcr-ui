@@ -28,7 +28,7 @@ export const formatHtmlDatetime = date =>
   format(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 
 export function getEndDateString(integer) {
-  return moment.unix(integer).format('YYYY-MM-DD_HH-mm-ss')
+  return moment.unix(integer).format('MM/DD/YY__HH:mm:ss')
 }
 export function dateHasPassed(unixTimestamp) {
   const date = moment().utc() // moment.utc("2018-03-13T01:24:07.827+00:00")
