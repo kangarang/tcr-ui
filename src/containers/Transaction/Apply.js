@@ -79,7 +79,10 @@ export default ({
         </Button>
         {miningStatus && (
           <div>
-            <SideText color="grey" text={translate('txCost_')} />
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+              {'etherscan'}
+            </Button>
+            {/* <SideText color="grey" text={translate('txCost_')} /> */}
             <TxnProgress />
           </div>
         )}

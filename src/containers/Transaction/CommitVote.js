@@ -11,6 +11,7 @@ import Button from 'components/Button'
 import SidePanelSeparator from './components/SidePanelSeparator'
 
 import { withCommas } from 'utils/_values'
+import { colors } from '../../global-styles'
 export default class CommitVote extends Component {
   render() {
     const {
@@ -23,6 +24,7 @@ export default class CommitVote extends Component {
       handleCommitVote,
       handleRequestVotingRights,
       miningStatus,
+      latestTxn,
     } = this.props
     return (
       <div>
@@ -54,32 +56,41 @@ export default class CommitVote extends Component {
 
             {balances.get('votingRights') === '0' ? (
               <MarginDiv>
-                <SideText text={translate('sidebar_requestVotingRights_instructions')} />
+                <SideText text={translate('ins_requestVotingRights')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>
                   {'Request Voting Rights'}
                 </Button>
               </MarginDiv>
             ) : (
               <MarginDiv>
-                <SideText text={translate('sidebar_commitVote_instructions')} />
-                <Button onClick={e => handleCommitVote('1')} emphasis="positive" mode="strong">
-                  {'Support the applicant'}
-                </Button>
-                <Button onClick={e => handleCommitVote('0')} emphasis="negative" mode="strong">
+                <SideText text={translate('ins_commitVote')} />
+                <Button onClick={e => handleCommitVote('1')}>{'Support the applicant'}</Button>
+                <Button
+                  onClick={e => handleCommitVote('0')}
+                  bgColor={colors.darkRed}
+                  fgColor={'white'}
+                >
                   {'Oppose the applicant'}
                 </Button>
               </MarginDiv>
             )}
           </MarginDiv>
 
-          {miningStatus && <TxnProgress />}
+          {miningStatus && (
+            <div>
+              <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+                {'etherscan'}
+              </Button>
+              <TxnProgress />
+            </div>
+          )}
 
-          <MarginDiv>
-            <SideText text={translate('sidebar_approve_instructions')} />
+          {/* <MarginDiv>
+            <SideText text={translate('ins_approve')} />
             <Button onClick={e => handleApprove('voting')} mode="strong" wide>
               {'Approve tokens for Voting'}
             </Button>
-          </MarginDiv>
+          </MarginDiv> */}
         </SidePanel>
       </div>
     )

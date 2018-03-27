@@ -179,6 +179,7 @@ class Home extends Component {
           handleChallenge={this.handleChallenge}
           selectedOne={this.state.selectedOne}
           miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
 
         <CommitVote
@@ -191,6 +192,7 @@ class Home extends Component {
           handleCommitVote={this.handleCommitVote}
           handleRequestVotingRights={this.handleRequestVotingRights}
           miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
 
         <RevealVote
@@ -203,6 +205,7 @@ class Home extends Component {
           handleApprove={this.handleApprove}
           handleRevealVote={this.handleRevealVote}
           miningStatus={miningStatus}
+          latestTxn={latestTxn}
         />
       </div>
     )

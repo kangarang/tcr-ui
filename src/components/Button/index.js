@@ -8,7 +8,7 @@ import Wrapper from './Wrapper'
 function Button(props) {
   // Render an anchor tag
   let button = (
-    <A href={props.href} onClick={props.onClick} {...props}>
+    <A href={props.href} target="_blank" onClick={props.onClick} {...props}>
       {Children.toArray(props.children)}
     </A>
   )

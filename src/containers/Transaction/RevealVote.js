@@ -20,6 +20,7 @@ export default ({
   handleRevealVote,
   selectedOne,
   miningStatus,
+  latestTxn,
 }) => (
   <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
     <SideSplit
@@ -42,7 +43,7 @@ export default ({
 
     <SideText text={'INSTRUCTIONS'} />
 
-    <SideText text={translate('sidebar_revealVote_instructions')} />
+    <SideText text={translate('ins_revealVote')} />
 
     <MarginDiv>
       <FileInput type="file" name="file" onChange={handleFileInput} />
@@ -52,6 +53,13 @@ export default ({
         {'Reveal Vote'}
       </Button>
     </MarginDiv>
-    {miningStatus && <TxnProgress />}
+    {miningStatus && (
+      <div>
+        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+          {'etherscan'}
+        </Button>
+        <TxnProgress />
+      </div>
+    )}
   </SidePanel>
 )

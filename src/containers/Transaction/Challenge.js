@@ -24,6 +24,7 @@ export default ({
   handleChallenge,
   selectedOne,
   miningStatus,
+  latestTxn,
 }) => (
   <div>
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
@@ -53,7 +54,14 @@ export default ({
         <Button onClick={handleChallenge} mode="strong" wide>
           {'CHALLENGE'}
         </Button>
-        {miningStatus && <TxnProgress />}
+        {miningStatus && (
+          <div>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+              {'etherscan'}
+            </Button>
+            <TxnProgress />
+          </div>
+        )}
       </MarginDiv>
 
       {/* <MarginDiv>
