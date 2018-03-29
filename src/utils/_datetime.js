@@ -9,24 +9,16 @@ const DAY_IN_SECONDS = HOUR_IN_SECONDS * 24
 
 export const difference = (date1, date2) => {
   const totalInSeconds = differenceInSeconds(date1, date2)
-
   let seconds = totalInSeconds
-
   const days = Math.floor(seconds / DAY_IN_SECONDS)
   seconds = seconds % DAY_IN_SECONDS
-
   const hours = Math.floor(seconds / HOUR_IN_SECONDS)
   seconds = seconds % HOUR_IN_SECONDS
-
   const minutes = Math.floor(seconds / MINUTE_IN_SECONDS)
   seconds = seconds % MINUTE_IN_SECONDS
-
   return { days, hours, minutes, seconds, totalInSeconds }
 }
-
-export const formatHtmlDatetime = date =>
-  format(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
-
+export const formatHtmlDatetime = date => format(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 export function getEndDateString(integer) {
   return moment.unix(integer).format('MM/DD/YY__HH:mm:ss')
 }
@@ -35,43 +27,40 @@ export function dateHasPassed(unixTimestamp) {
   // 1520904108 >= unixTimestamp
   return date.unix() >= unixTimestamp
 }
-
-// adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
-export function convertUnixTimeLeft(integer) {
+export function convertUnix(integer) {
   if (!_.isNumber(integer)) {
     return new Error('need integer!')
   }
-  return buildTimeObject(moment.unix(integer).toDate())
+  return buildTimeObject(integer)
 }
+// adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
+export function buildTimeObject(integer) {
+  const date = moment.unix(integer).toDate()
+  console.log('date', date)
 
-function buildTimeObject(d) {
-  const date = d instanceof Date ? d : new Date(0)
   const timestamp = date.getTime() / 1000
+  console.log('timestamp', timestamp)
 
-  const timeleft =
-    timestamp -
-    moment()
-      .utc()
-      .unix()
-  const timesince =
-    moment()
-      .utc()
-      .unix() - timestamp
+  const ts = integer / 1000
+  console.log('ts', ts)
+
+  // prettier-ignore
+  const now = moment().utc().unix()
+
+  const timeleft = timestamp - now
+  const timesince = now - timestamp
 
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])
   const localTimeTwelve = getTwelveHour(localTime)
 
   return {
-    formattedLocal: `${
-      months[date.getMonth()]
-    } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
-      ':'
-    )} ${localAMPM}`,
+    date,
     timeleft,
     timesince,
-    timestamp,
-    date,
+    formattedLocal: `${
+      months[date.getMonth()]
+    } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,
   }
 }
 
