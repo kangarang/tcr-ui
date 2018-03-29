@@ -2,23 +2,13 @@ import { createSelector } from 'reselect'
 
 export const selectHome = state => state.get('home')
 
-export const selectError = createSelector(selectHome, homeState =>
-  homeState.get('error')
-)
-export const selectProvider = createSelector(selectHome, homeState =>
-  homeState.get('provider')
-)
-export const selectAccount = createSelector(selectHome, homeState =>
-  homeState.get('account')
-)
-export const selectNetwork = createSelector(selectHome, homeState =>
-  homeState.get('network')
-)
+export const selectError = createSelector(selectHome, homeState => homeState.get('error'))
+export const selectProvider = createSelector(selectHome, homeState => homeState.get('provider'))
+export const selectAccount = createSelector(selectHome, homeState => homeState.get('account'))
+export const selectNetwork = createSelector(selectHome, homeState => homeState.get('network'))
 
 // Balances
-export const selectBalances = createSelector(selectHome, homeState =>
-  homeState.get('balances')
-)
+export const selectBalances = createSelector(selectHome, homeState => homeState.get('balances'))
 
 // Contracts
 export const selectAllContracts = createSelector(selectHome, homeState =>
@@ -27,86 +17,57 @@ export const selectAllContracts = createSelector(selectHome, homeState =>
 export const selectRegistry = createSelector(selectAllContracts, contracts =>
   contracts.get('registry')
 )
-export const selectToken = createSelector(selectAllContracts, contracts =>
-  contracts.get('token')
-)
-export const selectVoting = createSelector(selectAllContracts, contracts =>
-  contracts.get('voting')
-)
-export const selectParameterizer = createSelector(
-  selectAllContracts,
-  contracts => contracts.get('parameterizer')
+export const selectToken = createSelector(selectAllContracts, contracts => contracts.get('token'))
+export const selectVoting = createSelector(selectAllContracts, contracts => contracts.get('voting'))
+export const selectParameterizer = createSelector(selectAllContracts, contracts =>
+  contracts.get('parameterizer')
 )
 
-export const selectVotingMethods = createSelector(selectVoting, voting =>
-  (voting ? voting.abi : []).filter(
-    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-  )
-)
-export const selectRegistryMethods = createSelector(selectRegistry, registry =>
-  (registry ? registry.abi : []).filter(
-    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-  )
-)
-export const selectTokenMethods = createSelector(selectToken, token =>
-  (token ? token.abi : []).filter(
-    mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-  )
-)
-export const selectVisibilityFilter = createSelector(selectHome, homeState =>
-  homeState.get('vFilter')
-)
-export const selectVisibleRegistryMethod = createSelector(
-  [selectRegistryMethods, selectVisibilityFilter],
-  (registryMethods, vFilter) =>
-    registryMethods.filter(rMeth => rMeth.name === vFilter)
-)
-export const selectVisibleVotingMethod = createSelector(
-  [selectVotingMethods, selectVisibilityFilter],
-  (votingMethods, vFilter) =>
-    votingMethods.filter(vMeth => vMeth.name === vFilter)
-)
-export const selectVisibleTokenMethod = createSelector(
-  [selectTokenMethods, selectVisibilityFilter],
-  (tokenMethods, vFilter) =>
-    tokenMethods.filter(tMeth => tMeth.name === vFilter)
-)
+// export const selectVotingMethods = createSelector(selectVoting, voting =>
+//   (voting ? voting.abi : []).filter(
+//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+//   )
+// )
+// export const selectRegistryMethods = createSelector(selectRegistry, registry =>
+//   (registry ? registry.abi : []).filter(
+//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+//   )
+// )
+// export const selectTokenMethods = createSelector(selectToken, token =>
+//   (token ? token.abi : []).filter(
+//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
+//   )
+// )
+// export const selectVisibilityFilter = createSelector(selectHome, homeState =>
+//   homeState.get('vFilter')
+// )
+// export const selectVisibleRegistryMethod = createSelector(
+//   [selectRegistryMethods, selectVisibilityFilter],
+//   (registryMethods, vFilter) => registryMethods.filter(rMeth => rMeth.name === vFilter)
+// )
+// export const selectVisibleVotingMethod = createSelector(
+//   [selectVotingMethods, selectVisibilityFilter],
+//   (votingMethods, vFilter) => votingMethods.filter(vMeth => vMeth.name === vFilter)
+// )
+// export const selectVisibleTokenMethod = createSelector(
+//   [selectTokenMethods, selectVisibilityFilter],
+//   (tokenMethods, vFilter) => tokenMethods.filter(tMeth => tMeth.name === vFilter)
+// )
 
 // Parameters
-export const selectParameters = createSelector(selectHome, homeState =>
-  homeState.get('parameters')
-)
-
+export const selectParameters = createSelector(selectHome, homeState => homeState.get('parameters'))
 // Listings
-export const selectAllListings = createSelector(selectHome, homeState =>
-  homeState.get('listings')
+export const selectAllListings = createSelector(selectHome, homeState => homeState.get('listings'))
+
+// Only whitelisted listings
+export const selectWhitelist = createSelector(selectAllListings, listings =>
+  listings.filter(li => li.get('status') === '3')
 )
 // Candidate listings
 export const selectCandidates = createSelector(selectAllListings, listings =>
-  listings.filter(
-    li =>
-      !li.getIn(['latest', 'whitelisted']) &&
-      li.get('data') &&
-      !li.getIn(['latest', 'pollID']) &&
-      !li.getIn(['latest', 'event']).includes('Removed')
-  )
+  listings.filter(li => li.get('status') === '1')
 )
 // Only voteable listings
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
-  listings.filter(
-    li =>
-      li.get('data') &&
-      li.getIn(['latest', 'pollID']) &&
-      !li.getIn(['latest', 'event']).includes('Removed')
-  )
-)
-// Only whitelisted listings
-export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(
-    li =>
-      li.getIn(['latest', 'whitelisted']) &&
-      li.get('data') &&
-      !li.getIn(['latest', 'event']).includes('Removed') &&
-      !li.getIn(['latest', 'event']).includes('_Challenge')
-  )
+  listings.filter(li => li.get('status') === '2')
 )

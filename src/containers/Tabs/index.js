@@ -50,11 +50,7 @@ class SimpleTabs extends Component {
     return (
       <div className={classes.root}>
         <AppBar position="static" color="inherit">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-          >
+          <Tabs value={value} onChange={this.handleChange} indicatorColor="primary">
             <Tab label="registry" />
             <Tab label="applications" />
             <Tab label="voting" />
@@ -64,17 +60,19 @@ class SimpleTabs extends Component {
         {value === 0 && (
           <TabContainer>
             <FlexContainer>
-              {whitelist.map(one => (
-                <ListingMediaCard
-                  key={one.get('listingHash')}
-                  one={one}
-                  imgSrc={imgSrc}
-                  listingType={'whitelist'}
-                  openSidePanel={openSidePanel}
-                  chooseTCR={chooseTCR}
-                  registry={registry}
-                />
-              ))}
+              {whitelist
+                .valueSeq()
+                .map(one => (
+                  <ListingMediaCard
+                    key={one.get('listingHash')}
+                    one={one}
+                    imgSrc={imgSrc}
+                    listingType={'whitelist'}
+                    openSidePanel={openSidePanel}
+                    chooseTCR={chooseTCR}
+                    registry={registry}
+                  />
+                ))}
             </FlexContainer>
           </TabContainer>
         )}
@@ -82,17 +80,19 @@ class SimpleTabs extends Component {
         {value === 1 && (
           <TabContainer>
             <FlexContainer>
-              {candidates.map(one => (
-                <ListingMediaCard
-                  key={one.get('listingHash')}
-                  one={one}
-                  imgSrc={imgSrc}
-                  listingType={'candidates'}
-                  openSidePanel={openSidePanel}
-                  handleUpdateStatus={handleUpdateStatus}
-                  updateTrigger={one.getIn(['latest', 'appExpired'])}
-                />
-              ))}
+              {candidates
+                .valueSeq()
+                .map(one => (
+                  <ListingMediaCard
+                    key={one.get('listingHash')}
+                    one={one}
+                    imgSrc={imgSrc}
+                    listingType={'candidates'}
+                    openSidePanel={openSidePanel}
+                    handleUpdateStatus={handleUpdateStatus}
+                    updateTrigger={one.getIn(['appExpiry', 'appExpired'])}
+                  />
+                ))}
             </FlexContainer>
           </TabContainer>
         )}
@@ -100,18 +100,20 @@ class SimpleTabs extends Component {
         {value === 2 && (
           <TabContainer>
             <FlexContainer>
-              {faceoffs.map(one => (
-                <ListingMediaCard
-                  key={one.get('listingHash')}
-                  one={one}
-                  imgSrc={imgSrc}
-                  listingType={'faceoffs'}
-                  openSidePanel={openSidePanel}
-                  handleUpdateStatus={handleUpdateStatus}
-                  updateTrigger={one.getIn(['latest', 'revealExpired'])}
-                  revealTrigger={one.getIn(['latest', 'commitExpired'])}
-                />
-              ))}
+              {faceoffs
+                .valueSeq()
+                .map(one => (
+                  <ListingMediaCard
+                    key={one.get('listingHash')}
+                    one={one}
+                    imgSrc={imgSrc}
+                    listingType={'faceoffs'}
+                    openSidePanel={openSidePanel}
+                    handleUpdateStatus={handleUpdateStatus}
+                    updateTrigger={one.getIn(['latest', 'revealExpired'])}
+                    revealTrigger={one.getIn(['latest', 'commitExpired'])}
+                  />
+                ))}
             </FlexContainer>
           </TabContainer>
         )}

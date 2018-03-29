@@ -1,123 +1,76 @@
 import { fromJS } from 'immutable'
-
-import { baseToConvertedUnit } from 'utils/_units'
-import { convertUnixTimeLeft, dateHasPassed } from 'utils/_datetime'
-
+import { convertUnix } from 'utils/_datetime'
 import { getIPFSData } from './ipfs'
 
-// TODO: separate concerns. Type check
-export async function convertLogToListing(logData, block, tx, event, registry, voting) {
-  let { listingHash, challengeID, data, pollID, numTokens } = logData
-  let whitelisted
-  let ipfsContent
-  let ipfsData
-  let ipfsID
+export async function convertLogToGolem(log, block, tx) {
+  let { listingHash, deposit, appEndDate, data } = log
 
-  if (event === '_ApplicationRemoved' || event === '_ListingRemoved') {
-    whitelisted = false
-    numTokens = 0
-  }
-  if ((!listingHash && event === 'VoteCommitted') || event === 'VoteRevealed') {
-    return false
-    // return {
-    //   latest: { sender: tx.from, pollID: pollID.toString(), numTokens: numTokens.toString() },
-    // }
-  }
-  let listing = await registry.listings(listingHash)
-  numTokens = listing[3].toString(10) ? baseToConvertedUnit(listing[3], 18) : false
-  whitelisted = listing[1]
-  let aeUnix = listing[0].toNumber()
-  let appExpiry = convertUnixTimeLeft(aeUnix)
-  let appExpired = dateHasPassed(aeUnix)
+  // application expiration details
+  const appExpiry = convertUnix(appEndDate)
 
-  if (event === '_Application' && data.includes('Qm')) {
-    const content = await getIPFSData(data)
-    ipfsContent = content
-    ipfsID = content.id
-    ipfsData = content.data ? content.data : content.registry && content.registry
-  }
+  // ipfs api
+  const ipfsContent = await getIPFSData(data)
+  const ipfsID = ipfsContent.id
+  const ipfsData = ipfsContent.data
+    ? ipfsContent.data
+    : ipfsContent.registry && ipfsContent.registry
 
-  if (event === '_NewListingWhitelisted') {
-    whitelisted = true
-  }
+  // Golem: an animated anthropomorphic being that is
+  // magically created entirely from inanimate matter
 
-  let commitEndDate
-  let commitExpiry
-  let commitExpired
-  let revealEndDate
-  let revealExpiry
-  let revealExpired
-
-  if (pollID || challengeID) {
-    if (challengeID) {
-      pollID = challengeID
-    }
-    pollID = pollID.toString()
-    const poll = await voting.pollMap(pollID)
-    commitEndDate = poll[0].toNumber()
-    commitExpiry = convertUnixTimeLeft(commitEndDate)
-    commitExpired = dateHasPassed(commitEndDate)
-    revealEndDate = poll[1].toNumber()
-    revealExpiry = convertUnixTimeLeft(revealEndDate)
-    revealExpired = dateHasPassed(revealEndDate)
+  // prettier-ignore
+  const golem = {
+    // meta-data
+    listingHash,              // id
+    owner: tx.from,           // actions / view
+    challenger: false,        // actions / view
+    pollID: false,            // actions / view
+    ipfsHash: data,           // ipfs api
+    txHash: tx.hash,          // transaction of apply()
+    blockHash: block.hash,    // block of apply()
+    ts: block.timestamp,      // block of apply()
+    // view-data
+    status: '1',              // application
+    ipfsID,                   // ipfs -> content -> id (usually the)
+    ipfsData,                 // ipfs -> content -> data
+    unstakedDeposit: deposit, // numTokens potentially at-risk for Applicant
+    appExpiry,                // datetime
+    commitExpiry: false,      // datetime
+    revealExpiry: false,      // datetime
   }
-  let appInfo = {
-    listingHash,
-    data,
-    appExpiry,
-  }
-  if (event === '_Application') {
-    appInfo = {
-      ...appInfo,
-      owner: event === '_Application' && tx.from,
-      ipfsContent,
-      ipfsData,
-      ipfsID,
-    }
-  }
-  return {
-    ...appInfo,
-    latest: {
-      whitelisted,
-      appExpired,
-      txHash: tx.hash,
-      blockHash: block.hash,
-      blockNumber: block.number,
-      ts: block.timestamp,
-      timesince: appExpiry && appExpiry.timesince,
-      sender: tx.from,
-      event,
-      pollID: pollID ? pollID : challengeID ? challengeID : false,
-      numTokens,
-      commitExpiry,
-      commitExpired,
-      revealExpiry,
-      revealExpired,
-    },
-  }
+  return golem
 }
 
-export function updateListings(listings, newListings) {
-  // const sortedListings = listings
-  // console.log('sortedListings', sortedListings)
-  const latestListings = fromJS(newListings).reduce((acc, val) => {
-    const index = acc.findIndex(it => it.get('listingHash') === val.get('listingHash'))
-    // case: new listing
-    // add to list, return the list
-    if (index === -1) {
-      return acc.push(fromJS(val))
-    }
-    // case: existing listing
-    // if the timestamp is the more recent,
-    // update the listing's `latest` object,
-    // return the list
-    if (val.getIn(['latest', 'ts']) > acc.getIn([index, 'latest', 'ts'])) {
-      return acc.setIn([index, 'latest'], fromJS(val.get('latest')))
-    }
-    // case: not unique, not more recent
-    // return the list
-    return acc
-  }, fromJS(listings)) // initial value & the shape we want the final output of Array.reduce to look like
+// There can only be 1 golem per listingHash (i.e. Application)
+// in the listings Map, set the golem:
+// key:   golem.listingHash
+// value: golem
+export const updateApplications = (applications, newApplications) =>
+  // Array.reduce(reducer, initialAcc)
+  // reducer: (acc, val) => acc
+  // initialAcc: applications
+  fromJS(newApplications).reduce((acc, val) => {
+    // TODO: check block.timestamp to make sure it doesn't overwrite a newer application
+    return acc.set(val.get('listingHash'), fromJS(val))
+  }, fromJS(applications))
 
-  return latestListings
+export function updateListings(listings, newListings) {
+  return fromJS(newListings).reduce((acc, val) => {
+    // case: listings does not include newListings[val]
+    // note: this should only happen if it's an _Application event
+    // set: listings[val.listingHash] = val
+    if (!acc.has(val.get('listingHash'))) {
+      return acc.set(val.get('listingHash'), fromJS(val))
+    }
+    // case: listings includes newListings[val]
+    // note: duplicate events on the same listingHash
+    // set: listings.listings.events[val.events.txHash] = val.events
+    return (
+      acc
+        .setIn([val.listingHash, 'events', val.event.blockTimestamp], fromJS(val.event))
+        // assuming the list is sorted by block.timestamp
+        .setIn([val.listingHash, 'status'], fromJS(val.status))
+        .setIn([val.listingHash, 'latest'], fromJS(val.event))
+    )
+  }, fromJS(listings))
 }

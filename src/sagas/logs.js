@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { setListings } from 'actions'
 import { SET_CONTRACTS } from 'actions/constants'
-import { convertLogToListing, updateListings } from 'libs/listings'
+import { convertLogToGolem, updateApplications } from 'libs/listings'
 
 import { selectProvider, selectRegistry, selectVoting } from '../selectors'
 
@@ -22,16 +22,16 @@ export function* getHistorySaga(ContractEvents) {
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
 
-  const freshListings = yield all(
+  const freshApplications = yield all(
     ContractEvents.map(async ContractEvent => {
       return decodeLogs(provider, registry, ContractEvent, voting, registry.address)
     })
   )
-  const flattened = _.flatten(freshListings)
-  console.log('flattened', flattened)
-  const updatedListings = yield call(updateListings, [], flattened)
-  console.log('updatedListings', updatedListings.toJS())
-  yield put(setListings(updatedListings))
+  const flattenedApps = _.flatten(freshApplications)
+  console.log('flattenedApps', flattenedApps)
+  const updatedApplications = yield call(updateApplications, {}, flattenedApps)
+  console.log('updatedApplications', updatedApplications.toJS())
+  yield put(setListings(updatedApplications))
 }
 
 let lastReadBlockNumber = 1917000
@@ -54,7 +54,7 @@ async function decodeLogs(provider, registry, ContractEvent, voting, address) {
     const { block, tx } = await getBlockAndTxnFromLog(log, provider)
 
     // transform into a listing object
-    const listing = await convertLogToListing(
+    const listing = await convertLogToGolem(
       logData,
       block,
       tx,
@@ -67,11 +67,11 @@ async function decodeLogs(provider, registry, ContractEvent, voting, address) {
   return listings
 }
 
-async function decodeLog(ContractEvent, log) {
+export async function decodeLog(ContractEvent, log) {
   return ContractEvent.parse(log.topics, log.data)
 }
 
-async function getBlockAndTxnFromLog(log, provider) {
+export async function getBlockAndTxnFromLog(log, provider) {
   // get block and txn
   const block = await provider.getBlock(log.blockHash)
   const tx = await provider.getTransaction(log.transactionHash)

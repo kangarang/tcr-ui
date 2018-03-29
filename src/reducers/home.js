@@ -4,13 +4,10 @@ import {
   LOGIN_ERROR,
   // CONTRACT_ERROR,
   SET_WALLET,
+  SET_REGISTRY_CONTRACT,
   SET_CONTRACTS,
   UPDATE_BALANCES,
-  REQUEST_MODAL_METHOD,
   SET_LISTINGS,
-  DELETE_LISTINGS,
-  IPFS_ABI_RETRIEVED,
-  SET_REGISTRY_CONTRACT,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -23,8 +20,6 @@ const initialState = fromJS({
     registryAllowance: '0',
     votingAllowance: '0',
     votingRights: '0',
-    lockedTokens: '0',
-    claimableReward: '0',
   },
   contracts: {
     registry: {},
@@ -37,7 +32,7 @@ const initialState = fromJS({
     tokenDecimals: '18',
   },
   parameters: { minDeposit: '0', applyStageLen: '0' },
-  listings: [],
+  listings: {},
   vFilter: false,
   ipfs: {},
 })
@@ -54,8 +49,6 @@ function homeReducer(state = initialState, action) {
         .set('provider', fromJS(action.payload.provider))
         .set('account', fromJS(action.payload.account))
         .set('network', fromJS(action.payload.network))
-    case IPFS_ABI_RETRIEVED:
-      return state.setIn(['ipfs', action.payload.id], fromJS(action.payload))
     case SET_REGISTRY_CONTRACT:
       return state.setIn(['contracts', 'registry'], fromJS(action.payload))
     case SET_CONTRACTS:
@@ -65,24 +58,12 @@ function homeReducer(state = initialState, action) {
     // .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
     case UPDATE_BALANCES:
       return state.set('balances', fromJS(action.payload.balances))
-    case REQUEST_MODAL_METHOD:
-      return state.set('request', fromJS(action.payload))
     // TODO: semantics: set listings
     case SET_LISTINGS:
       return state.set('listings', fromJS(action.payload))
-    case DELETE_LISTINGS:
-      return deleteObjectInArray(state, action.payload)
     default:
       return state
   }
-}
-
-function deleteObjectInArray(array, payload) {
-  const index = array.findIndex(ri => ri.get('listingHash') === payload)
-  if (index !== -1) {
-    return array.delete(index)
-  }
-  return array
 }
 
 export default homeReducer
