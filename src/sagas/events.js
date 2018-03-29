@@ -4,7 +4,7 @@ import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/
 import { setListings } from '../actions'
 import { SET_CONTRACTS } from 'actions/constants'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
-import { getBlockAndTxnFromLog, decodeLog } from 'libs/logs'
+import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
 import { updateListings, convertLogToListing } from 'libs/listings'
 
 export default function* eventsSaga() {

@@ -1,15 +1,10 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
-
-import abis from '../abis'
-
 import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from 'actions/constants'
 import { setContracts, contractError, updateBalancesRequest, setRegistryContract } from '../actions'
-
-import { selectProvider } from '../selectors'
-
 import { setupRegistry, setupContract } from 'libs/contracts'
-
 import { baseToConvertedUnit } from 'utils/_units'
+import abis from '../abis'
+import { selectProvider } from '../selectors'
 
 export default function* root() {
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
@@ -27,7 +22,6 @@ export function* registrySaga(action) {
     const registry = yield call(setupRegistry, provider, abis.registry.abi, address)
     const byteCode = yield provider.getCode(address)
     if (byteCode.toString() !== abis.registry.deployedBytecode) {
-      console.log('mismatch bytecode')
       // throw new Error('mismatch bytecode')
     }
     yield put(setRegistryContract(registry))

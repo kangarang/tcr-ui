@@ -1,19 +1,17 @@
 import React from 'react'
 import translate from 'translations'
 
-import SidePanel from './SidePanel'
-import TxnProgress from './TxnProgress'
-
-import { SideText, SideTextInput } from './components'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
+import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
-import { colors } from '../../global-styles'
 
-// import { baseToConvertedUnit, BN } from 'utils/_units'
-// import { withCommas } from 'utils/_values'
+import SidePanel from './SidePanel'
+import TxnProgress from './TxnProgress'
+
+import { colors } from '../../global-styles'
 
 export default ({
   opened,
