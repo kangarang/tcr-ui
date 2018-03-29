@@ -11,6 +11,7 @@ import {
   SET_TOKENS_ALLOWED,
   UPDATE_BALANCES,
   UPDATE_BALANCES_REQUEST,
+  GET_ETHEREUM,
 } from './actions/constants'
 
 import createReducer from './reducers'
@@ -32,6 +33,7 @@ const stateTransformer = state => {
 
 const logger = createLogger({
   predicate: (getState, action) =>
+    action.type !== GET_ETHEREUM &&
     action.type !== GET_TOKENS_ALLOWED &&
     action.type !== POLL_LOGS_REQUEST &&
     action.type !== GET_ETH_PROVIDER &&
@@ -56,11 +58,7 @@ export default function configureStore(initialState = {}) {
       : compose
   /* eslint-enable */
 
-  const store = createStore(
-    createReducer(),
-    fromJS(initialState),
-    composeEnhancers(...enhancers)
-  )
+  const store = createStore(createReducer(), fromJS(initialState), composeEnhancers(...enhancers))
 
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)

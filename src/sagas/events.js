@@ -1,22 +1,9 @@
 import { eventChannel } from 'redux-saga'
-import {
-  call,
-  put,
-  select,
-  takeLatest,
-  cancelled,
-  takeEvery,
-} from 'redux-saga/effects'
-import _ from 'lodash'
+import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
 import { setListings } from '../actions'
 import { SET_CONTRACTS } from 'actions/constants'
-import {
-  selectRegistry,
-  selectAllListings,
-  selectProvider,
-  selectVoting,
-} from '../selectors'
+import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { getBlockAndTxnFromLog, decodeLog } from 'libs/logs'
 import { updateListings, convertLogToListing } from 'libs/listings'
 
@@ -49,24 +36,9 @@ function* setupEventChannels() {
   // const channel = yield call(createChannel, provider, _.concat(aTopics, cTopics, nlwTopics, arTopics, lrTopics), _Application)
   const aChannel = yield call(createChannel, provider, aTopics, _Application)
   const cChannel = yield call(createChannel, provider, cTopics, _Challenge)
-  const nlwChannel = yield call(
-    createChannel,
-    provider,
-    nlwTopics,
-    _NewListingWhitelisted
-  )
-  const arChannel = yield call(
-    createChannel,
-    provider,
-    arTopics,
-    _ApplicationRemoved
-  )
-  const lrChannel = yield call(
-    createChannel,
-    provider,
-    lrTopics,
-    _ListingRemoved
-  )
+  const nlwChannel = yield call(createChannel, provider, nlwTopics, _NewListingWhitelisted)
+  const arChannel = yield call(createChannel, provider, arTopics, _ApplicationRemoved)
+  const lrChannel = yield call(createChannel, provider, lrTopics, _ListingRemoved)
 
   // grab voting events
   const { VoteCommitted, VoteRevealed } = voting.interface.events

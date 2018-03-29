@@ -20,7 +20,7 @@ export default class CommitVote extends Component {
       balances,
       selectedOne,
       handleInputChange,
-      handleApprove,
+      // handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
       miningStatus,

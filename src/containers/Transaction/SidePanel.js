@@ -6,7 +6,6 @@ import { Text } from '@aragon/ui'
 
 import close from 'assets/close.svg'
 
-import { unselectable } from 'utils/_styles'
 import { getPublicUrl, prefixUrl } from 'utils/_url'
 import { colors } from '../../global-styles'
 
@@ -55,7 +54,6 @@ const StyledPanelHeader = styled.header`
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
   padding-bottom: 20px;
-  ${unselectable()};
 `
 
 const StyledPanelScrollView = styled.div`

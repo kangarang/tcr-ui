@@ -10,11 +10,11 @@ export function setProvider() {
         ? 'rinkeby'
         : networkID === '1' ? 'mainnet' : networkID === '420' ? 'ganache' : 'unknown'
     provider = new providers.Web3Provider(window.web3.currentProvider, network)
-    console.log('web3 provider', provider)
+    // console.log('web3 provider', provider)
     return provider
   }
   provider = new providers.JsonRpcProvider('http://localhost:8545')
-  console.log('json rpc provider', provider)
+  // console.log('json rpc provider', provider)
   return provider
 }
 

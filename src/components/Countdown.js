@@ -6,7 +6,6 @@ import redraw from './redraw'
 import IconTime from './Time'
 
 import { difference, formatHtmlDatetime } from 'utils/_datetime'
-import { unselectable } from 'utils/_styles'
 import { colors } from '../global-styles'
 
 const FRAME_EVERY = 1000 / 30 // 30 FPS is enough for a ticker
@@ -64,7 +63,6 @@ const Countdown = ({ end }) => {
 const Main = styled.time`
   width: 12em;
   white-space: nowrap;
-  ${unselectable()};
 `
 
 const IconWrapper = styled.span`

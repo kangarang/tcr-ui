@@ -15,12 +15,6 @@ import { colors } from '../../global-styles'
 // import { baseToConvertedUnit, BN } from 'utils/_units'
 // import { withCommas } from 'utils/_values'
 
-const styles = {
-  textInput: {
-    height: '50px',
-  },
-}
-
 export default ({
   opened,
   closeSidePanel,
