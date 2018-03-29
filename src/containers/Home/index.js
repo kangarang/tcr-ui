@@ -2,31 +2,20 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import { setupEthereum, sendTransaction, chooseTCR } from '../../actions'
 
 import {
-  setupEthereum,
-  requestModalMethod,
-  sendTransaction,
-  callRequested,
-  chooseTCR,
-} from 'actions'
-
-import {
-  selectProvider,
-  selectAccount,
-  selectNetwork,
+  selectError,
   selectBalances,
-  selectRegistry,
-  selectToken,
-  selectVoting,
-  selectParameters,
+  selectWhitelist,
   selectCandidates,
   selectFaceoffs,
-  selectWhitelist,
-  selectError,
   selectAllContracts,
-  selectLatestTxn,
+  selectRegistry,
+  selectToken,
+  selectParameters,
   selectMiningStatus,
+  selectLatestTxn,
 } from 'selectors'
 
 import { convertedToBaseUnit } from 'utils/_units'
@@ -121,7 +110,6 @@ class Home extends Component {
       candidates,
       faceoffs,
       whitelist,
-      // account,
       registry,
       balances,
       parameters,
@@ -217,6 +205,9 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {
+    const { _Application } = this.props.registry.interface.events
+    console.log('_Application', _Application)
+
     const args = [
       this.state.listingName,
       convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18),
@@ -268,17 +259,12 @@ function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(setupEthereum(network)),
     onChooseTCR: tcr => dispatch(chooseTCR(tcr)),
-    onRequestModalMethod: e => dispatch(requestModalMethod(e)),
     onSendTransaction: payload => dispatch(sendTransaction(payload)),
-    onCall: payload => dispatch(callRequested(payload)),
   }
 }
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
-  provider: selectProvider,
-  account: selectAccount,
-  network: selectNetwork,
 
   balances: selectBalances,
   miningStatus: selectMiningStatus,
@@ -287,7 +273,6 @@ const mapStateToProps = createStructuredSelector({
   contracts: selectAllContracts,
   registry: selectRegistry,
   token: selectToken,
-  voting: selectVoting,
 
   parameters: selectParameters,
 
