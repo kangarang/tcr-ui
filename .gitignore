@@ -5,6 +5,7 @@
 /.vscode
 /node_modules
 /build
+/tcr-archived
 /tcr
 
 .DS_Store

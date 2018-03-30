@@ -90,7 +90,7 @@ class SimpleTabs extends Component {
                     listingType={'candidates'}
                     openSidePanel={openSidePanel}
                     handleUpdateStatus={handleUpdateStatus}
-                    updateTrigger={one.getIn(['appExpiry', 'appExpired'])}
+                    updateTrigger={one.getIn(['appExpiry', 'expired'])}
                   />
                 ))}
             </FlexContainer>
@@ -110,8 +110,8 @@ class SimpleTabs extends Component {
                     listingType={'faceoffs'}
                     openSidePanel={openSidePanel}
                     handleUpdateStatus={handleUpdateStatus}
-                    updateTrigger={one.getIn(['latest', 'revealExpired'])}
-                    revealTrigger={one.getIn(['latest', 'commitExpired'])}
+                    updateTrigger={one.getIn(['revealExpiry', 'expired'])}
+                    revealTrigger={one.getIn(['commitExpiry', 'expired'])}
                   />
                 ))}
             </FlexContainer>

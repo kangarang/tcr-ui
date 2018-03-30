@@ -58,6 +58,7 @@ export function buildTimeObject(integer) {
     date,
     timeleft,
     timesince,
+    expired: dateHasPassed(timestamp),
     formattedLocal: `${
       months[date.getMonth()]
     } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(':')} ${localAMPM}`,

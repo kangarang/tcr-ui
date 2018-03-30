@@ -5,7 +5,7 @@ import { setListings } from '../actions'
 import { SET_CONTRACTS } from 'actions/constants'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
-import { updateListings, convertLogToListing } from 'libs/listings'
+import { updateListings, convertLogToGolem } from 'libs/listings'
 
 export default function* eventsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventChannels)
@@ -100,7 +100,7 @@ function* handleEventEmission({ ContractEvent, log }) {
   const { block, tx } = yield call(getBlockAndTxnFromLog, log, provider)
 
   const listing = yield call(
-    convertLogToListing,
+    convertLogToGolem,
     logData,
     block,
     tx,

@@ -30,11 +30,11 @@ export function* registrySaga(action) {
   }
 }
 
-export function* contractsSaga(action) {
-  const provider = yield select(selectProvider)
-  const registry = action.payload
-
+function* contractsSaga(action) {
   try {
+    const provider = yield select(selectProvider)
+    const registry = action.payload
+
     let [token, parameterizer, voting] = yield all([
       call(setupContract, provider, abis.token.abi, registry, 'token'),
       call(setupContract, provider, abis.parameterizer.abi, registry, 'parameterizer'),
@@ -50,7 +50,7 @@ export function* contractsSaga(action) {
       tokenName,
       tokenDecimals,
       tokenSymbol,
-      registryName,
+      // registryName,
     ] = yield all([
       call(parameterizer.get, 'minDeposit'),
       call(parameterizer.get, 'applyStageLen'),
@@ -60,7 +60,7 @@ export function* contractsSaga(action) {
       call(token.name),
       call(token.decimals),
       call(token.symbol),
-      call(registry.name),
+      // call(registry, 'name'),
     ])
 
     const parameters = {
@@ -82,7 +82,7 @@ export function* contractsSaga(action) {
           tokenSymbol,
           tokenName,
           tokenDecimals: tokenDecimals.toString(10),
-          registryName,
+          // registryName,
         },
       })
     )

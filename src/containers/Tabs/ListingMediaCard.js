@@ -64,7 +64,7 @@ function ListingMediaCard(props) {
                       >
                         {'Commit Vote'}
                       </Button>
-                      <Countdown end={one.getIn(['latest', 'commitExpiry', 'date'])} />
+                      <Countdown end={one.getIn(['commitExpiry', 'date'])} />
                     </div>
                   )}
                 {revealTrigger &&
@@ -77,7 +77,7 @@ function ListingMediaCard(props) {
                       >
                         {'Reveal Vote'}
                       </Button>
-                      <Countdown end={one.getIn(['latest', 'revealExpiry', 'date'])} />
+                      <Countdown end={one.getIn(['revealExpiry', 'date'])} />
                     </div>
                   )}
               </div>
@@ -93,7 +93,7 @@ function ListingMediaCard(props) {
                 <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
-            {registry && registry.address === '0xeac7a44f139dde706126d1c5947945daf999dc3f' ? (
+            {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
               <Button onClick={e => chooseTCR(one.get('ipfsData'))}>{'Select TCR'}</Button>
             ) : (
               updateTrigger && (

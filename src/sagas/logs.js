@@ -17,7 +17,7 @@ export function* setupEventsSaga() {
   yield call(getHistorySaga, [_Application])
 }
 
-export function* getHistorySaga(ContractEvents) {
+function* getHistorySaga(ContractEvents) {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
