@@ -1,5 +1,6 @@
 import React from 'react'
 import translate from 'translations'
+import { Text } from '@aragon/ui'
 
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
@@ -7,6 +8,8 @@ import Button from 'components/Button'
 import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
+
+import { BN, baseToConvertedUnit } from 'utils/_units'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
@@ -78,19 +81,16 @@ export default ({
             <TxnProgress />
           </div>
         )}
-        {/* {latestTxn && (
-          <a
-            target="_blank"
-            href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}
-          >
+        {latestTxn && (
+          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
             {latestTxn.get('tx')}
           </a>
-        )} */}
+        )}
       </MarginDiv>
 
       {/* if you wanna see approve, you'll see it */}
       {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
-      {/* <MarginDiv>
+      <MarginDiv>
         {visibleApprove ? (
           <div>
             <Button onClick={e => handleApprove('registry')} mode="strong">
@@ -108,7 +108,23 @@ export default ({
                 <Button onClick={e => handleApprove('registry')} mode="strong">
                   {'Approve tokens for Registry'}
                 </Button>
-                {miningStatus && <TxnProgress />}
+                {miningStatus && (
+                  <div>
+                    <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+                      {'etherscan'}
+                    </Button>
+                    {/* <SideText color="grey" text={translate('txCost_')} /> */}
+                    <TxnProgress />
+                  </div>
+                )}
+                {latestTxn && (
+                  <a
+                    target="_blank"
+                    href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}
+                  >
+                    {latestTxn.get('tx')}
+                  </a>
+                )}
               </div>
             ) : (
               <Button onClick={openApprove} mode="">
@@ -117,7 +133,7 @@ export default ({
             )}
           </div>
         )}
-      </MarginDiv> */}
+      </MarginDiv>
 
       {/* <SideSplit
         leftTitle={'Application Period'}

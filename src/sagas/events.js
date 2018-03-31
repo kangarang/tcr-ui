@@ -2,77 +2,78 @@ import { eventChannel } from 'redux-saga'
 import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
 import { setListings } from '../actions'
-import { SET_CONTRACTS } from 'actions/constants'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
-import { updateListings, convertLogToGolem } from 'libs/listings'
+import { updateListings, findGolem, changeGolem } from 'libs/listings'
+import { SET_REGISTRY_CONTRACT } from '../actions/constants'
+import { fromJS } from 'immutable'
 
 export default function* eventsSaga() {
-  yield takeLatest(SET_CONTRACTS, setupEventChannels)
+  yield takeLatest(SET_REGISTRY_CONTRACT, setupEventChannels)
 }
 
 function* setupEventChannels() {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
-  const voting = yield select(selectVoting)
 
   // grab registry events
   const {
     _Application,
     _Challenge,
-    _NewListingWhitelisted,
+    _ApplicationWhitelisted,
     _ApplicationRemoved,
+    _ChallengeSucceeded,
     _ListingRemoved,
+    // _ListingWithdrawn,
   } = registry.interface.events
 
   // extract the topics
   const aTopics = _Application.topics
   const cTopics = _Challenge.topics
-  const nlwTopics = _NewListingWhitelisted.topics
+  const wlTopics = _ApplicationWhitelisted.topics
   const arTopics = _ApplicationRemoved.topics
+  const csTopics = _ChallengeSucceeded.topics
   const lrTopics = _ListingRemoved.topics
 
   // create channels for each event-topic
-  // const channel = yield call(createChannel, provider, _.concat(aTopics, cTopics, nlwTopics, arTopics, lrTopics), _Application)
   const aChannel = yield call(createChannel, provider, aTopics, _Application)
   const cChannel = yield call(createChannel, provider, cTopics, _Challenge)
-  const nlwChannel = yield call(createChannel, provider, nlwTopics, _NewListingWhitelisted)
+  const wlChannel = yield call(createChannel, provider, wlTopics, _ApplicationWhitelisted)
   const arChannel = yield call(createChannel, provider, arTopics, _ApplicationRemoved)
+  const csChannel = yield call(createChannel, provider, csTopics, _ChallengeSucceeded)
   const lrChannel = yield call(createChannel, provider, lrTopics, _ListingRemoved)
 
-  // grab voting events
-  const { VoteCommitted, VoteRevealed } = voting.interface.events
+  // // grab voting events
+  // const { VoteCommitted, VoteRevealed } = voting.interface.events
 
-  // extract the topics
-  const vcTopics = VoteCommitted.topics
-  const vrTopics = VoteRevealed.topics
+  // // extract the topics
+  // const vcTopics = VoteCommitted.topics
+  // const vrTopics = VoteRevealed.topics
 
-  // create channels for each event-topic
-  const vcChannel = yield call(createChannel, provider, vcTopics, VoteCommitted)
-  const vrChannel = yield call(createChannel, provider, vrTopics, VoteRevealed)
+  // // create channels for each event-topic
+  // const vcChannel = yield call(createChannel, provider, vcTopics, VoteCommitted)
+  // const vrChannel = yield call(createChannel, provider, vrTopics, VoteRevealed)
 
   try {
     while (true) {
-      // yield takeEvery(channel, handleEventEmission)
       yield takeEvery(aChannel, handleEventEmission)
       yield takeEvery(cChannel, handleEventEmission)
-      yield takeEvery(nlwChannel, handleEventEmission)
+      yield takeEvery(wlChannel, handleEventEmission)
       yield takeEvery(arChannel, handleEventEmission)
+      yield takeEvery(csChannel, handleEventEmission)
       yield takeEvery(lrChannel, handleEventEmission)
-      yield takeEvery(vcChannel, handleEventEmission)
-      yield takeEvery(vrChannel, handleEventEmission)
+      // yield takeEvery(vcChannel, handleEventEmission)
+      // yield takeEvery(vrChannel, handleEventEmission)
     }
   } finally {
     if (yield cancelled()) {
       console.log('LISTENING CANCELLED')
-      // channel.close()
       aChannel.close()
       cChannel.close()
-      nlwChannel.close()
+      wlChannel.close()
       arChannel.close()
+      csChannel.close()
       lrChannel.close()
-      vcChannel.close()
-      vrChannel.close()
     }
   }
 }
@@ -81,36 +82,34 @@ function* setupEventChannels() {
 // for events from sources other than the Redux store
 const createChannel = (provider, eventTopics, ContractEvent) =>
   eventChannel(emitter => {
-    // console.log(ContractEvent.name, 'topics:', eventTopics)
     provider.removeAllListeners(eventTopics)
     const event = provider.on(eventTopics, function(log) {
-      console.log(ContractEvent.name)
+      console.log(ContractEvent.name, log)
       emitter({ ContractEvent, log })
     })
     return () => event.stopWatching()
   })
 
 function* handleEventEmission({ ContractEvent, log }) {
+  console.log('emit!')
+  console.log(ContractEvent.name, log)
   const provider = yield select(selectProvider)
-  const registry = yield select(selectRegistry)
-  const voting = yield select(selectVoting)
   const listings = yield select(selectAllListings)
 
-  const logData = yield call(decodeLog, ContractEvent, log)
   const { block, tx } = yield call(getBlockAndTxnFromLog, log, provider)
-
-  const listing = yield call(
-    convertLogToGolem,
-    logData,
-    block,
-    tx,
-    ContractEvent.name,
-    registry,
-    voting
-  )
-  console.log('listing', listing)
-  const updatedListings = yield call(updateListings, listings, [listing])
-  console.log('updatedListings', updatedListings.toJS())
-
-  yield put(setListings(updatedListings))
+  const txData = {
+    txHash: tx.hash,
+    blockNumber: block.number,
+    blockHash: block.hash,
+    ts: block.timestamp,
+  }
+  if (log.listingHash) {
+    const golem = yield call(findGolem, log.listingHash, listings)
+    console.log('golem', golem)
+    // const listing = yield call(changeGolem, golem, ContractEvent.name, log, tx.from)
+    // console.log('listing', listing)
+    // const updatedListings = listings.set(log.listingHash, fromJS(listing))
+    // console.log('updatedListings', updatedListings.toJS())
+    // yield put(setListings(updatedListings))
+  }
 }

@@ -5,20 +5,12 @@ import _ from 'lodash'
 import { SEND_TRANSACTION } from 'actions/constants'
 import { txnMining, txnMined, clearTxn } from 'actions/transactions'
 
-import {
-  selectProvider,
-  selectRegistry,
-  selectVoting,
-  selectToken,
-} from '../selectors'
+import { selectProvider, selectRegistry, selectVoting, selectToken } from '../selectors'
 import { ipfsAddData } from 'libs/ipfs'
 
 import { getListingHash } from 'utils/_values'
-import {
-  commitVoteSaga,
-  revealVoteSaga,
-  requestVotingRightsSaga,
-} from 'sagas/vote'
+import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from 'sagas/vote'
+import { updateBalancesRequest } from '../actions'
 
 export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
@@ -31,11 +23,7 @@ export function* handleSendTransaction(action) {
   const voting = yield select(selectVoting)
   const registry = yield select(selectRegistry)
 
-  if (
-    methodName === 'apply' ||
-    methodName === 'challenge' ||
-    methodName === 'updateStatus'
-  ) {
+  if (methodName === 'apply' || methodName === 'challenge' || methodName === 'updateStatus') {
     yield call(registryTxnSaga, action)
   } else if (methodName === 'requestVotingRights') {
     yield call(requestVotingRightsSaga, action)
@@ -56,10 +44,10 @@ export function* handleSendTransaction(action) {
 
 export function* registryTxnSaga(action) {
   const registry = yield select(selectRegistry)
-  const methodName = action.payload.methodName
+  const { methodName } = action.payload
 
   // typecheck arguments
-  let args = action.payload.args.map(arg => {
+  const args = action.payload.args.map(arg => {
     if (_.isObject(arg)) {
       return arg.toString()
     } else if (_.isString(arg)) {
@@ -69,18 +57,22 @@ export function* registryTxnSaga(action) {
     return arg
   })
 
+  let finalArgs = _.clone(args)
+
   if (methodName === 'apply') {
     const fileHash = yield call(ipfsAddData, {
       id: args[0], // listing string (name)
       data: args[2], // data (address)
     })
     // hash the string
-    args[0] = getListingHash(args[0])
+    finalArgs[0] = getListingHash(args[0])
     // use ipfs CID as the _data field in the application
-    args[2] = fileHash
+    finalArgs[2] = fileHash
   }
 
-  yield call(sendTransactionSaga, registry, methodName, args)
+  console.log('finalArgs', finalArgs)
+
+  yield call(sendTransactionSaga, registry, methodName, finalArgs)
 }
 
 export function* sendTransactionSaga(contract, method, args) {
@@ -97,17 +89,14 @@ export function* sendTransactionSaga(contract, method, args) {
 
     const receipt = yield call(contract.functions[method], ...newArgs)
     // console.log('receipt', receipt)
-    yield put(txnMining())
+    yield put(txnMining(receipt))
 
-    const minedTxn = yield provider
-      .waitForTransaction(receipt.hash)
-      .then(txn => txn)
+    const minedTxn = yield provider.waitForTransaction(receipt.hash).then(txn => txn)
 
     yield put(txnMined(minedTxn))
     yield call(delay, 3000)
     yield put(clearTxn(minedTxn))
-
-    return minedTxn
+    yield put(updateBalancesRequest())
   } catch (error) {
     console.log('error', error)
   }

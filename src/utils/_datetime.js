@@ -36,13 +36,8 @@ export function convertUnix(integer) {
 // adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
 export function buildTimeObject(integer) {
   const date = moment.unix(integer).toDate()
-  console.log('date', date)
-
   const timestamp = date.getTime() / 1000
-  console.log('timestamp', timestamp)
-
   const ts = integer / 1000
-  console.log('ts', ts)
 
   // prettier-ignore
   const now = moment().utc().unix()
@@ -58,6 +53,7 @@ export function buildTimeObject(integer) {
     date,
     timeleft,
     timesince,
+    timestamp,
     expired: dateHasPassed(timestamp),
     formattedLocal: `${
       months[date.getMonth()]

@@ -217,7 +217,7 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [this.state.selectedOne.get('listingHash'), this.state.selectedOne.get('data')]
+    const args = [this.state.selectedOne.get('listingHash'), this.state.selectedOne.get('ipfsData')]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {

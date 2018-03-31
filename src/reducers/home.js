@@ -2,7 +2,6 @@ import { fromJS } from 'immutable'
 
 import {
   LOGIN_ERROR,
-  // CONTRACT_ERROR,
   SET_WALLET,
   SET_REGISTRY_CONTRACT,
   SET_CONTRACTS,
@@ -35,14 +34,13 @@ const initialState = fromJS({
   listings: {},
   vFilter: false,
   ipfs: {},
+  latestTxn: {},
 })
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_ERROR:
       return state.set('error', action.error)
-    // case CONTRACT_ERROR:
-    //   return state.setIn(['error', 'type'], true)
     case SET_WALLET:
       return state
         .set('error', fromJS(false))
@@ -55,10 +53,8 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
-    // .set('miningStatus', fromJS({ open: true, message: 'mining Status message' }))
     case UPDATE_BALANCES:
       return state.set('balances', fromJS(action.payload.balances))
-    // TODO: semantics: set listings
     case SET_LISTINGS:
       return state.set('listings', fromJS(action.payload))
     default:

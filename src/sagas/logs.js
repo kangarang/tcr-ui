@@ -1,41 +1,120 @@
 import { select, takeLatest, all, call, put } from 'redux-saga/effects'
+import { fromJS } from 'immutable'
 import _ from 'lodash'
 
 import { setListings } from 'actions'
-import { SET_CONTRACTS } from 'actions/constants'
-import { convertLogToGolem, updateApplications } from 'libs/listings'
+import {
+  convertLogToGolem,
+  sortByBlockTimestamp,
+  findGolem,
+  changeGolem,
+  setApplications,
+} from 'libs/listings'
 
-import { selectProvider, selectRegistry, selectVoting } from '../selectors'
+import { selectProvider, selectRegistry, selectVoting, selectAllListings } from '../selectors'
+import { SET_REGISTRY_CONTRACT, SET_CONTRACTS } from '../actions/constants'
+import { sortByBlockNumber } from '../libs/listings'
 
-export default function* logsSaga() {
-  yield takeLatest(SET_CONTRACTS, setupEventsSaga)
+export default function* rootLogsSaga() {
+  yield takeLatest(SET_CONTRACTS, setupLogsSaga)
 }
 
-export function* setupEventsSaga() {
-  const registry = yield select(selectRegistry)
-  const { _Application } = registry.interface.events
-  yield call(getHistorySaga, [_Application])
-}
-
-function* getHistorySaga(ContractEvents) {
-  const provider = yield select(selectProvider)
+export function* setupLogsSaga() {
   const registry = yield select(selectRegistry)
   const voting = yield select(selectVoting)
+  const {
+    _Application,
+    _Challenge,
+    _ApplicationWhitelisted,
+    _ApplicationRemoved,
+    _ChallengeSucceeded,
+  } = registry.interface.events
 
-  const freshApplications = yield all(
-    ContractEvents.map(async ContractEvent => {
-      return decodeLogs(provider, registry, ContractEvent, voting, registry.address)
+  const applications = yield call(getHistorySaga, _Application)
+
+  const updatedApplications = yield call(setApplications, {}, applications)
+  if (updatedApplications.size > 0) {
+    yield put(setListings(updatedApplications))
+  }
+
+  const { _VoteCommitted, _VoteRevealed, _PollCreated } = voting.interface.events
+  const otherEvents = [
+    _Challenge,
+    _ApplicationWhitelisted,
+    _ApplicationRemoved,
+    _ChallengeSucceeded,
+    _VoteCommitted,
+    _VoteRevealed,
+    _PollCreated,
+  ]
+  const [
+    cListings,
+    awListings,
+    arListings,
+    csListings,
+    vcListings,
+    vrListings,
+    pcListings,
+  ] = yield all([
+    call(getHistorySaga, _Challenge),
+    call(getHistorySaga, _ApplicationWhitelisted),
+    call(getHistorySaga, _ApplicationRemoved),
+    call(getHistorySaga, _ChallengeSucceeded),
+    call(getHistorySaga, _VoteCommitted),
+    call(getHistorySaga, _VoteRevealed),
+    call(getHistorySaga, _PollCreated),
+  ])
+
+  const arr = [
+    ...cListings,
+    ...awListings,
+    ...arListings,
+    ...csListings,
+    ...vcListings,
+    ...vrListings,
+    ...pcListings,
+  ]
+  const flattened = _.flatten(arr)
+  console.log('flattened', flattened)
+  const sorted = sortByBlockTimestamp(flattened)
+  console.log('sorted', sorted)
+
+  const updatedListings = yield all(
+    sorted.map(one => {
+      console.log('one', one)
+      const golem = one.get('golem')
+      const eventName = one.get('eventName')
+      const log = one.get('log')
+      const txData = one.get('txData')
+      const msgSender = one.get('msgSender')
+      return changeGolem(golem, eventName, log, txData, msgSender)
     })
   )
-  const flattenedApps = _.flatten(freshApplications)
-  console.log('flattenedApps', flattenedApps)
-  const updatedApplications = yield call(updateApplications, {}, flattenedApps)
-  console.log('updatedApplications', updatedApplications.toJS())
-  yield put(setListings(updatedApplications))
+  console.log('updatedListings', updatedListings)
+  // if (updatedListings.size > 0) {
+  //   yield put(setListings(updatedListings))
+  // }
 }
 
-let lastReadBlockNumber = 1917000
-async function decodeLogs(provider, registry, ContractEvent, voting, address) {
+function* getHistorySaga(ContractEvent) {
+  const provider = yield select(selectProvider)
+  const registry = yield select(selectRegistry)
+  const allListings = yield select(selectAllListings)
+
+  const decodedLogs = yield call(decodeLogs, provider, ContractEvent, registry.address)
+  const listings = yield call(convertDecodedLogs, decodedLogs, ContractEvent, provider, allListings)
+  // const golem2 = changeGolem(golem, ContractEvent.name, logData, txData, tx.from)
+  // listings.push(golem2)
+  // const sorted = sortByBlockTimestamp(flatListings)
+  // console.log('sorted.toJS()', sorted)
+  // const updatedListings = yield call(setApplications, allListings, sorted)
+  // console.log('updated applications:', updatedListings.toJS())
+  return listings
+}
+
+let lastReadBlockNumber = 0
+// TODO: test
+async function decodeLogs(provider, ContractEvent, address) {
   // build filter
   const filter = {
     fromBlock: lastReadBlockNumber,
@@ -45,25 +124,37 @@ async function decodeLogs(provider, registry, ContractEvent, voting, address) {
   }
   // get logs according to filter
   const logs = await provider.getLogs(filter)
-  console.log(ContractEvent.name, logs)
-
+  return logs
+}
+// This is still building history
+export async function convertDecodedLogs(logs, ContractEvent, provider, allListings) {
   let listings = []
   for (const log of logs) {
     // decode logs
     const logData = await decodeLog(ContractEvent, log)
     const { block, tx } = await getBlockAndTxnFromLog(log, provider)
-
-    // transform into a listing object
-    const listing = await convertLogToGolem(
-      logData,
-      block,
-      tx,
-      ContractEvent.name,
-      registry,
-      voting
-    )
-    listings.push(listing)
+    const txData = {
+      txHash: tx.hash,
+      blockNumber: block.number,
+      blockHash: block.hash,
+      ts: block.timestamp,
+    }
+    if (ContractEvent.name === '_Application') {
+      // transform into a listing object
+      const listing = await convertLogToGolem(logData, txData, tx.from)
+      listings.push(listing)
+    } else {
+      const golem = await findGolem(logData.listingHash, allListings)
+      listings.push({
+        txData,
+        log: logData,
+        msgSender: tx.from,
+        eventName: ContractEvent.name,
+        golem,
+      })
+    }
   }
+  console.log(ContractEvent.name, 'listings', listings)
   return listings
 }
 
