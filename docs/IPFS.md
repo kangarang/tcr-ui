@@ -12,19 +12,23 @@ https://medium.com/@ConsenSys/an-introduction-to-ipfs-9bba4860abd0
 
 `function apply(bytes32 _listingHash, uint _deposit, string _data)`
 
-In the `apply` function, the `_data` field is either:
-  - a string that, when hashed with keccak256, is the value `_listingHash`
-  - a string that is a valid ipfs multihash:
-    * when resolved, is a JSON object which contains key `id`
-    * the value of `id`, when hashed with keccak256, is the value `_listingHash`
+In the `apply` function
 
-`_data`
-  - ipfs multihash: `Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7`
-  - string: 'consensysclassic.net'
+`_data` field is one of the following:
+1. a valid ipfs multihash:
+  - e.g. `Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7`
+  - when resolved, is a JSON object which contains key `id`
+  - the value of `id`, when hashed with keccak256, is the value `_listingHash`
+2. a plaintext string that, when hashed with keccak256, is the value `_listingHash`
+  - e.g. `'consensysclassic.net'`
 
-`_listingHash`: the keccak256 hash of the `id` key's value of the JSON object that is resolved at the `_data` ipfs multihash
+`_listingHash`
+1. if `_data` is an ipfs multihash, `_listingHash` is:
+  - the keccak256 hash of the `id` key's value of the JSON object that is resolved at the `_data` ipfs multihash
   - e.g. `keccak256(ipfs.get(_data).id)`
-  - `// 0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2`
+2. if `_data` is a plaintext string, or an invalid ipfs multihash, `_listingHash` is:
+  - the keccak256 hash of `_data`
+  - e.g. `keccak256('consensysclassic.net')`
 
 #### Pseudocode example
 
