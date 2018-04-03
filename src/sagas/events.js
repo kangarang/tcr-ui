@@ -1,7 +1,7 @@
 import { eventChannel } from 'redux-saga'
-import { call, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
+import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
-import { setListings } from '../actions'
+import { setListings, updateListing } from '../actions'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
 import { findGolem, findChallenge } from 'libs/listings'
@@ -18,11 +18,29 @@ export function* eventsSaga() {
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
 
+    const channel = yield call(createEventChannel, registry, voting)
+    try {
+      while (true) {
+        yield takeEvery(channel, handleEventEmission)
+      }
+    } finally {
+      if (yield cancelled()) {
+        console.log('LISTENING CANCELLED')
+        channel.close()
+      }
+    }
+  } catch (error) {
+    console.log('eventsSaga error:', error)
+  }
+}
+
+function createEventChannel(registry, voting) {
+  return eventChannel(emitter => {
     registry.on_application = (listingHash, deposit, appEndDate, data) => {
-      console.log('application', listingHash, deposit.toString(), appEndDate.toString(), data)
+      emitter({ listingHash, deposit: deposit.toString(), appEndDate: appEndDate.toNumber(), data })
     }
     registry.on_challenge = (listingHash, challengeID, data) => {
-      console.log('challenge', listingHash, challengeID.toString(), data)
+      emitter({ listingHash, challengeID: challengeID.toString(), data })
     }
     registry.on_applicationwhitelisted = listingHash => {
       console.log('application whitelisted', listingHash)
@@ -39,7 +57,6 @@ export function* eventsSaga() {
     registry.on_challengefailed = challengeID => {
       console.log('challenge failed', challengeID.toString())
     }
-
     voting.on_pollcreated = (voteQuorum, commitEndDate, revealEndDate, pollID) => {
       console.log(
         'poll created',
@@ -60,8 +77,20 @@ export function* eventsSaga() {
         votesAgainst.toString()
       )
     }
+    return () => registry.stopWatching()
+  })
+}
+function* handleEventEmission(result) {
+  try {
+    console.log('emit!')
+    console.log('result', result)
+    // const golem = findGolem(listingHash, allListings)
+    // console.log('golem', golem)
+    // const listing = golem.set('status', '2')
+    // console.log('listing', listing)
+    // yield put(updateListing(listing))
   } catch (error) {
-    console.log('eventsSaga error:', error)
+    console.log('handleEventEmission error:', error)
   }
 }
 
@@ -98,15 +127,6 @@ export function* eventsSaga() {
 //     })
 //     return () => event.stopWatching()
 //   })
-
-// function createEventChannel(contract, event) {
-//   return eventChannel(emitter => {
-//     const event = contract.events[event] = (args) => {
-//       emitter({})
-//     }
-//   })
-// }
-
 // function* handleEventEmission({ ContractEvent, log }) {
 //   console.log('emit!')
 //   console.log(ContractEvent.name, log)

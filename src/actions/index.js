@@ -16,6 +16,7 @@ import {
   GET_ETH_PROVIDER,
   POLL_LOGS_REQUEST,
   SET_LISTINGS,
+  UPDATE_LISTING,
   CHANGE_ITEMS,
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
@@ -166,6 +167,12 @@ export function getTokensAllowed(payload) {
 export function setTokensAllowed(payload) {
   return {
     type: SET_TOKENS_ALLOWED,
+    payload,
+  }
+}
+export function updateListing(payload) {
+  return {
+    type: UPDATE_LISTING,
     payload,
   }
 }

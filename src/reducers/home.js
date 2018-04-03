@@ -7,6 +7,7 @@ import {
   SET_CONTRACTS,
   UPDATE_BALANCES,
   SET_LISTINGS,
+  UPDATE_LISTING,
 } from '../actions/constants'
 
 const initialState = fromJS({
@@ -55,6 +56,8 @@ function homeReducer(state = initialState, action) {
         .set('contracts', fromJS(action.payload.contracts))
     case UPDATE_BALANCES:
       return state.set('balances', fromJS(action.payload.balances))
+    case UPDATE_LISTING:
+      return state.setIn(['listings', action.payload.get('listingHash')], fromJS(action.payload))
     case SET_LISTINGS:
       return state.set('listings', fromJS(action.payload))
     default:
