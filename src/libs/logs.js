@@ -1,11 +1,9 @@
-import { fromJS } from 'immutable'
 import _ from 'lodash'
 import {
   convertLogToListing,
   sortByNestedBlockTimestamp,
   findGolem,
   changeListing,
-  setApplications,
   findChallenge,
 } from 'libs/listings'
 

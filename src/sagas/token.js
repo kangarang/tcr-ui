@@ -9,10 +9,9 @@ import {
   selectToken,
   selectVoting,
   selectAllContracts,
-  selectAllListings,
   selectWhitelist,
 } from '../selectors'
-import { baseToConvertedUnit, BN } from 'libs/units'
+import { BN } from 'libs/units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)

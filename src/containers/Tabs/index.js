@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import Typography from 'material-ui/Typography'
 
-import imgSrc from 'assets/eth.svg'
+import imgSrc from 'assets/icons/adtoken.svg'
 
 import ListingMediaCard from './ListingMediaCard'
 

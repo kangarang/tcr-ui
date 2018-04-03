@@ -1,16 +1,10 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
-import _ from 'lodash'
 
 import { setListings } from 'actions'
 import { setApplications } from 'libs/listings'
-import {
-  flattenAndSortByNestedBlockTimestamp,
-  decodeLogs,
-  getBlockAndTxnFromLog,
-  convertDecodedLogs,
-} from '../libs/logs'
+import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
-import { selectProvider, selectRegistry, selectVoting, selectAllListings } from '../selectors'
+import { selectProvider, selectRegistry } from '../selectors'
 import { SET_CONTRACTS } from '../actions/constants'
 import { updateBalancesRequest } from '../actions'
 

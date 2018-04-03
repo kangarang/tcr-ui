@@ -4,9 +4,6 @@ import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
 import { Text } from '@aragon/ui'
 
-import close from 'assets/close.svg'
-
-import { getPublicUrl, prefixUrl } from 'utils/_url'
 import { colors } from '../../global-styles'
 
 const PANEL_WIDTH = 450
@@ -66,22 +63,6 @@ const StyledPanelContent = styled.div`
   padding-bottom: ${CONTENT_PADDING}px;
 `
 
-const StyledPanelCloseButton = styled.button`
-  ${StyledPanelHeader} & {
-    position: absolute;
-    padding: 20px;
-    top: 0;
-    right: 0;
-    cursor: pointer;
-    background: none;
-    border: 0;
-    outline: 0;
-    &::-moz-focus-inner {
-      border: 0;
-    }
-  }
-`
-
 class SidePanel extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleEscape, false)
@@ -127,7 +108,7 @@ class SidePanel extends Component {
   }
 
   render() {
-    const { children, title, opened, blocking, publicUrl } = this.props
+    const { children, title, opened } = this.props
     return (
       <Motion
         style={{ progress: spring(Number(opened), this.springConf('slow')) }}
@@ -143,11 +124,6 @@ class SidePanel extends Component {
                   <h1>
                     <Text size="xxlarge">{title}</Text>
                   </h1>
-                  {!blocking && (
-                    <StyledPanelCloseButton type="button" onClick={this.handleClose}>
-                      <img src={prefixUrl(close, publicUrl)} alt="Close" />
-                    </StyledPanelCloseButton>
-                  )}
                 </StyledPanelHeader>
                 <StyledPanelScrollView>
                   <StyledPanelContent>{children}</StyledPanelContent>
@@ -161,12 +137,10 @@ class SidePanel extends Component {
   }
 }
 
-const WrappedSidePanel = getPublicUrl(SidePanel)
+SidePanel.PANEL_WIDTH = PANEL_WIDTH
+SidePanel.PANEL_OVERFLOW = PANEL_OVERFLOW
+SidePanel.PANEL_HIDE_RIGHT = PANEL_HIDE_RIGHT
+SidePanel.PANEL_INNER_WIDTH = PANEL_INNER_WIDTH
+SidePanel.HORIZONTAL_PADDING = CONTENT_PADDING
 
-WrappedSidePanel.PANEL_WIDTH = PANEL_WIDTH
-WrappedSidePanel.PANEL_OVERFLOW = PANEL_OVERFLOW
-WrappedSidePanel.PANEL_HIDE_RIGHT = PANEL_HIDE_RIGHT
-WrappedSidePanel.PANEL_INNER_WIDTH = PANEL_INNER_WIDTH
-WrappedSidePanel.HORIZONTAL_PADDING = CONTENT_PADDING
-
-export default WrappedSidePanel
+export default SidePanel

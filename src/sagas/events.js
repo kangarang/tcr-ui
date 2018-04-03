@@ -1,13 +1,11 @@
 import { eventChannel, END } from 'redux-saga'
-import { fromJS } from 'immutable'
 import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
-import { setListings, updateListing } from '../actions'
-import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
-import { getBlockAndTxnFromLog, decodeLog, convertDecodedLogs } from 'libs/logs'
-import { findGolem, changeListing, findChallenge } from 'libs/listings'
 import { SET_CONTRACTS } from '../actions/constants'
-import { convertLogToListing, setApplications } from '../libs/listings'
+import { setListings } from '../actions'
+import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
+import { decodeLog, convertDecodedLogs } from 'libs/logs'
+import { setApplications } from '../libs/listings'
 
 export default function* rootEventsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventChannels)
