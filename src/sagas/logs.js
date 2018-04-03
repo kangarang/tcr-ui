@@ -65,10 +65,10 @@ export function* setupLogsSaga() {
     ]
     const sortedEvents = yield call(flattenAndSortByNestedBlockTimestamp, lhEvents)
     console.log('sortedEvents', sortedEvents.toJS())
+    const updatedApplications = yield call(updateSortedEventsSaga, sortedEvents, applications)
+
     const sortedPIEvents = yield call(flattenAndSortByNestedBlockTimestamp, piEvents)
     console.log('sortedPollIDEvents', sortedPIEvents.toJS())
-
-    const updatedApplications = yield call(updateSortedEventsSaga, sortedEvents, applications)
     const updatedListings = yield call(updateSortedEventsSaga, sortedPIEvents, updatedApplications)
 
     if (updatedListings.size > 0) {

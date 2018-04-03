@@ -159,15 +159,17 @@ class Home extends Component {
           />
         )}
 
-        <RevealVote
-          opened={this.state.opened === 'revealVote'}
-          closeSidePanel={this.closeSidePanel}
-          selectedOne={this.state.selectedOne}
-          handleFileInput={this.handleFileInput}
-          handleApprove={this.handleApprove}
-          handleRevealVote={this.handleRevealVote}
-          {...this.props}
-        />
+        {this.state.opened === 'revealVote' && (
+          <RevealVote
+            opened={this.state.opened === 'revealVote'}
+            closeSidePanel={this.closeSidePanel}
+            selectedOne={this.state.selectedOne}
+            handleFileInput={this.handleFileInput}
+            handleApprove={this.handleApprove}
+            handleRevealVote={this.handleRevealVote}
+            {...this.props}
+          />
+        )}
       </div>
     )
   }

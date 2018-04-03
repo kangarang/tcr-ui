@@ -125,13 +125,15 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
         .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
     case '_VoteCommitted':
-      return golem.set('status', '2')
-    // .set('votesFor', votesFor)
-    // .set('votesAgainst', votesAgainst)
+      return golem
+        .set('status', '2')
+        .set('votesFor', fromJS(log.votesFor.toString()))
+        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
     case '_VoteRevealed':
-      return golem.set('status', '2')
-    // .set('votesFor', votesFor)
-    // .set('votesAgainst', votesAgainst)
+      return golem
+        .set('status', '2')
+        .set('votesFor', fromJS(log.votesFor.toString()))
+        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
     case '_ListingRemoved':
       return golem
         .set('status', '0')
