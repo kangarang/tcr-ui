@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import _ from 'lodash'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash } from '../utils/_values'
@@ -25,14 +26,15 @@ export function sortByBlockTimestamp(unsorted) {
   })
 }
 export function sortByNestedBlockTimestamp(unsorted) {
-  return fromJS(unsorted).sort((a, b) => {
-    if (a.getIn(['txData', 'ts']) < b.getIn(['txData', 'ts'])) {
-      return -1
-    } else if (a.getIn(['txData', 'ts']) > b.getIn(['txData', 'ts'])) {
-      return 1
-    }
-    return 0
-  })
+  return _.sortBy(unsorted, u => u.txData.ts)
+  // return fromJS(unsorted).sort((a, b) => {
+  //   if (a.getIn(['txData', 'ts']) < b.getIn(['txData', 'ts'])) {
+  //     return -1
+  //   } else if (a.getIn(['txData', 'ts']) > b.getIn(['txData', 'ts'])) {
+  //     return 1
+  //   }
+  //   return 0
+  // })
 }
 
 // Get
@@ -118,6 +120,22 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('status', '2')
         .set('challenger', fromJS(msgSender))
         .set('challengeID', fromJS(log.challengeID.toString()))
+    case '_ApplicationWhitelisted':
+      return golem
+        .set('status', '3')
+        .set('challenger', false)
+        .set('challengeID', false)
+    case '_ApplicationRemoved':
+      return golem
+        .set('status', '0')
+        .set('challenger', false)
+        .set('challengeID', false)
+    case '_ListingRemoved':
+      return golem
+        .set('status', '0')
+        .set('challenger', false)
+        .set('challengeID', false)
+
     case '_PollCreated':
       return golem
         .set('status', '2')
@@ -134,21 +152,6 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('status', '2')
         .set('votesFor', fromJS(log.votesFor.toString()))
         .set('votesAgainst', fromJS(log.votesAgainst.toString()))
-    case '_ListingRemoved':
-      return golem
-        .set('status', '0')
-        .set('challenger', false)
-        .set('challengeID', false)
-    case '_ApplicationRemoved':
-      return golem
-        .set('status', '0')
-        .set('challenger', false)
-        .set('challengeID', false)
-    case '_ApplicationWhitelisted':
-      return golem
-        .set('status', '3')
-        .set('challenger', false)
-        .set('challengeID', false)
     case '_ChallengeFailed':
       return golem
         .set('status', '3')
