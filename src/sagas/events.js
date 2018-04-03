@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga'
+import { eventChannel, END } from 'redux-saga'
 import { fromJS } from 'immutable'
 import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
@@ -14,117 +14,103 @@ export default function* rootEventsSaga() {
 }
 
 function* setupEventChannels() {
-  const provider = yield select(selectProvider)
-  const registry = yield select(selectRegistry)
-  const voting = yield select(selectVoting)
-
-  const {
-    _Application,
-    _Challenge,
-    _ApplicationWhitelisted,
-    _ApplicationRemoved,
-    _ListingRemoved,
-    _ListingWithdrawn,
-    _TouchAndRemoved,
-    // _ChallengeFailed,
-    // _ChallengeSucceeded,
-  } = registry.interface.events
-  const { _VoteCommitted, _VoteRevealed, _PollCreated } = voting.interface.events
-
-  // create channels for each event-topic
-  const aChannel = yield call(createChannel, provider, _Application)
-  const cChannel = yield call(createChannel, provider, _Challenge)
-  const awChannel = yield call(createChannel, provider, _ApplicationWhitelisted)
-  const arChannel = yield call(createChannel, provider, _ApplicationRemoved)
-  const lrChannel = yield call(createChannel, provider, _ListingRemoved)
-  const lwChannel = yield call(createChannel, provider, _ListingWithdrawn)
-  const trChannel = yield call(createChannel, provider, _TouchAndRemoved)
-
-  const vcChannel = yield call(createChannel, provider, _VoteCommitted)
-  const vrChannel = yield call(createChannel, provider, _VoteRevealed)
-  const pcChannel = yield call(createChannel, provider, _PollCreated)
-
   try {
-    while (true) {
-      yield takeEvery(aChannel, handleEventEmission)
-      yield takeEvery(cChannel, handleEventEmission)
-      yield takeEvery(awChannel, handleEventEmission)
-      yield takeEvery(arChannel, handleEventEmission)
-      yield takeEvery(lrChannel, handleEventEmission)
-      yield takeEvery(lwChannel, handleEventEmission)
-      yield takeEvery(trChannel, handleEventEmission)
+    const provider = yield select(selectProvider)
+    const registry = yield select(selectRegistry)
+    const voting = yield select(selectVoting)
 
-      yield takeEvery(vcChannel, handleEventEmission)
-      yield takeEvery(vrChannel, handleEventEmission)
-      yield takeEvery(pcChannel, handleEventEmission)
-    }
-  } finally {
-    if (yield cancelled()) {
-      console.log('LISTENING CANCELLED')
-      aChannel.close()
-      cChannel.close()
-      awChannel.close()
-      arChannel.close()
-      lrChannel.close()
-      lwChannel.close()
-      trChannel.close()
+    const {
+      _Application,
+      _Challenge,
+      _ApplicationWhitelisted,
+      _ApplicationRemoved,
+      _ListingRemoved,
+      _ListingWithdrawn,
+      _TouchAndRemoved,
+      // _ChallengeFailed,
+      // _ChallengeSucceeded,
+    } = registry.interface.events
+    const { _VoteCommitted, _VoteRevealed, _PollCreated } = voting.interface.events
 
-      vcChannel.close()
-      vrChannel.close()
-      pcChannel.close()
+    // create channels for each event-topic
+    const aChannel = yield call(createChannel, provider, _Application)
+    const cChannel = yield call(createChannel, provider, _Challenge)
+    const awChannel = yield call(createChannel, provider, _ApplicationWhitelisted)
+    const arChannel = yield call(createChannel, provider, _ApplicationRemoved)
+    const lrChannel = yield call(createChannel, provider, _ListingRemoved)
+    const lwChannel = yield call(createChannel, provider, _ListingWithdrawn)
+    const trChannel = yield call(createChannel, provider, _TouchAndRemoved)
+
+    const vcChannel = yield call(createChannel, provider, _VoteCommitted)
+    const vrChannel = yield call(createChannel, provider, _VoteRevealed)
+    const pcChannel = yield call(createChannel, provider, _PollCreated)
+
+    try {
+      while (true) {
+        yield takeEvery(aChannel, handleEventEmission)
+        yield takeEvery(cChannel, handleEventEmission)
+        yield takeEvery(awChannel, handleEventEmission)
+        yield takeEvery(arChannel, handleEventEmission)
+        yield takeEvery(lrChannel, handleEventEmission)
+        yield takeEvery(lwChannel, handleEventEmission)
+        yield takeEvery(trChannel, handleEventEmission)
+
+        yield takeEvery(vcChannel, handleEventEmission)
+        yield takeEvery(vrChannel, handleEventEmission)
+        yield takeEvery(pcChannel, handleEventEmission)
+      }
+    } finally {
+      if (yield cancelled()) {
+        console.log('LISTENING CANCELLED')
+        aChannel.close()
+        cChannel.close()
+        awChannel.close()
+        arChannel.close()
+        lrChannel.close()
+        lwChannel.close()
+        trChannel.close()
+
+        vcChannel.close()
+        vrChannel.close()
+        pcChannel.close()
+      }
     }
+  } catch (error) {
+    console.log('setup events saga error', error)
   }
 }
 
 // eventChannel is a factory function that creates a Channel
 // for events from sources other than the Redux store
-const createChannel = (provider, ContractEvent) =>
-  eventChannel(emitter => {
+function createChannel(provider, ContractEvent) {
+  return eventChannel(emitter => {
     provider.removeAllListeners(ContractEvent.topics)
     provider.on(ContractEvent.topics, function(log) {
-      console.log('this', this)
+      console.log(ContractEvent.name, 'event channel', this)
       emitter({ ContractEvent, log })
     })
-    return () => provider.removeAllListeners(ContractEvent.topics)
+    return () => provider.removeListener(ContractEvent.topics, () => emitter(END))
   })
-
-function* handleEventEmission({ ContractEvent, log }) {
-  const provider = yield select(selectProvider)
-  const allListings = yield select(selectAllListings)
-
-  const dLog = yield call(decodeLog, ContractEvent, log, provider)
-  console.log(ContractEvent.name, 'emitted:', log, dLog)
-
-  const listings = yield call(convertDecodedLogs, [dLog], allListings)
-  console.log('event listing', listings)
-
-  if (listings[0] !== undefined) {
-    const updatedListings = yield call(setApplications, allListings, listings)
-    yield put(setListings(updatedListings))
-  }
 }
 
-// export function* eventsSaga() {
-//   try {
-//     const provider = yield select(selectProvider)
-//     const registry = yield select(selectRegistry)
-//     const voting = yield select(selectVoting)
+function* handleEventEmission({ ContractEvent, log }) {
+  try {
+    const provider = yield select(selectProvider)
+    const allListings = yield select(selectAllListings)
 
-//     const channel = yield call(createEventChannel, registry, voting)
-//     try {
-//       while (true) {
-//         yield takeEvery(channel, handleEventEmission)
-//       }
-//     } finally {
-//       if (yield cancelled()) {
-//         console.log('LISTENING CANCELLED')
-//         channel.close()
-//       }
-//     }
-//   } catch (error) {
-//     console.log('eventsSaga error:', error)
-//   }
-// }
+    const dLog = yield call(decodeLog, ContractEvent, log, provider)
+    console.log('emitted:', log, dLog)
+    const listings = yield call(convertDecodedLogs, [dLog], allListings)
+    console.log('event listing', listings)
+
+    if (listings[0] !== undefined) {
+      const updatedListings = yield call(setApplications, allListings, listings)
+      yield put(setListings(updatedListings))
+    }
+  } catch (error) {
+    console.log('handle event emission error', error)
+  }
+}
 
 // function createEventChannel(registry, voting) {
 //   return eventChannel(emitter => {
@@ -134,56 +120,9 @@ function* handleEventEmission({ ContractEvent, log }) {
 //     registry.on_challenge = (listingHash, challengeID, data) => {
 //       emitter({ listingHash, challengeID: challengeID.toString(), data })
 //     }
-//     registry.on_applicationwhitelisted = listingHash => {
-//       emitter({ listingHash })
-//     }
-//     registry.on_applicationremoved = listingHash => {
-//       emitter({ listingHash })
-//     }
-//     registry.on_listingremoved = listingHash => {
-//       emitter({ listingHash })
-//     }
-//     registry.on_challengesucceeded = challengeID => {
-//       console.log('challenge succeeded', challengeID.toString())
-//     }
-//     registry.on_challengefailed = challengeID => {
-//       console.log('challenge failed', challengeID.toString())
-//     }
-//     voting.on_pollcreated = (voteQuorum, commitEndDate, revealEndDate, pollID) => {
-//       console.log(
-//         'poll created',
-//         commitEndDate.toString(),
-//         revealEndDate.toString(),
-//         pollID.toString()
-//       )
-//     }
 //     voting.on_votecommitted = (pollID, numTokens) => {
 //       console.log('vote committed', pollID.toString(), numTokens.toString())
 //     }
-//     voting.on_voterevealed = (pollID, numTokens, votesFor, votesAgainst) => {
-//       console.log(
-//         'vote revealed',
-//         pollID.toString(),
-//         numTokens.toString(),
-//         votesFor.toString(),
-//         votesAgainst.toString()
-//       )
-//     }
 //     return () => registry.stopWatching()
 //   })
-// }
-
-// // Event emitter
-// function* handleEventEmission(result) {
-//   try {
-//     console.log('emit!')
-//     console.log('result', result)
-//     // const golem = findGolem(listingHash, allListings)
-//     // console.log('golem', golem)
-//     // const listing = golem.set('status', '2')
-//     // console.log('listing', listing)
-//     // yield put(updateListing(listing))
-//   } catch (error) {
-//     console.log('handleEventEmission error:', error)
-//   }
 // }

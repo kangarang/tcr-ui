@@ -18,61 +18,79 @@ export default function* transactionSaga() {
 
 // TODO: write tests for these sagas. against abis
 export function* handleSendTransaction(action) {
-  const { methodName, args } = action.payload
-  const token = yield select(selectToken)
-  const voting = yield select(selectVoting)
-  const registry = yield select(selectRegistry)
+  try {
+    const { methodName, args } = action.payload
+    const token = yield select(selectToken)
+    const voting = yield select(selectVoting)
+    const registry = yield select(selectRegistry)
 
-  if (methodName === 'apply' || methodName === 'challenge' || methodName === 'updateStatus') {
-    yield call(registryTxnSaga, action)
-  } else if (methodName === 'requestVotingRights') {
-    yield call(requestVotingRightsSaga, action)
-  } else if (methodName === 'commitVote') {
-    yield call(commitVoteSaga, action)
-  } else if (methodName === 'revealVote') {
-    yield call(revealVoteSaga, action)
-  } else if (methodName === 'approve') {
-    yield call(sendTransactionSaga, token, methodName, args)
-  } else if (methodName === 'rescueTokens') {
-    yield call(sendTransactionSaga, voting, methodName, args)
-  } else if (methodName === 'claimVoterReward') {
-    yield call(sendTransactionSaga, registry, methodName, args)
-  } else {
-    console.log('unknown methodName!?!?')
+    switch (methodName) {
+      case 'apply':
+      case 'challenge':
+      case 'updateStatus':
+        yield call(registryTxnSaga, action)
+        break
+      case 'requestVotingRights':
+        yield call(requestVotingRightsSaga, action)
+        break
+      case 'commitVote':
+        yield call(commitVoteSaga, action)
+        break
+      case 'revealVote':
+        yield call(revealVoteSaga, action)
+        break
+      case 'approve':
+        yield call(sendTransactionSaga, token, methodName, args)
+        break
+      case 'rescueTokens':
+        yield call(sendTransactionSaga, voting, methodName, args)
+        break
+      case 'claimVoteReward':
+        yield call(sendTransactionSaga, registry, methodName, args)
+        break
+      default:
+        console.log('unknown methodname')
+    }
+  } catch (error) {
+    console.log('send transaction error:', error)
   }
 }
 
 export function* registryTxnSaga(action) {
-  const registry = yield select(selectRegistry)
-  const { methodName } = action.payload
+  try {
+    const registry = yield select(selectRegistry)
+    const { methodName } = action.payload
 
-  // typecheck arguments
-  const args = action.payload.args.map(arg => {
-    if (_.isObject(arg)) {
-      return arg.toString()
-    } else if (_.isString(arg)) {
+    // typecheck arguments
+    const args = action.payload.args.map(arg => {
+      if (_.isObject(arg)) {
+        return arg.toString()
+      } else if (_.isString(arg)) {
+        return arg
+      }
+      // TODO: more typechecking
       return arg
-    }
-    // TODO: more typechecking
-    return arg
-  })
-
-  let finalArgs = _.clone(args)
-
-  if (methodName === 'apply') {
-    const fileHash = yield call(ipfsAddData, {
-      id: args[0], // listing string (name)
-      data: args[2], // data (address)
     })
-    // hash the string
-    finalArgs[0] = getListingHash(args[0])
-    // use ipfs CID as the _data field in the application
-    finalArgs[2] = fileHash
+
+    let finalArgs = _.clone(args)
+
+    if (methodName === 'apply') {
+      const fileHash = yield call(ipfsAddData, {
+        id: args[0], // listing string (name)
+        data: args[2], // data (address)
+      })
+      // hash the string
+      finalArgs[0] = getListingHash(args[0])
+      // use ipfs CID as the _data field in the application
+      finalArgs[2] = fileHash
+    }
+
+    console.log('finalArgs', finalArgs)
+
+    yield call(sendTransactionSaga, registry, methodName, finalArgs)
+  } catch (error) {
+    console.log('registryTxn error', error)
   }
-
-  console.log('finalArgs', finalArgs)
-
-  yield call(sendTransactionSaga, registry, methodName, finalArgs)
 }
 
 export function* sendTransactionSaga(contract, method, args) {
@@ -88,15 +106,13 @@ export function* sendTransactionSaga(contract, method, args) {
     })
 
     const receipt = yield call(contract.functions[method], ...newArgs)
-    // console.log('receipt', receipt)
     yield put(txnMining(receipt))
-
     const minedTxn = yield provider.waitForTransaction(receipt.hash).then(txn => txn)
-
     yield put(txnMined(minedTxn))
-    yield call(delay, 3000)
-    yield put(clearTxn(minedTxn))
     yield put(updateBalancesRequest())
+
+    yield call(delay, 5000)
+    yield put(clearTxn(minedTxn))
   } catch (error) {
     if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {
       console.log('MetaMask tx denied')

@@ -28,61 +28,69 @@ export function* requestVotingRightsSaga(action) {
 }
 
 export function* commitVoteSaga(action) {
-  const account = yield select(selectAccount)
-  const voting = yield select(selectVoting)
+  try {
+    const account = yield select(selectAccount)
+    const voting = yield select(selectVoting)
 
-  // console.log('commit vote saga:', action)
-  const { args } = action.payload
-  const pollID = args[0]
-  const voteOption = args[1]
-  // const numTokens = args[2]
-  const numTokens = yield call(convertedToBaseUnit, args[2], 18)
-  const data = args[3]
-  // console.log('args', args)
+    // console.log('commit vote saga:', action)
+    const { args } = action.payload
+    const pollID = args[0]
+    const voteOption = args[1]
+    // const numTokens = args[2]
+    const numTokens = yield call(convertedToBaseUnit, args[2], 18)
+    const data = args[3]
+    // console.log('args', args)
 
-  // TODO: fix
-  const salt = randInt(1e6, 1e8)
+    // TODO: fix
+    const salt = randInt(1e6, 1e8)
 
-  // format args
-  const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
-  const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens, pollID)
-  // console.log('prevPollID', prevPollID)
-  const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
+    // format args
+    const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
+    const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens, pollID)
+    // console.log('prevPollID', prevPollID)
+    const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
-  // grab the poll from the mapping
-  const pollStruct = yield voting.pollMap(pollID)
-  // console.log('pollStruct', pollStruct)
+    // grab the poll from the mapping
+    const pollStruct = yield voting.pollMap(pollID)
+    // console.log('pollStruct', pollStruct)
 
-  // record expiry dates
-  const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
-  const revealEndDateString = getEndDateString(pollStruct[1].toNumber())
+    // record expiry dates
+    const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
+    const revealEndDateString = getEndDateString(pollStruct[1].toNumber())
 
-  const json = {
-    voteOption,
-    numTokens,
-    commitEnd: commitEndDateString,
-    revealEnd: revealEndDateString,
-    pollID,
-    data,
-    salt: salt.toString(10),
-    secretHash,
-    account,
+    const json = {
+      voteOption,
+      numTokens,
+      commitEnd: commitEndDateString,
+      revealEnd: revealEndDateString,
+      pollID,
+      data,
+      salt: salt.toString(10),
+      secretHash,
+      account,
+    }
+
+    // console.log('commit json:', json)
+
+    const listingDashed = data.replace(' ', '-')
+    const filename = `poll-${pollID}-${listingDashed}.json`
+
+    saveFile(json, filename)
+
+    yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
+
+    // saveFile(json, filename)
+  } catch (error) {
+    console.log('commit vote saga error', error)
   }
-
-  // console.log('commit json:', json)
-
-  const listingDashed = data.replace(' ', '-')
-  const filename = `poll-${pollID}-${listingDashed}.json`
-
-  saveFile(json, filename)
-
-  yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
-
-  // saveFile(json, filename)
 }
 
 export function* revealVoteSaga(action) {
-  const voting = yield select(selectVoting)
-  const { args, methodName } = action.payload
-  yield call(sendTransactionSaga, voting, methodName, args)
+  try {
+    const voting = yield select(selectVoting)
+    const { args, methodName } = action.payload
+    yield call(sendTransactionSaga, voting, methodName, args)
+  } catch (error) {
+    console.log('reveal vote saga error', error)
+  }
 }
