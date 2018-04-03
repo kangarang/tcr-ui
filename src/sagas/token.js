@@ -31,21 +31,31 @@ function* updateBalancesSaga() {
       registryAllowanceRaw,
       votingAllowanceRaw,
       votingRightsRaw,
+      lockedTokensRaw,
     ] = yield all([
       provider.getBalance(owner),
       token.functions.balanceOf(owner),
       token.functions.allowance(owner, registry.address),
       token.functions.allowance(owner, voting.address),
       voting.functions.voteTokenBalance(owner),
+      voting.functions.getLockedTokens(owner),
     ])
 
     const decimals = contracts.get('tokenDecimals')
-    const [ETH, tokenBalance, registryAllowance, votingAllowance, votingRights] = yield all([
+    const [
+      ETH,
+      tokenBalance,
+      registryAllowance,
+      votingAllowance,
+      votingRights,
+      lockedTokens,
+    ] = yield all([
       baseToConvertedUnit(ethBalance, decimals),
       baseToConvertedUnit(tokenBalanceRaw, decimals),
       baseToConvertedUnit(registryAllowanceRaw, decimals),
       baseToConvertedUnit(votingAllowanceRaw, decimals),
       baseToConvertedUnit(votingRightsRaw, decimals),
+      baseToConvertedUnit(lockedTokensRaw, decimals),
     ])
 
     const balances = {
@@ -54,6 +64,7 @@ function* updateBalancesSaga() {
       registryAllowance,
       votingAllowance,
       votingRights,
+      lockedTokens,
     }
     yield put(updateBalances({ balances }))
   } catch (err) {

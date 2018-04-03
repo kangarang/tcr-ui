@@ -1,19 +1,17 @@
-import { select, takeLatest, all, call, put } from 'redux-saga/effects'
+import { select, takeLatest, call, put } from 'redux-saga/effects'
 import _ from 'lodash'
 
 import { setListings } from 'actions'
 import {
   convertLogToListing,
   sortByNestedBlockTimestamp,
-  sortByBlockTimestamp,
   findGolem,
   changeListing,
   setApplications,
-  updateListings,
   findChallenge,
 } from 'libs/listings'
 
-import { selectProvider, selectRegistry, selectVoting, selectAllListings } from '../selectors'
+import { selectProvider, selectRegistry, selectVoting } from '../selectors'
 import { SET_CONTRACTS } from '../actions/constants'
 
 let lastReadBlockNumber = 0
@@ -36,8 +34,8 @@ export function* setupLogsSaga() {
       _ListingRemoved,
       _ListingWithdrawn,
       _TouchAndRemoved,
-      _ChallengeFailed,
-      _ChallengeSucceeded,
+      // _ChallengeFailed,
+      // _ChallengeSucceeded,
     } = registry.interface.events
     const { _PollCreated, _VoteCommitted, _VoteRevealed } = voting.interface.events
 
@@ -52,19 +50,23 @@ export function* setupLogsSaga() {
     const lrEvents = yield call(getHistorySaga, _ListingRemoved, registry.address)
     const lwEvents = yield call(getHistorySaga, _ListingWithdrawn, registry.address)
     const trEvents = yield call(getHistorySaga, _TouchAndRemoved, registry.address)
-    const cfEvents = yield call(getHistorySaga, _ChallengeFailed, registry.address)
-    const csEvents = yield call(getHistorySaga, _ChallengeSucceeded, registry.address)
+    // const cfEvents = yield call(getHistorySaga, _ChallengeFailed, registry.address)
+    // const csEvents = yield call(getHistorySaga, _ChallengeSucceeded, registry.address)
 
     const pcEvents = yield call(getHistorySaga, _PollCreated, voting.address)
     const vcEvents = yield call(getHistorySaga, _VoteCommitted, voting.address)
     const vrEvents = yield call(getHistorySaga, _VoteRevealed, voting.address)
 
     const lhEvents = [cEvents, awEvents, arEvents, lrEvents, lwEvents, trEvents]
-    const piEvents = [pcEvents]
+    const piEvents = [
+      pcEvents,
+      // vcEvents,
+      // vrEvents
+    ]
     const sortedEvents = yield call(flattenAndSortByNestedBlockTimestamp, lhEvents)
     console.log('sortedEvents', sortedEvents.toJS())
     const sortedPIEvents = yield call(flattenAndSortByNestedBlockTimestamp, piEvents)
-    console.log('sortedPIEvenst', sortedPIEvents.toJS())
+    console.log('sortedPollIDEvents', sortedPIEvents.toJS())
 
     const updatedApplications = yield call(updateSortedEventsSaga, sortedEvents, applications)
     const updatedListings = yield call(updateSortedEventsSaga, sortedPIEvents, updatedApplications)
@@ -83,7 +85,7 @@ function flattenAndSortByNestedBlockTimestamp(events) {
   return sortByNestedBlockTimestamp(flattened)
 }
 
-function* updateSortedEventsSaga(sortedEvents, listings) {
+export function* updateSortedEventsSaga(sortedEvents, listings) {
   try {
     const updated = (yield sortedEvents.map(one => {
       const log = one.get('log')
@@ -92,9 +94,9 @@ function* updateSortedEventsSaga(sortedEvents, listings) {
       const msgSender = one.get('msgSender')
 
       let golem
-      if (eventName === '_PollCreated') {
+      if (log.pollID) {
         golem = findChallenge(log.pollID, listings)
-      } else {
+      } else if (log.listingHash) {
         golem = findGolem(log.listingHash, listings)
       }
       if (golem !== undefined) {
@@ -147,10 +149,6 @@ export async function convertDecodedLogs(logs, ContractEvent, provider) {
     // transform into a listing object
     if (ContractEvent.name === '_Application') {
       const listing = await convertLogToListing(logData, txData, tx.from)
-      // const data = {
-      //   txData,
-      //   listing
-      // }
       listings.push(listing)
     } else {
       // pack up an object and send back for re-analysis

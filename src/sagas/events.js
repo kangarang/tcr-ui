@@ -1,12 +1,11 @@
 import { eventChannel } from 'redux-saga'
-import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
+import { call, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
 import { setListings } from '../actions'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
-import { updateListings, findGolem, changeListing } from 'libs/listings'
-import { SET_REGISTRY_CONTRACT, SET_CONTRACTS } from '../actions/constants'
-import { fromJS } from 'immutable'
+import { findGolem, findChallenge } from 'libs/listings'
+import { SET_CONTRACTS } from '../actions/constants'
 
 export default function* eventsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventChannels)
@@ -26,7 +25,8 @@ function* setupEventChannels() {
     _ChallengeSucceeded,
     _ChallengeFailed,
     _ListingRemoved,
-    // _ListingWithdrawn,
+    _ListingWithdrawn,
+    _TouchAndRemoved,
   } = registry.interface.events
 
   // extract the topics
@@ -104,6 +104,7 @@ const createChannel = (provider, eventTopics, ContractEvent) =>
 function* handleEventEmission({ ContractEvent, log }) {
   console.log('emit!')
   console.log(ContractEvent.name, log)
+
   const provider = yield select(selectProvider)
   const listings = yield select(selectAllListings)
 
@@ -114,13 +115,19 @@ function* handleEventEmission({ ContractEvent, log }) {
     blockHash: block.hash,
     ts: block.timestamp,
   }
-  if (log.listingHash) {
-    const golem = yield call(findGolem, log.listingHash, listings)
+  const dLog = yield call(decodeLog, ContractEvent, log)
+  console.log('dLog', dLog)
+
+  if (dLog.listingHash) {
+    const golem = yield call(findGolem, dLog.listingHash, listings)
     console.log('golem', golem)
     // const listing = yield call(changeListing, golem, ContractEvent.name, log, tx.from)
     // console.log('listing', listing)
     // const updatedListings = listings.set(log.listingHash, fromJS(listing))
     // console.log('updatedListings', updatedListings.toJS())
     // yield put(setListings(updatedListings))
+  } else if (dLog.pollID) {
+    const golem = yield call(findChallenge, dLog.pollID, listings)
+    console.log('golem', golem)
   }
 }

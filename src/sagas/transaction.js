@@ -98,6 +98,10 @@ export function* sendTransactionSaga(contract, method, args) {
     yield put(clearTxn(minedTxn))
     yield put(updateBalancesRequest())
   } catch (error) {
+    if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {
+      console.log('MetaMask tx denied')
+      return false
+    }
     console.log('error', error)
   }
 }

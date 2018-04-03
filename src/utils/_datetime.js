@@ -37,7 +37,6 @@ export function timestampToExpiry(integer) {
 export function buildTimeObject(integer) {
   const date = moment.unix(integer).toDate()
   const timestamp = date.getTime() / 1000
-  const ts = integer / 1000
 
   // prettier-ignore
   const now = moment().utc().unix()
