@@ -2,15 +2,13 @@ import { select, takeLatest, call, put } from 'redux-saga/effects'
 import _ from 'lodash'
 
 import { setListings } from 'actions'
+import { setApplications } from 'libs/listings'
 import {
-  convertLogToListing,
-  sortByNestedBlockTimestamp,
-  findGolem,
-  changeListing,
-  setApplications,
-  findChallenge,
-} from 'libs/listings'
-import { decodeLogs, getBlockAndTxnFromLog, convertDecodedLogs } from '../libs/logs'
+  flattenAndSortByNestedBlockTimestamp,
+  decodeLogs,
+  getBlockAndTxnFromLog,
+  convertDecodedLogs,
+} from '../libs/logs'
 
 import { selectProvider, selectRegistry, selectVoting, selectAllListings } from '../selectors'
 import { SET_CONTRACTS } from '../actions/constants'
@@ -46,7 +44,7 @@ export function* setupLogsSaga() {
     const sorted = yield call(flattenAndSortByNestedBlockTimestamp, logs)
     const listings = yield call(convertDecodedLogs, sorted, applications)
     const updatedApplications = yield call(setApplications, applications, listings)
-    const filteredListings = updatedApplications.filter(li => li.get('status') !== '0')
+    const filteredListings = yield updatedApplications.filter(li => li.get('status') !== '0')
     // console.log('logs', logs)
     // console.log('flat, sorted', sorted)
     // console.log('listings', listings)
@@ -63,14 +61,13 @@ export function* setupLogsSaga() {
   }
 }
 
-function flattenAndSortByNestedBlockTimestamp(events) {
-  const flattened = _.flatten(events)
-  return sortByNestedBlockTimestamp(flattened)
-}
-
 function* decodeLogsSaga(ContractEvent, contractAddress) {
-  const provider = yield select(selectProvider)
-  const decodedLogs = yield call(decodeLogs, provider, ContractEvent, contractAddress)
-  console.log(ContractEvent.name, 'logs', decodedLogs)
-  return decodedLogs
+  try {
+    const provider = yield select(selectProvider)
+    const decodedLogs = yield call(decodeLogs, provider, ContractEvent, contractAddress)
+    // console.log(ContractEvent.name, 'logs', decodedLogs)
+    return decodedLogs
+  } catch (error) {
+    console.log('decodeLogsSaga error', error)
+  }
 }

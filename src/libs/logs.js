@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable'
+import _ from 'lodash'
 import {
   convertLogToListing,
   sortByNestedBlockTimestamp,
@@ -9,6 +10,11 @@ import {
 } from 'libs/listings'
 
 let lastReadBlockNumber = 0
+
+export function flattenAndSortByNestedBlockTimestamp(events) {
+  const flattened = _.flatten(events)
+  return sortByNestedBlockTimestamp(flattened)
+}
 
 export async function decodeLogs(provider, ContractEvent, address) {
   // build filter
