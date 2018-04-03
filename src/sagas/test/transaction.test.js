@@ -5,21 +5,16 @@ import _ from 'lodash'
 
 import { SEND_TRANSACTION } from 'actions/constants'
 import { sendTransaction } from 'actions'
-import { convertedToBaseUnit } from 'utils/_units'
+import { convertedToBaseUnit } from 'libs/units'
 
-import transactionSaga, {
-  handleSendTransaction,
-  registryTxnSaga,
-} from '../transaction'
+import transactionSaga, { handleSendTransaction, registryTxnSaga } from '../transaction'
 
 const getDefaultState = (payload = {}) => Object.assign({}, payload)
 
 describe('Root transaction saga', async () => {
   test('should return the root saga takeEvery', () => {
     const generator = cloneableGenerator(transactionSaga)(SEND_TRANSACTION)
-    expect(generator.next().value).toEqual(
-      takeEvery(SEND_TRANSACTION, handleSendTransaction)
-    )
+    expect(generator.next().value).toEqual(takeEvery(SEND_TRANSACTION, handleSendTransaction))
   })
 })
 

@@ -8,7 +8,7 @@ import { txnMining, txnMined, clearTxn } from 'actions/transactions'
 import { selectProvider, selectRegistry, selectVoting, selectToken } from '../selectors'
 import { ipfsAddData } from 'libs/ipfs'
 
-import { getListingHash } from 'utils/_values'
+import { getListingHash } from 'libs/values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from 'sagas/vote'
 import { updateBalancesRequest } from '../actions'
 

@@ -7,6 +7,7 @@ import Fade from 'material-ui/transitions/Fade'
 
 import Identicon from 'components/Identicon'
 import { colors } from '../global-styles'
+import { trimDecimalsThree } from 'libs/units'
 
 class Stats extends Component {
   state = {
@@ -50,7 +51,7 @@ class Stats extends Component {
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {balances.get('ETH')}
+              {trimDecimalsThree(balances.get('ETH'))}
               <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
             </BoldDiv>
           </UserItem>

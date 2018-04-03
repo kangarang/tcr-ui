@@ -9,7 +9,7 @@ import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
 
-import { BN, baseToConvertedUnit } from 'utils/_units'
+import { BN, baseToConvertedUnit } from 'libs/units'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'

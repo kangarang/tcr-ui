@@ -9,7 +9,7 @@ import { SideSplit, SideText } from 'containers/Transaction/components'
 import { MarginDiv, FileInput } from 'components/StyledHome'
 
 import SidePanelSeparator from './components/SidePanelSeparator'
-import { baseToConvertedUnit } from '../../utils/_units'
+import { baseToConvertedUnit } from '../../libs/units'
 
 export default class RevealVote extends Component {
   constructor(props) {

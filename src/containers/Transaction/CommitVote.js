@@ -11,7 +11,7 @@ import Button from 'components/Button'
 import SidePanelSeparator from './components/SidePanelSeparator'
 
 import { colors } from '../../global-styles'
-import { baseToConvertedUnit } from '../../utils/_units'
+import { baseToConvertedUnit } from '../../libs/units'
 export default class CommitVote extends Component {
   constructor(props) {
     super(props)

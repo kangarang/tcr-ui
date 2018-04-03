@@ -12,7 +12,7 @@ import {
   selectAllListings,
   selectWhitelist,
 } from '../selectors'
-import { baseToConvertedUnit, BN } from 'utils/_units'
+import { baseToConvertedUnit, BN } from 'libs/units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)

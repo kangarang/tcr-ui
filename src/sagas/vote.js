@@ -3,8 +3,8 @@ import { TX_REQUEST_VOTING_RIGHTS, TX_COMMIT_VOTE, TX_REVEAL_VOTE } from '../act
 
 import { selectAccount, selectVoting } from '../selectors'
 
-import { convertedToBaseUnit } from 'utils/_units'
-import { getVoteSaltHash, randInt } from 'utils/_values'
+import { convertedToBaseUnit } from 'libs/units'
+import { getVoteSaltHash, randInt } from 'libs/values'
 import saveFile from 'utils/_file'
 import { getEndDateString } from 'utils/_datetime'
 

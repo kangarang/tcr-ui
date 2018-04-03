@@ -2,8 +2,7 @@ import { fromJS } from 'immutable'
 import _ from 'lodash'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
-import { getListingHash } from '../utils/_values'
-import { _address } from '../utils/_address'
+import { getListingHash, isAddress } from '../libs/values'
 
 // Sort
 export function sortByNestedBlockTimestamp(unsorted) {
@@ -39,7 +38,7 @@ export async function convertLogToListing(log, blockTxn, owner) {
     if (listingHash === getListingHash(ipfsContent.id)) {
       // Validate listingHash === keccak256(ipfsContent.id)
       listingID = ipfsContent.id
-      if (_address.isAddress(listingID.toLowerCase())) {
+      if (isAddress(listingID.toLowerCase())) {
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         console.log('listingID', listingID)
         tokenData = _.find(tokenList, { address: listingID })

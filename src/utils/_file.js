@@ -10,4 +10,15 @@ function saveFile(data = '', filename = 'download.txt') {
   FileSaver.saveAs(blob, filename)
 }
 
+export function makeBlob(mime, str) {
+  str = typeof str === 'object' ? JSON.stringify(str) : str
+  if (str === null) {
+    return ''
+  }
+  const blob = new Blob([str], {
+    type: mime,
+  })
+  return window.URL.createObjectURL(blob)
+}
+
 export default saveFile

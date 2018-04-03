@@ -20,7 +20,7 @@ import {
   selectLatestTxn,
 } from 'selectors'
 
-import { convertedToBaseUnit } from 'utils/_units'
+import { convertedToBaseUnit } from 'libs/units'
 
 import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
