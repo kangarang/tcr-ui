@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash } from '../utils/_values'
+import { _address } from '../utils/_address'
 
 // Sort
 export function sortByNestedBlockTimestamp(unsorted) {
@@ -29,6 +30,7 @@ export function setApplications(applications, newApplications) {
 export async function convertLogToListing(log, blockTxn, owner) {
   let { listingHash, deposit, appEndDate, data } = log
   let listingID
+  let tokenData
 
   // IPFS input validations
   // Check if the data is a valid ipfs multihash
@@ -37,6 +39,12 @@ export async function convertLogToListing(log, blockTxn, owner) {
     if (listingHash === getListingHash(ipfsContent.id)) {
       // Validate listingHash === keccak256(ipfsContent.id)
       listingID = ipfsContent.id
+      if (_address.isAddress(listingID.toLowerCase())) {
+        const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
+        console.log('listingID', listingID)
+        tokenData = _.find(tokenList, { address: listingID })
+        console.log('tokenData', tokenData)
+      }
     } else {
       throw new Error('valid multihash, invalid id')
     }
@@ -65,6 +73,7 @@ export async function convertLogToListing(log, blockTxn, owner) {
     ...blockTxn,
     data,
     // view-data
+    tokenData,
     listingID,
     unstakedDeposit: deposit.toString(),
     appExpiry,
@@ -104,7 +113,7 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('challengeID', false)
     case '_PollCreated':
       return golem.set('status', '2').set('pollID', fromJS(log.pollID.toString()))
-      // .set('challengeID', fromJS(log.pollID.toString()))
+    // .set('challengeID', fromJS(log.pollID.toString()))
     // .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
     // .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
     case '_VoteCommitted':

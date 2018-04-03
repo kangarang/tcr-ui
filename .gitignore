@@ -5,12 +5,10 @@
 /.vscode
 /node_modules
 /build
-/tcr-archived
-/tcr
+/_tcr
 
 .DS_Store
 .firebaserc
 firebase.json
-ipfs-demo.js
 notes.md
 src/abis/addresses.md

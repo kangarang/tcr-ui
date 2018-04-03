@@ -49,9 +49,9 @@ export function* setupLogsSaga() {
     // console.log('flat, sorted', sorted)
     // console.log('listings', listings)
     // console.log('updatedListings', updatedListings)
-    // console.log('filteredListings', filteredListings)
 
     if (filteredListings.size > 0) {
+      console.log('filteredListings', filteredListings.toJS())
       // DISPATCH
       yield put(setListings(filteredListings))
       yield put(updateBalancesRequest())

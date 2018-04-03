@@ -71,6 +71,7 @@ class SimpleTabs extends Component {
                     openSidePanel={openSidePanel}
                     chooseTCR={chooseTCR}
                     registry={registry}
+                    tokenData={one.get('tokenData')}
                   />
                 ))}
             </FlexContainer>
@@ -91,6 +92,7 @@ class SimpleTabs extends Component {
                     openSidePanel={openSidePanel}
                     handleUpdateStatus={handleUpdateStatus}
                     updateTrigger={one.getIn(['appExpiry', 'expired'])}
+                    tokenData={one.get('tokenData')}
                   />
                 ))}
             </FlexContainer>
@@ -112,6 +114,7 @@ class SimpleTabs extends Component {
                   updateTrigger={true}
                   revealTrigger={one.getIn(['commitExpiry', 'expired'])}
                   // revealTrigger={true}
+                  tokenData={one.get('tokenData')}
                 />
               ))}
             </FlexContainer>

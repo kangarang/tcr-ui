@@ -30,6 +30,7 @@ function ListingMediaCard(props) {
     listingType,
     updateTrigger,
     revealTrigger,
+    tokenData,
   } = props
 
   return (
@@ -43,7 +44,7 @@ function ListingMediaCard(props) {
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {one.get('listingID')}
+            {tokenData ? tokenData.get('name') : one.get('listingID')}
           </Typography>
 
           <Typography component="p">{`BY: ${one.get('owner').substring(0, 10)}`}</Typography>

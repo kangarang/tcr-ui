@@ -1,5 +1,5 @@
 // from: https://github.com/0xProject/0x-monorepo/blob/development/packages/utils/src/address_utils.ts
-import * as jsSHA3 from 'js-sha3'
+import utils from 'ethers/utils'
 
 const BASIC_ADDRESS_REGEX = /^(0x)?[0-9a-f]{40}$/i
 const SAME_CASE_ADDRESS_REGEX = /^(0x)?([0-9a-f]{40}|[0-9A-F]{40})$/
@@ -8,7 +8,7 @@ export const _address = {
   isChecksumAddress(address) {
     // Check each case
     const unprefixedAddress = address.replace('0x', '')
-    const addressHash = jsSHA3.keccak256(unprefixedAddress.toLowerCase())
+    const addressHash = utils.keccak256(unprefixedAddress.toLowerCase())
 
     for (let i = 0; i < 40; i++) {
       // The nth letter should be uppercase if the nth digit of casemap is 1
@@ -32,7 +32,7 @@ export const _address = {
       return true
     } else {
       // Otherwise check each case
-      const isValidChecksummedAddress = addressUtils.isChecksumAddress(address)
+      const isValidChecksummedAddress = _address.isChecksumAddress(address)
       return isValidChecksummedAddress
     }
   },
