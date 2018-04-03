@@ -94,9 +94,10 @@ export async function convertLogToListing(log, blockTxn, owner) {
     challengeID: false,
     status: '1',
     ...blockTxn,
+    data,
     // view-data
     listingID,
-    unstakedDeposit: deposit, // numTokens potentially at-risk for Applicant
+    unstakedDeposit: deposit.toString(), // numTokens potentially at-risk for Applicant
     appExpiry,                // datetime
     commitExpiry: false,      // datetime
     revealExpiry: false,      // datetime
@@ -116,11 +117,11 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
       return golem
         .set('status', '2')
         .set('challenger', fromJS(msgSender))
-        .set('challengeID', fromJS(log.challengeID))
+        .set('challengeID', fromJS(log.challengeID.toString()))
     case '_PollCreated':
       return golem
         .set('status', '2')
-        .set('pollID', fromJS(log.pollID))
+        .set('pollID', fromJS(log.pollID.toString()))
         .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
         .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
     case '_VoteCommitted':

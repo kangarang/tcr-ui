@@ -36,16 +36,16 @@ export default ({
       <SidePanelSeparator />
 
       <SideTextInput
-        title="listing"
+        title="listing id"
         type="text"
-        handleInputChange={e => handleInputChange(e, 'listingName')}
+        handleInputChange={e => handleInputChange(e, 'listingID')}
       />
 
-      <SideTextInput
+      {/* <SideTextInput
         title="data"
         type="text"
         handleInputChange={e => handleInputChange(e, 'data')}
-      />
+      /> */}
 
       <SidePanelSeparator />
 

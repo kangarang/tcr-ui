@@ -9,7 +9,6 @@ import {
   POLL_LOGS_REQUEST,
   GET_ETH_PROVIDER,
   SET_TOKENS_ALLOWED,
-  UPDATE_BALANCES,
   UPDATE_BALANCES_REQUEST,
   GET_ETHEREUM,
 } from './actions/constants'
@@ -37,7 +36,6 @@ const logger = createLogger({
     action.type !== GET_TOKENS_ALLOWED &&
     action.type !== POLL_LOGS_REQUEST &&
     action.type !== GET_ETH_PROVIDER &&
-    action.type !== UPDATE_BALANCES &&
     action.type !== UPDATE_BALANCES_REQUEST &&
     action.type !== SET_TOKENS_ALLOWED,
   collapsed: (getState, action, logEntry) => !action.error,

@@ -37,7 +37,7 @@ class Home extends Component {
     this.state = {
       activeItem: 0,
       opened: false,
-      listingName: '',
+      listingID: '',
       data: '',
       numTokens: '',
       selectedOne: false,
@@ -191,12 +191,14 @@ class Home extends Component {
     const { _Application } = this.props.registry.interface.events
     console.log('_Application', _Application)
 
-    const args = [
-      this.state.listingName,
-      convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18),
-      // convertedToBaseUnit(this.state.numTokens, 18),
-      this.state.data,
-    ]
+    let numTokens
+    if (this.state.numTokens === '') {
+      numTokens = convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18)
+    } else {
+      numTokens = convertedToBaseUnit(this.state.numTokens, 18)
+    }
+
+    const args = [this.state.listingID, numTokens, this.state.data]
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
