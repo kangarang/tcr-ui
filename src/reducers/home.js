@@ -57,7 +57,7 @@ function homeReducer(state = initialState, action) {
     case UPDATE_BALANCES:
       return state.set('balances', fromJS(action.payload.balances))
     case UPDATE_LISTING:
-      return state.setIn(['listings', action.payload.get('listingHash')], fromJS(action.payload))
+      return state.setIn(['listings', action.payload.listingHash], fromJS(action.payload))
     case SET_LISTINGS:
       return state.set('listings', fromJS(action.payload))
     default:

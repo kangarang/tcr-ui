@@ -67,14 +67,19 @@ export function* setupLogsSaga() {
     const sortedEvents = yield call(flattenAndSortByNestedBlockTimestamp, lhEvents)
     console.log('sortedEvents', sortedEvents.toJS())
     const updatedApplications = yield call(updateSortedEventsSaga, sortedEvents, applications)
+    console.log('updatedApplications', updatedApplications.toJS())
 
     const sortedPIEvents = yield call(flattenAndSortByNestedBlockTimestamp, piEvents)
     console.log('sortedPollIDEvents', sortedPIEvents.toJS())
     const updatedListings = yield call(updateSortedEventsSaga, sortedPIEvents, updatedApplications)
+    console.log('updatedListings', updatedListings.toJS())
 
-    if (updatedListings.size > 0) {
+    const filteredListings = updatedListings.filter(li => li.get('status') !== '0')
+    console.log('filteredListings', filteredListings.toJS())
+
+    if (filteredListings.size > 0) {
       // DISPATCH
-      yield put(setListings(updatedListings))
+      yield put(setListings(filteredListings))
       yield put(updateBalancesRequest())
     }
   } catch (error) {
@@ -106,11 +111,9 @@ export function* updateSortedEventsSaga(sortedEvents, listings) {
       }
       return false
     })).filter(ev => ev !== false)
-    console.log('updated', updated.toJS())
+    // console.log('updated', updated.toJS())
     // List(Map, Map, Map)
     const updatedListings = yield call(setApplications, listings, updated)
-    console.log('updatedListings', updatedListings.toJS())
-    // Map(Map, Map, Map)
     return updatedListings
   } catch (error) {
     console.log('sagaSaga error:', error)
@@ -137,7 +140,7 @@ async function decodeLogs(provider, ContractEvent, address) {
   return provider.getLogs(filter)
 }
 
-export async function convertDecodedLogs(logs, ContractEvent, provider) {
+async function convertDecodedLogs(logs, ContractEvent, provider) {
   let listings = []
   for (const log of logs) {
     // decode logs
@@ -163,7 +166,7 @@ export async function convertDecodedLogs(logs, ContractEvent, provider) {
       listings.push(data)
     }
   }
-  console.log(ContractEvent.name, 'events:', listings)
+  console.log(ContractEvent.name, 'logs:', listings)
   return listings
 }
 
