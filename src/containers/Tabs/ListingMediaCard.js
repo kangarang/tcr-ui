@@ -54,20 +54,19 @@ function ListingMediaCard(props) {
           <div>
             {listingType === 'faceoffs' ? (
               <div>
-                {!revealTrigger &&
-                  !updateTrigger && (
-                    <div>
-                      <Button
-                        onClick={e => openSidePanel(one, 'commitVote')}
-                        size="medium"
-                        color="primary"
-                      >
-                        {'Commit Vote'}
-                      </Button>
-                      <Countdown end={one.getIn(['commitExpiry', 'date'])} />
-                    </div>
-                  )}
-                {revealTrigger &&
+                {!revealTrigger && !updateTrigger ? (
+                  <div>
+                    <Button
+                      onClick={e => openSidePanel(one, 'commitVote')}
+                      size="medium"
+                      color="primary"
+                    >
+                      {'Commit Vote'}
+                    </Button>
+                    <Countdown end={one.getIn(['commitExpiry', 'date'])} />
+                  </div>
+                ) : (
+                  revealTrigger &&
                   !updateTrigger && (
                     <div>
                       <Button
@@ -79,7 +78,8 @@ function ListingMediaCard(props) {
                       </Button>
                       <Countdown end={one.getIn(['revealExpiry', 'date'])} />
                     </div>
-                  )}
+                  )
+                )}
               </div>
             ) : (
               <div>
@@ -93,6 +93,7 @@ function ListingMediaCard(props) {
                 <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
+
             {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
               <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
             ) : (

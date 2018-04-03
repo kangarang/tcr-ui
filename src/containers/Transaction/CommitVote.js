@@ -10,7 +10,6 @@ import Button from 'components/Button'
 
 import SidePanelSeparator from './components/SidePanelSeparator'
 
-import { withCommas } from 'utils/_values'
 import { colors } from '../../global-styles'
 import { baseToConvertedUnit } from '../../utils/_units'
 export default class CommitVote extends Component {
@@ -62,7 +61,7 @@ export default class CommitVote extends Component {
             leftTitle={'Poll ID'}
             leftItem={selectedOne && selectedOne.get('challengeID')}
             rightTitle={'Token Balance'}
-            rightItem={withCommas(balances.get('token'))}
+            rightItem={balances.get('token')}
           />
           <SideSplit
             leftTitle={'Commit Hash'}
@@ -72,9 +71,9 @@ export default class CommitVote extends Component {
           />
           <SideSplit
             leftTitle={'Voting Rights'}
-            leftItem={withCommas(balances.get('votingRights'))}
+            leftItem={balances.get('votingRights')}
             rightTitle={'Locked Tokens'}
-            rightItem={withCommas(balances.get('lockedTokens'))}
+            rightItem={balances.get('lockedTokens')}
           />
 
           <SideText text={selectedOne && selectedOne.get('listingID')} />

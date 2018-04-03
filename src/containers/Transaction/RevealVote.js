@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import translate from 'translations'
-import { withCommas } from 'utils/_values'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
@@ -87,9 +86,9 @@ export default class RevealVote extends Component {
         />
         <SideSplit
           leftTitle={'Locked Tokens'}
-          leftItem={withCommas(balances.get('lockedTokens'))}
+          leftItem={balances.get('lockedTokens')}
           rightTitle={'Voting Rights'}
-          rightItem={withCommas(balances.get('votingRights'))}
+          rightItem={balances.get('votingRights')}
         />
 
         <SideText small text={'REVEAL VOTE'} />

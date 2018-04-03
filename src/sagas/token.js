@@ -1,3 +1,4 @@
+import utils from 'ethers/utils'
 import { put, select, all, takeEvery } from 'redux-saga/effects'
 import { UPDATE_BALANCES_REQUEST } from 'actions/constants'
 import { updateBalances } from '../actions'
@@ -45,6 +46,7 @@ function* updateBalancesSaga() {
     ])
 
     const decimals = contracts.get('tokenDecimals')
+
     const [
       ETH,
       tokenBalance,
@@ -53,21 +55,18 @@ function* updateBalancesSaga() {
       votingRights,
       lockedTokens,
     ] = yield all([
-      baseToConvertedUnit(ethBalance, decimals),
-      baseToConvertedUnit(tokenBalanceRaw, decimals),
-      baseToConvertedUnit(registryAllowanceRaw, decimals),
-      baseToConvertedUnit(votingAllowanceRaw, decimals),
-      baseToConvertedUnit(votingRightsRaw, decimals),
-      baseToConvertedUnit(lockedTokensRaw, decimals),
+      utils.formatEther(ethBalance, { commify: true }),
+      utils.formatUnits(tokenBalanceRaw, decimals, { commify: true }),
+      utils.formatUnits(registryAllowanceRaw, decimals, { commify: true }),
+      utils.formatUnits(votingAllowanceRaw, decimals, { commify: true }),
+      utils.formatUnits(votingRightsRaw, decimals, { commify: true }),
+      utils.formatUnits(lockedTokensRaw, decimals, { commify: true }),
     ])
 
     const stakeRaw = yield listings.reduce((acc, val) => {
       return acc.add(BN(val.get('unstakedDeposit')))
     }, BN('0'))
-    // console.log('stakeRaw', stakeRaw.toString())
-    // console.log('listings', listings.toJS())
-
-    const totalRegistryStake = yield baseToConvertedUnit(stakeRaw, decimals)
+    const totalRegistryStake = utils.formatUnits(stakeRaw, decimals, { commify: true })
 
     const balances = {
       ETH,

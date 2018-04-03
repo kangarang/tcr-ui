@@ -100,20 +100,20 @@ class SimpleTabs extends Component {
         {value === 2 && (
           <TabContainer>
             <FlexContainer>
-              {faceoffs
-                .valueSeq()
-                .map(one => (
-                  <ListingMediaCard
-                    key={one.get('listingHash')}
-                    one={one}
-                    imgSrc={imgSrc}
-                    listingType={'faceoffs'}
-                    openSidePanel={openSidePanel}
-                    handleUpdateStatus={handleUpdateStatus}
-                    updateTrigger={one.getIn(['revealExpiry', 'expired'])}
-                    revealTrigger={one.getIn(['commitExpiry', 'expired'])}
-                  />
-                ))}
+              {faceoffs.valueSeq().map(one => (
+                <ListingMediaCard
+                  key={one.get('listingHash')}
+                  one={one}
+                  imgSrc={imgSrc}
+                  listingType={'faceoffs'}
+                  openSidePanel={openSidePanel}
+                  handleUpdateStatus={handleUpdateStatus}
+                  // updateTrigger={one.getIn(['revealExpiry', 'expired'])}
+                  updateTrigger={true}
+                  revealTrigger={one.getIn(['commitExpiry', 'expired'])}
+                  // revealTrigger={true}
+                />
+              ))}
             </FlexContainer>
           </TabContainer>
         )}

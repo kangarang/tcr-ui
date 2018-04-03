@@ -6,7 +6,7 @@ import Menu from 'material-ui/Menu'
 import Fade from 'material-ui/transitions/Fade'
 
 import Identicon from 'components/Identicon'
-import { withCommas, trimDecimalsThree } from 'utils/_values'
+import { trimDecimalsThree } from 'utils/_values'
 import { colors } from '../global-styles'
 
 class Stats extends Component {
@@ -51,13 +51,13 @@ class Stats extends Component {
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {withCommas(trimDecimalsThree(balances.get('ETH')))}
+              {trimDecimalsThree(balances.get('ETH'))}
               <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {withCommas(trimDecimalsThree(balances.get('token')))}
+              {trimDecimalsThree(balances.get('token'))}
               <BoldDivGrey>{contracts.get('tokenSymbol')}</BoldDivGrey>
             </BoldDiv>
           </UserItem>

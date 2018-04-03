@@ -1,7 +1,6 @@
 import React from 'react'
 import { Text } from '@aragon/ui'
 import translate from 'translations'
-import { withCommas } from 'utils/_values'
 
 import SidePanel from './SidePanel'
 import TxnProgress from './TxnProgress'
