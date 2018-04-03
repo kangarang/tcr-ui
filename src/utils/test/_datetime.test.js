@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { dateHasPassed, convertUnixTimeLeft } from '../_datetime'
+import { dateHasPassed, timestampToExpiryTimeLeft } from '../_datetime'
 
 describe('datetime helpers', async () => {
   test('should return true for a small date', () => {
@@ -16,12 +16,12 @@ describe('datetime helpers', async () => {
     const noww = moment()
       .utc()
       .unix() // 1520904331
-    const converted = convertUnixTimeLeft(noww)
+    const converted = timestampToExpiryTimeLeft(noww)
     expect(converted.timeleft).toBe(0)
   })
 
   test('should throw an error when given a string', () => {
-    const converted = convertUnixTimeLeft('123424')
+    const converted = timestampToExpiryTimeLeft('123424')
     expect(converted.message).toBe('need integer!')
   })
 })

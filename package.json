@@ -20,7 +20,7 @@
     "history": "4.7.2",
     "husky": "0.14.3",
     "immutable": "3.8.2",
-    "ipfs-api": "18.1.1",
+    "ipfs-api": "19.0.0",
     "ipfs-mini": "1.1.2",
     "jazzicon": "1.5.0",
     "lint-staged": "7.0.0",

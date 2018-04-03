@@ -27,44 +27,28 @@ export default ({
     opened={this.state.opened === 'claimVoterReward'}
     onClose={this.closeSidePanel}
   >
-    <SideSplit
-      leftTitle={'Reveal Period'}
-      leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
-      rightTitle={'POLL ID'}
-      rightItem={this.state.selectedOne && this.state.selectedOne.getIn(['latest', 'pollID'])}
-    />
-    <SideSplit
-      leftTitle={'Token Balance'}
-      leftItem={withCommas(balances.get('token'))}
-      rightTitle={'Voting Allowance'}
-      rightItem={withCommas(balances.get('votingAllowance'))}
-    />
-
-    <SideText small text={'CLAIM VOTER REWARD'} />
-    <SideText small text={this.state.voterReward} />
-
-    <SidePanelSeparator />
-
-    <SideText small text={'INSTRUCTIONS'} />
-
-    <SideText text={translate('ins_claimVoterReward')} />
-
     <MarginDiv>
       <FileInput type="file" name="file" onChange={this.handleFileInput} />
     </MarginDiv>
+
     <MarginDiv>
       <Button onClick={this.handleClaimVoterReward} mode="strong" wide>
         {'Claim Voter Reward'}
       </Button>
     </MarginDiv>
+
     {miningStatus && (
       <div>
         <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
           {'etherscan'}
         </Button>
-        {/* <SideText color="grey" text={translate('txCost_')} /> */}
         <TxnProgress />
       </div>
+    )}
+    {latestTxn && (
+      <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
+        {latestTxn.get('tx')}
+      </a>
     )}
   </SidePanel>
 )

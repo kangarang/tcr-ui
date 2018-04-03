@@ -27,7 +27,7 @@ export function dateHasPassed(unixTimestamp) {
   // 1520904108 >= unixTimestamp
   return date.unix() >= unixTimestamp
 }
-export function convertUnix(integer) {
+export function timestampToExpiry(integer) {
   if (!_.isNumber(integer)) {
     return new Error('need integer!')
   }

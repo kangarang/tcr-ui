@@ -20,7 +20,7 @@ export default class CommitVote extends Component {
       balances,
       selectedOne,
       handleInputChange,
-      // handleApprove,
+      handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
       miningStatus,
@@ -43,7 +43,7 @@ export default class CommitVote extends Component {
             rightItem={withCommas(balances.get('votingAllowance'))}
           />
 
-          <SideText text={selectedOne && selectedOne.get('ipfsID')} />
+          <SideText text={selectedOne && selectedOne.get('listingID')} />
 
           <SidePanelSeparator />
 
@@ -85,12 +85,12 @@ export default class CommitVote extends Component {
             </div>
           )}
 
-          {/* <MarginDiv>
+          <MarginDiv>
             <SideText text={translate('ins_approve')} />
             <Button onClick={e => handleApprove('voting')} mode="strong" wide>
               {'Approve tokens for Voting'}
             </Button>
-          </MarginDiv> */}
+          </MarginDiv>
         </SidePanel>
       </div>
     )

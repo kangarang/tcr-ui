@@ -30,7 +30,7 @@ export default ({
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
       <SidePanelSeparator />
 
-      <SideText text={selectedOne && selectedOne.get('ipfsID')} />
+      <SideText text={selectedOne && selectedOne.get('listingID')} />
 
       <MarginDiv>
         <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
@@ -62,39 +62,12 @@ export default ({
             <TxnProgress />
           </div>
         )}
+        {latestTxn && (
+          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
+            {latestTxn.get('tx')}
+          </a>
+        )}
       </MarginDiv>
-
-      {/* <MarginDiv>
-          <Text color="grey" smallcaps>
-            {'TOKEN AMOUNT'}
-          </Text>
-          <TextInput onChange={e => handleInputChange(e, 'numTokens')} wide type="number" />
-            <SideTextInput
-              title="token amount"
-              type="number"
-              handleInputChange={e => handleInputChange(e, 'numTokens')}
-            />
-          <Button onClick={e => handleApprove('registry')} mode="strong" wide>
-            {'Approve tokens for Registry'}
-          </Button>
-        </MarginDiv> */}
-      {/* <SideSplit
-        leftTitle={'Challenge Period'}
-        leftItem={
-          <div>{`Commit: ${parameters.get('commitStageLen')} seconds & Reveal: ${parameters.get(
-            'revealStageLen'
-          )} seconds`}</div>
-        }
-        rightTitle={'Minimum Deposit'}
-        rightItem={<div>{`${parameters.get('minDeposit')} ${contracts.get('tokenSymbol')}`}</div>}
-      />
-
-      <SideSplit
-        leftTitle={'Token Balance'}
-        leftItem={balances.get('token')}
-        rightTitle={'Registry Allowance'}
-        rightItem={withCommas(balances.get('registryAllowance'))}
-      /> */}
     </SidePanel>
   </div>
 )

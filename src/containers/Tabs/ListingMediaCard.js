@@ -38,12 +38,12 @@ function ListingMediaCard(props) {
         <CardMedia
           className={classes.media}
           image={imgSrc}
-          title={`Listing image ${one.get('ipfsID')}`}
+          title={`Listing image ${one.get('listingID')}`}
         />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {one.get('ipfsID')}
+            {one.get('listingID')}
           </Typography>
 
           <Typography component="p">{`BY: ${one.get('owner').substring(0, 8)}`}</Typography>
@@ -94,7 +94,7 @@ function ListingMediaCard(props) {
               </div>
             )}
             {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
-              <Button onClick={e => chooseTCR(one.get('ipfsData'))}>{'Select TCR'}</Button>
+              <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
             ) : (
               updateTrigger && (
                 <div>

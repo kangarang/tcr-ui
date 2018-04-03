@@ -37,7 +37,7 @@ export default ({
     />
 
     <SideText small text={'REVEAL VOTE'} />
-    <SideText small text={selectedOne && selectedOne.get('ipfsID')} />
+    <SideText small text={selectedOne && selectedOne.get('listingID')} />
 
     <SidePanelSeparator />
 

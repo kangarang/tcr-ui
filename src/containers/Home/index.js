@@ -13,6 +13,7 @@ import {
   selectAllContracts,
   selectRegistry,
   selectToken,
+  selectVoting,
   selectParameters,
   selectMiningStatus,
   selectLatestTxn,
@@ -129,71 +130,53 @@ class Home extends Component {
 
         {/* filtered listings */}
         <Tabs
-          registry={registry}
-          candidates={candidates}
-          faceoffs={faceoffs}
-          whitelist={whitelist}
           openSidePanel={this.openSidePanel}
           chooseTCR={this.chooseTCR}
           handleUpdateStatus={this.handleUpdateStatus}
+          {...this.props}
         />
 
         {/* transaction modules */}
         <Apply
           opened={this.state.opened === 'apply'}
           closeSidePanel={this.closeSidePanel}
-          token={token}
-          contracts={contracts}
-          parameters={parameters}
-          balances={balances}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleApply={this.handleApply}
           visibleApprove={this.state.visibleApprove}
           openApprove={this.openApprove}
-          miningStatus={miningStatus}
-          latestTxn={latestTxn}
+          {...this.props}
         />
 
         <Challenge
           opened={this.state.opened === 'challenge'}
           closeSidePanel={this.closeSidePanel}
-          token={token}
-          contracts={contracts}
-          parameters={parameters}
-          balances={balances}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleChallenge={this.handleChallenge}
           selectedOne={this.state.selectedOne}
-          miningStatus={miningStatus}
-          latestTxn={latestTxn}
+          {...this.props}
         />
 
         <CommitVote
           opened={this.state.opened === 'commitVote'}
           closeSidePanel={this.closeSidePanel}
-          balances={balances}
           selectedOne={this.state.selectedOne}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleCommitVote={this.handleCommitVote}
           handleRequestVotingRights={this.handleRequestVotingRights}
-          miningStatus={miningStatus}
-          latestTxn={latestTxn}
+          {...this.props}
         />
 
         <RevealVote
           opened={this.state.opened === 'revealVote'}
           closeSidePanel={this.closeSidePanel}
-          parameters={parameters}
-          balances={balances}
           selectedOne={this.state.selectedOne}
           handleFileInput={this.handleFileInput}
           handleApprove={this.handleApprove}
           handleRevealVote={this.handleRevealVote}
-          miningStatus={miningStatus}
-          latestTxn={latestTxn}
+          {...this.props}
         />
       </div>
     )
@@ -217,7 +200,10 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [this.state.selectedOne.get('listingHash'), this.state.selectedOne.get('ipfsData')]
+    const args = [
+      this.state.selectedOne.get('listingHash'),
+      this.state.selectedOne.get('listingID'),
+    ]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {
@@ -226,16 +212,16 @@ class Home extends Component {
   }
   handleCommitVote = voteOption => {
     const args = [
-      this.state.selectedOne.getIn(['latest', 'pollID']),
+      this.state.selectedOne.get('challengeID'),
       voteOption,
       this.state.numTokens,
-      this.state.selectedOne.get('ipfsID'),
+      this.state.selectedOne.get('listingID'),
     ]
     this.props.onSendTransaction({ methodName: 'commitVote', args })
   }
   handleRevealVote = () => {
     const args = [
-      this.state.selectedOne.getIn(['latest', 'pollID']),
+      this.state.selectedOne.get('challengeID'),
       this.state.fileInput.voteOption,
       this.state.fileInput.salt,
     ]
@@ -246,11 +232,11 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'updateStatus', args })
   }
   handleRescueTokens = listing => {
-    const args = [listing.getIn(['latest', 'pollID'])]
+    const args = [listing.get('challengeID')]
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
   handleClaimVoterReward = () => {
-    const args = [this.state.selectedOne.getIn(['latest', 'pollID']), this.state.fileInput.salt]
+    const args = [this.state.selectedOne.get('challengeID'), this.state.fileInput.salt]
     this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
   }
 }
@@ -272,6 +258,7 @@ const mapStateToProps = createStructuredSelector({
 
   contracts: selectAllContracts,
   registry: selectRegistry,
+  voting: selectVoting,
   token: selectToken,
 
   parameters: selectParameters,

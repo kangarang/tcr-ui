@@ -3,7 +3,7 @@ import ipfsAPI from 'ipfs-api'
 
 // TODO: type checking
 // TODO: add tests
-export const getIPFSData = async multihash => {
+export const ipfsGetData = async multihash => {
   const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
   const ipfs = await ipfsAPI(config)
   const ipfsPath = await ipfs.files.get(multihash)
@@ -30,7 +30,7 @@ export async function ipfsAddData(obj) {
     })
   })
 
-  const content = await getIPFSData(CID[0].hash)
+  const content = await ipfsGetData(CID[0].hash)
   console.log(`${CID[0].hash.substring(0, 8)} added: ${JSON.stringify(content)}`)
   return CID[0].hash
 }

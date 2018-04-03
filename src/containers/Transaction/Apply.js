@@ -72,20 +72,6 @@ export default ({
         <Button bgColor={colors.brightBlue} wide fgColor={'white'} onClick={handleApply}>
           {'SUBMIT APPLICATION'}
         </Button>
-        {miningStatus && (
-          <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
-              {'etherscan'}
-            </Button>
-            {/* <SideText color="grey" text={translate('txCost_')} /> */}
-            <TxnProgress />
-          </div>
-        )}
-        {latestTxn && (
-          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
-            {latestTxn.get('tx')}
-          </a>
-        )}
       </MarginDiv>
 
       {/* if you wanna see approve, you'll see it */}
@@ -96,7 +82,6 @@ export default ({
             <Button onClick={e => handleApprove('registry')} mode="strong">
               {'Approve tokens for Registry'}
             </Button>
-            {miningStatus && <TxnProgress />}
           </div>
         ) : (
           <div>
@@ -108,23 +93,6 @@ export default ({
                 <Button onClick={e => handleApprove('registry')} mode="strong">
                   {'Approve tokens for Registry'}
                 </Button>
-                {miningStatus && (
-                  <div>
-                    <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
-                      {'etherscan'}
-                    </Button>
-                    {/* <SideText color="grey" text={translate('txCost_')} /> */}
-                    <TxnProgress />
-                  </div>
-                )}
-                {latestTxn && (
-                  <a
-                    target="_blank"
-                    href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}
-                  >
-                    {latestTxn.get('tx')}
-                  </a>
-                )}
               </div>
             ) : (
               <Button onClick={openApprove} mode="">
@@ -133,40 +101,20 @@ export default ({
             )}
           </div>
         )}
+        {miningStatus && (
+          <div>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+              {'etherscan'}
+            </Button>
+            <TxnProgress />
+          </div>
+        )}
+        {latestTxn && (
+          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
+            {latestTxn.get('tx')}
+          </a>
+        )}
       </MarginDiv>
-
-      {/* <SideSplit
-        leftTitle={'Application Period'}
-        leftItem={<div>{`${parameters.get('applyStageLen')} seconds`}</div>}
-        rightTitle={'Minimum Deposit'}
-        rightItem={
-          <div>{`${parameters.get('minDeposit')} ${contracts.get(
-            'tokenSymbol'
-          )}`}</div>
-        }
-      />
-      <SideSplit
-        leftTitle={'Token Balance'}
-        leftItem={balances.get('token')}
-        rightTitle={'Registry Allowance'}
-        rightItem={withCommas(balances.get('registryAllowance'))}
-      />
-      <SideSplit
-        leftTitle={'Voting Rights'}
-        leftItem={balances.get('votingRights')}
-        rightTitle={'Voting Allowance'}
-        rightItem={withCommas(balances.get('votingAllowance'))}
-      /> */}
-      {/* <MarginDiv>
-        <Text color="grey" smallcaps>
-          {'TOKEN AMOUNT'}
-        </Text>
-        <TextInput
-          onChange={e => handleInputChange(e, 'numTokens')}
-          wide
-          type="number"
-        />
-      </MarginDiv> */}
     </SidePanel>
   </div>
 )

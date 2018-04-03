@@ -1,9 +1,5 @@
 import { select, call, takeEvery } from 'redux-saga/effects'
-import {
-  TX_REQUEST_VOTING_RIGHTS,
-  TX_COMMIT_VOTE,
-  TX_REVEAL_VOTE,
-} from '../actions/constants'
+import { TX_REQUEST_VOTING_RIGHTS, TX_COMMIT_VOTE, TX_REVEAL_VOTE } from '../actions/constants'
 
 import { selectAccount, selectVoting } from '../selectors'
 
@@ -49,7 +45,7 @@ export function* commitVoteSaga(action) {
 
   // format args
   const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
-  const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens)
+  const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens, pollID)
   // console.log('prevPollID', prevPollID)
   const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
