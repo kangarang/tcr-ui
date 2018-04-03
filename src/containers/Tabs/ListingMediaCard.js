@@ -46,7 +46,7 @@ function ListingMediaCard(props) {
             {one.get('listingID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${one.get('owner').substring(0, 8)}`}</Typography>
+          <Typography component="p">{`BY: ${one.get('owner').substring(0, 10)}`}</Typography>
           <Typography component="p">{one.getIn(['appExpiry', 'formattedLocal'])}</Typography>
         </CardContent>
 

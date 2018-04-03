@@ -6,6 +6,7 @@ import { setupEthereum, sendTransaction, chooseTCR } from '../../actions'
 
 import {
   selectError,
+  selectAccount,
   selectBalances,
   selectWhitelist,
   selectCandidates,
@@ -107,19 +108,6 @@ class Home extends Component {
   }
 
   render() {
-    const {
-      candidates,
-      faceoffs,
-      whitelist,
-      registry,
-      balances,
-      parameters,
-      token,
-      contracts,
-      miningStatus,
-      latestTxn,
-    } = this.props
-
     return (
       <div>
         {/* apply, title, navigation */}
@@ -158,16 +146,18 @@ class Home extends Component {
           {...this.props}
         />
 
-        <CommitVote
-          opened={this.state.opened === 'commitVote'}
-          closeSidePanel={this.closeSidePanel}
-          selectedOne={this.state.selectedOne}
-          handleInputChange={this.handleInputChange}
-          handleApprove={this.handleApprove}
-          handleCommitVote={this.handleCommitVote}
-          handleRequestVotingRights={this.handleRequestVotingRights}
-          {...this.props}
-        />
+        {this.state.opened === 'commitVote' && (
+          <CommitVote
+            opened={this.state.opened === 'commitVote'}
+            closeSidePanel={this.closeSidePanel}
+            selectedOne={this.state.selectedOne}
+            handleInputChange={this.handleInputChange}
+            handleApprove={this.handleApprove}
+            handleCommitVote={this.handleCommitVote}
+            handleRequestVotingRights={this.handleRequestVotingRights}
+            {...this.props}
+          />
+        )}
 
         <RevealVote
           opened={this.state.opened === 'revealVote'}
@@ -253,6 +243,8 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
+
+  account: selectAccount,
 
   balances: selectBalances,
   miningStatus: selectMiningStatus,

@@ -27,7 +27,13 @@ export default ({
       leftTitle={'Reveal Period'}
       leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
       rightTitle={'POLL ID'}
-      rightItem={selectedOne && selectedOne.getIn(['latest', 'pollID'])}
+      rightItem={selectedOne && selectedOne.get('challengeID')}
+    />
+    <SideSplit
+      leftTitle={'Locked Tokens'}
+      leftItem={withCommas(balances.get('lockedTokens'))}
+      rightTitle={'Voting Rights'}
+      rightItem={withCommas(balances.get('votingRights'))}
     />
     <SideSplit
       leftTitle={'Token Balance'}

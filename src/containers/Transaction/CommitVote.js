@@ -12,7 +12,37 @@ import SidePanelSeparator from './components/SidePanelSeparator'
 
 import { withCommas } from 'utils/_values'
 import { colors } from '../../global-styles'
+import { baseToConvertedUnit } from '../../utils/_units'
 export default class CommitVote extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      commitHash: '',
+      numTokens: '',
+    }
+  }
+  componentDidMount() {
+    this.getCommitHash()
+  }
+
+  getCommitHash = async () => {
+    const numTokensRaw = await this.props.voting.getNumTokens(
+      this.props.account,
+      this.props.selectedOne.get('challengeID')
+    )
+    const commitHash = await this.props.voting.getCommitHash(
+      this.props.account,
+      this.props.selectedOne.get('challengeID')
+    )
+    console.log('commitHash', commitHash)
+    const numTokens = baseToConvertedUnit(numTokensRaw, 18)
+    if (commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
+      this.setState({
+        commitHash,
+        numTokens,
+      })
+    }
+  }
   render() {
     const {
       opened,
@@ -31,16 +61,21 @@ export default class CommitVote extends Component {
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SideSplit
             leftTitle={'Poll ID'}
-            leftItem={selectedOne && selectedOne.getIn(['latest', 'pollID'])}
+            leftItem={selectedOne && selectedOne.get('challengeID')}
             rightTitle={'Token Balance'}
             rightItem={withCommas(balances.get('token'))}
           />
-
+          <SideSplit
+            leftTitle={'Commit Hash'}
+            leftItem={this.state.commitHash.substring(0, 10)}
+            rightTitle={'Tokens Committed'}
+            rightItem={this.state.numTokens}
+          />
           <SideSplit
             leftTitle={'Voting Rights'}
-            leftItem={balances.get('votingRights')}
-            rightTitle={'Voting Allowance'}
-            rightItem={withCommas(balances.get('votingAllowance'))}
+            leftItem={withCommas(balances.get('votingRights'))}
+            rightTitle={'Locked Tokens'}
+            rightItem={withCommas(balances.get('lockedTokens'))}
           />
 
           <SideText text={selectedOne && selectedOne.get('listingID')} />
@@ -78,7 +113,7 @@ export default class CommitVote extends Component {
 
           {miningStatus && (
             <div>
-              <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+              <Button wide href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
                 {'etherscan'}
               </Button>
               <TxnProgress />
@@ -86,7 +121,6 @@ export default class CommitVote extends Component {
           )}
 
           <MarginDiv>
-            <SideText text={translate('ins_approve')} />
             <Button onClick={e => handleApprove('voting')} mode="strong" wide>
               {'Approve tokens for Voting'}
             </Button>
