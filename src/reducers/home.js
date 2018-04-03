@@ -20,6 +20,7 @@ const initialState = fromJS({
     votingAllowance: '0',
     votingRights: '0',
     lockedTokens: '0',
+    totalRegistryStake: '0',
   },
   contracts: {
     registry: {},
@@ -33,8 +34,6 @@ const initialState = fromJS({
   },
   parameters: { minDeposit: '0', applyStageLen: '0' },
   listings: {},
-  vFilter: false,
-  ipfs: {},
   latestTxn: {},
 })
 

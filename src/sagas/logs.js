@@ -13,6 +13,7 @@ import {
 
 import { selectProvider, selectRegistry, selectVoting } from '../selectors'
 import { SET_CONTRACTS } from '../actions/constants'
+import { updateBalancesRequest } from '../actions'
 
 let lastReadBlockNumber = 0
 
@@ -74,6 +75,7 @@ export function* setupLogsSaga() {
     if (updatedListings.size > 0) {
       // DISPATCH
       yield put(setListings(updatedListings))
+      yield put(updateBalancesRequest())
     }
   } catch (error) {
     console.log('setupLogsSaga error', error)

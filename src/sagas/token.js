@@ -8,8 +8,10 @@ import {
   selectToken,
   selectVoting,
   selectAllContracts,
+  selectAllListings,
+  selectWhitelist,
 } from '../selectors'
-import { baseToConvertedUnit } from 'utils/_units'
+import { baseToConvertedUnit, BN } from 'utils/_units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
@@ -24,6 +26,7 @@ function* updateBalancesSaga() {
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
     const contracts = yield select(selectAllContracts)
+    const listings = yield select(selectWhitelist)
 
     const [
       ethBalance,
@@ -58,6 +61,14 @@ function* updateBalancesSaga() {
       baseToConvertedUnit(lockedTokensRaw, decimals),
     ])
 
+    const stakeRaw = yield listings.reduce((acc, val) => {
+      return acc.add(BN(val.get('unstakedDeposit')))
+    }, BN('0'))
+    // console.log('stakeRaw', stakeRaw.toString())
+    // console.log('listings', listings.toJS())
+
+    const totalRegistryStake = yield baseToConvertedUnit(stakeRaw, decimals)
+
     const balances = {
       ETH,
       token: tokenBalance,
@@ -65,6 +76,7 @@ function* updateBalancesSaga() {
       votingAllowance,
       votingRights,
       lockedTokens,
+      totalRegistryStake,
     }
     yield put(updateBalances({ balances }))
   } catch (err) {
