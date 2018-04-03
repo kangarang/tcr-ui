@@ -66,6 +66,7 @@ export function* commitVoteSaga(action) {
     data,
     salt: salt.toString(10),
     secretHash,
+    account,
   }
 
   // console.log('commit json:', json)

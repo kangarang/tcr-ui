@@ -180,9 +180,6 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {
-    const { _Application } = this.props.registry.interface.events
-    console.log('_Application', _Application)
-
     let numTokens
     if (this.state.numTokens === '') {
       numTokens = convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18)

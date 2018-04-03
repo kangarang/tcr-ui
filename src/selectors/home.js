@@ -71,3 +71,7 @@ export const selectCandidates = createSelector(selectAllListings, listings =>
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('status') === '2')
 )
+
+export const selectRemoved = createSelector(selectAllListings, listings =>
+  listings.filter(li => li.get('status') === '0')
+)
