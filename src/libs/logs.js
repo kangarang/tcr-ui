@@ -51,28 +51,37 @@ export async function getBlockAndTxnFromLog(log, provider) {
   return { block, tx }
 }
 
+// Invoked by sagas/logs and sagas/events
+// Inputs: decoded logs + all the current listings
 export async function convertDecodedLogs(dLogs, allListings) {
   let listings = []
   for (const log of dLogs) {
     const { logData, txData, msgSender, eventName } = log
-    // transform into a listing object
     let golem
     let listing
+    // if the log is an application,
+    // transform into a new listing object
+    // if not, find the corresponding listing
+    // using the logData
     if (eventName === '_Application') {
       listing = await convertLogToListing(logData, txData, msgSender)
     } else if (logData.listingHash) {
+      // if listingHash exists, find the corresponding listing
       golem = findGolem(logData.listingHash, allListings)
     } else if (logData.pollID) {
-      console.log('pid logData', logData)
+      // if pollID or challengeID exists, find the corresponding challenge
+      console.log('poll id logData', logData)
       golem = findChallenge(logData.pollID, allListings)
     } else if (logData.challengeID) {
-      console.log('cid logData', logData)
+      console.log('challenge id logData', logData)
       golem = findChallenge(logData.challengeID, allListings)
     }
+    // invoke the changeListing function to modify the listing
     if (golem !== undefined) {
       listing = changeListing(golem, logData, txData, eventName, msgSender)
     }
     listings.push(listing)
   }
+  // return a new array of relevant listings
   return listings
 }

@@ -4,7 +4,7 @@ import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/
 
 import { setListings, updateListing } from '../actions'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
-import { getBlockAndTxnFromLog, decodeLog } from 'sagas/logs'
+import { getBlockAndTxnFromLog, decodeLog, convertDecodedLogs } from 'libs/logs'
 import { findGolem, changeListing, findChallenge } from 'libs/listings'
 import { SET_CONTRACTS } from '../actions/constants'
 import { convertLogToListing, setApplications } from '../libs/listings'
@@ -16,8 +16,8 @@ export default function* rootEventsSaga() {
 function* setupEventChannels() {
   const provider = yield select(selectProvider)
   const registry = yield select(selectRegistry)
+  const voting = yield select(selectVoting)
 
-  // grab registry events
   const {
     _Application,
     _Challenge,
@@ -29,6 +29,7 @@ function* setupEventChannels() {
     // _ChallengeFailed,
     // _ChallengeSucceeded,
   } = registry.interface.events
+  const { _VoteCommitted, _VoteRevealed, _PollCreated } = voting.interface.events
 
   // create channels for each event-topic
   const aChannel = yield call(createChannel, provider, _Application)
@@ -39,6 +40,10 @@ function* setupEventChannels() {
   const lwChannel = yield call(createChannel, provider, _ListingWithdrawn)
   const trChannel = yield call(createChannel, provider, _TouchAndRemoved)
 
+  const vcChannel = yield call(createChannel, provider, _VoteCommitted)
+  const vrChannel = yield call(createChannel, provider, _VoteRevealed)
+  const pcChannel = yield call(createChannel, provider, _PollCreated)
+
   try {
     while (true) {
       yield takeEvery(aChannel, handleEventEmission)
@@ -48,6 +53,10 @@ function* setupEventChannels() {
       yield takeEvery(lrChannel, handleEventEmission)
       yield takeEvery(lwChannel, handleEventEmission)
       yield takeEvery(trChannel, handleEventEmission)
+
+      yield takeEvery(vcChannel, handleEventEmission)
+      yield takeEvery(vrChannel, handleEventEmission)
+      yield takeEvery(pcChannel, handleEventEmission)
     }
   } finally {
     if (yield cancelled()) {
@@ -59,6 +68,10 @@ function* setupEventChannels() {
       lrChannel.close()
       lwChannel.close()
       trChannel.close()
+
+      vcChannel.close()
+      vrChannel.close()
+      pcChannel.close()
     }
   }
 }
@@ -67,44 +80,27 @@ function* setupEventChannels() {
 // for events from sources other than the Redux store
 const createChannel = (provider, ContractEvent) =>
   eventChannel(emitter => {
-    // provider.removeAllListeners(ContractEvent.topics)
+    provider.removeAllListeners(ContractEvent.topics)
     provider.on(ContractEvent.topics, function(log) {
+      console.log('this', this)
       emitter({ ContractEvent, log })
     })
     return () => provider.removeAllListeners(ContractEvent.topics)
   })
 
 function* handleEventEmission({ ContractEvent, log }) {
-  console.log('emit!')
-  console.log(ContractEvent.name, log)
-
   const provider = yield select(selectProvider)
-  const listings = yield select(selectAllListings)
+  const allListings = yield select(selectAllListings)
 
-  const { block, tx } = yield call(getBlockAndTxnFromLog, log, provider)
-  const txData = {
-    txHash: tx.hash,
-    blockNumber: block.number,
-    blockHash: block.hash,
-    ts: block.timestamp,
-  }
-  const dLog = yield call(decodeLog, ContractEvent, log)
-  console.log('dLog', dLog)
+  const dLog = yield call(decodeLog, ContractEvent, log, provider)
+  console.log(ContractEvent.name, 'emitted:', log, dLog)
 
-  if (ContractEvent.name === '_Application') {
-    const listing = yield call(convertLogToListing, dLog, txData, tx.from)
-    yield put(updateListing(listing))
-  } else if (dLog.listingHash) {
-    const golem = yield call(findGolem, dLog.listingHash, listings)
-    if (golem !== undefined) {
-      const listing = yield call(changeListing, golem, dLog, txData, ContractEvent.name, tx.from)
-      console.log('listing', listing.toJS())
-      const updatedListings = yield call(setApplications, listings, [listing])
-      yield put(setListings(updatedListings))
-    }
-  } else if (dLog.pollID) {
-    const golem = yield call(findChallenge, dLog.pollID, listings)
-    console.log('golem', golem)
+  const listings = yield call(convertDecodedLogs, [dLog], allListings)
+  console.log('event listing', listings)
+
+  if (listings[0] !== undefined) {
+    const updatedListings = yield call(setApplications, allListings, listings)
+    yield put(setListings(updatedListings))
   }
 }
 
