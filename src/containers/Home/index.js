@@ -182,7 +182,7 @@ class Home extends Component {
   handleApply = () => {
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18)
+      numTokens = convertedToBaseUnit(this.props.parameters.minDeposit, 18)
     } else {
       numTokens = convertedToBaseUnit(this.state.numTokens, 18)
     }
@@ -191,10 +191,7 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [
-      this.state.selectedOne.get('listingHash'),
-      this.state.selectedOne.get('listingID'),
-    ]
+    const args = [this.state.selectedOne.listingHash, this.state.selectedOne.listingID]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {
@@ -203,31 +200,31 @@ class Home extends Component {
   }
   handleCommitVote = voteOption => {
     const args = [
-      this.state.selectedOne.get('challengeID'),
+      this.state.selectedOne.challengeID,
       voteOption,
       this.state.numTokens,
-      this.state.selectedOne.get('listingID'),
+      this.state.selectedOne.listingID,
     ]
     this.props.onSendTransaction({ methodName: 'commitVote', args })
   }
   handleRevealVote = () => {
     const args = [
-      this.state.selectedOne.get('challengeID'),
+      this.state.selectedOne.challengeID,
       this.state.fileInput.voteOption,
       this.state.fileInput.salt,
     ]
     this.props.onSendTransaction({ methodName: 'revealVote', args })
   }
   handleUpdateStatus = listing => {
-    const args = [listing.get('listingHash')]
+    const args = [listing.listingHash]
     this.props.onSendTransaction({ methodName: 'updateStatus', args })
   }
   handleRescueTokens = listing => {
-    const args = [listing.get('challengeID')]
+    const args = [listing.challengeID]
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
   handleClaimVoterReward = () => {
-    const args = [this.state.selectedOne.get('challengeID'), this.state.fileInput.salt]
+    const args = [this.state.selectedOne.challengeID, this.state.fileInput.salt]
     this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
   }
 }

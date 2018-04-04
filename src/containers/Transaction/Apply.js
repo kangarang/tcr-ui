@@ -53,8 +53,8 @@ export default ({
 
       <TotalAmount
         copy={'Minimum Deposit'}
-        minDeposit={parameters.get('minDeposit')}
-        tokenSymbol={contracts.get('tokenSymbol')}
+        minDeposit={parameters.minDeposit}
+        tokenSymbol={contracts.tokenSymbol}
       />
 
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
@@ -85,8 +85,8 @@ export default ({
           </div>
         ) : (
           <div>
-            {BN(balances.get('registryAllowance')).lt(
-              BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
+            {BN(balances.registryAllowance).lt(
+              BN(baseToConvertedUnit(parameters.minDeposit, 18))
             ) ? (
               <div>
                 <Text color="red">{'YOU NEED TO APPROVE'}</Text>
@@ -103,15 +103,15 @@ export default ({
         )}
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
               {'etherscan'}
             </Button>
             <TxnProgress />
           </div>
         )}
         {latestTxn && (
-          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
-            {latestTxn.get('tx')}
+          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+            {latestTxn.hash}
           </a>
         )}
       </MarginDiv>

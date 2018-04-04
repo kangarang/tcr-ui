@@ -1,5 +1,3 @@
-import { fromJS } from 'immutable'
-
 import {
   LOGIN_ERROR,
   SET_WALLET,
@@ -10,7 +8,7 @@ import {
   UPDATE_LISTING,
 } from '../actions/constants'
 
-const initialState = fromJS({
+const initialState = {
   provider: {},
   account: '',
   network: '',
@@ -36,30 +34,66 @@ const initialState = fromJS({
   parameters: { minDeposit: '0', applyStageLen: '0' },
   listings: {},
   latestTxn: {},
-})
+}
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case LOGIN_ERROR:
-      return state.set('error', action.error)
+      return {
+        ...state,
+        error: action.error,
+      }
     case SET_WALLET:
-      return state
-        .set('error', fromJS(false))
-        .set('provider', fromJS(action.payload.provider))
-        .set('account', fromJS(action.payload.account))
-        .set('network', fromJS(action.payload.network))
+      return {
+        ...state,
+        provider: action.payload.provider,
+        account: action.payload.account,
+        network: action.payload.network,
+      }
     case SET_REGISTRY_CONTRACT:
-      return state.setIn(['contracts', 'registry'], fromJS(action.payload))
+      return {
+        ...state,
+        contracts: {
+          ...state.contracts,
+          registry: action.payload,
+        },
+      }
     case SET_CONTRACTS:
-      return state
-        .set('parameters', fromJS(action.payload.parameters))
-        .set('contracts', fromJS(action.payload.contracts))
+      return {
+        ...state,
+        parameters: {
+          ...state.parameters,
+          ...action.payload.parameters,
+        },
+        contracts: {
+          ...state.contracts,
+          ...action.payload.contracts,
+        },
+      }
     case UPDATE_BALANCES:
-      return state.set('balances', fromJS(action.payload.balances))
+      return {
+        ...state,
+        balances: {
+          ...state.balances,
+          ...action.payload.balances,
+        },
+      }
     case UPDATE_LISTING:
-      return state.setIn(['listings', action.payload.listingHash], fromJS(action.payload))
+      return {
+        ...state,
+        listings: {
+          ...state.listings,
+          [action.payload.listingHash]: action.payload,
+        },
+      }
     case SET_LISTINGS:
-      return state.set('listings', fromJS(action.payload))
+      return {
+        ...state,
+        listings: {
+          ...state.listings,
+          ...action.payload,
+        },
+      }
     default:
       return state
   }

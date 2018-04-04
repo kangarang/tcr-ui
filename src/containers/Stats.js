@@ -32,17 +32,17 @@ class Stats extends Component {
       <GridContainer>
         <GridItem>
           <CapsDiv>{'total applications'}</CapsDiv>
-          <BoldDiv>{candidates.size}</BoldDiv>
+          <BoldDiv>{Object.keys(candidates).length}</BoldDiv>
         </GridItem>
 
         <GridItem>
-          <CapsDiv>{`total ${contracts.get('tokenSymbol')} at stake`}</CapsDiv>
-          <BoldDiv>{balances.get('totalRegistryStake')}</BoldDiv>
+          <CapsDiv>{`total ${contracts.tokenSymbol} at stake`}</CapsDiv>
+          <BoldDiv>{balances.totalRegistryStake}</BoldDiv>
         </GridItem>
 
         <GridItem>
           <CapsDiv>{'listings in registry'}</CapsDiv>
-          <BoldDiv>{whitelist.size}</BoldDiv>
+          <BoldDiv>{Object.keys(whitelist).length}</BoldDiv>
         </GridItem>
 
         <UserInfoGridItem>
@@ -51,14 +51,14 @@ class Stats extends Component {
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {trimDecimalsThree(balances.get('ETH'))}
+              {trimDecimalsThree(balances.ETH)}
               <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {balances.get('token')}
-              <BoldDivGrey>{contracts.get('tokenSymbol')}</BoldDivGrey>
+              {balances.token}
+              <BoldDivGrey>{contracts.tokenSymbol}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
 

@@ -38,15 +38,13 @@ export default ({
 
     {miningStatus && (
       <div>
-        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
-          {'etherscan'}
-        </Button>
+        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>{'etherscan'}</Button>
         <TxnProgress />
       </div>
     )}
     {latestTxn && (
-      <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
-        {latestTxn.get('tx')}
+      <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+        {latestTxn.hash}
       </a>
     )}
   </SidePanel>

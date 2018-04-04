@@ -1,77 +1,42 @@
 import { createSelector } from 'reselect'
+import _ from 'lodash'
 
-export const selectHome = state => state.get('home')
+export const selectHome = state => state.home
 
-export const selectError = createSelector(selectHome, homeState => homeState.get('error'))
-export const selectProvider = createSelector(selectHome, homeState => homeState.get('provider'))
-export const selectAccount = createSelector(selectHome, homeState => homeState.get('account'))
-export const selectNetwork = createSelector(selectHome, homeState => homeState.get('network'))
-
-// Balances
-export const selectBalances = createSelector(selectHome, homeState => homeState.get('balances'))
+export const selectError = createSelector(selectHome, homeState => homeState.error)
+export const selectProvider = createSelector(selectHome, homeState => homeState.provider)
+export const selectAccount = createSelector(selectHome, homeState => homeState.account)
+export const selectNetwork = createSelector(selectHome, homeState => homeState.network)
+export const selectBalances = createSelector(selectHome, homeState => homeState.balances)
 
 // Contracts
-export const selectAllContracts = createSelector(selectHome, homeState =>
-  homeState.get('contracts')
+export const selectAllContracts = createSelector(selectHome, homeState => homeState.contracts)
+export const selectRegistry = createSelector(selectAllContracts, contracts => contracts.registry)
+export const selectToken = createSelector(selectAllContracts, contracts => contracts.token)
+export const selectVoting = createSelector(selectAllContracts, contracts => contracts.voting)
+export const selectParameterizer = createSelector(
+  selectAllContracts,
+  contracts => contracts.parameterizer
 )
-export const selectRegistry = createSelector(selectAllContracts, contracts =>
-  contracts.get('registry')
-)
-export const selectToken = createSelector(selectAllContracts, contracts => contracts.get('token'))
-export const selectVoting = createSelector(selectAllContracts, contracts => contracts.get('voting'))
-export const selectParameterizer = createSelector(selectAllContracts, contracts =>
-  contracts.get('parameterizer')
-)
-
-// export const selectVotingMethods = createSelector(selectVoting, voting =>
-//   (voting ? voting.abi : []).filter(
-//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-//   )
-// )
-// export const selectRegistryMethods = createSelector(selectRegistry, registry =>
-//   (registry ? registry.abi : []).filter(
-//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-//   )
-// )
-// export const selectTokenMethods = createSelector(selectToken, token =>
-//   (token ? token.abi : []).filter(
-//     mi => mi.type === 'function' && mi.inputs.length > 0 && mi.constant
-//   )
-// )
-// export const selectVisibilityFilter = createSelector(selectHome, homeState =>
-//   homeState.get('vFilter')
-// )
-// export const selectVisibleRegistryMethod = createSelector(
-//   [selectRegistryMethods, selectVisibilityFilter],
-//   (registryMethods, vFilter) => registryMethods.filter(rMeth => rMeth.name === vFilter)
-// )
-// export const selectVisibleVotingMethod = createSelector(
-//   [selectVotingMethods, selectVisibilityFilter],
-//   (votingMethods, vFilter) => votingMethods.filter(vMeth => vMeth.name === vFilter)
-// )
-// export const selectVisibleTokenMethod = createSelector(
-//   [selectTokenMethods, selectVisibilityFilter],
-//   (tokenMethods, vFilter) => tokenMethods.filter(tMeth => tMeth.name === vFilter)
-// )
 
 // Parameters
-export const selectParameters = createSelector(selectHome, homeState => homeState.get('parameters'))
+export const selectParameters = createSelector(selectHome, homeState => homeState.parameters)
 // Listings
-export const selectAllListings = createSelector(selectHome, homeState => homeState.get('listings'))
+export const selectAllListings = createSelector(selectHome, homeState => homeState.listings)
 
 // Only whitelisted listings
 export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '3')
+  _.pickBy(listings, li => li.status === '3')
 )
 // Candidate listings
 export const selectCandidates = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '1')
+  _.pickBy(listings, li => li.status === '1')
 )
 // Only voteable listings
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '2')
+  _.pickBy(listings, li => li.status === '2')
 )
 
-export const selectRemoved = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '0')
-)
+// export const selectRemoved = createSelector(selectAllListings, listings =>
+// _.pickBy(listings, li => li.status === '0')
+// )

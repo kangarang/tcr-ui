@@ -30,10 +30,10 @@ export default ({
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
       <SidePanelSeparator />
 
-      <SideText text={selectedOne && selectedOne.get('listingID')} />
+      <SideText text={selectedOne && selectedOne.listingID} />
 
       <MarginDiv>
-        <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
+        <Countdown end={selectedOne && selectedOne.appExpiry.date} />
       </MarginDiv>
 
       <SidePanelSeparator />
@@ -42,8 +42,8 @@ export default ({
 
       <TotalAmount
         copy={'Total Stake'}
-        minDeposit={parameters.get('minDeposit')}
-        tokenSymbol={contracts.get('tokenSymbol')}
+        minDeposit={parameters.minDeposit}
+        tokenSymbol={contracts.tokenSymbol}
       />
 
       <SidePanelSeparator />
@@ -56,15 +56,15 @@ export default ({
         </Button>
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
               {'etherscan'}
             </Button>
             <TxnProgress />
           </div>
         )}
         {latestTxn && (
-          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('tx')}`}>
-            {latestTxn.get('tx')}
+          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+            {latestTxn.hash}
           </a>
         )}
       </MarginDiv>

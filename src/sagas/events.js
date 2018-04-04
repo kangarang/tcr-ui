@@ -5,7 +5,6 @@ import { SET_CONTRACTS } from '../actions/constants'
 import { setListings } from '../actions'
 import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
-import { setApplications } from '../libs/listings'
 
 export default function* rootEventsSaga() {
   yield takeLatest(SET_CONTRACTS, setupEventChannels)
@@ -41,7 +40,7 @@ function* setupEventChannels() {
 
     const vcChannel = yield call(createChannel, provider, _VoteCommitted)
     const vrChannel = yield call(createChannel, provider, _VoteRevealed)
-    const pcChannel = yield call(createChannel, provider, _PollCreated)
+    // const pcChannel = yield call(createChannel, provider, _PollCreated)
 
     try {
       while (true) {
@@ -55,7 +54,7 @@ function* setupEventChannels() {
 
         yield takeEvery(vcChannel, handleEventEmission)
         yield takeEvery(vrChannel, handleEventEmission)
-        yield takeEvery(pcChannel, handleEventEmission)
+        // yield takeEvery(pcChannel, handleEventEmission)
       }
     } finally {
       if (yield cancelled()) {
@@ -70,7 +69,7 @@ function* setupEventChannels() {
 
         vcChannel.close()
         vrChannel.close()
-        pcChannel.close()
+        // pcChannel.close()
       }
     }
   } catch (error) {
@@ -99,28 +98,12 @@ function* handleEventEmission({ ContractEvent, log }) {
     const dLog = yield call(decodeLog, ContractEvent, log, provider)
     console.log('emitted:', log, dLog)
     const listings = yield call(convertDecodedLogs, [dLog], allListings)
-    console.log('event listing', listings)
+    console.log('event listings', listings)
 
-    if (listings[0] !== undefined) {
-      const updatedListings = yield call(setApplications, allListings, listings)
-      yield put(setListings(updatedListings))
+    if (Object.keys(listings).length > 0) {
+      yield put(setListings(listings))
     }
   } catch (error) {
     console.log('handle event emission error', error)
   }
 }
-
-// function createEventChannel(registry, voting) {
-//   return eventChannel(emitter => {
-//     registry.on_application = (listingHash, deposit, appEndDate, data) => {
-//       emitter({ listingHash, deposit: deposit.toString(), appEndDate: appEndDate.toNumber(), data })
-//     }
-//     registry.on_challenge = (listingHash, challengeID, data) => {
-//       emitter({ listingHash, challengeID: challengeID.toString(), data })
-//     }
-//     voting.on_votecommitted = (pollID, numTokens) => {
-//       console.log('vote committed', pollID.toString(), numTokens.toString())
-//     }
-//     return () => registry.stopWatching()
-//   })
-// }

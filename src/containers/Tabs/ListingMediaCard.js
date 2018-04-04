@@ -39,16 +39,16 @@ function ListingMediaCard(props) {
         <CardMedia
           className={classes.media}
           image={imgSrc}
-          title={`Listing image ${one.get('listingID')}`}
+          title={`Listing image ${one.listingID}`}
         />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {tokenData ? tokenData.get('name') : one.get('listingID')}
+            {tokenData ? tokenData.name : one.listingID}
           </Typography>
 
-          <Typography component="p">{`BY: ${one.get('owner').substring(0, 10)}`}</Typography>
-          <Typography component="p">{one.getIn(['appExpiry', 'formattedLocal'])}</Typography>
+          <Typography component="p">{`BY: ${one.owner.substring(0, 10)}`}</Typography>
+          <Typography component="p">{one.appExpiry.formattedLocal}</Typography>
         </CardContent>
 
         <CardActions>
@@ -64,7 +64,18 @@ function ListingMediaCard(props) {
                     >
                       {'Commit Vote'}
                     </Button>
-                    <Countdown end={one.getIn(['commitExpiry', 'date'])} />
+                    <Countdown end={one.commitExpiry.date} />
+                    <Button
+                      onClick={e => openSidePanel(one, 'revealVote')}
+                      size="medium"
+                      color="primary"
+                    >
+                      {'Reveal Vote'}
+                    </Button>
+                    <Countdown end={one.revealExpiry.date} />
+                    <Button onClick={e => handleUpdateStatus(one)} size="medium" color="primary">
+                      {'Update Status'}
+                    </Button>
                   </div>
                 ) : (
                   revealTrigger &&
@@ -77,7 +88,7 @@ function ListingMediaCard(props) {
                       >
                         {'Reveal Vote'}
                       </Button>
-                      <Countdown end={one.getIn(['revealExpiry', 'date'])} />
+                      <Countdown end={one.revealExpiry.date} />
                     </div>
                   )
                 )}
@@ -91,11 +102,11 @@ function ListingMediaCard(props) {
                 >
                   {'Challenge'}
                 </Button>
-                <Countdown end={one.getIn(['appExpiry', 'date'])} />
+                <Countdown end={one.appExpiry.date} />
               </div>
             )}
             {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
-              <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
+              <Button onClick={e => chooseTCR(one.listingID)}>{'Select TCR'}</Button>
             ) : (
               updateTrigger && (
                 <div>

@@ -1,8 +1,6 @@
-import { fromJS } from 'immutable'
-
-const initialState = fromJS({
+const initialState = {
   stats: [],
-})
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {

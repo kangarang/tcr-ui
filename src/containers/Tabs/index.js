@@ -60,20 +60,18 @@ class SimpleTabs extends Component {
         {value === 0 && (
           <TabContainer>
             <FlexContainer>
-              {whitelist
-                .valueSeq()
-                .map(one => (
-                  <ListingMediaCard
-                    key={one.get('listingHash')}
-                    one={one}
-                    imgSrc={imgSrc}
-                    listingType={'whitelist'}
-                    openSidePanel={openSidePanel}
-                    chooseTCR={chooseTCR}
-                    registry={registry}
-                    tokenData={one.get('tokenData')}
-                  />
-                ))}
+              {Object.keys(whitelist).map(k => (
+                <ListingMediaCard
+                  key={k}
+                  one={whitelist[k]}
+                  imgSrc={imgSrc}
+                  listingType={'whitelist'}
+                  openSidePanel={openSidePanel}
+                  chooseTCR={chooseTCR}
+                  registry={registry}
+                  tokenData={whitelist[k].tokenData}
+                />
+              ))}
             </FlexContainer>
           </TabContainer>
         )}
@@ -81,20 +79,18 @@ class SimpleTabs extends Component {
         {value === 1 && (
           <TabContainer>
             <FlexContainer>
-              {candidates
-                .valueSeq()
-                .map(one => (
-                  <ListingMediaCard
-                    key={one.get('listingHash')}
-                    one={one}
-                    imgSrc={imgSrc}
-                    listingType={'candidates'}
-                    openSidePanel={openSidePanel}
-                    handleUpdateStatus={handleUpdateStatus}
-                    updateTrigger={one.getIn(['appExpiry', 'expired'])}
-                    tokenData={one.get('tokenData')}
-                  />
-                ))}
+              {Object.keys(candidates).map(k => (
+                <ListingMediaCard
+                  key={k}
+                  one={candidates[k]}
+                  imgSrc={imgSrc}
+                  listingType={'candidates'}
+                  openSidePanel={openSidePanel}
+                  handleUpdateStatus={handleUpdateStatus}
+                  updateTrigger={candidates[k].appExpiry.expired}
+                  tokenData={candidates[k].tokenData}
+                />
+              ))}
             </FlexContainer>
           </TabContainer>
         )}
@@ -102,21 +98,19 @@ class SimpleTabs extends Component {
         {value === 2 && (
           <TabContainer>
             <FlexContainer>
-              {faceoffs
-                .valueSeq()
-                .map(one => (
-                  <ListingMediaCard
-                    key={one.get('listingHash')}
-                    one={one}
-                    imgSrc={imgSrc}
-                    listingType={'faceoffs'}
-                    openSidePanel={openSidePanel}
-                    handleUpdateStatus={handleUpdateStatus}
-                    updateTrigger={one.getIn(['revealExpiry', 'expired'])}
-                    revealTrigger={one.getIn(['commitExpiry', 'expired'])}
-                    tokenData={one.get('tokenData')}
-                  />
-                ))}
+              {Object.keys(faceoffs).map(k => (
+                <ListingMediaCard
+                  key={k}
+                  one={faceoffs[k]}
+                  imgSrc={imgSrc}
+                  listingType={'faceoffs'}
+                  openSidePanel={openSidePanel}
+                  handleUpdateStatus={handleUpdateStatus}
+                  updateTrigger={faceoffs[k].revealExpiry.expired}
+                  revealTrigger={faceoffs[k].commitExpiry.expired}
+                  tokenData={faceoffs[k].tokenData}
+                />
+              ))}
             </FlexContainer>
           </TabContainer>
         )}

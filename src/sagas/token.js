@@ -44,7 +44,7 @@ function* updateBalancesSaga() {
       voting.functions.getLockedTokens(owner),
     ])
 
-    const decimals = contracts.get('tokenDecimals')
+    const decimals = contracts.tokenDecimals
 
     const [
       ETH,
@@ -62,10 +62,10 @@ function* updateBalancesSaga() {
       utils.formatUnits(lockedTokensRaw, decimals, { commify: true }),
     ])
 
-    const stakeRaw = yield listings.reduce((acc, val) => {
-      return acc.add(BN(val.get('unstakedDeposit')))
-    }, BN('0'))
-    const totalRegistryStake = utils.formatUnits(stakeRaw, decimals, { commify: true })
+    // const stakeRaw = yield listings.reduce((acc, val) => {
+    //   return acc.add(BN(val.unstakedDeposit))
+    // }, BN('0'))
+    // const totalRegistryStake = utils.formatUnits(stakeRaw, decimals, { commify: true })
 
     const balances = {
       ETH,
@@ -74,7 +74,7 @@ function* updateBalancesSaga() {
       votingAllowance,
       votingRights,
       lockedTokens,
-      totalRegistryStake,
+      totalRegistryStake: '0',
     }
     yield put(updateBalances({ balances }))
   } catch (err) {

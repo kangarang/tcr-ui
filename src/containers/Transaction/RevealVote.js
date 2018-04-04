@@ -26,21 +26,19 @@ export default class RevealVote extends Component {
   }
 
   getCommitHash = async () => {
-    const poll = await this.props.voting.functions.pollMap(
-      this.props.selectedOne.get('challengeID')
-    )
+    const poll = await this.props.voting.functions.pollMap(this.props.selectedOne.challengeID)
     const votesFor = baseToConvertedUnit(poll[3], 18)
     const votesAgainst = baseToConvertedUnit(poll[4], 18)
 
     const numTokensRaw = await this.props.voting.functions.getNumTokens(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     )
     const numTokens = baseToConvertedUnit(numTokensRaw, 18)
 
     const commitHash = await this.props.voting.functions.getCommitHash(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     )
 
     if (commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
@@ -68,9 +66,9 @@ export default class RevealVote extends Component {
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
         <SideSplit
           leftTitle={'Reveal Period'}
-          leftItem={`Reveal: ${parameters.get('revealStageLen')} seconds`}
+          leftItem={`Reveal: ${parameters.revealStageLen} seconds`}
           rightTitle={'POLL ID'}
-          rightItem={selectedOne && selectedOne.get('challengeID')}
+          rightItem={selectedOne && selectedOne.challengeID}
         />
         <SideSplit
           leftTitle={'Votes For'}
@@ -86,13 +84,13 @@ export default class RevealVote extends Component {
         />
         <SideSplit
           leftTitle={'Locked Tokens'}
-          leftItem={balances.get('lockedTokens')}
+          leftItem={balances.lockedTokens}
           rightTitle={'Voting Rights'}
-          rightItem={balances.get('votingRights')}
+          rightItem={balances.votingRights}
         />
 
         <SideText small text={'REVEAL VOTE'} />
-        <SideText small text={selectedOne && selectedOne.get('listingID')} />
+        <SideText small text={selectedOne && selectedOne.listingID} />
 
         <SidePanelSeparator />
 
@@ -110,7 +108,7 @@ export default class RevealVote extends Component {
         </MarginDiv>
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
               {'etherscan'}
             </Button>
             <TxnProgress />

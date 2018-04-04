@@ -2,8 +2,6 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 
-import { fromJS, Iterable } from 'immutable'
-
 import {
   GET_TOKENS_ALLOWED,
   POLL_LOGS_REQUEST,
@@ -25,11 +23,6 @@ import eventsSaga from './sagas/events'
 
 const sagaMiddleware = createSagaMiddleware()
 
-const stateTransformer = state => {
-  if (Iterable.isIterable(state)) return state.toJS()
-  return state
-}
-
 const logger = createLogger({
   predicate: (getState, action) =>
     action.type !== GET_ETHEREUM &&
@@ -39,7 +32,6 @@ const logger = createLogger({
     action.type !== UPDATE_BALANCES_REQUEST &&
     action.type !== SET_TOKENS_ALLOWED,
   collapsed: (getState, action, logEntry) => !action.error,
-  stateTransformer,
 })
 
 export default function configureStore(initialState = {}) {
@@ -56,7 +48,7 @@ export default function configureStore(initialState = {}) {
       : compose
   /* eslint-enable */
 
-  const store = createStore(createReducer(), fromJS(initialState), composeEnhancers(...enhancers))
+  const store = createStore(createReducer(), initialState, composeEnhancers(...enhancers))
 
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(logSaga)

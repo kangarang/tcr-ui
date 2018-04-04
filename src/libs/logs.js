@@ -55,10 +55,9 @@ export async function getBlockAndTxnFromLog(log, provider) {
   return { block, tx }
 }
 
-// Invoked by sagas/logs and sagas/events
-// Inputs: decoded logs + all the current listings
-export async function convertDecodedLogs(dLogs, allListings) {
-  let listings = []
+// Inputs: decodedLogs: Array, currentListings: Object
+// Output: updatedListings: Object
+export async function convertDecodedLogs(dLogs, listings) {
   for (const log of dLogs) {
     const { logData, txData, msgSender, eventName } = log
     let golem
@@ -69,23 +68,30 @@ export async function convertDecodedLogs(dLogs, allListings) {
     // using the logData
     if (eventName === '_Application') {
       listing = await convertLogToListing(logData, txData, msgSender)
+      listings[listing.listingHash] = listing
     } else if (logData.listingHash) {
       // if listingHash exists, find the corresponding listing
-      golem = findGolem(logData.listingHash, allListings)
+      golem = findGolem(logData.listingHash, listings)
     } else if (logData.pollID) {
       // if pollID or challengeID exists, find the corresponding challenge
       console.log('poll id logData', logData)
-      golem = findChallenge(logData.pollID, allListings)
+      golem = findChallenge(logData.pollID, listings)
     } else if (logData.challengeID) {
       console.log('challenge id logData', logData)
-      golem = findChallenge(logData.challengeID, allListings)
+      golem = findChallenge(logData.challengeID, listings)
     }
     // invoke the changeListing function to modify the listing
     if (golem !== undefined) {
       listing = changeListing(golem, logData, txData, eventName, msgSender)
     }
-    listings.push(listing)
+    // console.log('golem, listing', golem, listing)
+
+    // set the in the master object
+    if (listing !== undefined) {
+      listings[listing.listingHash] = listing
+    }
   }
-  // return a new array of relevant listings
+  console.log('listings', listings)
+  // return a new object of relevant listings
   return listings
 }

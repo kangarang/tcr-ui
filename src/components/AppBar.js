@@ -41,7 +41,7 @@ export default ({ error, openSidePanel, contracts }) => (
 
         <GridItem gc={2}>
           <Text size="xlarge" weight="bold">
-            <BoldDiv>{contracts.get('registryName')}</BoldDiv>
+            <BoldDiv>{contracts.registryName}</BoldDiv>
           </Text>
         </GridItem>
 

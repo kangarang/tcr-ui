@@ -1,6 +1,7 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
+import _ from 'lodash'
 
-import { setListings } from 'actions'
+import { setListings } from '../actions'
 import { setApplications } from 'libs/listings'
 import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
@@ -25,27 +26,23 @@ export function* setupLogsSaga() {
 
     // get all applications
     const aLogs = yield call(decodeLogsSaga, _Application, registry.address)
-    const aEvents = yield call(convertDecodedLogs, aLogs, {})
-    const applications = yield call(setApplications, {}, aEvents)
+    const applications = yield call(convertDecodedLogs, aLogs, {})
 
-    // build the list
     const cLogs = yield call(decodeLogsSaga, _Challenge, registry.address)
     const awLogs = yield call(decodeLogsSaga, _ApplicationWhitelisted, registry.address)
     const arLogs = yield call(decodeLogsSaga, _ApplicationRemoved, registry.address)
     const lrLogs = yield call(decodeLogsSaga, _ListingRemoved, registry.address)
 
     const logs = [cLogs, awLogs, arLogs, lrLogs]
+    console.log('logs', logs)
     const sorted = yield call(flattenAndSortByNestedBlockTimestamp, logs)
+    // console.log('flatsorted', sorted)
     const listings = yield call(convertDecodedLogs, sorted, applications)
-    const updatedApplications = yield call(setApplications, applications, listings)
-    const filteredListings = yield updatedApplications.filter(li => li.get('status') !== '0')
-    // console.log('logs', logs)
-    // console.log('flat, sorted', sorted)
     // console.log('listings', listings)
-    // console.log('updatedListings', updatedListings)
+    const filteredListings = yield _.pickBy(listings, li => li.status !== '0')
+    console.log('filteredListings', filteredListings)
 
-    if (filteredListings.size > 0) {
-      console.log('filteredListings', filteredListings.toJS())
+    if (Object.keys(filteredListings).length > 0) {
       // DISPATCH
       yield put(setListings(filteredListings))
       yield put(updateBalancesRequest())

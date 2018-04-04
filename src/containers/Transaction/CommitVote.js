@@ -27,11 +27,11 @@ export default class CommitVote extends Component {
   getCommitHash = async () => {
     const numTokensRaw = await this.props.voting.getNumTokens(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     )
     const commitHash = await this.props.voting.getCommitHash(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     )
     const numTokens = baseToConvertedUnit(numTokensRaw, 18)
     if (commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
@@ -59,9 +59,9 @@ export default class CommitVote extends Component {
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SideSplit
             leftTitle={'Poll ID'}
-            leftItem={selectedOne && selectedOne.get('challengeID')}
+            leftItem={selectedOne && selectedOne.challengeID}
             rightTitle={'Token Balance'}
-            rightItem={balances.get('token')}
+            rightItem={balances.token}
           />
           <SideSplit
             leftTitle={'Commit Hash'}
@@ -71,12 +71,12 @@ export default class CommitVote extends Component {
           />
           <SideSplit
             leftTitle={'Voting Rights'}
-            leftItem={balances.get('votingRights')}
+            leftItem={balances.votingRights}
             rightTitle={'Locked Tokens'}
-            rightItem={balances.get('lockedTokens')}
+            rightItem={balances.lockedTokens}
           />
 
-          <SideText text={selectedOne && selectedOne.get('listingID')} />
+          <SideText text={selectedOne && selectedOne.listingID} />
 
           <SidePanelSeparator />
 
@@ -87,7 +87,7 @@ export default class CommitVote extends Component {
               handleInputChange={e => handleInputChange(e, 'numTokens')}
             />
 
-            {balances.get('votingRights') === '0.0' ? (
+            {balances.votingRights === '0.0' ? (
               <MarginDiv>
                 <SideText text={translate('ins_requestVotingRights')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>
@@ -111,7 +111,7 @@ export default class CommitVote extends Component {
 
           {miningStatus && (
             <div>
-              <Button wide href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('hash')}`}>
+              <Button wide href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
                 {'etherscan'}
               </Button>
               <TxnProgress />

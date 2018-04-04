@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import _ from 'lodash'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
@@ -11,18 +10,10 @@ export function sortByNestedBlockTimestamp(unsorted) {
 
 // Get
 export function findGolem(listingHash, listings) {
-  return listings.get(listingHash)
+  return listings[listingHash]
 }
 export function findChallenge(pollID, listings) {
-  return listings.find((v, k) => listings.getIn([k, 'challengeID']) === pollID.toString())
-}
-
-// Set
-export function setApplications(applications, newApplications) {
-  // There can only be 1 golem per listingHash (i.e. Application)
-  return fromJS(newApplications).reduce((acc, val) => {
-    return acc.set(val.get('listingHash'), fromJS(val))
-  }, fromJS(applications))
+  return Object.values(listings).filter(li => li.challengeID.toString() === pollID.toString())
 }
 
 // Create
@@ -54,7 +45,7 @@ export async function convertLogToListing(log, blockTxn, owner) {
   // TODO: account for neither case
 
   // application expiration details
-  const appExpiry = timestampToExpiry(appEndDate.toNumber())
+  const appExpiry = await timestampToExpiry(appEndDate.toNumber())
 
   // ------------------------------------------------
   // Golem: an animated anthropomorphic being that is
@@ -76,69 +67,85 @@ export async function convertLogToListing(log, blockTxn, owner) {
     listingID,
     unstakedDeposit: deposit.toString(),
     appExpiry,
-    commitExpiry: false,
-    revealExpiry: false,
+    commitExpiry: {expired: false},
+    revealExpiry: {expired: false},
   }
   return golem
 }
 
 // Update
 export function changeListing(golem, log, txData, eventName, msgSender) {
-  if (txData.ts < golem.get('ts')) {
+  if (txData.ts < golem.ts) {
     console.log('old txn; returning listing')
     return golem
   }
 
   switch (eventName) {
     case '_Challenge':
-      return golem
-        .set('status', '2')
-        .set('challenger', fromJS(msgSender))
-        .set('challengeID', fromJS(log.challengeID.toString()))
+      return {
+        ...golem,
+        status: '2',
+        challenger: msgSender,
+        challengeID: log.challengeID.toString(),
+      }
     case '_ApplicationWhitelisted':
-      return golem
-        .set('status', '3')
-        .set('challenger', false)
-        .set('challengeID', false)
+      return {
+        ...golem,
+        status: '3',
+        challenger: false,
+        challengeID: false,
+      }
     case '_ApplicationRemoved':
-      return golem
-        .set('status', '0')
-        .set('challenger', false)
-        .set('challengeID', false)
+      return {
+        ...golem,
+        status: '0',
+        challenger: false,
+        challengeID: false,
+      }
     case '_ListingRemoved':
-      return golem
-        .set('status', '0')
-        .set('challenger', false)
-        .set('challengeID', false)
+      return {
+        ...golem,
+        status: '0',
+        challenger: false,
+        challengeID: false,
+      }
     case '_PollCreated':
-      return (
-        golem
-          .set('status', '2')
-          // .set('pollID', fromJS(log.pollID.toString()))
-          // .set('challengeID', fromJS(log.challengeID.toString()))
-          .set('commitExpiry', timestampToExpiry(log.commitEndDate.toNumber()))
-          .set('revealExpiry', timestampToExpiry(log.revealEndDate.toNumber()))
-      )
+      return {
+        ...golem,
+        status: '2',
+        // commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
+        // revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
+      }
     case '_VoteCommitted':
-      return golem.set('status', '2')
-    // .set('challengeID', fromJS(log.pollID.toString()))
-    // .set('votesFor', fromJS(log.votesFor.toString()))
-    // .set('votesAgainst', fromJS(log.votesAgainst.toString()))
+      return {
+        ...golem,
+        status: '2',
+        challengeID: log.pollID.toString(),
+        // votesFor: log.votesFor.toString(),
+        // votesAgainst: log.votesAgainst.toString(),
+      }
     case '_VoteRevealed':
-      return golem.set('status', '2')
-    // .set('challengeID', fromJS(log.pollID.toString()))
-    // .set('votesFor', fromJS(log.votesFor.toString()))
-    // .set('votesAgainst', fromJS(log.votesAgainst.toString()))
+      return {
+        ...golem,
+        status: '2',
+        challengeID: log.pollID.toString(),
+        // votesFor: log.votesFor.toString(),
+        // votesAgainst: log.votesAgainst.toString(),
+      }
     case '_ChallengeFailed':
-      return golem
-        .set('status', '3')
-        .set('challenger', false)
-        .set('challengeID', false)
+      return {
+        ...golem,
+        status: '3',
+        challenger: false,
+        challengeID: false,
+      }
     case '_ChallengeSucceeded':
-      return golem
-        .set('status', '0')
-        .set('challenger', false)
-        .set('challengeID', false)
+      return {
+        ...golem,
+        status: '0',
+        challenger: false,
+        challengeID: false,
+      }
     default:
       return golem
   }
