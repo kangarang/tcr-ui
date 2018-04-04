@@ -70,10 +70,10 @@ export async function convertDecodedLogs(dLogs, listings) {
       golem = findGolem(logData.listingHash, listings)
     } else if (logData.pollID) {
       // if pollID or challengeID exists, find the corresponding challenge
-      console.log('poll id logData', logData)
+      // console.log('poll id logData', logData)
       golem = findChallenge(logData.pollID, listings)[0]
     } else if (logData.challengeID) {
-      console.log('challenge id logData', logData)
+      // console.log('challenge id logData', logData)
       golem = findChallenge(logData.challengeID, listings)[0]
     }
     // invoke the changeListing function to modify the listing

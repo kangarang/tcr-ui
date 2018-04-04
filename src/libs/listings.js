@@ -22,18 +22,15 @@ export async function createListing(log, blockTxn, owner) {
   if (data.length === 46 && data.includes('Qm')) {
     const ipfsContent = await ipfsGetData(data)
     if (listingHash === getListingHash(ipfsContent.id)) {
-      // Validate listingHash === keccak256(ipfsContent.id)
       listingID = ipfsContent.id
+      // Validate listingHash === keccak256(ipfsContent.id)
       if (isAddress(listingID.toLowerCase())) {
+        console.log('listingID', listingID)
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         tokenData = _.find({ address: listingID }, tokenList)
 
-        console.log('listingID', listingID)
-        console.log('tokenData', tokenData)
-
         if (tokenData !== undefined) {
-          const tokenSymbol = tokenData.symbol.toLowerCase()
-          tokenData.logo.url = `https://s3.amazonaws.com/tcr-ui/color/${tokenSymbol}.png`
+          tokenData.logo.url = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${tokenData.address.toLowerCase()}.png`
           console.log('tokenData', tokenData)
         }
       }
