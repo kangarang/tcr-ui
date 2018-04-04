@@ -5,9 +5,7 @@ import { withStyles } from 'material-ui/styles'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import Typography from 'material-ui/Typography'
 
-import imgSrc from 'assets/icons/adtoken.svg'
-
-import ListingMediaCard from './ListingMediaCard'
+import ListingCard from './ListingCard'
 
 function TabContainer(props) {
   return (
@@ -61,10 +59,9 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {Object.keys(whitelist).map(k => (
-                <ListingMediaCard
+                <ListingCard
                   key={k}
                   one={whitelist[k]}
-                  imgSrc={imgSrc}
                   listingType={'whitelist'}
                   openSidePanel={openSidePanel}
                   chooseTCR={chooseTCR}
@@ -80,10 +77,9 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {Object.keys(candidates).map(k => (
-                <ListingMediaCard
+                <ListingCard
                   key={k}
                   one={candidates[k]}
-                  imgSrc={imgSrc}
                   listingType={'candidates'}
                   openSidePanel={openSidePanel}
                   handleUpdateStatus={handleUpdateStatus}
@@ -99,10 +95,9 @@ class SimpleTabs extends Component {
           <TabContainer>
             <FlexContainer>
               {Object.keys(faceoffs).map(k => (
-                <ListingMediaCard
+                <ListingCard
                   key={k}
                   one={faceoffs[k]}
-                  imgSrc={imgSrc}
                   listingType={'faceoffs'}
                   openSidePanel={openSidePanel}
                   handleUpdateStatus={handleUpdateStatus}

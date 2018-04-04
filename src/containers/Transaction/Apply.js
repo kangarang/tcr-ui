@@ -1,6 +1,6 @@
 import React from 'react'
 import translate from 'translations'
-import { Text } from '@aragon/ui'
+import Text from 'components/Text'
 
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'

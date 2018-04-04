@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Text, TextInput } from '@aragon/ui'
+import { TextInput } from '@aragon/ui'
+import Text from 'components/Text'
 
 const MarginDiv = styled.div`
   margin: 1em 0;

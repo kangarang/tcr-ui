@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { SidePanelSplit, Section, Text } from '@aragon/ui'
+import { SidePanelSplit, Section } from '@aragon/ui'
+import Text from 'components/Text'
 
 export default ({ leftTitle, leftItem, rightTitle, rightItem }) => (
   <SidePanelSplit

@@ -1,10 +1,13 @@
 import React from 'react'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
+import Card, { CardActions, CardContent } from 'material-ui/Card'
 
 import Button from 'components/Button'
+import Img from 'components/Img'
 import Countdown from 'components/Countdown'
+
+import imgSrc from 'assets/icons/eth.png'
 
 const styles = {
   card: {
@@ -18,9 +21,8 @@ const styles = {
   },
 }
 
-function ListingMediaCard(props) {
+function ListingCard(props) {
   const {
-    imgSrc,
     one,
     classes,
     openSidePanel,
@@ -36,7 +38,7 @@ function ListingMediaCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <img src={tokenData && tokenData.logo.url} alt="" />
+        <Img src={tokenData ? tokenData.logo.url : imgSrc} alt="" />
 
         <CardContent>
           <Typography variant="title" component="h3">
@@ -119,4 +121,4 @@ function ListingMediaCard(props) {
   )
 }
 
-export default withStyles(styles)(ListingMediaCard)
+export default withStyles(styles)(ListingCard)

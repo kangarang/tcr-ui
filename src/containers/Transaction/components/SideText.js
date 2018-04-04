@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
-import { Text } from '@aragon/ui'
+import Text from 'components/Text'
 
 const MarginDiv = styled.div`
   margin: 2em 0;

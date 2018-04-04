@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
-import { Text } from '@aragon/ui'
+import Text from 'components/Text'
 
 import { colors } from '../../global-styles'
 

@@ -38,10 +38,6 @@ const globalStyles = `
   }
 `
 
-export default () => {
-  injectGlobal`${globalStyles}`
-}
-
 export const jsonTheme = {
   scheme: 'monokai',
   base00: '#272822',
@@ -60,4 +56,35 @@ export const jsonTheme = {
   base0D: '#66d9ef',
   base0E: '#ae81ff',
   base0F: '#cc6633',
+}
+
+const FONT_SIZES = {
+  xxsmall: '11px',
+  xsmall: '12px',
+  small: '14px',
+  normal: '15px',
+  large: '16px',
+  xlarge: '20px',
+  xxlarge: '22px',
+  great: '37px',
+}
+
+const FONT_WEIGHTS = {
+  normal: '400',
+  bold: '600',
+  bolder: '800',
+}
+
+export const font = ({ size = 'normal', weight = 'normal' }) => {
+  const fontSize = FONT_SIZES[size] || FONT_SIZES.normal
+  const fontWeight = FONT_WEIGHTS[weight] || FONT_WEIGHTS.normal
+  return `
+    font-size: ${fontSize};
+    font-weight: ${fontWeight};
+    line-height: 1.5;
+  `
+}
+
+export default () => {
+  injectGlobal`${globalStyles}`
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from '@aragon/ui'
+import Text from 'components/Text'
 import translate from 'translations'
 
 import SidePanel from './SidePanel'

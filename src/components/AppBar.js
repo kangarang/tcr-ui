@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Text } from '@aragon/ui'
-
+import Text from 'components/Text'
 import Button from 'components/Button'
 
 import { colors } from '../global-styles'
