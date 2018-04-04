@@ -3,8 +3,7 @@ import { cloneableGenerator } from 'redux-saga/utils'
 import { delay } from 'redux-saga'
 import _ from 'lodash/fp'
 
-import { SEND_TRANSACTION } from '../../actions/constants'
-import { sendTransaction } from '../../actions'
+import { SEND_TRANSACTION, sendTransaction } from '../../reducers/transaction'
 import { convertedToBaseUnit } from '../../libs/units'
 
 import transactionSaga, { handleSendTransaction, registryTxnSaga } from '../transaction'

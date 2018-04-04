@@ -4,7 +4,7 @@ import { call, put, select, takeLatest } from 'redux-saga/effects'
 import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 import { loginError } from '../actions'
 import { setProvider } from '../libs/provider'
-import { registrySaga } from '../sagas/contracts'
+import { registrySaga } from './contracts'
 import { setWallet } from 'reducers/home'
 import { selectRegistry, selectAccount } from '../selectors'
 
