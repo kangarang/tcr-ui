@@ -2,14 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 
-import {
-  GET_TOKENS_ALLOWED,
-  POLL_LOGS_REQUEST,
-  GET_ETH_PROVIDER,
-  SET_TOKENS_ALLOWED,
-  UPDATE_BALANCES_REQUEST,
-  GET_ETHEREUM,
-} from './actions/constants'
+import { GET_ETHEREUM, UPDATE_BALANCES_REQUEST } from './actions/constants'
 
 import createReducer from './reducers'
 
@@ -25,12 +18,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 const logger = createLogger({
   predicate: (getState, action) =>
-    action.type !== GET_ETHEREUM &&
-    action.type !== GET_TOKENS_ALLOWED &&
-    action.type !== POLL_LOGS_REQUEST &&
-    action.type !== GET_ETH_PROVIDER &&
-    action.type !== UPDATE_BALANCES_REQUEST &&
-    action.type !== SET_TOKENS_ALLOWED,
+    action.type !== GET_ETHEREUM && action.type !== UPDATE_BALANCES_REQUEST,
   collapsed: (getState, action, logEntry) => !action.error,
 })
 
@@ -57,14 +45,6 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(transactionSaga)
   sagaMiddleware.run(eventsSaga)
-
-  // Make reducers hot reloadable, see http://mxs.is/googmo
-  /* istanbul ignore next */
-  // if (module.hot) {
-  //   module.hot.accept('./reducers', () => {
-  //     store.replaceReducer(createReducer(store.injectedReducers))
-  //   })
-  // }
 
   return store
 }

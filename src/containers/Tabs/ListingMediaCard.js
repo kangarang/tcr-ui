@@ -13,7 +13,7 @@ const styles = {
     padding: '1em',
   },
   media: {
-    height: 140,
+    height: 100,
     margin: 5,
   },
 }
@@ -36,11 +36,7 @@ function ListingMediaCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <CardMedia
-          className={classes.media}
-          image={imgSrc}
-          title={`Listing image ${one.listingID}`}
-        />
+        <img src={tokenData && tokenData.logo.url} alt="" />
 
         <CardContent>
           <Typography variant="title" component="h3">

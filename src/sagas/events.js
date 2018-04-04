@@ -3,7 +3,8 @@ import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/
 
 import { SET_CONTRACTS } from '../actions/constants'
 import { setListings } from '../actions'
-import { selectRegistry, selectAllListings, selectProvider, selectVoting } from '../selectors'
+import { selectRegistry, selectProvider, selectVoting } from '../selectors'
+import { selectAllListings } from 'selectors/listings'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 
 export default function* rootEventsSaga() {
@@ -107,7 +108,7 @@ function* handleEventEmission({ ContractEvent, log }) {
     console.log('event listings', listings)
 
     if (Object.keys(listings).length > 0) {
-      yield put(setListings(listings))
+      yield put(setListings({ listings: listings, byID: Object.keys(listings) }))
     }
   } catch (error) {
     console.log('handle event emission error', error)

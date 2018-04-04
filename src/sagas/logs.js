@@ -49,7 +49,7 @@ export function* setupLogsSaga() {
 
     if (Object.keys(filteredListings).length > 0) {
       // DISPATCH
-      yield put(setListings(filteredListings))
+      yield put(setListings({ listings: filteredListings, byID: Object.keys(filteredListings) }))
       yield put(updateBalancesRequest())
     }
   } catch (error) {

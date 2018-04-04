@@ -1,11 +1,9 @@
 import {
   LOGIN_ERROR,
   SET_WALLET,
+  UPDATE_BALANCES,
   SET_REGISTRY_CONTRACT,
   SET_CONTRACTS,
-  UPDATE_BALANCES,
-  SET_LISTINGS,
-  UPDATE_LISTING,
 } from '../actions/constants'
 
 const initialState = {
@@ -21,18 +19,19 @@ const initialState = {
     lockedTokens: '0',
     totalRegistryStake: '0',
   },
-  contracts: {
-    registry: {},
-    token: { name: '' },
-    voting: {},
-    parameterizer: {},
+  tcr: {
     tokenName: '',
     registryName: '',
     tokenSymbol: '',
     tokenDecimals: '18',
   },
+  contracts: {
+    registry: {},
+    token: { name: '' },
+    voting: {},
+    parameterizer: {},
+  },
   parameters: { minDeposit: '0', applyStageLen: '0' },
-  listings: {},
   latestTxn: {},
 }
 
@@ -69,6 +68,10 @@ function homeReducer(state = initialState, action) {
           ...state.contracts,
           ...action.payload.contracts,
         },
+        tcr: {
+          ...state.tcr,
+          ...action.payload.tcr,
+        },
       }
     case UPDATE_BALANCES:
       return {
@@ -76,22 +79,6 @@ function homeReducer(state = initialState, action) {
         balances: {
           ...state.balances,
           ...action.payload.balances,
-        },
-      }
-    case UPDATE_LISTING:
-      return {
-        ...state,
-        listings: {
-          ...state.listings,
-          [action.payload.listingHash]: action.payload,
-        },
-      }
-    case SET_LISTINGS:
-      return {
-        ...state,
-        listings: {
-          ...state.listings,
-          ...action.payload,
         },
       }
     default:

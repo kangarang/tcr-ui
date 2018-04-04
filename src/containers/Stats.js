@@ -24,7 +24,7 @@ class Stats extends Component {
 
   render() {
     const { anchorEl } = this.state
-    const { account, candidates, whitelist, balances, contracts, network } = this.props
+    const { account, candidates, whitelist, balances, tcr, network } = this.props
 
     // const items = []
 
@@ -36,7 +36,7 @@ class Stats extends Component {
         </GridItem>
 
         <GridItem>
-          <CapsDiv>{`total ${contracts.tokenSymbol} at stake`}</CapsDiv>
+          <CapsDiv>{`total ${tcr.tokenSymbol} at stake`}</CapsDiv>
           <BoldDiv>{balances.totalRegistryStake}</BoldDiv>
         </GridItem>
 
@@ -58,7 +58,7 @@ class Stats extends Component {
           <UserItem>
             <BoldDiv>
               {balances.token}
-              <BoldDivGrey>{contracts.tokenSymbol}</BoldDivGrey>
+              <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
 

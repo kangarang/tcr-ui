@@ -79,6 +79,8 @@ function* contractsSaga(action) {
           token,
           voting,
           parameterizer,
+        },
+        tcr: {
           tokenSymbol,
           tokenName,
           tokenDecimals: tokenDecimals.toString(10),

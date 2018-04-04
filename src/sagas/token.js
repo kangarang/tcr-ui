@@ -8,9 +8,9 @@ import {
   selectRegistry,
   selectToken,
   selectVoting,
-  selectAllContracts,
-  selectWhitelist,
+  selectTCR,
 } from '../selectors'
+import { selectWhitelist } from 'selectors/listings'
 import { BN } from 'libs/units'
 
 export default function* tokenSaga() {
@@ -25,7 +25,7 @@ function* updateBalancesSaga() {
     const registry = yield select(selectRegistry)
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
-    const contracts = yield select(selectAllContracts)
+    const tcr = yield select(selectTCR)
     const listings = yield select(selectWhitelist)
 
     const [
@@ -44,7 +44,7 @@ function* updateBalancesSaga() {
       voting.functions.getLockedTokens(owner),
     ])
 
-    const decimals = contracts.tokenDecimals
+    const decimals = tcr.tokenDecimals
 
     const [
       ETH,

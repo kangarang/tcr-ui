@@ -20,7 +20,7 @@ export default ({
   opened,
   closeSidePanel,
   token,
-  contracts,
+  tcr,
   parameters,
   balances,
   handleInputChange,
@@ -54,7 +54,7 @@ export default ({
       <TotalAmount
         copy={'Minimum Deposit'}
         minDeposit={parameters.minDeposit}
-        tokenSymbol={contracts.tokenSymbol}
+        tokenSymbol={tcr.tokenSymbol}
       />
 
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}

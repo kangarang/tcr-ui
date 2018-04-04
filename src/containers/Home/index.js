@@ -8,17 +8,14 @@ import {
   selectError,
   selectAccount,
   selectBalances,
-  selectWhitelist,
-  selectCandidates,
-  selectFaceoffs,
-  selectAllContracts,
   selectRegistry,
   selectToken,
   selectVoting,
   selectParameters,
   selectMiningStatus,
   selectLatestTxn,
-} from 'selectors'
+} from 'selectors/index'
+import { selectWhitelist, selectCandidates, selectFaceoffs } from 'selectors/listings'
 
 import { convertedToBaseUnit } from 'libs/units'
 
@@ -31,6 +28,7 @@ import AppBar from 'components/AppBar'
 
 import Stats from '../Stats'
 import Tabs from '../Tabs'
+import { selectTCR } from '../../selectors'
 
 class Home extends Component {
   constructor(props) {
@@ -245,8 +243,8 @@ const mapStateToProps = createStructuredSelector({
   balances: selectBalances,
   miningStatus: selectMiningStatus,
   latestTxn: selectLatestTxn,
+  tcr: selectTCR,
 
-  contracts: selectAllContracts,
   registry: selectRegistry,
   voting: selectVoting,
   token: selectToken,

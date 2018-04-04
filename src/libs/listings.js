@@ -1,12 +1,7 @@
-import _ from 'lodash'
+import fp from 'lodash/fp'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash, isAddress } from '../libs/values'
-
-// Sort
-export function sortByNestedBlockTimestamp(unsorted) {
-  return _.sortBy(unsorted, u => u.txData.ts)
-}
 
 // Get
 export function findGolem(listingHash, listings) {
@@ -17,7 +12,7 @@ export function findChallenge(challengeID, listings) {
 }
 
 // Create
-export async function convertLogToListing(log, blockTxn, owner) {
+export async function createListing(log, blockTxn, owner) {
   let { listingHash, deposit, appEndDate, data } = log
   let listingID
   let tokenData
@@ -31,9 +26,16 @@ export async function convertLogToListing(log, blockTxn, owner) {
       listingID = ipfsContent.id
       if (isAddress(listingID.toLowerCase())) {
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
+        tokenData = fp.find({ address: listingID }, tokenList)
+
         console.log('listingID', listingID)
-        tokenData = _.find(tokenList, { address: listingID })
         console.log('tokenData', tokenData)
+
+        if (tokenData !== undefined) {
+          const tokenSymbol = tokenData.symbol.toLowerCase()
+          tokenData.logo.url = `https://s3.amazonaws.com/tcr-ui/color/${tokenSymbol}.png`
+          console.log('tokenData', tokenData)
+        }
       }
     } else {
       throw new Error('valid multihash, invalid id')
@@ -121,6 +123,7 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
       return {
         ...golem,
         status: '2',
+        challengeID: log.pollID.toString(),
         commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
         revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
       }

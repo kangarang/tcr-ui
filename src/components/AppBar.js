@@ -25,7 +25,7 @@ const BoldDiv = styled.div`
   font-weight: bold;
 `
 
-export default ({ error, openSidePanel, contracts }) => (
+export default ({ error, openSidePanel, tcr }) => (
   <Wrapper>
     {error ? (
       <GridContainer>
@@ -41,7 +41,7 @@ export default ({ error, openSidePanel, contracts }) => (
 
         <GridItem gc={2}>
           <Text size="xlarge" weight="bold">
-            <BoldDiv>{contracts.registryName}</BoldDiv>
+            <BoldDiv>{tcr.registryName}</BoldDiv>
           </Text>
         </GridItem>
 

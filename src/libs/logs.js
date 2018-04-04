@@ -1,17 +1,15 @@
 import _ from 'lodash'
-import {
-  convertLogToListing,
-  sortByNestedBlockTimestamp,
-  findGolem,
-  changeListing,
-  findChallenge,
-} from 'libs/listings'
+import { createListing, findGolem, changeListing, findChallenge } from 'libs/listings'
 
 let lastReadBlockNumber = 0
 
 export function flattenAndSortByNestedBlockTimestamp(events) {
   const flattened = _.flatten(events)
   return sortByNestedBlockTimestamp(flattened)
+}
+
+export function sortByNestedBlockTimestamp(unsorted) {
+  return _.sortBy(unsorted, u => u.txData.ts)
 }
 
 export async function decodeLogs(provider, ContractEvent, address) {
@@ -67,7 +65,7 @@ export async function convertDecodedLogs(dLogs, listings) {
     // if not, find the corresponding listing
     // using the logData
     if (eventName === '_Application') {
-      listing = await convertLogToListing(logData, txData, msgSender)
+      listing = await createListing(logData, txData, msgSender)
       listings[listing.listingHash] = listing
     } else if (logData.listingHash) {
       // if listingHash exists, find the corresponding listing
@@ -84,7 +82,7 @@ export async function convertDecodedLogs(dLogs, listings) {
     if (golem !== undefined) {
       listing = changeListing(golem, logData, txData, eventName, msgSender)
     }
-    console.log('golem, listing', golem, listing)
+    // console.log('golem, listing', golem, listing)
 
     // set the in the master object
     if (listing !== undefined) {

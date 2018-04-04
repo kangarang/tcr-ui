@@ -79,6 +79,8 @@ export function* registryTxnSaga(action) {
         id: args[0], // listing string (name)
         data: args[2], // data (address)
       })
+      // const isSuccess = flow(get('status'), isEqual(200))
+      // isSuccess(fileHash)
       // hash the string
       finalArgs[0] = getListingHash(args[0])
       // use ipfs CID as the _data field in the application
@@ -105,7 +107,8 @@ export function* sendTransactionSaga(contract, method, args) {
       return rg
     })
 
-    const receipt = yield call(contract.functions[method], ...newArgs)
+    // const receipt = yield call(contract.functions[method], ...newArgs)
+    const receipt = yield contract.functions[method](...newArgs)
     yield put(txnMining(receipt))
     const minedTxn = yield provider.waitForTransaction(receipt.hash).then(txn => txn)
     yield put(txnMined(minedTxn))

@@ -16,7 +16,7 @@ export default ({
   opened,
   closeSidePanel,
   token,
-  contracts,
+  tcr,
   parameters,
   balances,
   handleInputChange,
@@ -43,7 +43,7 @@ export default ({
       <TotalAmount
         copy={'Total Stake'}
         minDeposit={parameters.minDeposit}
-        tokenSymbol={contracts.tokenSymbol}
+        tokenSymbol={tcr.tokenSymbol}
       />
 
       <SidePanelSeparator />

@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux'
-import home from './home'
-import transaction from './transaction'
+import homeReducer from './home'
+import transactionReducer from './transaction'
+import listingsReducer from './listings'
 
 export default function createReducer() {
   return combineReducers({
-    home,
-    transaction,
+    home: homeReducer,
+    transaction: transactionReducer,
+    listings: listingsReducer,
   })
 }
