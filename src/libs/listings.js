@@ -17,7 +17,7 @@ const byId = state =>
     {}
   )
 
-const usersById = byId(users)
+// const usersById = byId(users)
 // Get
 export function findGolem(listingHash, listings) {
   return listings[listingHash]
@@ -40,7 +40,6 @@ export async function createListing(log, blockTxn, owner) {
       listingID = ipfsContent.id
       // Validate listingHash === keccak256(ipfsContent.id)
       if (isAddress(listingID.toLowerCase())) {
-        console.log('listingID', listingID)
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         tokenData = _.find({ address: listingID }, tokenList)
         if (tokenData) {
@@ -49,7 +48,6 @@ export async function createListing(log, blockTxn, owner) {
         } else {
           tokenData = {}
           tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${listingID.toLowerCase()}.png`
-          console.log('tokenData', tokenData)
         }
       }
     } else {

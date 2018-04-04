@@ -2,11 +2,11 @@ import { select, takeLatest, call, put } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 
 import { setListings } from '../reducers/listings'
+import { SET_CONTRACTS } from '../reducers/home'
 import { setApplications } from '../libs/listings'
 import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
 import { selectProvider, selectRegistry } from '../selectors'
-import { SET_CONTRACTS } from '../actions/constants'
 import { updateBalancesRequest } from '../actions'
 
 export default function* rootLogsSaga() {
@@ -32,16 +32,23 @@ export function* setupLogsSaga() {
     console.log('registry', registry)
 
     const cLogs = yield call(decodeLogsSaga, _Challenge, registry.address)
-    const csLogs = yield call(decodeLogsSaga, _ChallengeSucceeded, registry.address)
-    const cfLogs = yield call(decodeLogsSaga, _ChallengeFailed, registry.address)
+    // const csLogs = yield call(decodeLogsSaga, _ChallengeSucceeded, registry.address)
+    // const cfLogs = yield call(decodeLogsSaga, _ChallengeFailed, registry.address)
     const awLogs = yield call(decodeLogsSaga, _ApplicationWhitelisted, registry.address)
     const arLogs = yield call(decodeLogsSaga, _ApplicationRemoved, registry.address)
     const lrLogs = yield call(decodeLogsSaga, _ListingRemoved, registry.address)
 
-    const logs = [cLogs, csLogs, cfLogs, awLogs, arLogs, lrLogs]
+    const logs = [
+      cLogs,
+      // csLogs,
+      // cfLogs,
+      awLogs,
+      arLogs,
+      lrLogs,
+    ]
     console.log('logs', logs)
     const sorted = yield call(flattenAndSortByNestedBlockTimestamp, logs)
-    // console.log('flatsorted', sorted)
+    console.log('flatsorted', sorted)
     const listings = yield call(convertDecodedLogs, sorted, applications)
     // console.log('listings', listings)
     const filteredListings = yield _.pickBy(li => li.status !== '0', listings)

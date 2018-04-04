@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import { setupEthereum, sendTransaction, chooseTCR } from '../../actions'
+import { setupEthereum, chooseTCR } from '../../actions'
 
 import {
   selectError,
@@ -23,6 +23,7 @@ import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
 import CommitVote from 'containers/Transaction/CommitVote'
 import RevealVote from 'containers/Transaction/RevealVote'
+import { sendTransaction } from 'reducers/transaction'
 
 import AppBar from 'components/AppBar'
 

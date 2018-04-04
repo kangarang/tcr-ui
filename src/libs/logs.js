@@ -8,7 +8,7 @@ export function flattenAndSortByNestedBlockTimestamp(events) {
   return sortByNestedBlockTimestamp(flattened)
 }
 
-export const sortByNestedBlockTimestamp = unsorted => _.sortBy(u => u.txData.ts, unsorted)
+export const sortByNestedBlockTimestamp = unsorted => _.sortBy('txData.ts', unsorted)
 
 export async function decodeLogs(provider, ContractEvent, address) {
   // build filter

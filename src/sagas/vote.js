@@ -1,5 +1,10 @@
-import { select, call, takeEvery } from 'redux-saga/effects'
-import { TX_REQUEST_VOTING_RIGHTS, TX_COMMIT_VOTE, TX_REVEAL_VOTE } from '../actions/constants'
+import { select, spawn, call, take, fork, takeEvery } from 'redux-saga/effects'
+import {
+  TXN_MINING,
+  TX_REQUEST_VOTING_RIGHTS,
+  TX_COMMIT_VOTE,
+  TX_REVEAL_VOTE,
+} from '../reducers/transaction'
 
 import { selectAccount, selectVoting } from '../selectors'
 
@@ -75,11 +80,12 @@ export function* commitVoteSaga(action) {
     const listingDashed = data.replace(' ', '-')
     const filename = `poll-${pollID}-${listingDashed}.json`
 
-    saveFile(json, filename)
+    yield spawn(sendTransactionSaga, voting, 'commitVote', finalArgs)
 
-    yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
-
-    // saveFile(json, filename)
+    while (true) {
+      const receipt = yield take(TXN_MINING)
+      saveFile(json, filename)
+    }
   } catch (error) {
     console.log('commit vote saga error', error)
   }

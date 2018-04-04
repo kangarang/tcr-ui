@@ -1,7 +1,7 @@
 import utils from 'ethers/utils'
 import { put, select, all, takeEvery } from 'redux-saga/effects'
 import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
-import { updateBalances } from '../actions'
+import { updateBalances } from '../reducers/home'
 import {
   selectProvider,
   selectAccount,

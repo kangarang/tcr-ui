@@ -19,18 +19,6 @@ export function requestApproval(amount) {
   }
 }
 
-export function txnMining(payload) {
-  return {
-    type: TXN_MINING,
-    payload,
-  }
-}
-export function clearTxn(payload) {
-  return {
-    type: CLEAR_TXN,
-    payload,
-  }
-}
 export function txRequestVotingRights(payload) {
   return {
     type: TX_REQUEST_VOTING_RIGHTS,
@@ -70,12 +58,6 @@ export function txApply(payload) {
   }
 }
 
-export function txnMined(payload) {
-  return {
-    type: TXN_MINED,
-    payload,
-  }
-}
 export function txnReverted(payload) {
   return {
     type: TXN_REVERTED,
