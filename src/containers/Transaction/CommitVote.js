@@ -87,7 +87,7 @@ export default class CommitVote extends Component {
               handleInputChange={e => handleInputChange(e, 'numTokens')}
             />
 
-            {balances.get('votingRights') === '0' ? (
+            {balances.get('votingRights') === '0.0' ? (
               <MarginDiv>
                 <SideText text={translate('ins_requestVotingRights')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>

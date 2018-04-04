@@ -111,16 +111,22 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('challenger', false)
         .set('challengeID', false)
     case '_PollCreated':
-      return golem.set('status', '2').set('pollID', fromJS(log.pollID.toString()))
-    // .set('challengeID', fromJS(log.pollID.toString()))
-    // .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
-    // .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
+      return (
+        golem
+          .set('status', '2')
+          // .set('pollID', fromJS(log.pollID.toString()))
+          // .set('challengeID', fromJS(log.challengeID.toString()))
+          .set('commitExpiry', timestampToExpiry(log.commitEndDate.toNumber()))
+          .set('revealExpiry', timestampToExpiry(log.revealEndDate.toNumber()))
+      )
     case '_VoteCommitted':
-      return golem.set('status', '2').set('challengeID', fromJS(log.pollID.toString()))
+      return golem.set('status', '2')
+    // .set('challengeID', fromJS(log.pollID.toString()))
     // .set('votesFor', fromJS(log.votesFor.toString()))
     // .set('votesAgainst', fromJS(log.votesAgainst.toString()))
     case '_VoteRevealed':
-      return golem.set('status', '2').set('challengeID', fromJS(log.pollID.toString()))
+      return golem.set('status', '2')
+    // .set('challengeID', fromJS(log.pollID.toString()))
     // .set('votesFor', fromJS(log.votesFor.toString()))
     // .set('votesAgainst', fromJS(log.votesAgainst.toString()))
     case '_ChallengeFailed':

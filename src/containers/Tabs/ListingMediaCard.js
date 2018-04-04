@@ -94,7 +94,6 @@ function ListingMediaCard(props) {
                 <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
-
             {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
               <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
             ) : (
