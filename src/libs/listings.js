@@ -12,8 +12,8 @@ export function sortByNestedBlockTimestamp(unsorted) {
 export function findGolem(listingHash, listings) {
   return listings[listingHash]
 }
-export function findChallenge(pollID, listings) {
-  return Object.values(listings).filter(li => li.challengeID.toString() === pollID.toString())
+export function findChallenge(challengeID, listings) {
+  return Object.values(listings).filter(li => li.challengeID.toString() === challengeID.toString())
 }
 
 // Create
@@ -67,8 +67,8 @@ export async function convertLogToListing(log, blockTxn, owner) {
     listingID,
     unstakedDeposit: deposit.toString(),
     appExpiry,
-    commitExpiry: {expired: false},
-    revealExpiry: {expired: false},
+    commitExpiry: false,
+    revealExpiry: false,
   }
   return golem
 }
@@ -87,6 +87,8 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '2',
         challenger: msgSender,
         challengeID: log.challengeID.toString(),
+        // commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
+        // revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
       }
     case '_ApplicationWhitelisted':
       return {
@@ -94,6 +96,8 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '3',
         challenger: false,
         challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
       }
     case '_ApplicationRemoved':
       return {
@@ -101,6 +105,8 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '0',
         challenger: false,
         challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
       }
     case '_ListingRemoved':
       return {
@@ -108,13 +114,15 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '0',
         challenger: false,
         challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
       }
     case '_PollCreated':
       return {
         ...golem,
         status: '2',
-        // commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
-        // revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
+        commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
+        revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
       }
     case '_VoteCommitted':
       return {
@@ -138,6 +146,8 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '3',
         challenger: false,
         challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
       }
     case '_ChallengeSucceeded':
       return {
@@ -145,6 +155,8 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '0',
         challenger: false,
         challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
       }
     default:
       return golem

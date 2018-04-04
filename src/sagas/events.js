@@ -24,8 +24,8 @@ function* setupEventChannels() {
       _ListingRemoved,
       _ListingWithdrawn,
       _TouchAndRemoved,
-      // _ChallengeFailed,
-      // _ChallengeSucceeded,
+      _ChallengeSucceeded,
+      _ChallengeFailed,
     } = registry.interface.events
     const { _VoteCommitted, _VoteRevealed, _PollCreated } = voting.interface.events
 
@@ -37,6 +37,8 @@ function* setupEventChannels() {
     const lrChannel = yield call(createChannel, provider, _ListingRemoved)
     const lwChannel = yield call(createChannel, provider, _ListingWithdrawn)
     const trChannel = yield call(createChannel, provider, _TouchAndRemoved)
+    const csChannel = yield call(createChannel, provider, _ChallengeSucceeded)
+    const cfChannel = yield call(createChannel, provider, _ChallengeFailed)
 
     const vcChannel = yield call(createChannel, provider, _VoteCommitted)
     const vrChannel = yield call(createChannel, provider, _VoteRevealed)
@@ -51,6 +53,8 @@ function* setupEventChannels() {
         yield takeEvery(lrChannel, handleEventEmission)
         yield takeEvery(lwChannel, handleEventEmission)
         yield takeEvery(trChannel, handleEventEmission)
+        yield takeEvery(csChannel, handleEventEmission)
+        yield takeEvery(cfChannel, handleEventEmission)
 
         yield takeEvery(vcChannel, handleEventEmission)
         yield takeEvery(vrChannel, handleEventEmission)
@@ -66,6 +70,8 @@ function* setupEventChannels() {
         lrChannel.close()
         lwChannel.close()
         trChannel.close()
+        csChannel.close()
+        cfChannel.close()
 
         vcChannel.close()
         vrChannel.close()
@@ -96,7 +102,7 @@ function* handleEventEmission({ ContractEvent, log }) {
     const allListings = yield select(selectAllListings)
 
     const dLog = yield call(decodeLog, ContractEvent, log, provider)
-    console.log('emitted:', log, dLog)
+    console.log(ContractEvent.name, 'emitted:', log, dLog)
     const listings = yield call(convertDecodedLogs, [dLog], allListings)
     console.log('event listings', listings)
 

@@ -75,23 +75,23 @@ export async function convertDecodedLogs(dLogs, listings) {
     } else if (logData.pollID) {
       // if pollID or challengeID exists, find the corresponding challenge
       console.log('poll id logData', logData)
-      golem = findChallenge(logData.pollID, listings)
+      golem = findChallenge(logData.pollID, listings)[0]
     } else if (logData.challengeID) {
       console.log('challenge id logData', logData)
-      golem = findChallenge(logData.challengeID, listings)
+      golem = findChallenge(logData.challengeID, listings)[0]
     }
     // invoke the changeListing function to modify the listing
     if (golem !== undefined) {
       listing = changeListing(golem, logData, txData, eventName, msgSender)
     }
-    // console.log('golem, listing', golem, listing)
+    console.log('golem, listing', golem, listing)
 
     // set the in the master object
     if (listing !== undefined) {
       listings[listing.listingHash] = listing
     }
   }
-  console.log('listings', listings)
+  console.log('converted logs/listings', listings)
   // return a new object of relevant listings
   return listings
 }

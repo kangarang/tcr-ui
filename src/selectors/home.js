@@ -37,6 +37,6 @@ export const selectFaceoffs = createSelector(selectAllListings, listings =>
   _.pickBy(listings, li => li.status === '2')
 )
 
-// export const selectRemoved = createSelector(selectAllListings, listings =>
-// _.pickBy(listings, li => li.status === '0')
-// )
+export const selectRemoved = createSelector(selectAllListings, listings =>
+  _.pickBy(listings, li => li.status === '0')
+)

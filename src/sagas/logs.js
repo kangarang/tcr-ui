@@ -19,21 +19,26 @@ export function* setupLogsSaga() {
     const {
       _Application,
       _Challenge,
+      _ChallengeSucceeded,
+      _ChallengeFailed,
       _ApplicationWhitelisted,
       _ApplicationRemoved,
       _ListingRemoved,
     } = registry.interface.events
-
     // get all applications
     const aLogs = yield call(decodeLogsSaga, _Application, registry.address)
     const applications = yield call(convertDecodedLogs, aLogs, {})
 
+    console.log('registry', registry)
+
     const cLogs = yield call(decodeLogsSaga, _Challenge, registry.address)
+    const csLogs = yield call(decodeLogsSaga, _ChallengeSucceeded, registry.address)
+    const cfLogs = yield call(decodeLogsSaga, _ChallengeFailed, registry.address)
     const awLogs = yield call(decodeLogsSaga, _ApplicationWhitelisted, registry.address)
     const arLogs = yield call(decodeLogsSaga, _ApplicationRemoved, registry.address)
     const lrLogs = yield call(decodeLogsSaga, _ListingRemoved, registry.address)
 
-    const logs = [cLogs, awLogs, arLogs, lrLogs]
+    const logs = [cLogs, csLogs, cfLogs, awLogs, arLogs, lrLogs]
     console.log('logs', logs)
     const sorted = yield call(flattenAndSortByNestedBlockTimestamp, logs)
     // console.log('flatsorted', sorted)
