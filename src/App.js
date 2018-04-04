@@ -6,8 +6,8 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 
 import Home from 'containers/Home'
 
-import '../global-styles'
-import { colors } from '../global-styles'
+import './global-styles'
+import { colors } from './global-styles'
 
 const theme = createMuiTheme({
   palette: {
@@ -27,9 +27,9 @@ const theme = createMuiTheme({
   overrides: {
     MuiTabIndicator: {
       root: {
-        background: `linear-gradient(to right, ${
-          colors.gradient.left
-        } 0%, ${colors.gradient.right} 100%)`,
+        background: `linear-gradient(to right, ${colors.gradient.left} 0%, ${
+          colors.gradient.right
+        } 100%)`,
         border: 0,
         height: 3,
       },
