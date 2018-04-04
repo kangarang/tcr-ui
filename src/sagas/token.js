@@ -1,6 +1,6 @@
 import utils from 'ethers/utils'
 import { put, select, all, takeEvery } from 'redux-saga/effects'
-import { UPDATE_BALANCES_REQUEST } from 'actions/constants'
+import { UPDATE_BALANCES_REQUEST } from '../actions/constants'
 import { updateBalances } from '../actions'
 import {
   selectProvider,
@@ -10,8 +10,8 @@ import {
   selectVoting,
   selectTCR,
 } from '../selectors'
-import { selectWhitelist } from 'selectors/listings'
-import { BN } from 'libs/units'
+import { selectWhitelist } from '../selectors/listings'
+import { BN } from '../libs/units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)

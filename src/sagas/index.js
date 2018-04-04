@@ -1,10 +1,10 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
 // import { Organization } from '@governx/governx-lib'
 
-import { GET_ETHEREUM, LOGIN_ERROR } from 'actions/constants'
+import { GET_ETHEREUM, LOGIN_ERROR } from '../actions/constants'
 import { setWallet, loginError } from '../actions'
-import { setProvider } from 'libs/provider'
-import { registrySaga } from 'sagas/contracts'
+import { setProvider } from '../libs/provider'
+import { registrySaga } from '../sagas/contracts'
 import { selectRegistry, selectAccount } from '../selectors'
 
 export default function* rootSaga() {

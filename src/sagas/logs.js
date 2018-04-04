@@ -1,8 +1,8 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 
-import { setListings } from '../actions'
-import { setApplications } from 'libs/listings'
+import { setListings } from '../reducers/listings'
+import { setApplications } from '../libs/listings'
 import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
 import { selectProvider, selectRegistry } from '../selectors'

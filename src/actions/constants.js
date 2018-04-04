@@ -53,8 +53,6 @@ export const TX_REQUEST_VOTING_RIGHTS = 'TX_REQUEST_VOTING_RIGHTS--|--Vote'
 export const TX_COMMIT_VOTE = 'TX_COMMIT_VOTE--|--Vote'
 export const TX_REVEAL_VOTE = 'TX_REVEAL_VOTE--|--Vote'
 
-export const SET_LISTINGS = 'SET_LISTINGS--|--Reducer'
-export const UPDATE_LISTING = 'UPDATE_LISTING--|--Home'
 export const CHANGE_ITEMS = 'CHANGE_ITEMS--|--Reducer'
 export const DELETE_LISTINGS = 'DELETE_LISTINGS--|--Home'
 

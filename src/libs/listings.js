@@ -3,6 +3,21 @@ import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash, isAddress } from '../libs/values'
 
+const updateUser = user =>
+  Object.assign({}, user, {
+    name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+  })
+
+const byId = state =>
+  state.reduce(
+    (acc, item) => ({
+      ...acc,
+      [item.id]: updateUser(item),
+    }),
+    {}
+  )
+
+const usersById = byId(users)
 // Get
 export function findGolem(listingHash, listings) {
   return listings[listingHash]
@@ -28,9 +43,12 @@ export async function createListing(log, blockTxn, owner) {
         console.log('listingID', listingID)
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         tokenData = _.find({ address: listingID }, tokenList)
-
-        if (tokenData !== undefined) {
-          tokenData.logo.url = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${tokenData.address.toLowerCase()}.png`
+        if (tokenData) {
+          tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${tokenData.address.toLowerCase()}.png`
+          console.log('tokenData', tokenData)
+        } else {
+          tokenData = {}
+          tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${listingID.toLowerCase()}.png`
           console.log('tokenData', tokenData)
         }
       }

@@ -1,8 +1,8 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
-import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from 'actions/constants'
+import { CHOOSE_TCR, SET_REGISTRY_CONTRACT } from '../actions/constants'
 import { setContracts, contractError, updateBalancesRequest, setRegistryContract } from '../actions'
-import { setupRegistry, setupContract } from 'libs/contracts'
-import { baseToConvertedUnit } from 'libs/units'
+import { setupRegistry, setupContract } from '../libs/contracts'
+import { baseToConvertedUnit } from '../libs/units'
 import abis from '../abis'
 import { selectProvider } from '../selectors'
 

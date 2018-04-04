@@ -1,4 +1,4 @@
-import { baseToConvertedUnit, convertedToBaseUnit } from '../_units'
+import { baseToConvertedUnit, convertedToBaseUnit } from '../../libs/units'
 
 describe('unit conversion helpers', () => {
   test('should return the converted number as a string', () => {

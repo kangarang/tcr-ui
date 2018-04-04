@@ -3,12 +3,12 @@ import { TX_REQUEST_VOTING_RIGHTS, TX_COMMIT_VOTE, TX_REVEAL_VOTE } from '../act
 
 import { selectAccount, selectVoting } from '../selectors'
 
-import { convertedToBaseUnit } from 'libs/units'
-import { getVoteSaltHash, randInt } from 'libs/values'
-import saveFile from 'utils/_file'
-import { getEndDateString } from 'utils/_datetime'
+import { convertedToBaseUnit } from '../libs/units'
+import { getVoteSaltHash, randInt } from '../libs/values'
+import saveFile from '../utils/_file'
+import { getEndDateString } from '../utils/_datetime'
 
-import { sendTransactionSaga } from 'sagas/transaction'
+import { sendTransactionSaga } from '../sagas/transaction'
 
 export default function* voteSaga() {
   yield takeEvery(TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)

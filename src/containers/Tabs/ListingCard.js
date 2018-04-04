@@ -38,11 +38,11 @@ function ListingCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <Img src={tokenData ? tokenData.logo.url : imgSrc} alt="" />
+        <Img src={tokenData ? tokenData.imgSrc : imgSrc} alt="" />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {tokenData ? tokenData.name : one.listingID}
+            {tokenData ? (tokenData.name ? tokenData.name : one.listingID) : one.listingID}
           </Typography>
 
           <Typography component="p">{`BY: ${one.owner.substring(0, 10)}`}</Typography>
