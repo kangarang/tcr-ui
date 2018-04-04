@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash/fp'
 import { createListing, findGolem, changeListing, findChallenge } from 'libs/listings'
 
 let lastReadBlockNumber = 0
@@ -8,9 +8,7 @@ export function flattenAndSortByNestedBlockTimestamp(events) {
   return sortByNestedBlockTimestamp(flattened)
 }
 
-export function sortByNestedBlockTimestamp(unsorted) {
-  return _.sortBy(unsorted, u => u.txData.ts)
-}
+export const sortByNestedBlockTimestamp = unsorted => _.sortBy(u => u.txData.ts, unsorted)
 
 export async function decodeLogs(provider, ContractEvent, address) {
   // build filter

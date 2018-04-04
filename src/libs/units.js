@@ -1,5 +1,5 @@
 import BNJS from 'bn.js'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 
 // TODO: typecheck
 export const BN = small => {

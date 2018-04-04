@@ -1,5 +1,5 @@
 import { differenceInSeconds, format } from 'date-fns'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 import moment from 'moment'
 
 // https://github.com/aragon/aragon-ui/blob/master/src/utils/date.js

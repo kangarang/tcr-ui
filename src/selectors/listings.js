@@ -1,26 +1,23 @@
 import { createSelector } from 'reselect'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 
 export const selectListings = state => state.listings
 
-export const selectAllListings = createSelector(
-  selectListings,
-  listingsState => listingsState.listings
-)
-
 // Only whitelisted listings
-export const selectWhitelist = createSelector(selectAllListings, listings =>
-  _.pickBy(listings, li => li.status === '3')
+export const selectWhitelist = createSelector(selectListings, listings =>
+  _.pickBy(li => li.status === '3', listings)
 )
 // Candidate listings
-export const selectCandidates = createSelector(selectAllListings, listings =>
-  _.pickBy(listings, li => li.status === '1')
+export const selectCandidates = createSelector(
+  selectListings,
+  listings => _.pickBy(li => li.status === '1', listings)
+  // listings.filter(li => li.status === '1')
 )
 // Only voteable listings
-export const selectFaceoffs = createSelector(selectAllListings, listings =>
-  _.pickBy(listings, li => li.status === '2')
+export const selectFaceoffs = createSelector(selectListings, listings =>
+  _.pickBy(li => li.status === '2', listings)
 )
 
-export const selectRemoved = createSelector(selectAllListings, listings =>
-  _.pickBy(listings, li => li.status === '0')
+export const selectRemoved = createSelector(selectListings, listings =>
+  _.pickBy(li => li.status === '0', listings)
 )

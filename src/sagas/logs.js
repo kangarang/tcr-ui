@@ -1,5 +1,5 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 
 import { setListings } from '../actions'
 import { setApplications } from 'libs/listings'
@@ -44,7 +44,7 @@ export function* setupLogsSaga() {
     // console.log('flatsorted', sorted)
     const listings = yield call(convertDecodedLogs, sorted, applications)
     // console.log('listings', listings)
-    const filteredListings = yield _.pickBy(listings, li => li.status !== '0')
+    const filteredListings = yield _.pickBy(li => li.status !== '0', listings)
     console.log('filteredListings', filteredListings)
 
     if (Object.keys(filteredListings).length > 0) {

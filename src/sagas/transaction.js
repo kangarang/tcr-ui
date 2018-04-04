@@ -1,6 +1,6 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 
 import { SEND_TRANSACTION } from 'actions/constants'
 import { txnMining, txnMined, clearTxn } from 'actions/transactions'

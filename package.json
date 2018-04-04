@@ -59,6 +59,7 @@
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
     "eslint": "4.18.1",
+    "eslint-plugin-lodash-fp": "2.1.3",
     "eslint-plugin-react": "7.7.0",
     "react-test-renderer": "16.2.0",
     "regenerator-runtime": "0.11.1"
@@ -71,16 +72,53 @@
   },
   "eslintConfig": {
     "plugins": [
-      "react"
+      "react",
+      "lodash-fp"
     ],
+    "env": {
+      "es6": true
+    },
     "parserOptions": {
-      "ecmaVersion": 6,
+      "ecmaVersion": 7,
       "sourceType": "module",
       "ecmaFeatures": {
         "jsx": true
       }
     },
     "rules": {
+      "lodash-fp/consistent-compose": "off",
+      "lodash-fp/consistent-name": [
+        "error",
+        "_"
+      ],
+      "lodash-fp/no-argumentless-calls": "error",
+      "lodash-fp/no-chain": "error",
+      "lodash-fp/no-extraneous-args": "error",
+      "lodash-fp/no-extraneous-function-wrapping": "warn",
+      "lodash-fp/no-extraneous-iteratee-args": "error",
+      "lodash-fp/no-for-each": "off",
+      "lodash-fp/no-partial-of-curried": "error",
+      "lodash-fp/no-single-composition": "error",
+      "lodash-fp/no-submodule-destructuring": "error",
+      "lodash-fp/no-unused-result": "error",
+      "lodash-fp/prefer-compact": "error",
+      "lodash-fp/prefer-composition-grouping": "error",
+      "lodash-fp/prefer-constant": [
+        "error",
+        {
+          "arrowFunctions": false
+        }
+      ],
+      "lodash-fp/prefer-flat-map": "error",
+      "lodash-fp/prefer-get": "error",
+      "lodash-fp/prefer-identity": [
+        "error",
+        {
+          "arrowFunctions": false
+        }
+      ],
+      "lodash-fp/preferred-alias": "off",
+      "lodash-fp/use-fp": "error",
       "arrow-body-style": 0,
       "semi": 0
     },

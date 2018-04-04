@@ -4,7 +4,7 @@ import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/
 import { SET_CONTRACTS } from '../actions/constants'
 import { setListings } from '../actions'
 import { selectRegistry, selectProvider, selectVoting } from '../selectors'
-import { selectAllListings } from 'selectors/listings'
+import { selectListings } from 'selectors/listings'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 
 export default function* rootEventsSaga() {
@@ -100,7 +100,7 @@ function createChannel(provider, ContractEvent) {
 function* handleEventEmission({ ContractEvent, log }) {
   try {
     const provider = yield select(selectProvider)
-    const allListings = yield select(selectAllListings)
+    const allListings = yield select(selectListings)
 
     const dLog = yield call(decodeLog, ContractEvent, log, provider)
     console.log(ContractEvent.name, 'emitted:', log, dLog)

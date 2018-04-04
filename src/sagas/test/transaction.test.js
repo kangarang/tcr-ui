@@ -1,7 +1,7 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { cloneableGenerator } from 'redux-saga/utils'
 import { delay } from 'redux-saga'
-import _ from 'lodash'
+import _ from 'lodash/fp'
 
 import { SEND_TRANSACTION } from 'actions/constants'
 import { sendTransaction } from 'actions'

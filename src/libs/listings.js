@@ -1,4 +1,4 @@
-import fp from 'lodash/fp'
+import _ from 'lodash/fp'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash, isAddress } from '../libs/values'
@@ -26,7 +26,7 @@ export async function createListing(log, blockTxn, owner) {
       listingID = ipfsContent.id
       if (isAddress(listingID.toLowerCase())) {
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
-        tokenData = fp.find({ address: listingID }, tokenList)
+        tokenData = _.find({ address: listingID }, tokenList)
 
         console.log('listingID', listingID)
         console.log('tokenData', tokenData)
