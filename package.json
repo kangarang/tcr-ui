@@ -25,7 +25,7 @@
     "jazzicon": "1.5.0",
     "lint-staged": "7.0.0",
     "lodash": "4.17.4",
-    "material-ui": "^1.0.0-beta.36",
+    "material-ui": "^1.0.0-beta.40",
     "moment": "2.20.1",
     "path": "0.12.7",
     "prettier": "1.11.1",
