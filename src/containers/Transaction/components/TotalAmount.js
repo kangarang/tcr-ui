@@ -1,23 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
-import Text from 'components/Text'
 
-import { MarginDiv } from 'components/StyledHome'
+import Text from 'components/Text'
 
 const FlexSpaceBetween = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 2em 0;
 `
 
 export default ({ minDeposit, tokenSymbol, copy }) => (
-  <MarginDiv>
-    <FlexSpaceBetween>
-      <Text size="large" weight="normal" color="black">
-        {copy}
-      </Text>
-      <Text size="large" weight="bold" color="black">
-        {`${minDeposit} ${tokenSymbol}`}
-      </Text>
-    </FlexSpaceBetween>
-  </MarginDiv>
+  <FlexSpaceBetween>
+    <Text size="large" weight="normal" color="black">
+      {copy}
+    </Text>
+    <Text size="large" weight="bold" color="black">
+      {`${minDeposit} ${tokenSymbol}`}
+    </Text>
+  </FlexSpaceBetween>
 )

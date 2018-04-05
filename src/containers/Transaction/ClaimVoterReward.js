@@ -2,7 +2,7 @@ import React from 'react'
 import Text from 'components/Text'
 import translate from 'translations'
 
-import SidePanel from './SidePanel'
+import SidePanel from './components/SidePanel'
 import TxnProgress from './TxnProgress'
 
 import Button from 'components/Button'

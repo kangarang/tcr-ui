@@ -12,7 +12,7 @@ const StyledText = styled.span`
     `
   }};
   ${({ color }) => {
-    return `color: ${color || 'primary'}`
+    return `color: ${color || '#000000'}`
   }};
 `
 
@@ -23,7 +23,6 @@ const createTextContainer = props => {
     const textProps = { color, size, smallcaps, weight }
     return (
       <div {...props}>
-        {console.log('props', props)}
         <Text {...textProps}>{children}</Text>
       </div>
     )

@@ -1,12 +1,14 @@
+// adapted from:
 // https://github.com/aragon/aragon-ui/tree/master/src/components/Countdown
 import React from 'react'
 import styled from 'styled-components'
+
+import { theme } from '../global-styles'
 
 import redraw from './redraw'
 import IconTime from './Time'
 
 import { difference, formatHtmlDatetime } from 'utils/_datetime'
-import { colors } from '../global-styles'
 
 const FRAME_EVERY = 1000 / 30 // 30 FPS is enough for a ticker
 
@@ -72,24 +74,24 @@ const IconWrapper = styled.span`
 const Part = styled.span`
   font-size: 15px;
   font-weight: 600;
-  color: ${colors.offBlackj};
+  color: ${theme.textPrimary};
 `
 
 const Separator = styled.span`
   margin: 0 4px;
-  color: ${colors.offBlack};
+  color: ${theme.textPrimary};
   font-weight: 400;
 `
 
 const Unit = styled.span`
   margin-left: 2px;
   font-size: 12px;
-  color: ${colors.offBlack};
+  color: ${theme.textPrimary};
 `
 
 const TimeOut = styled.span`
   font-weight: 600;
-  color: ${colors.offBlack};
+  color: ${theme.textPrimary};
 `
 
 export default redraw(FRAME_EVERY)(Countdown)

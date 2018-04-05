@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import translate from 'translations'
 
-import SidePanel from './SidePanel'
+import SidePanel from './components/SidePanel'
 import TxnProgress from './TxnProgress'
 
 import Button from 'components/Button'

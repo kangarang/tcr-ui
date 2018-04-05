@@ -11,7 +11,7 @@ import TotalAmount from './components/TotalAmount'
 
 import { BN, baseToConvertedUnit } from 'libs/units'
 
-import SidePanel from './SidePanel'
+import SidePanel from './components/SidePanel'
 import TxnProgress from './TxnProgress'
 
 import { colors } from '../../global-styles'

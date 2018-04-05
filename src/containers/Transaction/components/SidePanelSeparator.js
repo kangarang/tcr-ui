@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { colors } from '../../../global-styles'
+import { theme } from 'global-styles'
 
 const SidePanelSeparator = styled.div`
   width: 100%;
   height: 1px;
-  background: ${colors.gradient.right};
+  background: ${theme.contentBackground};
 `
 
 export default SidePanelSeparator

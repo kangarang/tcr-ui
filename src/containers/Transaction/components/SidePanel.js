@@ -1,10 +1,11 @@
-// from: https://github.com/aragon/aragon-ui/blob/master/src/components/SidePanel/SidePanel.js
+// adapted from:
+// https://github.com/aragon/aragon-ui/blob/master/src/components/SidePanel/SidePanel.js
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
 import Text from 'components/Text'
 
-import { colors } from '../../global-styles'
+import { colors } from 'global-styles'
 
 const PANEL_WIDTH = 450
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
