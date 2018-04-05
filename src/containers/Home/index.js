@@ -15,6 +15,7 @@ import {
   selectParameters,
   selectMiningStatus,
   selectLatestTxn,
+  selectABIs,
 } from 'selectors/index'
 import { selectWhitelist, selectCandidates, selectFaceoffs } from 'selectors/listings'
 
@@ -256,6 +257,7 @@ const mapStateToProps = createStructuredSelector({
   candidates: selectCandidates,
   faceoffs: selectFaceoffs,
   whitelist: selectWhitelist,
+  abis: selectABIs,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

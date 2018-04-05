@@ -1,11 +1,12 @@
 import { call, put, select, takeLatest } from 'redux-saga/effects'
+import { ipfsGetData } from 'libs/ipfs'
 // import { Organization } from '@governx/governx-lib'
 
 import { LOGIN_ERROR } from '../actions/constants'
-import { loginError } from '../actions'
+import { loginError, chooseTCR } from '../actions'
 import { setProvider } from '../libs/provider'
 import { registrySaga } from './contracts'
-import { setWallet, GET_ETHEREUM } from 'actions/home'
+import { setWallet, GET_ETHEREUM, setABIs } from 'actions/home'
 import { selectRegistry, selectAccount } from '../selectors'
 
 export default function* rootSaga() {
@@ -14,15 +15,16 @@ export default function* rootSaga() {
 
 export function* genesis() {
   try {
-    const provider = yield call(setProvider)
+    const provider = yield call(setProvider, 420)
     const account = (yield provider.listAccounts())[0]
     const network =
       provider.chainId === 4
         ? 'rinkeby'
         : provider.chainId === 1 ? 'mainnet' : provider.chainId === 420 ? 'ganache' : 'unknown'
-
     yield put(setWallet({ provider, account, network }))
-    yield call(registrySaga, provider)
+
+    const data = yield call(ipfsGetData, 'QmeCTiFp7VUgPBnxQcWfNjrxFeh9eeScSx8VUKE2344beo')
+    yield put(setABIs(data))
     // yield call(governXSaga)
   } catch (err) {
     console.log('Genesis error:', err)

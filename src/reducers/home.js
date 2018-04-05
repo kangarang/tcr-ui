@@ -1,4 +1,10 @@
-import { UPDATE_BALANCES, SET_REGISTRY_CONTRACT, SET_CONTRACTS, SET_WALLET } from 'actions/home'
+import {
+  UPDATE_BALANCES,
+  SET_REGISTRY_CONTRACT,
+  SET_CONTRACTS,
+  SET_WALLET,
+  SET_ABIS,
+} from 'actions/home'
 
 const initialState = {
   provider: {},
@@ -27,10 +33,19 @@ const initialState = {
   },
   parameters: { minDeposit: '0', applyStageLen: '0' },
   latestTxn: {},
+  abis: {},
 }
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
+    case SET_ABIS:
+      return {
+        ...state,
+        abis: {
+          ...state.abis,
+          ...action.abis,
+        },
+      }
     case SET_WALLET:
       return {
         ...state,

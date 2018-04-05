@@ -5,31 +5,31 @@ import {
   setRegistryContract,
   setContracts,
   updateBalancesRequest,
+  SET_ABIS,
 } from 'actions/home'
 import { contractError } from '../actions'
 import { setupRegistry, setupContract } from '../libs/contracts'
 import { baseToConvertedUnit } from '../libs/units'
-import abis from '../abis'
-import { selectProvider } from '../selectors/home'
+import { selectProvider, selectABIs } from '../selectors/home'
 
 export default function* root() {
+  yield takeLatest(SET_ABIS, registrySaga)
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)
+
   yield takeLatest(CHOOSE_TCR, registrySaga)
 }
 
 export function* registrySaga(action) {
   try {
+    const abis = yield select(selectABIs)
     const provider = yield select(selectProvider)
     const networkID = provider.chainId.toString()
-    let address = action.payload
-    if (!address) {
-      address = abis.registry.networks[networkID].address
-    }
+
+    // if action was dispatched with a payload.address, use that address
+    // otherwise, use the default address (factory tcr)
+    let { address } = action.payload || abis.registry.networks[networkID]
     const registry = yield call(setupRegistry, provider, abis.registry.abi, address)
-    const byteCode = yield provider.getCode(address)
-    if (byteCode.toString() !== abis.registry.deployedBytecode) {
-      // throw new Error('mismatch bytecode')
-    }
+
     yield put(setRegistryContract(registry))
   } catch (err) {
     console.log('registry saga err', err)
@@ -38,6 +38,7 @@ export function* registrySaga(action) {
 
 function* contractsSaga(action) {
   try {
+    const abis = yield select(selectABIs)
     const provider = yield select(selectProvider)
     const registry = action.payload
 
@@ -56,7 +57,7 @@ function* contractsSaga(action) {
       tokenName,
       tokenDecimals,
       tokenSymbol,
-      // registryName,
+      registryName,
     ] = yield all([
       call(parameterizer.get, 'minDeposit'),
       call(parameterizer.get, 'applyStageLen'),
@@ -66,7 +67,7 @@ function* contractsSaga(action) {
       call(token.name),
       call(token.decimals),
       call(token.symbol),
-      // call(registry, 'name'),
+      call(registry.name),
     ])
 
     const parameters = {
@@ -90,7 +91,7 @@ function* contractsSaga(action) {
           tokenSymbol,
           tokenName,
           tokenDecimals: tokenDecimals.toString(10),
-          // registryName,
+          registryName,
         },
       })
     )

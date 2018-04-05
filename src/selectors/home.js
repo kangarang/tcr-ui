@@ -9,6 +9,7 @@ export const selectNetwork = createSelector(selectHome, homeState => homeState.n
 export const selectBalances = createSelector(selectHome, homeState => homeState.balances)
 export const selectParameters = createSelector(selectHome, homeState => homeState.parameters)
 export const selectTCR = createSelector(selectHome, homeState => homeState.tcr)
+export const selectABIs = createSelector(selectHome, homeState => homeState.abis)
 
 // Contracts
 export const selectAllContracts = createSelector(selectHome, homeState => homeState.contracts)

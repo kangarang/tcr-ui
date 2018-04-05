@@ -4,6 +4,7 @@ export const SET_CONTRACTS = 'SET_CONTRACTS--Home'
 export const SET_WALLET = 'SET_WALLET--Home'
 export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--Token'
 export const GET_ETHEREUM = 'GET_ETHEREUM--Home'
+export const SET_ABIS = 'SET_ABIS--Home'
 
 export function updateBalancesRequest() {
   return {
@@ -35,6 +36,12 @@ export function setWallet(payload) {
   }
 }
 
+export function setABIs(abis) {
+  return {
+    type: SET_ABIS,
+    abis,
+  }
+}
 export function setupEthereum(network) {
   return {
     type: GET_ETHEREUM,
