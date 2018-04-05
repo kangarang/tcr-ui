@@ -1,4 +1,5 @@
 import omit from 'lodash/fp/omit'
+import { UPDATE_LISTING, SET_LISTINGS, DELETE_KEY } from 'actions/listings'
 
 const initialState = {
   listings: {},

@@ -3,6 +3,7 @@ export const SET_REGISTRY_CONTRACT = 'SET_REGISTRY_CONTRACT--Home'
 export const SET_CONTRACTS = 'SET_CONTRACTS--Home'
 export const SET_WALLET = 'SET_WALLET--Home'
 export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--Token'
+export const GET_ETHEREUM = 'GET_ETHEREUM--Home'
 
 export function updateBalancesRequest() {
   return {
@@ -31,5 +32,12 @@ export function setWallet(payload) {
   return {
     type: SET_WALLET,
     payload,
+  }
+}
+
+export function setupEthereum(network) {
+  return {
+    type: GET_ETHEREUM,
+    network,
   }
 }

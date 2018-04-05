@@ -1,3 +1,5 @@
+import { UPDATE_BALANCES, SET_REGISTRY_CONTRACT, SET_CONTRACTS, SET_WALLET } from 'actions/home'
+
 const initialState = {
   provider: {},
   account: '',

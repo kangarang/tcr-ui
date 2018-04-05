@@ -1,6 +1,6 @@
-const SET_LISTINGS = 'SET_LISTINGS--Listings'
-const UPDATE_LISTING = 'UPDATE_LISTING--Listings'
-const DELETE_KEY = 'DELETE_KEY--Listings'
+export const SET_LISTINGS = 'SET_LISTINGS--Listings'
+export const UPDATE_LISTING = 'UPDATE_LISTING--Listings'
+export const DELETE_KEY = 'DELETE_KEY--Listings'
 
 export function updateListing(payload) {
   return {

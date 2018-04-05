@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 
-import { GET_ETHEREUM, UPDATE_BALANCES_REQUEST } from './actions/constants'
+import { UPDATE_BALANCES_REQUEST, GET_ETHEREUM } from './actions/home'
 
 import createReducer from './reducers'
 

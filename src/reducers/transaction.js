@@ -1,4 +1,4 @@
-import { TXN_MINED, TXN_MINING, CLEAR_TXN } from 'actions/transactions'
+import { TXN_MINED, TXN_MINING, CLEAR_TXN } from 'actions/transaction'
 
 const initialState = {
   miningStatus: false,

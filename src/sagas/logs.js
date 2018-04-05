@@ -2,12 +2,11 @@ import { select, takeLatest, call, put } from 'redux-saga/effects'
 import pickBy from 'lodash/fp/pickBy'
 
 import { setListings } from '../actions/listings'
-import { SET_CONTRACTS } from '../actions/home'
+import { SET_CONTRACTS, updateBalancesRequest } from '../actions/home'
 import { setApplications } from '../libs/listings'
 import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
 import { selectProvider, selectRegistry } from '../selectors'
-import { updateBalancesRequest } from '../actions'
 
 export default function* rootLogsSaga() {
   yield takeLatest(SET_CONTRACTS, setupLogsSaga)

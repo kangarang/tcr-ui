@@ -80,10 +80,3 @@ export function txApply(payload) {
     payload,
   }
 }
-
-export function txnReverted(payload) {
-  return {
-    type: TXN_REVERTED,
-    payload,
-  }
-}
