@@ -103,7 +103,7 @@ function* handleEventEmission({ ContractEvent, log }) {
     const allListings = yield select(selectAllListings)
 
     const dLog = yield call(decodeLog, ContractEvent, log, provider)
-    console.log(ContractEvent.name, 'emitted:', log, dLog)
+    console.log(ContractEvent.name, 'emitted:', dLog)
     const listings = yield call(convertDecodedLogs, [dLog], allListings)
     console.log('event listings', listings)
 

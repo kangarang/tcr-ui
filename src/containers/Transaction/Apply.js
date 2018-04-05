@@ -109,11 +109,6 @@ export default ({
             <TxnProgress />
           </div>
         )}
-        {latestTxn && (
-          <a target="_blank" href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
-            {latestTxn.hash}
-          </a>
-        )}
       </MarginDiv>
     </SidePanel>
   </div>

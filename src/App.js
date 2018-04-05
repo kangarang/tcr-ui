@@ -36,7 +36,7 @@ const muiTheme = createMuiTheme({
   },
 })
 
-console.log(muiTheme)
+console.log('theme:', muiTheme)
 
 const AppWrapper = styled.div`
   display: flex;

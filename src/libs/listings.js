@@ -40,6 +40,7 @@ export async function createListing(log, blockTxn, owner) {
       listingID = ipfsContent.id
       // Validate listingHash === keccak256(ipfsContent.id)
       if (isAddress(listingID.toLowerCase())) {
+        // see: https://github.com/ethereum-lists/tokens
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         tokenData = find({ address: listingID }, tokenList)
         if (tokenData) {
@@ -102,9 +103,33 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         status: '2',
         challenger: msgSender,
         challengeID: log.challengeID.toString(),
-        // commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
-        // revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
+        commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
+        revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
       }
+
+    case '_PollCreated':
+      return {
+        ...golem,
+        status: '2',
+        pollID: log.pollID.toString(),
+        commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
+        revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
+      }
+    case '_VoteCommitted':
+      return {
+        ...golem,
+        status: '2',
+        pollID: log.pollID.toString(),
+      }
+    case '_VoteRevealed':
+      return {
+        ...golem,
+        status: '2',
+        pollID: log.pollID.toString(),
+        votesFor: log.votesFor.toString(),
+        votesAgainst: log.votesAgainst.toString(),
+      }
+
     case '_ApplicationWhitelisted':
       return {
         ...golem,
@@ -114,6 +139,16 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         commitExpiry: false,
         revealExpiry: false,
       }
+    case '_ChallengeFailed':
+      return {
+        ...golem,
+        status: '3',
+        challenger: false,
+        challengeID: false,
+        commitExpiry: false,
+        revealExpiry: false,
+      }
+
     case '_ApplicationRemoved':
       return {
         ...golem,
@@ -127,39 +162,6 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
       return {
         ...golem,
         status: '0',
-        challenger: false,
-        challengeID: false,
-        commitExpiry: false,
-        revealExpiry: false,
-      }
-    case '_PollCreated':
-      return {
-        ...golem,
-        status: '2',
-        challengeID: log.pollID.toString(),
-        commitExpiry: timestampToExpiry(log.commitEndDate.toNumber()),
-        revealExpiry: timestampToExpiry(log.revealEndDate.toNumber()),
-      }
-    case '_VoteCommitted':
-      return {
-        ...golem,
-        status: '2',
-        challengeID: log.pollID.toString(),
-        // votesFor: log.votesFor.toString(),
-        // votesAgainst: log.votesAgainst.toString(),
-      }
-    case '_VoteRevealed':
-      return {
-        ...golem,
-        status: '2',
-        challengeID: log.pollID.toString(),
-        // votesFor: log.votesFor.toString(),
-        // votesAgainst: log.votesAgainst.toString(),
-      }
-    case '_ChallengeFailed':
-      return {
-        ...golem,
-        status: '3',
         challenger: false,
         challengeID: false,
         commitExpiry: false,

@@ -75,17 +75,12 @@ export function* commitVoteSaga(action) {
       account,
     }
 
-    // console.log('commit json:', json)
-
     const listingDashed = data.replace(' ', '-')
     const filename = `poll-${pollID}-${listingDashed}.json`
 
-    yield spawn(sendTransactionSaga, voting, 'commitVote', finalArgs)
-
-    while (true) {
-      const receipt = yield take(TXN_MINING)
-      saveFile(json, filename)
-    }
+    // TODO: local storage
+    saveFile(json, filename)
+    yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
   } catch (error) {
     console.log('commit vote saga error', error)
   }
@@ -95,6 +90,7 @@ export function* revealVoteSaga(action) {
   try {
     const voting = yield select(selectVoting)
     const { args, methodName } = action.payload
+    console.log('reveal args', args)
     yield call(sendTransactionSaga, voting, methodName, args)
   } catch (error) {
     console.log('reveal vote saga error', error)

@@ -63,17 +63,6 @@ function ListingCard(props) {
                       {'Commit Vote'}
                     </Button>
                     <Countdown end={one.commitExpiry.date} />
-                    <Button
-                      onClick={e => openSidePanel(one, 'revealVote')}
-                      size="medium"
-                      color="primary"
-                    >
-                      {'Reveal Vote'}
-                    </Button>
-                    <Countdown end={one.revealExpiry.date} />
-                    <Button onClick={e => handleUpdateStatus(one)} size="medium" color="primary">
-                      {'Update Status'}
-                    </Button>
                   </div>
                 ) : (
                   revealTrigger &&
