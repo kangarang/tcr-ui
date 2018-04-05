@@ -5,5 +5,4 @@ export const TRANSACTION_ERROR = 'TRANSACTION_ERROR--Error'
 
 export const GET_ETHEREUM = 'GET_ETHEREUM--Home'
 export const CHOOSE_TCR = 'CHOOSE_TCR--Home'
-export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--Token'
 export const POLL_LOGS_REQUEST = 'POLL_LOGS_REQUEST--Logs'

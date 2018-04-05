@@ -1,4 +1,4 @@
-import _ from 'lodash/fp'
+import find from 'lodash/fp/find'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from './ipfs'
 import { getListingHash, isAddress } from '../libs/values'
@@ -41,7 +41,7 @@ export async function createListing(log, blockTxn, owner) {
       // Validate listingHash === keccak256(ipfsContent.id)
       if (isAddress(listingID.toLowerCase())) {
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
-        tokenData = _.find({ address: listingID }, tokenList)
+        tokenData = find({ address: listingID }, tokenList)
         if (tokenData) {
           tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${tokenData.address.toLowerCase()}.png`
           console.log('tokenData', tokenData)

@@ -1,5 +1,5 @@
 import { differenceInSeconds, format } from 'date-fns'
-import _ from 'lodash/fp'
+import isNumber from 'lodash/fp/isNumber'
 import moment from 'moment'
 
 // https://github.com/aragon/aragon-ui/blob/master/src/utils/date.js
@@ -28,7 +28,7 @@ export function dateHasPassed(unixTimestamp) {
   return date.unix() >= unixTimestamp
 }
 export function timestampToExpiry(integer) {
-  if (!_.isNumber(integer)) {
+  if (!isNumber(integer)) {
     return new Error('need integer!')
   }
   return buildTimeObject(integer)

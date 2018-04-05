@@ -42,11 +42,11 @@
     "styled-components": "2.3.0"
   },
   "scripts": {
-    "start": "NODE_PATH=./src node server.js",
-    "start:prod": "npm run build && NODE_PATH=./src node server.js",
-    "dev": "npm run lint && NODE_PATH=./src react-scripts start",
-    "test": "npm run lint && NODE_PATH=./src react-scripts test",
-    "build": "NODE_PATH=./src react-scripts build",
+    "start": "node server.js",
+    "start:prod": "npm run build && node server.js",
+    "dev": "npm run lint && react-scripts start",
+    "test": "npm run lint && react-scripts test",
+    "build": "react-scripts build",
     "precommit": "lint-staged",
     "fix": "eslint --fix ./src",
     "lint": "eslint ./src"
@@ -68,6 +68,10 @@
       "prettier --single-quote --write",
       "git add"
     ]
+  },
+  "jest": {
+    "verbose": true,
+    "modulePaths": ["<rootDir>/src/"]
   },
   "eslintConfig": {
     "plugins": [

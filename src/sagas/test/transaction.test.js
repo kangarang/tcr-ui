@@ -1,9 +1,8 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { cloneableGenerator } from 'redux-saga/utils'
 import { delay } from 'redux-saga'
-import _ from 'lodash/fp'
 
-import { SEND_TRANSACTION, sendTransaction } from '../../reducers/transaction'
+import { SEND_TRANSACTION, sendTransaction } from '../../actions/transaction'
 import { convertedToBaseUnit } from '../../libs/units'
 
 import transactionSaga, { handleSendTransaction, registryTxnSaga } from '../transaction'
@@ -31,7 +30,7 @@ describe('Handle send transaction saga', async () => {
       contract: 'registry',
     }
     const state = getDefaultState({ payload, type: SEND_TRANSACTION })
-    console.log(state)
+    // console.log(state)
     const action = sendTransaction(payload)
     const generator = cloneableGenerator(handleSendTransaction)(action)
     // expect(generator.next().value).toEqual(call(registryTxnSaga, action))

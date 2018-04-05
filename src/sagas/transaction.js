@@ -2,14 +2,14 @@ import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import _ from 'lodash/fp'
 
-import { SEND_TRANSACTION, txnMining, txnMined, clearTxn } from '../reducers/transaction'
+import { SEND_TRANSACTION, txnMining, txnMined, clearTxn } from '../actions/transaction'
 
 import { selectProvider, selectRegistry, selectVoting, selectToken } from '../selectors'
 import { ipfsAddData } from '../libs/ipfs'
 
 import { getListingHash } from '../libs/values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
-import { updateBalancesRequest } from '../actions'
+import { updateBalancesRequest } from '../actions/home'
 
 export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)

@@ -1,9 +1,9 @@
 import { eventChannel, END } from 'redux-saga'
 import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
-import { SET_CONTRACTS } from '../reducers/home'
-import { setListings } from '../reducers/listings'
-import { selectRegistry, selectProvider, selectVoting } from '../selectors'
+import { SET_CONTRACTS } from '../actions/home'
+import { setListings } from '../actions/listings'
+import { selectRegistry, selectProvider, selectVoting } from '../selectors/home'
 import { selectAllListings } from 'selectors/listings'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 

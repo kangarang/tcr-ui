@@ -5,7 +5,6 @@ import {
   TRANSACTION_ERROR,
   GET_ETHEREUM,
   CHOOSE_TCR,
-  UPDATE_BALANCES_REQUEST,
   POLL_LOGS_REQUEST,
 } from './constants'
 
@@ -44,11 +43,6 @@ export function chooseTCR(payload) {
   return {
     type: CHOOSE_TCR,
     payload,
-  }
-}
-export function updateBalancesRequest() {
-  return {
-    type: UPDATE_BALANCES_REQUEST,
   }
 }
 export function pollLogsRequest(payload) {

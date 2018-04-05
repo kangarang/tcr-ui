@@ -1,11 +1,16 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 import { CHOOSE_TCR } from '../actions/constants'
-import { SET_REGISTRY_CONTRACT, setRegistryContract, setContracts } from 'reducers/home'
-import { contractError, updateBalancesRequest } from '../actions'
+import {
+  SET_REGISTRY_CONTRACT,
+  setRegistryContract,
+  setContracts,
+  updateBalancesRequest,
+} from 'actions/home'
+import { contractError } from '../actions'
 import { setupRegistry, setupContract } from '../libs/contracts'
 import { baseToConvertedUnit } from '../libs/units'
 import abis from '../abis'
-import { selectProvider } from '../selectors'
+import { selectProvider } from '../selectors/home'
 
 export default function* root() {
   yield takeLatest(SET_REGISTRY_CONTRACT, contractsSaga)

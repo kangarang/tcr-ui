@@ -4,7 +4,7 @@ import {
   TX_REQUEST_VOTING_RIGHTS,
   TX_COMMIT_VOTE,
   TX_REVEAL_VOTE,
-} from '../reducers/transaction'
+} from '../actions/transaction'
 
 import { selectAccount, selectVoting } from '../selectors'
 
