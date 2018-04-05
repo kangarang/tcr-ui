@@ -2,8 +2,8 @@ import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { cloneableGenerator } from 'redux-saga/utils'
 import { delay } from 'redux-saga'
 
-import { SEND_TRANSACTION, sendTransaction } from '../../actions/transaction'
-import { convertedToBaseUnit } from '../../libs/units'
+import { SEND_TRANSACTION, sendTransaction } from 'actions/transaction'
+import { convertedToBaseUnit } from 'libs/units'
 
 import transactionSaga, { handleSendTransaction, registryTxnSaga } from '../transaction'
 
