@@ -2,6 +2,7 @@ import { differenceInSeconds, format } from 'date-fns'
 import isNumber from 'lodash/fp/isNumber'
 import moment from 'moment'
 
+// adapted from:
 // https://github.com/aragon/aragon-ui/blob/master/src/utils/date.js
 const MINUTE_IN_SECONDS = 60
 const HOUR_IN_SECONDS = MINUTE_IN_SECONDS * 60
@@ -33,7 +34,8 @@ export function timestampToExpiry(integer) {
   }
   return buildTimeObject(integer)
 }
-// adapted from: https://github.com/AugurProject/augur/tree/seadragon/src/utils
+// adapted from:
+// https://github.com/AugurProject/augur/tree/seadragon/src/utils
 export function buildTimeObject(integer) {
   const date = moment.unix(integer).toDate()
   const timestamp = date.getTime() / 1000
@@ -70,22 +72,6 @@ function getTwelveHour(time) {
   if (time[1] < 10) time[1] = '0' + time[1]
 
   return time
-}
-
-// periodString: 'week', 'month', 'all'
-export function getBeginDate(periodString) {
-  const date = moment()
-  let beginDate = date.subtract(1, 'day')
-  if (periodString === 'week') {
-    beginDate = date.subtract(7, 'day')
-  }
-  if (periodString === 'month') {
-    beginDate = date.subtract(1, 'month')
-  }
-  if (periodString === 'all') {
-    return null
-  }
-  return beginDate.unix()
 }
 
 const months = [

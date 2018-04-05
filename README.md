@@ -115,15 +115,11 @@ Start development server: `http://localhost:3000`
 
 ---
 
-## Credits
+## Acknowledgements
 
-UI Components
+[Aragon-ui](https://github.com/aragon/aragon-ui/tree/master/src/components)
 
-[aragon-ui](https://github.com/aragon/aragon-ui/tree/master/src/components)
-
-[material-ui](https://material-ui-next.com/)
-
-Utils
+[Material-ui](https://material-ui-next.com/)
 
 [0x.js](https://github.com/0xProject/0x.js/tree/development/packages)
 

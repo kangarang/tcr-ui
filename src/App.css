@@ -1,0 +1,23 @@
+html {
+  margin: 0;
+}
+@font-face {
+  font-family: 'Iosevka';
+  src: url('./assets/fonts/iosevka-ss08-regular.woff2') format('woff2'),
+    url('./assets/fonts/iosevka-ss08-regular.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Fira Code';
+  src: url('./assets/fonts/FiraCode-Regular.woff2') format('woff2'),
+    url('./assets/fonts/FiraCode-Regular.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+body {
+  line-height: 1.5em;
+  color: black;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  margin: 0;
+}

@@ -7,6 +7,8 @@
 /build
 /_tcr
 
+/src/assets/fonts
+
 .DS_Store
 .firebaserc
 firebase.json

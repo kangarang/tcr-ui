@@ -11,19 +11,21 @@ describe('unit conversion helpers', () => {
     expect(base).toBe('50000000000000000000')
   })
 
-  test('should throw an error if input is undefined', () => {
-    try {
-      baseToConvertedUnit(undefined, 18)
-    } catch (error) {
-      expect(error.message).toBe('invalid type')
-    }
-  })
+  describe('should throw error if given undefined inputs', async () => {
+    test('baseToConvertedUnit', () => {
+      try {
+        baseToConvertedUnit(undefined, 18)
+      } catch (error) {
+        expect(error.message).toBe('invalid type')
+      }
+    })
 
-  test('should throw an error if input is undefined 2', () => {
-    try {
-      convertedToBaseUnit(undefined, 18)
-    } catch (error) {
-      expect(error.message).toBe('invalid type')
-    }
+    test('convertedToBaseUnit', () => {
+      try {
+        convertedToBaseUnit(undefined, 18)
+      } catch (error) {
+        expect(error.message).toBe('invalid type')
+      }
+    })
   })
 })

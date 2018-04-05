@@ -1,15 +1,14 @@
 import 'babel-polyfill'
 import React from 'react'
 import styled from 'styled-components'
-import { AragonApp } from '@aragon/ui'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 
 import Home from 'containers/Home'
 
-import './global-styles'
-import { colors } from './global-styles'
+import './App.css'
+import { theme } from './global-styles'
 
-const theme = createMuiTheme({
+const muiTheme = createMuiTheme({
   palette: {
     primary: {
       light: '#757ce8',
@@ -27,8 +26,8 @@ const theme = createMuiTheme({
   overrides: {
     MuiTabIndicator: {
       root: {
-        background: `linear-gradient(to right, ${colors.gradient.left} 0%, ${
-          colors.gradient.right
+        background: `linear-gradient(to right, ${theme.gradientLeft} 0%, ${
+          theme.gradientRight
         } 100%)`,
         border: 0,
         height: 3,
@@ -36,6 +35,8 @@ const theme = createMuiTheme({
     },
   },
 })
+
+console.log(muiTheme)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -47,11 +48,9 @@ const AppWrapper = styled.div`
 const App = () => (
   <div>
     <AppWrapper>
-      <AragonApp publicUrl="/aragon-ui/">
-        <MuiThemeProvider theme={theme}>
-          <Home />
-        </MuiThemeProvider>
-      </AragonApp>
+      <MuiThemeProvider theme={muiTheme}>
+        <Home />
+      </MuiThemeProvider>
     </AppWrapper>
   </div>
 )
