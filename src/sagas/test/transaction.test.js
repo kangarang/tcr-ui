@@ -12,6 +12,7 @@ const getDefaultState = (payload = {}) => Object.assign({}, payload)
 describe('Root transaction saga', async () => {
   test('should return the root saga takeEvery', () => {
     const generator = cloneableGenerator(transactionSaga)(SEND_TRANSACTION)
+
     expect(generator.next().value).toEqual(takeEvery(SEND_TRANSACTION, handleSendTransaction))
   })
 })
@@ -29,10 +30,12 @@ describe('Handle send transaction saga', async () => {
       listing: null,
       contract: 'registry',
     }
+    // TODO: explain
     const state = getDefaultState({ payload, type: SEND_TRANSACTION })
     // console.log(state)
     const action = sendTransaction(payload)
     const generator = cloneableGenerator(handleSendTransaction)(action)
+    console.log('generator.next().value', generator.next().value)
     // expect(generator.next().value).toEqual(call(registryTxnSaga, action))
     // expect(generator.next().done).toEqual(true)
   })

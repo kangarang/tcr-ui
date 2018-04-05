@@ -1,6 +1,6 @@
 import { setProvider, setupSignerProvider } from '../provider'
 
-describe('libs: provider', async () => {
+describe.skip('libs: provider', async () => {
   describe('function: setProvider', () => {
     test('should return default ethers.js provider', () => {
       const provider = setProvider(420)

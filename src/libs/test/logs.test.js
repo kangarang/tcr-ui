@@ -1,5 +1,5 @@
 import { decodedLogs } from 'libs/logs'
 
-describe('decodeLogs', () => {
+describe.skip('decodeLogs', () => {
   test('test', () => {})
 })

@@ -4,7 +4,7 @@ import { setupRegistry, setupContract } from '../contracts'
 import { setProvider } from '../provider'
 import abis from 'abis'
 
-describe('libs: contracts', async () => {
+describe.skip('libs: contracts', async () => {
   describe('setupRegistry', () => {
     test('should return registry contract', async () => {
       const provider = setProvider(420)

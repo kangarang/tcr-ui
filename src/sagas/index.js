@@ -15,7 +15,7 @@ export default function* rootSaga() {
 
 export function* genesis() {
   try {
-    const provider = yield call(setProvider, 420)
+    const provider = yield call(setProvider)
     const account = (yield provider.listAccounts())[0]
     const network =
       provider.chainId === 4
