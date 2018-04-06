@@ -70,20 +70,20 @@ class Stats extends Component {
             >
               <Identicon address={account} diameter={30} />
             </Button>
-            <Menu
+            {/* <Menu
               id="simple-menu"
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={this.handleClose}
               transition={Fade}
             >
-              {/* <MenuItem onClick={this.handleClose}>
+              <MenuItem onClick={this.handleClose}>
                 <div>{`Account: ${account.substring(0, 10)}...`}</div>
               </MenuItem>
               <MenuItem onClick={this.handleClose}>
                 <div>{network}</div>
-              </MenuItem> */}
-            </Menu>
+              </MenuItem>
+            </Menu> */}
           </div>
         </UserInfoGridItem>
       </GridContainer>

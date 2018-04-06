@@ -1,7 +1,7 @@
 {
   "name": "tcr-ui",
   "author": "kangarang",
-  "version": "0.3.6",
+  "version": "0.0.7",
   "description": "Client-side shell to interact with token-curated registries",
   "repository": "https://github.com/kangarang/tcr-ui",
   "engines": {
@@ -88,10 +88,7 @@
     },
     "rules": {
       "lodash-fp/consistent-compose": "off",
-      "lodash-fp/consistent-name": [
-        "error",
-        "_"
-      ],
+      "lodash-fp/consistent-name": ["error", "_"],
       "lodash-fp/no-argumentless-calls": "error",
       "lodash-fp/no-chain": "error",
       "lodash-fp/no-extraneous-args": "error",

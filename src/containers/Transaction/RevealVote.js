@@ -65,10 +65,10 @@ export default class RevealVote extends Component {
     return (
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
         <SideSplit
-          leftTitle={'Reveal Period'}
-          leftItem={`Reveal: ${parameters.revealStageLen} seconds`}
-          rightTitle={'POLL ID'}
-          rightItem={selectedOne && selectedOne.challengeID}
+          leftTitle={'Voting Rights'}
+          leftItem={balances.votingRights}
+          rightTitle={'Locked Tokens'}
+          rightItem={balances.lockedTokens}
         />
         <SideSplit
           leftTitle={'Votes For'}
@@ -77,16 +77,10 @@ export default class RevealVote extends Component {
           rightItem={this.state.votesAgainst}
         />
         <SideSplit
-          leftTitle={'Commit Hash'}
-          leftItem={this.state.commitHash.substring(0, 10)}
-          rightTitle={'Tokens Committed'}
-          rightItem={this.state.numTokens}
-        />
-        <SideSplit
-          leftTitle={'Locked Tokens'}
-          leftItem={balances.lockedTokens}
-          rightTitle={'Voting Rights'}
-          rightItem={balances.votingRights}
+          leftTitle={'Tokens Committed'}
+          leftItem={this.state.numTokens}
+          rightTitle={'POLL ID'}
+          rightItem={selectedOne && selectedOne.challengeID}
         />
 
         <SideText small text={'REVEAL VOTE'} />
