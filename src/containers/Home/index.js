@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import { chooseTCR } from '../../actions'
-import { setupEthereum } from '../../actions/home'
 
+import { setupEthereum, chooseTCR } from 'actions/home'
+import { sendTransaction } from 'actions/transaction'
 import {
   selectError,
   selectAccount,
@@ -13,11 +13,11 @@ import {
   selectToken,
   selectVoting,
   selectParameters,
-  selectMiningStatus,
-  selectLatestTxn,
   selectABIs,
-} from 'selectors/index'
+  selectTCR,
+} from 'selectors/home'
 import { selectWhitelist, selectCandidates, selectFaceoffs } from 'selectors/listings'
+import { selectMiningStatus, selectLatestTxn } from 'selectors/transaction'
 
 import { convertedToBaseUnit } from 'libs/units'
 
@@ -25,13 +25,11 @@ import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
 import CommitVote from 'containers/Transaction/CommitVote'
 import RevealVote from 'containers/Transaction/RevealVote'
-import { sendTransaction } from 'actions/transaction'
 
 import AppBar from 'components/AppBar'
 
 import Stats from '../Stats'
 import Tabs from '../Tabs'
-import { selectTCR } from '../../selectors'
 
 class Home extends Component {
   constructor(props) {
@@ -261,5 +259,4 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
-
 export default compose(withConnect)(Home)

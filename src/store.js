@@ -13,6 +13,7 @@ import voteSaga from './sagas/vote'
 import contractsSaga from './sagas/contracts'
 import transactionSaga from './sagas/transaction'
 import eventsSaga from './sagas/events'
+// import drizzleSaga from './sagas/drizzle'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -45,6 +46,7 @@ export default function configureStore(initialState = {}) {
   sagaMiddleware.run(voteSaga)
   sagaMiddleware.run(transactionSaga)
   sagaMiddleware.run(eventsSaga)
+  // sagaMiddleware.run(drizzleSaga)
 
   return store
 }

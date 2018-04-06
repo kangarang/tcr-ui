@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
@@ -8,6 +7,16 @@ import Home from 'containers/Home'
 import './App.css'
 import { theme } from './global-styles'
 
+import configureStore from './store'
+
+import { Provider } from 'react-redux'
+import { Router, Route } from 'react-router-dom'
+import { syncHistoryWithStore } from 'react-router-redux'
+import createBrowserHistory from 'history/createBrowserHistory'
+
+// import { generateContractsInitialState } from 'drizzle'
+// import { DrizzleProvider } from 'drizzle-react'
+// import drizzleOptions from './drizzleOptions'
 const muiTheme = createMuiTheme({
   palette: {
     primary: {
@@ -38,6 +47,13 @@ const muiTheme = createMuiTheme({
 
 console.log('theme:', muiTheme)
 
+const bHistory = createBrowserHistory()
+const initialState = {
+  // contracts: generateContractsInitialState(drizzleOptions),
+}
+const store = configureStore(initialState)
+const history = syncHistoryWithStore(bHistory, store)
+
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -48,9 +64,15 @@ const AppWrapper = styled.div`
 const App = () => (
   <div>
     <AppWrapper>
-      <MuiThemeProvider theme={muiTheme}>
-        <Home />
-      </MuiThemeProvider>
+      {/* <DrizzleProvider options={drizzleOptions}> */}
+      <Provider store={store}>
+        <MuiThemeProvider theme={muiTheme}>
+          <Router history={history}>
+            <Route path="/" component={Home} />
+          </Router>
+        </MuiThemeProvider>
+      </Provider>
+      {/* </DrizzleProvider> */}
     </AppWrapper>
   </div>
 )

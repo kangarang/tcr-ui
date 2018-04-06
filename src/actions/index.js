@@ -3,7 +3,6 @@ import {
   CONTRACT_ERROR,
   LOGS_ERROR,
   TRANSACTION_ERROR,
-  CHOOSE_TCR,
   POLL_LOGS_REQUEST,
 } from './constants'
 
@@ -30,12 +29,6 @@ export function transactionError(error) {
   return {
     type: TRANSACTION_ERROR,
     error,
-  }
-}
-export function chooseTCR(payload) {
-  return {
-    type: CHOOSE_TCR,
-    payload,
   }
 }
 export function pollLogsRequest(payload) {

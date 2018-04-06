@@ -5,6 +5,7 @@ export const SET_WALLET = 'SET_WALLET--Home'
 export const UPDATE_BALANCES_REQUEST = 'UPDATE_BALANCES_REQUEST--Token'
 export const GET_ETHEREUM = 'GET_ETHEREUM--Home'
 export const SET_ABIS = 'SET_ABIS--Home'
+export const CHOOSE_TCR = 'CHOOSE_TCR--Home'
 
 export function updateBalancesRequest() {
   return {
@@ -46,5 +47,12 @@ export function setupEthereum(network) {
   return {
     type: GET_ETHEREUM,
     network,
+  }
+}
+
+export function chooseTCR(payload) {
+  return {
+    type: CHOOSE_TCR,
+    payload,
   }
 }

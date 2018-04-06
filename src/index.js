@@ -1,19 +1,9 @@
+import 'babel-polyfill'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-
-import configureStore from './store'
+import { render } from 'react-dom'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 
-const initialState = {}
-const store = configureStore(initialState)
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
+render(<App />, document.getElementById('root'))
 
 registerServiceWorker()
