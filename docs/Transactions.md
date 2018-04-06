@@ -69,11 +69,13 @@ token.approve(address _spender, uint _value)
 Note:
 
 Scenario 1. IF there IS NOT a challenge
-- the Listing is whitelisted
+
+* the Listing is whitelisted
 
 Scenario 2. IF there IS a challenge:
-- a. if the challenger won, challenger is auto-transferred the challenge reward
-- b. if the applicant won, the challenge reward is added to the Listing's deposit stake, available to be withdrawn using `registry.withdraw`
+
+* a. if the challenger won, challenger is auto-transferred the challenge reward
+* b. if the applicant won, the challenge reward is added to the Listing's deposit stake, available to be withdrawn using `registry.withdraw`
 
 ---
 
@@ -109,7 +111,7 @@ Scenario 2. IF there IS a challenge:
 ```
 
 * lorem ipsum
-* `msg.sender`: 
+* `msg.sender`:
 
 ---
 
@@ -118,7 +120,7 @@ Scenario 2. IF there IS a challenge:
 ```
 
 * lorem ipsum
-* `msg.sender`: 
+* `msg.sender`:
 
 ---
 
@@ -127,7 +129,7 @@ Scenario 2. IF there IS a challenge:
 ```
 
 * lorem ipsum
-* `msg.sender`: 
+* `msg.sender`:
 
 ---
 
@@ -136,4 +138,4 @@ Scenario 2. IF there IS a challenge:
 ```
 
 * lorem ipsum
-* `msg.sender`: 
+* `msg.sender`:

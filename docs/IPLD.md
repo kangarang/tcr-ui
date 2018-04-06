@@ -184,7 +184,6 @@ Git commit:
     "email": "juan@benet.ai",
     "time": "1435398707 -0700"
   },
-  "message":
-    "Merge pull request #7 from ipfs/iprs\n\n(WIP) records + merkledag specs"
+  "message": "Merge pull request #7 from ipfs/iprs\n\n(WIP) records + merkledag specs"
 }
 ```

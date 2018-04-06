@@ -1,12 +1,11 @@
 # TCR UI (WIP)
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkangarang%2Ftcr-ui?ref=badge_shield)
+[![Build Status](https://travis-ci.org/kangarang/tcr-ui.svg?branch=master)](https://travis-ci.org/kangarang/tcr-ui)
 
 "Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
 TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a Registry of high-quality entries
-
-The vision of this project is to build a registry-agnostic client-side user interface to interact and transact with Ethereum TCRs
 
 ---
 

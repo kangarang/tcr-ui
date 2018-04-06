@@ -18,23 +18,25 @@ In the `apply` function...
 
 **`_data` is one of the following**
 
-1. a valid ipfs multihash
-    - e.g. `Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7`
-    - when resolved, is a JSON object which contains key `id`
-    - the value of `id`, when hashed with keccak256, is the value `_listingHash`
+1.  a valid ipfs multihash
 
-2. a plaintext string that, when hashed with keccak256, is the value `_listingHash`
-    - e.g. `'consensysclassic.net'`
+    * e.g. `Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7`
+    * when resolved, is a JSON object which contains key `id`
+    * the value of `id`, when hashed with keccak256, is the value `_listingHash`
+
+2.  a plaintext string that, when hashed with keccak256, is the value `_listingHash`
+    * e.g. `'consensysclassic.net'`
 
 **`_listingHash` is one of the following**
 
-1. if `_data` is an ipfs multihash, `_listingHash` is:
-    - the keccak256 hash of the `id` key's value of the JSON object that is resolved at the `_data` ipfs multihash
-    - i.e. `keccak256(ipfs.get(_data).id)`
+1.  if `_data` is an ipfs multihash, `_listingHash` is:
 
-2. if `_data` is a plaintext string, or an invalid ipfs multihash, `_listingHash` is:
-    - the keccak256 hash of `_data`
-    - e.g. `keccak256('consensysclassic.net')`
+    * the keccak256 hash of the `id` key's value of the JSON object that is resolved at the `_data` ipfs multihash
+    * i.e. `keccak256(ipfs.get(_data).id)`
+
+2.  if `_data` is a plaintext string, or an invalid ipfs multihash, `_listingHash` is:
+    * the keccak256 hash of `_data`
+    * e.g. `keccak256('consensysclassic.net')`
 
 #### Pseudocode example
 
