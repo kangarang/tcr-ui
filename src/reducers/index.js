@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
-// import { drizzleReducers } from 'drizzle'
 
 import homeReducer from './home'
 import transactionReducer from './transaction'
@@ -12,6 +11,5 @@ export default function createReducer() {
     home: homeReducer,
     transaction: transactionReducer,
     listings: listingsReducer,
-    // ...drizzleReducers,
   })
 }

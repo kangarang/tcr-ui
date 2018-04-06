@@ -1,22 +1,17 @@
 import React from 'react'
+import { Provider } from 'react-redux'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+// import { syncHistoryWithStore } from 'react-router-redux'
+// import createBrowserHistory from 'history/createBrowserHistory'
+
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-
-import Home from 'containers/Home'
-
 import './App.css'
-import { theme } from './global-styles'
+import { theme } from 'global-styles'
 
+import Home from 'containers/Home/Loadable'
 import configureStore from './store'
 
-import { Provider } from 'react-redux'
-import { Router, Route } from 'react-router-dom'
-import { syncHistoryWithStore } from 'react-router-redux'
-import createBrowserHistory from 'history/createBrowserHistory'
-
-// import { generateContractsInitialState } from 'drizzle'
-// import { DrizzleProvider } from 'drizzle-react'
-// import drizzleOptions from './drizzleOptions'
 const muiTheme = createMuiTheme({
   palette: {
     primary: {
@@ -47,12 +42,10 @@ const muiTheme = createMuiTheme({
 
 console.log('theme:', muiTheme)
 
-const bHistory = createBrowserHistory()
-const initialState = {
-  // contracts: generateContractsInitialState(drizzleOptions),
-}
+const initialState = {}
 const store = configureStore(initialState)
-const history = syncHistoryWithStore(bHistory, store)
+// const browserHistory = createBrowserHistory()
+// const history = syncHistoryWithStore(browserHistory, store)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -62,19 +55,19 @@ const AppWrapper = styled.div`
   margin: 0;
 `
 const App = () => (
-  <div>
-    <AppWrapper>
-      {/* <DrizzleProvider options={drizzleOptions}> */}
-      <Provider store={store}>
-        <MuiThemeProvider theme={muiTheme}>
-          <Router history={history}>
-            <Route path="/" component={Home} />
-          </Router>
-        </MuiThemeProvider>
-      </Provider>
-      {/* </DrizzleProvider> */}
-    </AppWrapper>
-  </div>
+  <AppWrapper>
+    <Provider store={store}>
+      <MuiThemeProvider theme={muiTheme}>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            {/* <Route path="/:user" component={User}/> */}
+            {/* <Route component={NoMatch} /> */}
+          </Switch>
+        </Router>
+      </MuiThemeProvider>
+    </Provider>
+  </AppWrapper>
 )
 
 export default App

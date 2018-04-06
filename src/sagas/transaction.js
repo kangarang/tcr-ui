@@ -2,14 +2,15 @@ import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import _ from 'lodash/fp'
 
-import { SEND_TRANSACTION, txnMining, txnMined, clearTxn } from '../actions/transaction'
+import { SEND_TRANSACTION, txnMining, txnMined, clearTxn } from 'actions/transaction'
+import { updateBalancesRequest } from 'actions/home'
 
-import { selectProvider, selectRegistry, selectVoting, selectToken } from '../selectors'
-import { ipfsAddData } from '../libs/ipfs'
+import { selectProvider, selectRegistry, selectVoting, selectToken } from 'selectors'
 
-import { getListingHash } from '../libs/values'
+import { ipfsAddData } from 'libs/ipfs'
+import { getListingHash } from 'libs/values'
+
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './vote'
-import { updateBalancesRequest } from '../actions/home'
 
 export default function* transactionSaga() {
   yield takeEvery(SEND_TRANSACTION, handleSendTransaction)
@@ -106,10 +107,10 @@ export function* sendTransactionSaga(contract, method, args) {
       return rg
     })
 
-    const defaults = {
-      gas: 4700000,
-      gasPrice: 20000000000,
-    }
+    // const defaults = {
+    //   gas: 4700000,
+    //   gasPrice: 20000000000,
+    // }
     const receipt = yield contract.functions[method](...newArgs)
     yield put(txnMining(receipt))
     const minedTxn = yield provider.waitForTransaction(receipt.hash).then(txn => txn)

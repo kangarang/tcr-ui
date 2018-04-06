@@ -15,21 +15,22 @@ import {
   selectParameters,
   selectABIs,
   selectTCR,
-} from 'selectors/home'
-import { selectWhitelist, selectCandidates, selectFaceoffs } from 'selectors/listings'
-import { selectMiningStatus, selectLatestTxn } from 'selectors/transaction'
+  selectWhitelist,
+  selectCandidates,
+  selectFaceoffs,
+  selectMiningStatus,
+  selectLatestTxn,
+} from 'selectors'
 
-import { convertedToBaseUnit } from 'libs/units'
-
+import AppBar from 'components/AppBar'
+import Stats from 'containers/Stats'
+import Tabs from 'containers/Tabs'
 import Apply from 'containers/Transaction/Apply'
 import Challenge from 'containers/Transaction/Challenge'
 import CommitVote from 'containers/Transaction/CommitVote'
 import RevealVote from 'containers/Transaction/RevealVote'
 
-import AppBar from 'components/AppBar'
-
-import Stats from '../Stats'
-import Tabs from '../Tabs'
+import { convertedToBaseUnit } from 'libs/units'
 
 class Home extends Component {
   constructor(props) {

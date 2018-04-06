@@ -1,17 +1,11 @@
-import { select, spawn, call, take, fork, takeEvery } from 'redux-saga/effects'
-import {
-  TXN_MINING,
-  TX_REQUEST_VOTING_RIGHTS,
-  TX_COMMIT_VOTE,
-  TX_REVEAL_VOTE,
-} from '../actions/transaction'
+import { select, call, takeEvery } from 'redux-saga/effects'
+import { TX_REQUEST_VOTING_RIGHTS, TX_COMMIT_VOTE, TX_REVEAL_VOTE } from 'actions/transaction'
+import { selectAccount, selectVoting } from 'selectors'
 
-import { selectAccount, selectVoting } from '../selectors'
-
-import { convertedToBaseUnit } from '../libs/units'
-import { getVoteSaltHash, randInt } from '../libs/values'
-import saveFile from '../utils/_file'
-import { getEndDateString } from '../utils/_datetime'
+import { convertedToBaseUnit } from 'libs/units'
+import { getVoteSaltHash, randInt } from 'libs/values'
+import saveFile from 'utils/_file'
+import { getEndDateString } from 'utils/_datetime'
 
 import { sendTransactionSaga } from './transaction'
 

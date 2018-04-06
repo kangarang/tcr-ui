@@ -1,5 +1,6 @@
 import flatten from 'lodash/fp/flatten'
 import sortBy from 'lodash/fp/sortBy'
+
 import { createListing, findGolem, changeListing, findChallenge } from 'libs/listings'
 
 let lastReadBlockNumber = 0

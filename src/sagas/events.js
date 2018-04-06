@@ -1,9 +1,10 @@
 import { eventChannel, END } from 'redux-saga'
 import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/effects'
 
-import { SET_CONTRACTS } from '../actions/home'
-import { setListings } from '../actions/listings'
+import { SET_CONTRACTS } from 'actions/home'
+import { setListings } from 'actions/listings'
 import { selectAllListings, selectRegistry, selectProvider, selectVoting } from 'selectors'
+
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 
 export default function* rootEventsSaga() {
@@ -42,7 +43,7 @@ function* setupEventChannels() {
 
     const vcChannel = yield call(createChannel, provider, _VoteCommitted)
     const vrChannel = yield call(createChannel, provider, _VoteRevealed)
-    // const pcChannel = yield call(createChannel, provider, _PollCreated)
+    const pcChannel = yield call(createChannel, provider, _PollCreated)
 
     try {
       while (true) {
@@ -58,7 +59,7 @@ function* setupEventChannels() {
 
         yield takeEvery(vcChannel, handleEventEmission)
         yield takeEvery(vrChannel, handleEventEmission)
-        // yield takeEvery(pcChannel, handleEventEmission)
+        yield takeEvery(pcChannel, handleEventEmission)
       }
     } finally {
       if (yield cancelled()) {
@@ -75,7 +76,7 @@ function* setupEventChannels() {
 
         vcChannel.close()
         vrChannel.close()
-        // pcChannel.close()
+        pcChannel.close()
       }
     }
   } catch (error) {

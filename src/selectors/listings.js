@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import pickBy from 'lodash/fp/pickBy'
-import filter from 'lodash/fp/filter'
-import flow from 'lodash/fp/flow'
+// import filter from 'lodash/fp/filter'
+// import flow from 'lodash/fp/flow'
 
 export const selectListings = state => state.listings
 
@@ -10,9 +10,9 @@ export const selectAllListings = createSelector(
   listingState => listingState.listings
 )
 
-const onlyThrees = filter(li => li.status === '3')
-const onlyTwos = filter(li => li.status === '2')
-const onlyOnes = filter(li => li.status === '1')
+// const onlyThrees = filter(li => li.status === '3')
+// const onlyTwos = filter(li => li.status === '2')
+// const onlyOnes = filter(li => li.status === '1')
 
 // filter(onlyThrees, listings)
 // Only whitelisted listings

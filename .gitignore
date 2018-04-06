@@ -6,6 +6,7 @@
 /node_modules
 /build
 /_tcr
+/srcDucks
 
 .DS_Store
 .firebaserc

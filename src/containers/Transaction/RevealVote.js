@@ -54,7 +54,6 @@ export default class RevealVote extends Component {
     const {
       opened,
       closeSidePanel,
-      parameters,
       balances,
       handleFileInput,
       handleRevealVote,

@@ -1,6 +1,7 @@
 import utils from 'ethers/utils'
 import { put, select, all, takeEvery } from 'redux-saga/effects'
-import { updateBalances, UPDATE_BALANCES_REQUEST } from '../actions/home'
+
+import { updateBalances, UPDATE_BALANCES_REQUEST } from 'actions/home'
 import {
   selectProvider,
   selectAccount,
@@ -8,9 +9,7 @@ import {
   selectToken,
   selectVoting,
   selectTCR,
-  selectWhitelist,
 } from 'selectors'
-import { BN } from '../libs/units'
 
 export default function* tokenSaga() {
   yield takeEvery(UPDATE_BALANCES_REQUEST, updateBalancesSaga)
@@ -25,7 +24,6 @@ function* updateBalancesSaga() {
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
-    const listings = yield select(selectWhitelist)
 
     const [
       ethBalance,
@@ -60,11 +58,6 @@ function* updateBalancesSaga() {
       utils.formatUnits(votingRightsRaw, decimals, { commify: true }),
       utils.formatUnits(lockedTokensRaw, decimals, { commify: true }),
     ])
-
-    // const stakeRaw = yield listings.reduce((acc, val) => {
-    //   return acc.add(BN(val.unstakedDeposit))
-    // }, BN('0'))
-    // const totalRegistryStake = utils.formatUnits(stakeRaw, decimals, { commify: true })
 
     const balances = {
       ETH,

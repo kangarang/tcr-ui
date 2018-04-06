@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-
+import { colors } from 'global-styles'
 import Button from 'material-ui/Button'
-import Menu from 'material-ui/Menu'
-import Fade from 'material-ui/transitions/Fade'
-
 import Identicon from 'components/Identicon'
-import { colors } from '../global-styles'
 import { trimDecimalsThree } from 'libs/units'
 
 class Stats extends Component {

@@ -8,8 +8,8 @@ import {
   CHOOSE_TCR,
 } from 'actions/home'
 import { contractError } from '../actions'
-import { setupRegistry, setupContract } from '../libs/contracts'
-import { baseToConvertedUnit } from '../libs/units'
+import { setupRegistry, setupContract } from 'libs/contracts'
+import { baseToConvertedUnit } from 'libs/units'
 import { selectProvider, selectABIs } from 'selectors'
 
 export default function* root() {

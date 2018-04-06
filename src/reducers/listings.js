@@ -1,4 +1,5 @@
 import omit from 'lodash/fp/omit'
+
 import { UPDATE_LISTING, SET_LISTINGS, DELETE_KEY } from 'actions/listings'
 
 const initialState = {
@@ -33,3 +34,17 @@ function listingsReducer(state = initialState, action) {
 }
 
 export default listingsReducer
+
+// const updateUser = user =>
+//   Object.assign({}, user, {
+//     name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+//   })
+// const byId = state =>
+//   state.reduce(
+//     (acc, item) => ({
+//       ...acc,
+//       [item.id]: updateUser(item),
+//     }),
+//     {}
+//   )
+// const usersById = byId(listings)
