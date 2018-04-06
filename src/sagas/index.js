@@ -3,11 +3,12 @@ import { ipfsGetData } from 'libs/ipfs'
 // import { Organization } from '@governx/governx-lib'
 
 import { LOGIN_ERROR } from '../actions/constants'
-import { loginError, chooseTCR } from '../actions'
-import { setProvider } from '../libs/provider'
-import { registrySaga } from './contracts'
+import { loginError } from '../actions'
 import { setWallet, GET_ETHEREUM, setABIs } from 'actions/home'
-import { selectRegistry, selectAccount } from '../selectors'
+import { setProvider } from 'libs/provider'
+import { registrySaga } from './contracts'
+
+import { selectRegistry, selectAccount } from 'selectors'
 
 export default function* rootSaga() {
   yield takeLatest(GET_ETHEREUM, genesis)

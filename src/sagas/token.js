@@ -8,8 +8,8 @@ import {
   selectToken,
   selectVoting,
   selectTCR,
-} from '../selectors'
-import { selectWhitelist } from '../selectors/listings'
+  selectWhitelist,
+} from 'selectors'
 import { BN } from '../libs/units'
 
 export default function* tokenSaga() {

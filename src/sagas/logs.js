@@ -3,6 +3,7 @@ import pickBy from 'lodash/fp/pickBy'
 
 import { setListings } from '../actions/listings'
 import { SET_CONTRACTS, updateBalancesRequest } from '../actions/home'
+
 import { setApplications } from '../libs/listings'
 import { flattenAndSortByNestedBlockTimestamp, decodeLogs, convertDecodedLogs } from '../libs/logs'
 
@@ -27,8 +28,6 @@ export function* setupLogsSaga() {
     // get all applications
     const aLogs = yield call(decodeLogsSaga, _Application, registry.address)
     const applications = yield call(convertDecodedLogs, aLogs, {})
-
-    console.log('registry', registry)
 
     const cLogs = yield call(decodeLogsSaga, _Challenge, registry.address)
     // const csLogs = yield call(decodeLogsSaga, _ChallengeSucceeded, registry.address)

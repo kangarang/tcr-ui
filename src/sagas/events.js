@@ -3,8 +3,7 @@ import { call, put, select, takeLatest, cancelled, takeEvery } from 'redux-saga/
 
 import { SET_CONTRACTS } from '../actions/home'
 import { setListings } from '../actions/listings'
-import { selectRegistry, selectProvider, selectVoting } from '../selectors/home'
-import { selectAllListings } from 'selectors/listings'
+import { selectAllListings, selectRegistry, selectProvider, selectVoting } from 'selectors'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 
 export default function* rootEventsSaga() {

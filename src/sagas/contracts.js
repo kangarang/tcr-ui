@@ -10,7 +10,7 @@ import {
 import { contractError } from '../actions'
 import { setupRegistry, setupContract } from '../libs/contracts'
 import { baseToConvertedUnit } from '../libs/units'
-import { selectProvider, selectABIs } from '../selectors/home'
+import { selectProvider, selectABIs } from 'selectors'
 
 export default function* root() {
   yield takeLatest(SET_ABIS, registrySaga)
