@@ -35,7 +35,7 @@ export function* genesis() {
       yield put(actions.setWallet({ account, network }))
 
       // get abis from ipfs
-      const data = yield call(ipfsGetData, 'QmeCTiFp7VUgPBnxQcWfNjrxFeh9eeScSx8VUKE2344beo')
+      const data = yield call(ipfsGetData, 'QmZpeget91fUBZyw9LfhwvB3X5iPTkWLiTtRioWcdrU1LE')
       const { id, registry, token, voting, parameterizer } = data
       const abis = {
         id,
