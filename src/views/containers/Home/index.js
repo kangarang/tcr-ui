@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
-import { setupEthereum } from 'state/ducks/home/actions'
-import { convertedToBaseUnit } from 'state/libs/units'
+import actions from 'state/ducks/home/actions'
 import {
   // selectError,
   selectAccount,
@@ -21,6 +20,7 @@ import {
   // selectMiningStatus,
   // selectLatestTxn,
 } from 'state/ducks/home/selectors'
+// import { convertedToBaseUnit } from 'state/libs/units'
 
 // import Stats from 'views/containers/Stats'
 // import Tabs from 'views/containers/Tabs'
@@ -231,7 +231,7 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: network => dispatch(setupEthereum(network)),
+    onSetupEthereum: network => dispatch(actions.setupEthereum(network)),
     // onChooseTCR: tcr => dispatch(chooseTCR(tcr)),
     // onSendTransaction: payload => dispatch(sendTransaction(payload)),
   }

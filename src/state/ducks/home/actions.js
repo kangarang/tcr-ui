@@ -56,4 +56,14 @@ function updateBalances(payload) {
   }
 }
 
-export { setupEthereum }
+export default {
+  setupEthereum,
+  setABIs,
+  setWallet,
+  setRegistryContract,
+  setContracts,
+  chooseTCR,
+  pollLogsRequest,
+  updateBalances,
+  updateBalancesRequest,
+}

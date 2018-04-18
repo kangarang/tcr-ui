@@ -41,7 +41,7 @@ const muiTheme = createMuiTheme({
   },
 })
 
-console.log('theme:', muiTheme)
+// console.log('theme:', muiTheme)
 
 const initialState = {}
 const store = configureStore(initialState)

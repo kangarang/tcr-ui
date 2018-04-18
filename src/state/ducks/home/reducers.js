@@ -1,6 +1,8 @@
+import { fromJS } from 'immutable'
+
 import types from './types'
 
-const initialState = {
+const initialState = fromJS({
   provider: {},
   account: '',
   network: '',
@@ -28,57 +30,25 @@ const initialState = {
   parameters: { minDeposit: '0', applyStageLen: '0' },
   latestTxn: {},
   abis: {},
-}
+})
 
 function homeReducer(state = initialState, action) {
   switch (action.type) {
-    // case types.SET_ABIS:
-    //   return {
-    //     ...state,
-    //     abis: {
-    //       ...state.abis,
-    //       ...action.abis,
-    //     },
-    //   }
-    // case types.SET_WALLET:
-    //   return {
-    //     ...state,
-    //     provider: action.payload.provider,
-    //     account: action.payload.account,
-    //     network: action.payload.network,
-    //   }
-    // case types.SET_REGISTRY_CONTRACT:
-    //   return {
-    //     ...state,
-    //     contracts: {
-    //       ...state.contracts,
-    //       registry: action.payload,
-    //     },
-    //   }
-    // case types.SET_CONTRACTS:
-    //   return {
-    //     ...state,
-    //     parameters: {
-    //       ...state.parameters,
-    //       ...action.payload.parameters,
-    //     },
-    //     contracts: {
-    //       ...state.contracts,
-    //       ...action.payload.contracts,
-    //     },
-    //     tcr: {
-    //       ...state.tcr,
-    //       ...action.payload.tcr,
-    //     },
-    //   }
-    // case types.UPDATE_BALANCES:
-    //   return {
-    //     ...state,
-    //     balances: {
-    //       ...state.balances,
-    //       ...action.payload.balances,
-    //     },
-    //   }
+    case types.SET_ABIS:
+      return state.set('abis', fromJS(action.abis))
+    case types.SET_WALLET:
+      return state
+        .set('account', fromJS(action.payload.account))
+        .set('network', fromJS(action.payload.network))
+    case types.SET_REGISTRY_CONTRACT:
+      return state.setIn(['contracts', 'registry'], fromJS(action.payload))
+    case types.SET_CONTRACTS:
+      return state
+        .set('parameters', fromJS(action.payload.parameters))
+        .set('contracts', fromJS(action.payload.contracts))
+        .set('tcr', fromJS(action.payload.tcr))
+    case types.UPDATE_BALANCES:
+      return state.set('balances', fromJS(action.payload.balances))
     default:
       return state
   }
