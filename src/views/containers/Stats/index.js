@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { colors } from 'global-styles'
+import { colors } from 'views/global-styles'
 import Button from 'material-ui/Button'
 
 import { trimDecimalsThree } from 'state/libs/units'
@@ -22,7 +22,7 @@ class Stats extends Component {
 
   render() {
     const { anchorEl } = this.state
-    const { account, candidates, whitelist, balances, tcr, network } = this.props
+    const { account, balances, tcr, network, candidates, whitelist } = this.props
 
     // const items = []
 
@@ -30,7 +30,7 @@ class Stats extends Component {
       <GridContainer>
         <GridItem>
           <CapsDiv>{'total applications'}</CapsDiv>
-          <BoldDiv>{Object.keys(candidates).length}</BoldDiv>
+          <BoldDiv>{candidates.size}</BoldDiv>
         </GridItem>
 
         <GridItem>
@@ -40,7 +40,7 @@ class Stats extends Component {
 
         <GridItem>
           <CapsDiv>{'listings in registry'}</CapsDiv>
-          <BoldDiv>{Object.keys(whitelist).length}</BoldDiv>
+          <BoldDiv>{whitelist.size}</BoldDiv>
         </GridItem>
 
         <UserInfoGridItem>
@@ -49,14 +49,14 @@ class Stats extends Component {
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {trimDecimalsThree(balances.ETH)}
+              {trimDecimalsThree(balances.get('ETH'))}
               <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
           <UserItem>
             <BoldDiv>
-              {balances.token}
-              <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
+              {balances.get('token')}
+              <BoldDivGrey>{tcr.get('tokenSymbol')}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
 

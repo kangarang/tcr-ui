@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { theme } from 'global-styles'
+import { theme } from 'views/global-styles'
 
 const SidePanelSeparator = styled.div`
   width: 100%;

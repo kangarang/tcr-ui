@@ -3,7 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { theme } from 'global-styles'
+import { theme } from 'views/global-styles'
 
 import { difference, formatHtmlDatetime } from 'state/utils/_datetime'
 

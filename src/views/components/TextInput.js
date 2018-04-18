@@ -3,7 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { font, theme } from 'global-styles'
+import { font, theme } from 'views/global-styles'
 
 const StyledInput = styled.input`
   ${font({ size: 'small', weight: 'normal' })};

@@ -1,7 +1,7 @@
 import React from 'react'
 import translate from 'translations'
 
-import { colors } from 'global-styles'
+import { colors } from 'views/global-styles'
 
 import { BN, baseToConvertedUnit } from 'state/libs/units'
 

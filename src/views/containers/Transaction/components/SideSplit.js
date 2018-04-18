@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { theme } from 'global-styles'
+import { theme } from 'views/global-styles'
 
 import Text from 'views/components/Text'
 import Section from 'views/components/Section'

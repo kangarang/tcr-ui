@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
-import { colors } from 'global-styles'
+import { colors } from 'views/global-styles'
 
 const NavLinkWrapper = styled.div`
   display: flex;

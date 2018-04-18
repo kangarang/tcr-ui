@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { colors } from 'global-styles'
+import { colors } from 'views/global-styles'
 
 export const MarginDiv = styled.div`
   margin: 2em 0;

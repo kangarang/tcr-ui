@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { colors } from 'global-styles'
-
 import Text from 'views/components/Text'
 import Button from 'views/components/Button'
 
@@ -18,10 +16,7 @@ const GridContainer = styled.div`
   padding: 1em;
 `
 
-const GridItem = styled.div``
-
-const BoldDiv = styled.div`
-  color: ${colors.offBlack};
+const GridItem = styled.div`
   font-weight: bold;
 `
 
@@ -34,20 +29,16 @@ export default ({ error, openSidePanel, tcr }) => (
     ) : (
       <GridContainer>
         <GridItem gc={1}>
-          <Button onClick={openSidePanel}>
-            <BoldDiv>{'Start an application'}</BoldDiv>
-          </Button>
+          <Button onClick={openSidePanel}>{'Start an application'}</Button>
         </GridItem>
 
         <GridItem gc={2}>
           <Text size="xlarge" weight="bold">
-            <BoldDiv>{tcr.registryName}</BoldDiv>
+            {tcr.registryName}
           </Text>
         </GridItem>
 
-        <GridItem gc={3}>
-          <BoldDiv>{'Challenge Vote Activities About TCR'}</BoldDiv>
-        </GridItem>
+        <GridItem gc={3}>{'Challenge Vote Activities About TCR'}</GridItem>
       </GridContainer>
     )}
   </Wrapper>

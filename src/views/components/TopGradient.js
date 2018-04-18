@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { colors } from 'global-styles'
+import { colors } from 'views/global-styles'
 
 const TopGradient = styled.div`
   position: relative;

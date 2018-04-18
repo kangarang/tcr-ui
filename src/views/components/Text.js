@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { font } from 'global-styles'
+import { font } from 'views/global-styles'
 
 const StyledText = styled.span`
   ${({ size, weight }) => font({ size, weight })};

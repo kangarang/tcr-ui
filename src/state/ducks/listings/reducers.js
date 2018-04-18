@@ -1,33 +1,34 @@
 import omit from 'lodash/fp/omit'
+import { fromJS } from 'immutable'
 
-import { UPDATE_LISTING, SET_LISTINGS, DELETE_KEY } from 'actions/listings'
+import types from './types'
 
-const initialState = {
+const initialState = fromJS({
   listings: {},
   byID: [],
-}
+})
 
 function listingsReducer(state = initialState, action) {
   switch (action.type) {
-    case UPDATE_LISTING:
-      return {
-        ...state,
-        listings: {
-          ...state.listings,
-          [action.payload.listingHash]: action.payload,
-        },
-      }
-    case SET_LISTINGS:
-      return {
-        ...state,
-        listings: {
-          ...state.listings,
-          ...action.payload.listings,
-        },
-        byID: [...state.byID, ...action.payload.byID],
-      }
-    case DELETE_KEY:
-      return omit(action.key, state)
+    // case types.UPDATE_LISTING:
+    // return {
+    //   ...state,
+    //   listings: {
+    //     ...state.listings,
+    //     [action.payload.listingHash]: action.payload,
+    //   },
+    // }
+    // case types.SET_LISTINGS:
+    // return {
+    //   ...state,
+    //   listings: {
+    //     ...state.listings,
+    //     ...action.payload.listings,
+    //   },
+    //   byID: [...state.byID, ...action.payload.byID],
+    // }
+    // case types.DELETE_KEY:
+    // return omit(action.key, state)
     default:
       return state
   }
