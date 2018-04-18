@@ -1,6 +1,6 @@
 import ethers from 'ethers'
 
-import abis from 'state/abis'
+import abis from 'state/ducks/ethereumProvider/abis'
 
 import { setupRegistry, setupContract } from '../contracts'
 import { setProvider } from '../provider'

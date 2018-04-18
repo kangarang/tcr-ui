@@ -1,7 +1,7 @@
 import reducer from '../reducers'
 import actions from '../actions'
 
-describe('duck reducer', function() {
+describe.skip('duck reducer', function() {
   test('quack', function() {
     const quack = actions.quack()
     const initialState = false
