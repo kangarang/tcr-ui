@@ -1,20 +1,19 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, fork, put, takeLatest } from 'redux-saga/effects'
 // import { Organization } from '@governx/governx-lib'
 
 import { setEthjs } from 'state/libs/provider'
 import { ipfsGetData } from 'state/libs/ipfs'
 
-import types from './types'
-import actions from './actions'
+import types from '../types'
+import actions from '../actions'
 
-// import logSaga from './sagas/logs'
-// import tokenSaga from './sagas/token'
-// import voteSaga from './sagas/vote'
-// import contractsSaga from './sagas/contracts'
-// import transactionSaga from './sagas/transaction'
+import contractSagas from 'state/ducks/ethereumProvider/sagas/contracts'
+import balancesSaga from './balances'
 // import eventsSaga from './sagas/events'
 
 export default function* rootSaga() {
+  yield fork(contractSagas)
+  yield fork(balancesSaga)
   yield takeLatest(types.SETUP_ETHEREUM_REQUEST, genesis)
 }
 
@@ -33,10 +32,20 @@ export function* genesis() {
       console.log('HOME ERROR: account undefined')
     } else {
       // dispatch account/network
-      // get abis from ipfs
-      // dispatch abis -> invokes contractSagas
       yield put(actions.setWallet({ account, network }))
-      const abis = yield call(ipfsGetData, 'QmeCTiFp7VUgPBnxQcWfNjrxFeh9eeScSx8VUKE2344beo')
+
+      // get abis from ipfs
+      const data = yield call(ipfsGetData, 'QmeCTiFp7VUgPBnxQcWfNjrxFeh9eeScSx8VUKE2344beo')
+      const { id, registry, token, voting, parameterizer } = data
+      const abis = {
+        id,
+        registry: { abi: registry.abi, bytecode: registry.bytecode, networks: registry.networks },
+        token: { abi: token.abi, bytecode: token.bytecode },
+        voting: { abi: voting.abi, bytecode: voting.bytecode },
+        parameterizer: { abi: parameterizer.abi, bytecode: parameterizer.bytecode },
+      }
+
+      // dispatch abis -> invokes contractSagas
       yield put(actions.setABIs(abis))
     }
     // yield call(governXSaga)

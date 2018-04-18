@@ -56,7 +56,7 @@ class Stats extends Component {
           <UserItem>
             <BoldDiv>
               {balances.get('token')}
-              <BoldDivGrey>{tcr.get('tokenSymbol')}</BoldDivGrey>
+              <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
             </BoldDiv>
           </UserItem>
 
@@ -125,7 +125,7 @@ const BoldDivGrey = styled(BoldDiv)`
 `
 const BoldDivColored = styled(BoldDiv)`
   color: ${props =>
-    props.network === 'rinkeby' ? 'orange' : props.network === 'main' ? 'turquoise' : 'black'};
+    props.network === 'rinkeby' ? 'orange' : props.network === 'main' ? 'turquoise' : 'purple'};
 `
 const UserInfoGridItem = styled(GridItem)`
   flex-direction: row;

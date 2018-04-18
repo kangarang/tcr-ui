@@ -35,7 +35,7 @@ const initialState = fromJS({
 function homeReducer(state = initialState, action) {
   switch (action.type) {
     case types.SET_ABIS:
-      return state.set('abis', fromJS(action.abis))
+      return state.set('abis', action.abis) // mutable
     case types.SET_WALLET:
       return state
         .set('account', fromJS(action.payload.account))
@@ -46,7 +46,7 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
-        .set('tcr', fromJS(action.payload.tcr))
+        .set('tcr', action.payload.tcr) // mutable
     case types.UPDATE_BALANCES:
       return state.set('balances', fromJS(action.payload.balances))
     default:
