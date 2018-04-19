@@ -4,30 +4,24 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
 import actions from 'state/ducks/home/actions'
+import txActions from 'state/ducks/transactions/actions'
 import {
   selectError,
   selectAccount,
   selectNetwork,
   selectBalances,
   selectTCR,
-  // selectABIs,
-  // selectRegistry,
-  // selectToken,
+  selectRegistry,
   // selectVoting,
-  // selectParameters,
-  // selectMiningStatus,
-  // selectLatestTxn,
+  selectParameters,
+  selectStats,
 } from 'state/ducks/home/selectors'
-import {
-  selectCandidates,
-  // selectFaceoffs,
-  selectWhitelist,
-} from 'state/ducks/listings/selectors'
-// import { convertedToBaseUnit } from 'state/libs/units'
+import { selectMiningStatus, selectLatestTxn } from 'state/ducks/transactions/selectors'
+import { convertedToBaseUnit } from 'state/libs/units'
 
 import Stats from 'views/containers/Stats'
 // import Tabs from 'views/containers/Tabs'
-// import Apply from 'views/containers/Transaction/Apply'
+import Apply from 'views/containers/Transaction/Apply'
 // import Challenge from 'views/containers/Transaction/Challenge'
 // import CommitVote from 'views/containers/Transaction/CommitVote'
 // import RevealVote from 'views/containers/Transaction/RevealVote'
@@ -35,38 +29,39 @@ import Stats from 'views/containers/Stats'
 import AppBar from 'views/components/AppBar'
 
 class Home extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      activeItem: 0,
-      opened: false,
-      listingID: '',
-      data: '',
-      numTokens: '',
-      selectedOne: false,
-      fileInput: false,
-      methodName: false,
-      visibleApprove: false,
-      expand: '',
-    }
+  state = {
+    activeItem: 0,
+    opened: false,
+    listingID: '',
+    data: '',
+    numTokens: '',
+    selectedOne: false,
+    fileInput: false,
+    methodName: false,
+    visibleApprove: false,
+    expand: '',
   }
   componentDidMount() {
     this.props.onSetupEthereum()
   }
+
   closeSidePanel = () => {
     this.setState({
       opened: false,
     })
   }
-  openApprove = () => {
+
+  showApprove = () => {
     this.setState({ visibleApprove: true })
   }
+
   openSidePanel = (one, openThis) => {
     this.setState({
       selectedOne: one,
       opened: openThis,
     })
   }
+
   // chooseTCR = one => {
   //   this.props.onChooseTCR(one)
   // }
@@ -91,11 +86,12 @@ class Home extends Component {
   //   }
   //   fr.readAsText(file)
   // }
-  // handleInputChange = (e, t) => {
-  //   this.setState({
-  //     [t]: e.target.value,
-  //   })
-  // }
+
+  handleInputChange = (e, t) => {
+    this.setState({
+      [t]: e.target.value,
+    })
+  }
 
   render() {
     return (
@@ -115,18 +111,18 @@ class Home extends Component {
         /> */}
 
         {/* transaction modules */}
-        {/* <Apply
+        <Apply
           opened={this.state.opened === 'apply'}
           closeSidePanel={this.closeSidePanel}
           handleInputChange={this.handleInputChange}
           handleApprove={this.handleApprove}
           handleApply={this.handleApply}
           visibleApprove={this.state.visibleApprove}
-          openApprove={this.openApprove}
+          showApprove={this.showApprove}
           {...this.props}
         />
 
-        <Challenge
+        {/* <Challenge
           opened={this.state.opened === 'challenge'}
           closeSidePanel={this.closeSidePanel}
           handleInputChange={this.handleInputChange}
@@ -134,9 +130,9 @@ class Home extends Component {
           handleChallenge={this.handleChallenge}
           selectedOne={this.state.selectedOne}
           {...this.props}
-        />
+        /> */}
 
-        {this.state.opened === 'commitVote' && (
+        {/* {this.state.opened === 'commitVote' && (
           <CommitVote
             opened={this.state.opened === 'commitVote'}
             closeSidePanel={this.closeSidePanel}
@@ -147,9 +143,9 @@ class Home extends Component {
             handleRequestVotingRights={this.handleRequestVotingRights}
             {...this.props}
           />
-        )}
+        )} */}
 
-        {this.state.opened === 'revealVote' && (
+        {/* {this.state.opened === 'revealVote' && (
           <RevealVote
             opened={this.state.opened === 'revealVote'}
             closeSidePanel={this.closeSidePanel}
@@ -165,21 +161,21 @@ class Home extends Component {
   }
 
   // TRANSACTIONS
-  // handleApprove = contract => {
-  //   const args = [this.props[contract].address, convertedToBaseUnit(this.state.numTokens, 18)]
-  //   this.props.onSendTransaction({ methodName: 'approve', args })
-  // }
-  // handleApply = () => {
-  //   let numTokens
-  //   if (this.state.numTokens === '') {
-  //     numTokens = convertedToBaseUnit(this.props.parameters.minDeposit, 18)
-  //   } else {
-  //     numTokens = convertedToBaseUnit(this.state.numTokens, 18)
-  //   }
+  handleApprove = contract => {
+    const args = [this.props[contract].address, convertedToBaseUnit(this.state.numTokens, 18)]
+    this.props.onSendTransaction({ methodName: 'approve', args })
+  }
+  handleApply = () => {
+    let numTokens
+    if (this.state.numTokens === '') {
+      numTokens = convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18)
+    } else {
+      numTokens = convertedToBaseUnit(this.state.numTokens, 18)
+    }
 
-  //   const args = [this.state.listingID, numTokens, this.state.data]
-  //   this.props.onSendTransaction({ methodName: 'apply', args })
-  // }
+    const args = [this.state.listingID, numTokens, this.state.data]
+    this.props.onSendTransaction({ methodName: 'apply', args })
+  }
   // handleChallenge = () => {
   //   const args = [this.state.selectedOne.listingHash, this.state.selectedOne.listingID]
   //   this.props.onSendTransaction({ methodName: 'challenge', args })
@@ -221,9 +217,9 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: network => dispatch(actions.setupEthereum(network)),
+    onSetupEthereum: network => dispatch(actions.setupEthereumStart(network)),
     onChooseTCR: tcr => dispatch(actions.chooseTCR(tcr)),
-    onSendTransaction: payload => dispatch(actions.sendTransaction(payload)),
+    onSendTransaction: payload => dispatch(txActions.sendTransactionStart(payload)),
   }
 }
 
@@ -237,17 +233,15 @@ const mapStateToProps = createStructuredSelector({
   tcr: selectTCR,
 
   // abis: selectABIs,
-  // registry: selectRegistry,
+  registry: selectRegistry,
   // voting: selectVoting,
   // token: selectToken,
-  // parameters: selectParameters,
+  parameters: selectParameters,
 
-  candidates: selectCandidates,
-  // faceoffs: selectFaceoffs,
-  whitelist: selectWhitelist,
+  stats: selectStats,
 
-  // miningStatus: selectMiningStatus,
-  // latestTxn: selectLatestTxn,
+  miningStatus: selectMiningStatus,
+  latestTxn: selectLatestTxn,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

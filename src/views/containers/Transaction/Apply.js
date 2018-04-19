@@ -1,9 +1,9 @@
 import React from 'react'
-import translate from 'translations'
-
-import { colors } from 'views/global-styles'
 
 import { BN, baseToConvertedUnit } from 'state/libs/units'
+
+import translate from 'views/translations'
+import { colors } from 'views/global-styles'
 
 import Text from 'views/components/Text'
 import { MarginDiv } from 'views/components/StyledHome'
@@ -27,7 +27,7 @@ export default ({
   handleApprove,
   handleApply,
   visibleApprove,
-  openApprove,
+  showApprove,
   miningStatus,
   latestTxn,
 }) => (
@@ -53,7 +53,7 @@ export default ({
 
       <TotalAmount
         copy={'Minimum Deposit'}
-        minDeposit={parameters.minDeposit}
+        minDeposit={parameters.get('minDeposit')}
         tokenSymbol={tcr.tokenSymbol}
       />
 
@@ -85,8 +85,8 @@ export default ({
           </div>
         ) : (
           <div>
-            {BN(balances.registryAllowance).lt(
-              BN(baseToConvertedUnit(parameters.minDeposit, 18))
+            {BN(balances.get('registryAllowance')).lt(
+              BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
             ) ? (
               <div>
                 <Text color="red">{'YOU NEED TO APPROVE'}</Text>
@@ -95,7 +95,7 @@ export default ({
                 </Button>
               </div>
             ) : (
-              <Button onClick={openApprove} mode="">
+              <Button onClick={showApprove} mode="">
                 {'Show approve'}
               </Button>
             )}
@@ -103,7 +103,7 @@ export default ({
         )}
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
               {'etherscan'}
             </Button>
             <TxnProgress />

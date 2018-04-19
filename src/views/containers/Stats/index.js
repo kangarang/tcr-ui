@@ -22,7 +22,7 @@ class Stats extends Component {
 
   render() {
     const { anchorEl } = this.state
-    const { account, balances, tcr, network, candidates, whitelist } = this.props
+    const { account, balances, tcr, network, stats } = this.props
 
     // const items = []
 
@@ -30,7 +30,7 @@ class Stats extends Component {
       <GridContainer>
         <GridItem>
           <CapsDiv>{'total applications'}</CapsDiv>
-          <BoldDiv>{candidates.size}</BoldDiv>
+          <BoldDiv>{stats.sizes.candidates}</BoldDiv>
         </GridItem>
 
         <GridItem>
@@ -40,7 +40,7 @@ class Stats extends Component {
 
         <GridItem>
           <CapsDiv>{'listings in registry'}</CapsDiv>
-          <BoldDiv>{whitelist.size}</BoldDiv>
+          <BoldDiv>{stats.sizes.whitelist}</BoldDiv>
         </GridItem>
 
         <UserInfoGridItem>
