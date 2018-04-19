@@ -32,27 +32,22 @@ export function* commitVoteSaga(action) {
     const account = yield select(selectAccount)
     const voting = yield select(selectVoting)
 
-    // console.log('commit vote saga:', action)
     const { args } = action.payload
     const pollID = args[0]
     const voteOption = args[1]
-    // const numTokens = args[2]
     const numTokens = yield call(convertedToBaseUnit, args[2], 18)
     const data = args[3]
-    // console.log('args', args)
 
-    // TODO: fix
+    // TODO: improve
     const salt = randInt(1e6, 1e8)
 
     // format args
     const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
     const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens, pollID)
-    // console.log('prevPollID', prevPollID)
     const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
 
     // grab the poll from the mapping
     const pollStruct = yield voting.pollMap(pollID)
-    // console.log('pollStruct', pollStruct)
 
     // record expiry dates
     const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
@@ -71,7 +66,7 @@ export function* commitVoteSaga(action) {
     }
 
     const listingDashed = data.replace(' ', '-')
-    const filename = `poll-${pollID}-${listingDashed}.json`
+    const filename = `${pollID}-${listingDashed}-${numTokens}.json`
 
     // TODO: local storage
     saveFile(json, filename)

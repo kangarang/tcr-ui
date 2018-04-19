@@ -14,7 +14,6 @@ export function* registryTxnSaga(action) {
     const { methodName, args } = action.payload
 
     let finalArgs = _.clone(args)
-
     if (methodName === 'apply') {
       const fileHash = yield call(ipfsAddObject, {
         id: args[0], // listing string (name)
@@ -25,7 +24,6 @@ export function* registryTxnSaga(action) {
       // use ipfs CID as the _data field in the application
       finalArgs[2] = fileHash
     }
-
     console.log('finalArgs', finalArgs)
 
     yield call(sendTransactionSaga, registry, methodName, finalArgs)

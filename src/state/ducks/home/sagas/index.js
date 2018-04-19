@@ -9,6 +9,7 @@ import actions from '../actions'
 import contractsSagas from 'state/ducks/ethereumProvider/sagas/contracts'
 import balancesSaga from './balances'
 import transactionsSagas from 'state/ducks/transactions/sagas'
+import { setEthersProvider } from 'state/libs/provider'
 
 export default function* rootSaga() {
   // init other root sagas
@@ -25,6 +26,7 @@ export function* genesis() {
     const ethjs = yield call(setEthjs)
     const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
+    const ethersProvider = yield call(setEthersProvider, parseInt(networkID))
     const network =
       networkID === '4'
         ? 'rinkeby'

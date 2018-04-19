@@ -17,6 +17,7 @@ import _abi from 'state/utils/_abi'
 import actions from '../actions'
 import types from '../types'
 
+import { getEthersProvider } from 'state/libs/provider'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 import { registryTxnSaga } from './registry'
 
@@ -24,7 +25,6 @@ export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
 }
 
-// TODO: write tests for these sagas. against abis
 export function* handleSendTransaction(action) {
   try {
     const { methodName, args } = action.payload
@@ -32,7 +32,7 @@ export function* handleSendTransaction(action) {
     const voting = yield select(selectVoting)
     const registry = yield select(selectRegistry)
 
-    // convert BN objects -> String
+    // convert Objects (BNs) -> String
     const newArgs = args.map(rg => {
       if (_.isObject(rg)) {
         return rg.toString(10)
@@ -75,52 +75,52 @@ export function* handleSendTransaction(action) {
   }
 }
 
+// TODO: minimize # of dependencies
 export function* sendTransactionSaga(contract, method, args) {
   try {
-    // invoke contract function
+    // ethjs-contract: sendTransaction
     const txHash = yield contract[method](...args)
     yield put(actions.txnMining(txHash))
 
-    // wait 2 seconds, then get txn receipt
-    yield call(delay, 2000)
+    // ethers: waitForTransaction
+    const ethersProvider = yield call(getEthersProvider)
+    const minedTxn = yield ethersProvider.waitForTransaction(txHash).then(txn => txn)
+    console.log('minedTxn:', minedTxn)
+
+    // ethjs: getTransactionReceipt
     const ethjs = yield call(getEthjs)
-    const txReceipt = yield call(ethjs.getTransactionReceipt, txHash)
+    const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
     console.log('txReceipt:', txReceipt)
 
-    // TODO: figure out a better way to get the status
-    // const filter = yield registry._Application().new({ toBlock: 'latest' })
-    // console.log('filter:', filter)
-    const account = yield select(selectAccount)
-
-    // successful transaction
+    // successful sendTransaction
     if (txReceipt.status === '0x01') {
       const txLogs = txReceipt.logs
       console.log('txLogs:', txLogs)
-      const indexedFilterValues = yield {
-        listingHash: args[0],
-        applicant: account,
-      }
-      const filter = yield call(
-        _abi.getFilter,
-        contract.address,
-        '_Application',
-        indexedFilterValues,
-        contract.abi,
-        { fromBlock: '0', toBlock: 'latest' }
-      )
-      console.log('filter:', filter)
-
-      // const eventSignature = utils.id('_Application(bytes32,uint256,uint256,string,address)')
-      // console.log('eventSignature:', eventSignature)
-      // 0xa27f550c3c7a7c6d8369e5383fdc7a3b4850d8ce9e20066f9d496f6989f00864
-
+      // dispatch tx receipt, update balances
       yield put(actions.sendTransactionSucceeded(txReceipt))
       yield put(homeActions.updateBalancesStart())
-      yield call(delay, 5000)
-      yield put(actions.clearTxn(txReceipt))
+      // if you decide to re-implement this, you need to control *which* txn
+      // you are attempting to clear (in reducer)
+      // yield call(delay, 5000)
+      // yield put(actions.clearTxn(txReceipt))
     } else {
       throw new Error('Transaction failed')
     }
+    // this is practice
+    // const account = yield select(selectAccount)
+    // const indexedFilterValues = yield {
+    //   listingHash: args[0],
+    //   applicant: account,
+    // }
+    // const filter = yield call(
+    //   _abi.getFilter,
+    //   contract.address,
+    //   '_Application',
+    //   indexedFilterValues,
+    //   contract.abi,
+    //   { fromBlock: '0', toBlock: 'latest' }
+    // )
+    // console.log('filter:', filter)
   } catch (error) {
     // MetaMask `reject`
     if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {

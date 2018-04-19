@@ -11,4 +11,4 @@
 .firebaserc
 firebase.json
 notes.md
-src/abis/addresses.md
+src/state/ethereumProvider/abis/addresses.md
