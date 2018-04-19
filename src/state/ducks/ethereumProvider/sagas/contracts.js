@@ -8,13 +8,35 @@ import types from 'state/ducks/home/types'
 
 import { setupRegistry, setupContract } from 'state/libs/contracts'
 import { getEthjs } from 'state/libs/provider'
+import { ipfsGetData } from 'state/libs/ipfs'
 
 import { baseToConvertedUnit } from 'state/libs/units'
 
-export default function* root() {
+export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
   yield takeLatest(types.CHOOSE_TCR, registrySaga)
   yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
+  yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
+}
+
+function* abisSaga() {
+  try {
+    // get abis from ipfs
+    const data = yield call(ipfsGetData, 'QmZpeget91fUBZyw9LfhwvB3X5iPTkWLiTtRioWcdrU1LE')
+    const { id, registry, token, voting, parameterizer } = data
+    const abis = {
+      id,
+      registry: { abi: registry.abi, bytecode: registry.bytecode, networks: registry.networks },
+      token: { abi: token.abi, bytecode: token.bytecode },
+      voting: { abi: voting.abi, bytecode: voting.bytecode },
+      parameterizer: { abi: parameterizer.abi, bytecode: parameterizer.bytecode },
+    }
+
+    // dispatch abis -> invokes contractSagas
+    yield put(actions.setABIs(abis))
+  } catch (error) {
+    console.log('set abis error:', error)
+  }
 }
 
 export function* registrySaga(action) {
@@ -112,7 +134,7 @@ function* contractsSaga(action) {
       })
     )
     // refresh balances
-    yield put(actions.updateBalancesRequest())
+    yield put(actions.updateBalancesStart())
   } catch (err) {
     console.log('contract err', err)
   }
