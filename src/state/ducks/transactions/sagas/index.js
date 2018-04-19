@@ -106,21 +106,6 @@ export function* sendTransactionSaga(contract, method, args) {
     } else {
       throw new Error('Transaction failed')
     }
-    // this is practice
-    // const account = yield select(selectAccount)
-    // const indexedFilterValues = yield {
-    //   listingHash: args[0],
-    //   applicant: account,
-    // }
-    // const filter = yield call(
-    //   _abi.getFilter,
-    //   contract.address,
-    //   '_Application',
-    //   indexedFilterValues,
-    //   contract.abi,
-    //   { fromBlock: '0', toBlock: 'latest' }
-    // )
-    // console.log('filter:', filter)
   } catch (error) {
     // MetaMask `reject`
     if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {

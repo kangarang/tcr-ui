@@ -7,6 +7,7 @@ import types from '../types'
 import actions from '../actions'
 
 import contractsSagas from 'state/ducks/ethereumProvider/sagas/contracts'
+import logsSagas from 'state/ducks/ethereumProvider/sagas/logs'
 import balancesSaga from './balances'
 import transactionsSagas from 'state/ducks/transactions/sagas'
 import { setEthersProvider } from 'state/libs/provider'
@@ -15,6 +16,7 @@ export default function* rootSaga() {
   // init other root sagas
   yield fork(contractsSagas)
   yield fork(balancesSaga)
+  yield fork(logsSagas)
   yield fork(transactionsSagas)
 
   // home sagas
