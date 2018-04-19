@@ -27,16 +27,16 @@ export async function ipfsGetData(multihash) {
 
 // TODO: type checking
 // TODO: add tests
-// export async function ipfsAddData(obj) {
-//   // TODO: id: data | verify keccak256
-//   const CID = await new Promise((resolve, reject) => {
-//     ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
-//       if (err) reject(new Error(err))
-//       resolve(result)
-//     })
-//   })
+export async function ipfsAddData(obj) {
+  // TODO: id: data | verify keccak256
+  const CID = await new Promise((resolve, reject) => {
+    ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
+      if (err) reject(new Error(err))
+      resolve(result)
+    })
+  })
 
-//   const content = await ipfsGetData(CID[0].hash)
-//   console.log(`${CID[0].hash.substring(0, 8)} added: ${JSON.stringify(content)}`)
-//   return CID[0].hash
-// }
+  const content = await ipfsGetData(CID[0].hash)
+  console.log(`${CID[0].hash.substring(0, 8)} added: ${JSON.stringify(content)}`)
+  return CID[0].hash
+}

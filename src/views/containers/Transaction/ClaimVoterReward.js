@@ -39,7 +39,9 @@ export default ({
 
     {miningStatus && (
       <div>
-        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>{'etherscan'}</Button>
+        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
+          {'etherscan'}
+        </Button>
         <TxnProgress />
       </div>
     )}

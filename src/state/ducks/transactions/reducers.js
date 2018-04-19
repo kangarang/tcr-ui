@@ -1,29 +1,24 @@
+import { fromJS } from 'immutable'
 import types from './types'
 
-const initialState = {
+const initialState = fromJS({
+  error: false,
   miningStatus: false,
-  latestTxn: {},
-}
+  latestTxn: { transactionHash: '' },
+})
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.TXN_MINING:
-      return {
-        ...state,
-        miningStatus: true,
-        latestTxn: action.payload,
-      }
-    case types.TXN_MINED:
-      return {
-        ...state,
-        latestTxn: action.payload,
-      }
+      return state
+        .set('miningStatus', fromJS(true))
+        .setIn(['latestTxn', 'transactionHash'], fromJS(action.payload))
+    case types.SEND_TRANSACTION_SUCCEEDED:
+      return state.set('latestTxn', fromJS(action.payload))
+    case types.SEND_TRANSACTION_FAILED:
+      return state.set('error', fromJS(action.payload.error))
     case types.CLEAR_TXN:
-      return {
-        ...state,
-        miningStatus: false,
-        latestTxn: false,
-      }
+      return state.set('miningStatus', fromJS(false)).set('latestTxn', fromJS({ hash: '' }))
     default:
       return state
   }

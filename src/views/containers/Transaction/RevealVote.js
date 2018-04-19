@@ -12,14 +12,11 @@ import SidePanel from './components/SidePanel'
 import TxnProgress from './TxnProgress'
 
 export default class RevealVote extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      commitHash: '',
-      numTokens: '',
-      votesFor: '',
-      votesAgainst: '',
-    }
+  state = {
+    commitHash: '',
+    numTokens: '',
+    votesFor: '',
+    votesAgainst: '',
   }
   componentDidMount() {
     this.getCommitHash()
@@ -101,7 +98,7 @@ export default class RevealVote extends Component {
         </MarginDiv>
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
               {'etherscan'}
             </Button>
             <TxnProgress />

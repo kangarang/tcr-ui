@@ -1,18 +1,17 @@
+import { select, call } from 'redux-saga/effects'
+import _ from 'lodash/fp'
+
+import { selectRegistry } from 'state/ducks/home/selectors'
+
+import { ipfsAddData } from 'state/libs/ipfs'
+import { getListingHash } from 'state/libs/values'
+
+import { sendTransactionSaga } from './index'
+
 export function* registryTxnSaga(action) {
   try {
     const registry = yield select(selectRegistry)
-    const { methodName } = action.payload
-
-    // typecheck arguments
-    const args = action.payload.args.map(arg => {
-      if (_.isObject(arg)) {
-        return arg.toString()
-      } else if (_.isString(arg)) {
-        return arg
-      }
-      // TODO: more typechecking
-      return arg
-    })
+    const { methodName, args } = action.payload
 
     let finalArgs = _.clone(args)
 
@@ -21,8 +20,6 @@ export function* registryTxnSaga(action) {
         id: args[0], // listing string (name)
         data: args[2], // data (address)
       })
-      // const isSuccess = flow(get('status'), isEqual(200))
-      // isSuccess(fileHash)
       // hash the string
       finalArgs[0] = getListingHash(args[0])
       // use ipfs CID as the _data field in the application

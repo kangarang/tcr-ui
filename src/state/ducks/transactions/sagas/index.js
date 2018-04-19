@@ -1,19 +1,27 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 import _ from 'lodash/fp'
+// import utils from 'ethers/utils'
 
-import { ipfsAddData } from '../libs/ipfs'
-import { getListingHash } from '../libs/values'
+import homeActions from 'state/ducks/home/actions'
+import {
+  selectRegistry,
+  selectVoting,
+  selectToken,
+  selectAccount,
+} from 'state/ducks/home/selectors'
 
-import { updateBalancesRequest } from '../home/actions'
+import { getEthjs } from 'state/libs/provider'
+import _abi from 'state/utils/_abi'
 
-import actions from './actions'
-import types from './types'
-import { selectProvider, selectRegistry, selectVoting, selectToken } from 'state/home/selectors'
-import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './sagas'
+import actions from '../actions'
+import types from '../types'
+
+import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
+import { registryTxnSaga } from './registry'
 
 export default function* transactionSaga() {
-  yield takeEvery(types.SEND_TRANSACTION, handleSendTransaction)
+  yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
 }
 
 // TODO: write tests for these sagas. against abis
@@ -23,6 +31,17 @@ export function* handleSendTransaction(action) {
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
     const registry = yield select(selectRegistry)
+
+    // convert BN objects -> String
+    const newArgs = args.map(rg => {
+      if (_.isObject(rg)) {
+        return rg.toString(10)
+      } else if (_.isString(rg)) {
+        return rg
+      }
+      // TODO: more typechecking
+      return rg
+    })
 
     switch (methodName) {
       case 'apply':
@@ -40,13 +59,13 @@ export function* handleSendTransaction(action) {
         yield call(revealVoteSaga, action)
         break
       case 'approve':
-        yield call(sendTransactionSaga, token, methodName, args)
+        yield call(sendTransactionSaga, token, methodName, newArgs)
         break
       case 'rescueTokens':
-        yield call(sendTransactionSaga, voting, methodName, args)
+        yield call(sendTransactionSaga, voting, methodName, newArgs)
         break
       case 'claimVoteReward':
-        yield call(sendTransactionSaga, registry, methodName, args)
+        yield call(sendTransactionSaga, registry, methodName, newArgs)
         break
       default:
         console.log('unknown methodname')
@@ -58,35 +77,56 @@ export function* handleSendTransaction(action) {
 
 export function* sendTransactionSaga(contract, method, args) {
   try {
-    const provider = yield select(selectProvider)
-    const newArgs = args.map(rg => {
-      if (_.isObject(rg)) {
-        return rg.toString(10)
-      } else if (_.isString(rg)) {
-        return rg
+    // invoke contract function
+    const txHash = yield contract[method](...args)
+    yield put(actions.txnMining(txHash))
+
+    // wait 2 seconds, then get txn receipt
+    yield call(delay, 2000)
+    const ethjs = yield call(getEthjs)
+    const txReceipt = yield call(ethjs.getTransactionReceipt, txHash)
+    console.log('txReceipt:', txReceipt)
+
+    // TODO: figure out a better way to get the status
+    // const filter = yield registry._Application().new({ toBlock: 'latest' })
+    // console.log('filter:', filter)
+    const account = yield select(selectAccount)
+
+    // successful transaction
+    if (txReceipt.status === '0x01') {
+      const txLogs = txReceipt.logs
+      console.log('txLogs:', txLogs)
+      const indexedFilterValues = yield {
+        listingHash: args[0],
+        applicant: account,
       }
-      return rg
-    })
+      const filter = yield call(
+        _abi.getFilter,
+        contract.address,
+        '_Application',
+        indexedFilterValues,
+        contract.abi,
+        { fromBlock: '0', toBlock: 'latest' }
+      )
+      console.log('filter:', filter)
 
-    // const defaults = {
-    //   gas: 4700000,
-    //   gasPrice: 20000000000,
-    // }
-    const receipt = yield contract.functions[method](...newArgs)
-    yield put(actions.txnMining(receipt))
+      // const eventSignature = utils.id('_Application(bytes32,uint256,uint256,string,address)')
+      // console.log('eventSignature:', eventSignature)
+      // 0xa27f550c3c7a7c6d8369e5383fdc7a3b4850d8ce9e20066f9d496f6989f00864
 
-    const minedTxn = yield provider.waitForTransaction(receipt.hash).then(txn => txn)
-    yield put(actions.txnMined(minedTxn))
-
-    yield put(updateBalancesRequest())
-
-    yield call(delay, 5000)
-    yield put(actions.clearTxn(minedTxn))
+      yield put(actions.sendTransactionSucceeded(txReceipt))
+      yield put(homeActions.updateBalancesStart())
+      yield call(delay, 5000)
+      yield put(actions.clearTxn(txReceipt))
+    } else {
+      throw new Error('Transaction failed')
+    }
   } catch (error) {
+    // MetaMask `reject`
     if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {
       console.log('MetaMask tx denied')
       return false
     }
-    console.log('error', error)
+    yield put(actions.sendTransactionFailed({ error }))
   }
 }

@@ -6,7 +6,6 @@ import { fromJS, Iterable } from 'immutable'
 // import * as reducers from './ducks'
 import createReducer from './ducks/reducers'
 
-import types from './ducks/home/types'
 import rootSaga from './ducks/home/sagas'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -17,8 +16,6 @@ const stateTransformer = state => {
 }
 
 const logger = createLogger({
-  predicate: (getState, action) =>
-    action.type !== types.SETUP_ETHEREUM_REQUEST && action.type !== types.UPDATE_BALANCES_REQUEST,
   collapsed: (getState, action, logEntry) => !action.error,
   stateTransformer,
 })

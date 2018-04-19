@@ -1,14 +1,14 @@
 import { select, call, takeEvery } from 'redux-saga/effects'
 
-import { selectAccount, selectVoting } from 'state/home/selectors'
+import { selectAccount, selectVoting } from 'state/ducks/home/selectors'
 
-import { convertedToBaseUnit } from '../libs/units'
-import { getVoteSaltHash, randInt } from '../libs/values'
-import saveFile from '../utils/_file'
-import { getEndDateString } from '../utils/_datetime'
+import { convertedToBaseUnit } from 'state/libs/units'
+import { getVoteSaltHash, randInt } from 'state/libs/values'
+import saveFile from 'state/utils/_file'
+import { getEndDateString } from 'state/utils/_datetime'
 
-import types from './types'
-import { sendTransactionSaga } from './operations'
+import types from '../types'
+import { sendTransactionSaga } from './index'
 
 export default function* voteSaga() {
   yield takeEvery(types.TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)

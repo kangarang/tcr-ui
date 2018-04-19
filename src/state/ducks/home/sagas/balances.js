@@ -9,7 +9,7 @@ import types from '../types'
 import { selectTCR, selectAccount, selectRegistry, selectToken, selectVoting } from '../selectors'
 
 export default function* balancesSaga() {
-  yield takeEvery(types.UPDATE_BALANCES_REQUEST, updateBalancesSaga)
+  yield takeEvery(types.UPDATE_BALANCES_START, updateBalancesSaga)
 }
 
 function* updateBalancesSaga() {
@@ -67,8 +67,8 @@ function* updateBalancesSaga() {
       lockedTokens,
       totalRegistryStake: '0',
     }
-    yield put(actions.updateBalances({ balances }))
-  } catch (err) {
-    console.log('Update balances error:', err)
+    yield put(actions.updateBalancesSucceeded({ balances }))
+  } catch (error) {
+    yield put(actions.updateBalancesFailed({ error }))
   }
 }

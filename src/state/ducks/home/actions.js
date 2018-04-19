@@ -1,8 +1,8 @@
 import types from './types'
 
-function setupEthereum(network) {
+function setupEthereumStart(network) {
   return {
-    type: types.SETUP_ETHEREUM_REQUEST,
+    type: types.SETUP_ETHEREUM_START,
     network,
   }
 }
@@ -12,9 +12,15 @@ function setABIs(abis) {
     abis,
   }
 }
-function setWallet(payload) {
+function setupEthereumFailed(payload) {
   return {
-    type: types.SET_WALLET,
+    type: types.SETUP_ETHEREUM_FAILED,
+    payload,
+  }
+}
+function setupEthereumSucceeded(payload) {
+  return {
+    type: types.SETUP_ETHEREUM_SUCCEEDED,
     payload,
   }
 }
@@ -37,33 +43,41 @@ function chooseTCR(payload) {
   }
 }
 
-function pollLogsRequest(payload) {
+function pollLogsStart(payload) {
   return {
-    type: types.POLL_LOGS_REQUEST,
+    type: types.POLL_LOGS_START,
     payload,
   }
 }
 
-function updateBalancesRequest() {
+function updateBalancesStart() {
   return {
-    type: types.UPDATE_BALANCES_REQUEST,
+    type: types.UPDATE_BALANCES_START,
   }
 }
-function updateBalances(payload) {
+function updateBalancesSucceeded(payload) {
   return {
-    type: types.UPDATE_BALANCES,
+    type: types.UPDATE_BALANCES_SUCCEEDED,
+    payload,
+  }
+}
+function updateBalancesFailed(payload) {
+  return {
+    type: types.UPDATE_BALANCES_FAILED,
     payload,
   }
 }
 
 export default {
-  setupEthereum,
+  setupEthereumStart,
+  setupEthereumSucceeded,
+  setupEthereumFailed,
+  updateBalancesStart,
+  updateBalancesSucceeded,
+  updateBalancesFailed,
   setABIs,
-  setWallet,
   setRegistryContract,
   setContracts,
   chooseTCR,
-  pollLogsRequest,
-  updateBalances,
-  updateBalancesRequest,
+  pollLogsStart,
 }

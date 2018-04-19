@@ -1,7 +1,7 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
 import pickBy from 'lodash/fp/pickBy'
 
-import { SET_CONTRACTS, updateBalancesRequest } from 'state/home/actions'
+import { SET_CONTRACTS, updateBalancesStart } from 'state/home/actions'
 import { selectProvider, selectRegistry } from 'state/home/selectors'
 
 import {
@@ -58,7 +58,7 @@ export function* setupLogsSaga() {
     if (Object.keys(filteredListings).length > 0) {
       // DISPATCH
       yield put(setListings({ listings: filteredListings, byID: Object.keys(filteredListings) }))
-      yield put(updateBalancesRequest())
+      yield put(updateBalancesStart())
     }
   } catch (error) {
     console.log('setupLogsSaga error', error)

@@ -13,12 +13,9 @@ import SidePanel from './components/SidePanel'
 import TxnProgress from './TxnProgress'
 
 export default class CommitVote extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      commitHash: '',
-      numTokens: '',
-    }
+  state = {
+    commitHash: '',
+    numTokens: '',
   }
   componentDidMount() {
     this.getCommitHash()
@@ -111,7 +108,10 @@ export default class CommitVote extends Component {
 
           {miningStatus && (
             <div>
-              <Button wide href={`https://rinkeby.etherscan.io/tx/${latestTxn.hash}`}>
+              <Button
+                wide
+                href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
+              >
                 {'etherscan'}
               </Button>
               <TxnProgress />

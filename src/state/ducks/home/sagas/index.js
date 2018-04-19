@@ -2,19 +2,22 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects'
 // import { Organization } from '@governx/governx-lib'
 
 import { setEthjs } from 'state/libs/provider'
-import { ipfsGetData } from 'state/libs/ipfs'
 
 import types from '../types'
 import actions from '../actions'
 
-import contractSagas from 'state/ducks/ethereumProvider/sagas/contracts'
+import contractsSagas from 'state/ducks/ethereumProvider/sagas/contracts'
 import balancesSaga from './balances'
-// import eventsSaga from './sagas/events'
+import transactionsSagas from 'state/ducks/transactions/sagas'
 
 export default function* rootSaga() {
-  yield fork(contractSagas)
+  // init other root sagas
+  yield fork(contractsSagas)
   yield fork(balancesSaga)
-  yield takeLatest(types.SETUP_ETHEREUM_REQUEST, genesis)
+  yield fork(transactionsSagas)
+
+  // home sagas
+  yield takeLatest(types.SETUP_ETHEREUM_START, genesis)
 }
 
 export function* genesis() {
@@ -29,29 +32,14 @@ export function* genesis() {
 
     if (account === undefined) {
       // yield put(actions.loginError({ type: LOGIN_ERROR, message: 'Need MetaMask!' }))
-      console.log('HOME ERROR: account undefined')
+      throw new Error('Account undefined')
     } else {
       // dispatch account/network
-      yield put(actions.setWallet({ account, network }))
-
-      // get abis from ipfs
-      const data = yield call(ipfsGetData, 'QmZpeget91fUBZyw9LfhwvB3X5iPTkWLiTtRioWcdrU1LE')
-      const { id, registry, token, voting, parameterizer } = data
-      const abis = {
-        id,
-        registry: { abi: registry.abi, bytecode: registry.bytecode, networks: registry.networks },
-        token: { abi: token.abi, bytecode: token.bytecode },
-        voting: { abi: voting.abi, bytecode: voting.bytecode },
-        parameterizer: { abi: parameterizer.abi, bytecode: parameterizer.bytecode },
-      }
-
-      // dispatch abis -> invokes contractSagas
-      yield put(actions.setABIs(abis))
+      yield put(actions.setupEthereumSucceeded({ account, network }))
     }
     // yield call(governXSaga)
-  } catch (err) {
-    console.log('Genesis error:', err)
-    // yield put(actions.loginError({ type: LOGIN_ERROR, message: 'Need MetaMask' }))
+  } catch (error) {
+    yield put(actions.setupEthereumFailed({ error }))
   }
 }
 
