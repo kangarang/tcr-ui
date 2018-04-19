@@ -3,7 +3,7 @@ import _ from 'lodash/fp'
 
 import { selectRegistry } from 'state/ducks/home/selectors'
 
-import { ipfsAddData } from 'state/libs/ipfs'
+import { ipfsAddObject } from 'state/libs/ipfs'
 import { getListingHash } from 'state/libs/values'
 
 import { sendTransactionSaga } from './index'
@@ -16,7 +16,7 @@ export function* registryTxnSaga(action) {
     let finalArgs = _.clone(args)
 
     if (methodName === 'apply') {
-      const fileHash = yield call(ipfsAddData, {
+      const fileHash = yield call(ipfsAddObject, {
         id: args[0], // listing string (name)
         data: args[2], // data (address)
       })

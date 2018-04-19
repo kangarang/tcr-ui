@@ -27,7 +27,7 @@ export async function ipfsGetData(multihash) {
 
 // TODO: type checking
 // TODO: add tests
-export async function ipfsAddData(obj) {
+export async function ipfsAddObject(obj) {
   // TODO: id: data | verify keccak256
   const CID = await new Promise((resolve, reject) => {
     ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
@@ -37,6 +37,6 @@ export async function ipfsAddData(obj) {
   })
 
   const content = await ipfsGetData(CID[0].hash)
-  console.log(`${CID[0].hash.substring(0, 8)} added: ${JSON.stringify(content)}`)
+  // console.log(`${CID[0].hash.substring(0, 8)} added: ${JSON.stringify(content)}`)
   return CID[0].hash
 }
