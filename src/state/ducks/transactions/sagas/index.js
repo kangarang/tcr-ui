@@ -83,7 +83,7 @@ export function* registryTxnSaga(action) {
       // use ipfs CID as the _data field in the application
       finalArgs[2] = fileHash
     }
-    // console.log('finalArgs', finalArgs)
+    console.log('finalArgs', finalArgs)
 
     yield call(sendTransactionSaga, registry, methodName, finalArgs)
   } catch (error) {
@@ -96,7 +96,7 @@ export function* sendTransactionSaga(contract, method, args) {
   try {
     console.log(method, 'args:', args)
     // ethjs-contract: sendTransaction
-    const txHash = yield contract[method](...args)
+    const txHash = yield call(contract[method], ...args)
     yield put(actions.txnMining(txHash))
 
     // ethers: waitForTransaction
@@ -110,7 +110,7 @@ export function* sendTransactionSaga(contract, method, args) {
     console.log('txReceipt:', txReceipt)
 
     // successful sendTransaction
-    if (txReceipt.status === '0x01') {
+    if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {
       const txLogs = txReceipt.logs
       console.log('txLogs:', txLogs)
       // dispatch tx receipt, update balances

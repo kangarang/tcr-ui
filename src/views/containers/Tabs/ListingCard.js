@@ -47,8 +47,12 @@ function ListingCard(props) {
               : one.get('listingID') && one.get('listingID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${one.get('owner').substring(0, 10)}`}</Typography>
-          <Typography component="p">{one.getIn(['appExpiry', 'formattedLocal'])}</Typography>
+          <Typography component="p">{`BY: ${one
+            .get('owner')
+            .substring(0, 10)}`}</Typography>
+          <Typography component="p">
+            {one.getIn(['appExpiry', 'formattedLocal'])}
+          </Typography>
         </CardContent>
 
         <CardActions>
@@ -94,12 +98,19 @@ function ListingCard(props) {
                 <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
-            {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
-              <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
+            {registry &&
+            registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
+              <Button onClick={e => chooseTCR(one.get('listingID'))}>
+                {'Select TCR'}
+              </Button>
             ) : (
               updateTrigger && (
                 <div>
-                  <Button onClick={e => handleUpdateStatus(one)} size="medium" color="primary">
+                  <Button
+                    onClick={e => handleUpdateStatus(one.get('listingHash'))}
+                    size="medium"
+                    color="primary"
+                  >
                     {'Update Status'}
                   </Button>
                 </div>

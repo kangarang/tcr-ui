@@ -40,26 +40,25 @@ export const selectAllListings = createSelector(selectHome, homeState =>
   homeState.get('listings')
 )
 
-export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '3')
-)
-export const onlyWhitelistIDs = createSelector(selectWhitelist, whitelist => {
-  const [...keys] = whitelist.keys()
-  return keys
-})
 export const selectCandidates = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('status') === '1')
 )
 export const onlyCandidateIDs = createSelector(selectCandidates, candidates => {
   const [...keys] = candidates.keys()
   return keys
-  // return candidates.mapKeys().map(k => k)
 })
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('status') === '2')
 )
 export const onlyFaceoffIDs = createSelector(selectFaceoffs, faceoffs => {
   const [...keys] = faceoffs.keys()
+  return keys
+})
+export const selectWhitelist = createSelector(selectAllListings, listings =>
+  listings.filter(li => li.get('status') === '3')
+)
+export const onlyWhitelistIDs = createSelector(selectWhitelist, whitelist => {
+  const [...keys] = whitelist.keys()
   return keys
 })
 

@@ -92,8 +92,7 @@ class Home extends Component {
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
       }
-
-      this.getVoterReward(json.pollID, json.salt)
+      // this.getVoterReward(json.pollID, json.salt)
     }
     fr.readAsText(file)
   }
@@ -227,8 +226,8 @@ class Home extends Component {
     ]
     this.props.onSendTransaction({ methodName: 'revealVote', args })
   }
-  handleUpdateStatus = listing => {
-    const args = [listing.get('listingHash')]
+  handleUpdateStatus = listingHash => {
+    const args = [listingHash]
     this.props.onSendTransaction({ methodName: 'updateStatus', args })
   }
   handleRescueTokens = listing => {

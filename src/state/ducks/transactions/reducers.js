@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
     case types.CLEAR_TXN:
       return state
         .set('miningStatus', fromJS(false))
-        .set('latestTxn', fromJS({ hash: '' }))
+        .set('latestTxn', fromJS({ transactionHash: '' }))
     default:
       return state
   }

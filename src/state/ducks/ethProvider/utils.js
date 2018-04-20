@@ -1,10 +1,12 @@
+// import utils from 'ethers/utils'
 import EthContract from 'ethjs-contract'
 import { getEthjs } from 'state/libs/provider'
 
+// TODO: estimate gas prices
 const getDefaults = account => ({
   from: account,
-  gas: 300000,
-  gasPrice: 25000000000,
+  gas: 4500000,
+  gasPrice: 3000000000,
 })
 
 export async function setupRegistry(abi, bytecode, account, address) {

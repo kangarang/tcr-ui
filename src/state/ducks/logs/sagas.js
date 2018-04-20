@@ -11,7 +11,7 @@ import { selectNetwork, selectRegistry } from 'state/ducks/home/selectors'
 import { getEthjs } from 'state/libs/provider'
 import { getBlockAndTxnFromLog } from './utils'
 
-import _abi from './_abi'
+import _utils from './utils'
 
 export default function* rootLogsSaga() {
   yield takeLatest(epTypes.SET_CONTRACTS, getFreshLogs)
@@ -50,6 +50,7 @@ function* getFreshLogs() {
         '_Application',
         '_Challenge',
         '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
         '_ChallengeSucceeded',
         '_ChallengeFailed',
       ],
@@ -81,6 +82,7 @@ function* pollLogsSaga(action) {
         '_Application',
         '_Challenge',
         '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
         '_ChallengeSucceeded',
         '_ChallengeFailed',
       ],
@@ -101,7 +103,7 @@ function* decodeLogsSaga(action) {
       //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
     }
     const filter = yield call(
-      _abi.getFilter,
+      _utils.getFilter,
       contractAddress,
       eventNames,
       indexedFilterValues,

@@ -62,6 +62,12 @@ function* updateBalancesSaga() {
       utils.formatUnits(lockedTokensRaw['0'], decimals, { commify: true }),
     ])
 
+    const totalRegistryStakeRaw = yield token.balanceOf(registry.address)
+    console.log('totalRegistryStakeRaw:', totalRegistryStakeRaw)
+    const totalRegistryStake = utils.formatUnits(totalRegistryStakeRaw['0'], decimals, {
+      commify: true,
+    })
+
     // dispatch formatted
     const balances = {
       ETH,
@@ -70,7 +76,7 @@ function* updateBalancesSaga() {
       votingAllowance,
       votingRights,
       lockedTokens,
-      totalRegistryStake: '0',
+      totalRegistryStake,
     }
     yield put(actions.updateBalancesSucceeded({ balances }))
   } catch (error) {

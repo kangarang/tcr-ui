@@ -1,4 +1,5 @@
-// import { convertDecodedLogs } from 'state/ducks/listings/utils'
+import utils from 'ethers/utils'
+import _ from 'lodash/fp'
 
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)
@@ -6,38 +7,117 @@ export async function getBlockAndTxnFromLog(log, ethjs) {
   return { block, tx }
 }
 
-// let lastReadBlockNumber = 0
+// adapted from:
+// https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
+const _utils = {
+  getMethodAbi: async (address, methodName, abi) => {
+    const methodAbi = _.find({ name: methodName }, abi)
+    return methodAbi
+  },
 
-// export async function decodeLogs(provider, ContractEvent, address) {
-//   // build filter
-//   const filter = {
-//     fromBlock: lastReadBlockNumber,
-//     toBlock: 'latest',
-//     address,
-//     topics: ContractEvent.topics,
-//   }
-//   // get logs according to filter
-//   const logs = await provider.getLogs(filter)
-//   let decodedLogs = []
-//   for (const log of logs) {
-//     const dLog = await decodeLog(ContractEvent, log, provider)
-//     decodedLogs.push(dLog)
-//   }
-//   // console.log('1 decodedLogs', decodedLogs)
-//   return decodedLogs
-// }
-// export async function decodeLog(ContractEvent, log, provider) {
-//   const logData = await ContractEvent.parse(log.topics, log.data)
-//   const { block, tx } = await getBlockAndTxnFromLog(log, provider)
-//   const txData = {
-//     txHash: tx.hash,
-//     blockHash: block.hash,
-//     ts: block.timestamp,
-//   }
-//   return {
-//     logData,
-//     txData,
-//     eventName: ContractEvent.name,
-//     msgSender: tx.from,
-//   }
-// }
+  getFilter: async (address, eventNames, indexFilterValues, abi, blockRange) => {
+    if (eventNames.length === 0) {
+      const filter = {
+        address: address,
+        topics: [],
+      }
+      return {
+        ...blockRange,
+        ...filter,
+      }
+    }
+
+    let eventAbi
+    const evSigTopics = eventNames.map(eventName => {
+      eventAbi = _.find({ name: eventName }, abi)
+      const eventString = _utils.getEventStringFromAbiName(eventAbi, eventName)
+      const eventSignature = utils.id(eventString)
+      const eventSignatureTopic = utils.hexlify(eventSignature)
+      return eventSignatureTopic
+    })
+    // console.log('evSigTopics:', evSigTopics)
+    // note: eventAbi is now the last one in the array
+    const topicsForIndexedArgs = _utils.getTopicsForIndexedArgs(
+      eventAbi,
+      indexFilterValues
+    )
+    const topics = [evSigTopics, ...topicsForIndexedArgs]
+    let filter = {
+      address,
+      topics,
+    }
+    if (!_.isUndefined(blockRange)) {
+      filter = {
+        ...blockRange,
+        ...filter,
+      }
+    }
+    // console.log('filter:', filter)
+    return filter
+  },
+
+  getEventStringFromAbiName: (eventAbi, eventName) => {
+    const types = _.map('type', eventAbi.inputs)
+    const signature = `${eventAbi.name}(${types.join(',')})`
+    return signature
+  },
+
+  getTopicsForIndexedArgs: (abi, indexFilterValues) => {
+    const topics = []
+    for (const eventInput of abi.inputs) {
+      if (!eventInput.indexed) {
+        continue
+      }
+      if (_.isUndefined(indexFilterValues[eventInput.name])) {
+        // Null is a wildcard topic in a JSON-RPC call
+        topics.push(null)
+      } else {
+        const value = indexFilterValues[eventInput.name]
+        // An arrayish object is any such that it:
+        // has a length property
+        // has a value for each index from 0 up to (but excluding) length
+        // has a valid byte for each value; a byte is an integer in the range [0, 255]
+        // is NOT a string
+        const arrayish = utils.arrayify(value)
+        // zeros prepended to 32 bytes
+        const padded = utils.padZeros(arrayish, 32)
+        const topic = utils.hexlify(padded)
+        topics.push(topic)
+      }
+    }
+    return topics
+  },
+
+  matchesFilter(log, filter) {
+    if (!_.isUndefined(filter.address) && log.address !== filter.address) {
+      return false
+    }
+    if (!_.isUndefined(filter.topics)) {
+      return _utils.matchesTopics(log.topics, filter.topics)
+    }
+    return true
+  },
+
+  matchesTopics(logTopics, filterTopics) {
+    const matchesTopic = _.zipWith(
+      _utils.matchesTopic.bind(_utils),
+      logTopics,
+      filterTopics
+    )
+    const matchesTopics = _.every(matchesTopic)
+    return matchesTopics
+  },
+
+  matchesTopic(logTopic, filterTopic) {
+    if (_.isArray(filterTopic)) {
+      return _.includes(logTopic, filterTopic)
+    }
+    if (_.isString(filterTopic)) {
+      return filterTopic === logTopic
+    }
+    // null topic is a wildcard
+    return true
+  },
+}
+
+export default _utils

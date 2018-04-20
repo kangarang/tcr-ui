@@ -11,9 +11,7 @@ import * as types from '../types'
 import { sendTransactionSaga } from './index'
 
 export default function* voteSaga() {
-  yield takeEvery(types.TX_REQUEST_VOTING_RIGHTS, requestVotingRightsSaga)
-  yield takeEvery(types.TX_COMMIT_VOTE, commitVoteSaga)
-  yield takeEvery(types.TX_REVEAL_VOTE, revealVoteSaga)
+  yield 'voteSaga'
 }
 
 export function* requestVotingRightsSaga(action) {
