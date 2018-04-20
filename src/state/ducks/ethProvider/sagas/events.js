@@ -62,6 +62,11 @@ function* setupEventChannels() {
         yield takeEvery(vrChannel, handleEventEmission)
         yield takeEvery(pcChannel, handleEventEmission)
       }
+      // In the case of take, the control is inverted.
+      // Instead of the actions being pushed to the handler tasks,
+      // the Saga is pulling the action by itself. It looks as if
+      // the Saga is performing a normal function call action = getNextAction()
+      // which will resolve when the action is dispatched.
     } finally {
       if (yield cancelled()) {
         console.log('LISTENING CANCELLED')

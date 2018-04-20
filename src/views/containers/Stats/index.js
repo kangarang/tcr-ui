@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { colors } from 'views/global-styles'
 import Button from 'material-ui/Button'
+import { colors } from 'views/global-styles'
 
 import { trimDecimalsThree } from 'state/libs/units'
 
@@ -35,7 +35,7 @@ class Stats extends Component {
 
         <GridItem>
           <CapsDiv>{`total ${tcr.tokenSymbol} at stake`}</CapsDiv>
-          <BoldDiv>{balances.totalRegistryStake}</BoldDiv>
+          <BoldDiv>{balances.get('totalRegistryStake')}</BoldDiv>
         </GridItem>
 
         <GridItem>

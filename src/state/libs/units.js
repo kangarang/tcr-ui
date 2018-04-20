@@ -2,9 +2,8 @@ import _ from 'lodash/fp'
 import BNJS from 'bn.js'
 
 // TODO: typecheck
-export const BN = small => {
-  return new BNJS(small.toString(10), 10)
-}
+export const BN = small => new BNJS(small.toString(10), 10)
+
 // Trim to 3 trailing decimals
 export const trimDecimalsThree = n => {
   return (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')

@@ -11,7 +11,47 @@ export function findChallenge(challengeID, listings) {
   return Object.values(listings).filter(li => li.challengeID.toString() === challengeID.toString())
 }
 
-// Create
+// Inputs: decodedLogs: Array, currentListings: Object
+// Output: updatedListings: Object
+export async function convertDecodedLogs(dLogs, listings) {
+  for (const log of dLogs) {
+    const { logData, txData, msgSender, eventName } = log
+    let golem
+    let listing
+    // if the log is an application,
+    // transform into a new listing object
+    // if not, find the corresponding listing
+    // using the logData
+    if (eventName === '_Application') {
+      listing = await createListing(logData, txData, msgSender)
+      listings[listing.listingHash] = listing
+    } else if (logData.listingHash) {
+      // if listingHash exists, find the corresponding listing
+      golem = findGolem(logData.listingHash, listings)
+    } else if (logData.pollID) {
+      // if pollID or challengeID exists, find the corresponding challenge
+      // console.log('poll id logData', logData)
+      golem = findChallenge(logData.pollID, listings)[0]
+    } else if (logData.challengeID) {
+      // console.log('challenge id logData', logData)
+      golem = findChallenge(logData.challengeID, listings)[0]
+    }
+    // invoke the changeListing function to modify the listing
+    if (golem !== undefined) {
+      listing = changeListing(golem, logData, txData, eventName, msgSender)
+    }
+    // console.log('golem, listing', golem, listing)
+
+    // set the in the master object
+    if (listing !== undefined) {
+      listings[listing.listingHash] = listing
+    }
+  }
+  console.log('converted logs/listings', listings)
+  // return a new object of relevant listings
+  return listings
+}
+
 export async function createListing(log, blockTxn, owner) {
   let { listingHash, deposit, appEndDate, data } = log
   let listingID
@@ -74,7 +114,6 @@ export async function createListing(log, blockTxn, owner) {
   return golem
 }
 
-// Update
 export function changeListing(golem, log, txData, eventName, msgSender) {
   if (txData.ts < golem.ts) {
     console.log('old txn; returning listing')

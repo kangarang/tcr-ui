@@ -9,9 +9,8 @@ const _abi = {
     return methodAbi
   },
 
-  getFilter: async (address, eventName, indexFilterValues, abi, blockRange) => {
-    let eventAbi
-    if (!eventName) {
+  getFilter: async (address, eventNames, indexFilterValues, abi, blockRange) => {
+    if (eventNames.length === 0) {
       const filter = {
         address: address,
         topics: [],
@@ -20,14 +19,20 @@ const _abi = {
         ...blockRange,
         ...filter,
       }
-    } else {
-      eventAbi = _.find({ name: eventName }, abi)
     }
-    const eventString = _abi.getEventStringFromAbiName(eventAbi, eventName)
-    const eventSignature = utils.id(eventString)
-    const topicForEventSignature = utils.hexlify(eventSignature)
+
+    let eventAbi
+    let evSigTopics = eventNames.map(eventName => {
+      eventAbi = _.find({ name: eventName }, abi)
+      const eventString = _abi.getEventStringFromAbiName(eventAbi, eventName)
+      const eventSignature = utils.id(eventString)
+      const eventSignatureTopic = utils.hexlify(eventSignature)
+      return eventSignatureTopic
+    })
+    // console.log('evSigTopics:', evSigTopics)
+    // note: eventAbi is now the last one in the array
     const topicsForIndexedArgs = _abi.getTopicsForIndexedArgs(eventAbi, indexFilterValues)
-    const topics = [topicForEventSignature, ...topicsForIndexedArgs]
+    const topics = [evSigTopics, ...topicsForIndexedArgs]
     let filter = {
       address,
       topics,
@@ -38,6 +43,7 @@ const _abi = {
         ...filter,
       }
     }
+    // console.log('filter:', filter)
     return filter
   },
 

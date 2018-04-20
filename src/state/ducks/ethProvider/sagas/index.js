@@ -1,5 +1,5 @@
 import utils from 'ethers/utils'
-import { put, call, select, all, takeEvery } from 'redux-saga/effects'
+import { put, call, select, all, takeLatest } from 'redux-saga/effects'
 
 import { getEthjs } from 'state/libs/provider'
 
@@ -15,13 +15,12 @@ import {
 } from 'state/ducks/home/selectors'
 
 export default function* balancesSaga() {
-  yield takeEvery(types.UPDATE_BALANCES_START, updateBalancesSaga)
+  yield takeLatest(types.UPDATE_BALANCES_START, updateBalancesSaga)
 }
 
 function* updateBalancesSaga() {
   try {
     const ethjs = yield call(getEthjs)
-
     const tcr = yield select(selectTCR)
     const account = yield select(selectAccount)
     const registry = yield select(selectRegistry)

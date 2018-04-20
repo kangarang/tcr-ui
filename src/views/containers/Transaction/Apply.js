@@ -5,21 +5,20 @@ import { BN, baseToConvertedUnit } from 'state/libs/units'
 import translate from 'views/translations'
 import { colors } from 'views/global-styles'
 
-import Text from 'views/components/Text'
 import { MarginDiv } from 'views/components/StyledHome'
 import Button from 'views/components/Button'
+import Text from 'views/components/Text'
 
 import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
-
 import SidePanel from './components/SidePanel'
+
 import TxnProgress from './TxnProgress'
 
 export default ({
   opened,
   closeSidePanel,
-  token,
   tcr,
   parameters,
   balances,
@@ -74,8 +73,6 @@ export default ({
         </Button>
       </MarginDiv>
 
-      {/* if you wanna see approve, you'll see it */}
-      {/* if not, and your current allowance is greater than the minimum deposit, you won't see it */}
       <MarginDiv>
         {visibleApprove ? (
           <div>
@@ -85,20 +82,10 @@ export default ({
           </div>
         ) : (
           <div>
-            {/* {BN(balances.get('registryAllowance')).lt(
-              BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.tokenDecimals))
-            ) ? (
-              <div>
-                <Text color="red">{'YOU NEED TO APPROVE'}</Text>
-                <Button onClick={e => handleApprove('registry')} mode="strong">
-                  {'Approve tokens for Registry'}
-                </Button>
-              </div>
-            ) : (
-              <Button onClick={showApprove} mode="">
-                {'Show approve'}
-              </Button>
-            )} */}
+            {/* <Text color="red">{'YOU NEED TO APPROVE'}</Text> */}
+            <Button onClick={showApprove} mode="">
+              {'Show approve'}
+            </Button>
           </div>
         )}
         {miningStatus && (

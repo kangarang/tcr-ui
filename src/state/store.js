@@ -3,9 +3,7 @@ import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 import { fromJS, Iterable } from 'immutable'
 
-// import * as reducers from './ducks'
 import createReducer from './ducks/reducers'
-
 import rootSaga from './ducks/home/sagas'
 
 const sagaMiddleware = createSagaMiddleware()

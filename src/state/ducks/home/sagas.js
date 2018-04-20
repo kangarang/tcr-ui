@@ -24,10 +24,9 @@ export default function* rootSaga() {
 export function* genesis() {
   try {
     const ethjs = yield call(setEthjs)
-    console.log('ethjs:', ethjs)
     const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
-    const provider = yield call(setEthersProvider, parseInt(networkID, 10))
+    yield call(setEthersProvider, parseInt(networkID, 10))
     const network =
       networkID === '4'
         ? 'rinkeby'

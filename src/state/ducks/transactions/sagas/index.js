@@ -1,15 +1,15 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 
-import homeActions from 'state/ducks/home/actions'
+import actions from '../actions'
+import types from '../types'
+
+import epActions from 'state/ducks/ethProvider/actions'
 import { selectRegistry, selectVoting, selectToken } from 'state/ducks/home/selectors'
 
 import { getEthjs, getEthersProvider } from 'state/libs/provider'
 import { ipfsAddObject } from 'state/libs/ipfs'
 import { getListingHash } from 'state/libs/values'
-
-import actions from '../actions'
-import types from '../types'
 
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 
@@ -83,7 +83,7 @@ export function* registryTxnSaga(action) {
       // use ipfs CID as the _data field in the application
       finalArgs[2] = fileHash
     }
-    console.log('finalArgs', finalArgs)
+    // console.log('finalArgs', finalArgs)
 
     yield call(sendTransactionSaga, registry, methodName, finalArgs)
   } catch (error) {
@@ -115,7 +115,7 @@ export function* sendTransactionSaga(contract, method, args) {
       console.log('txLogs:', txLogs)
       // dispatch tx receipt, update balances
       yield put(actions.sendTransactionSucceeded(txReceipt))
-      yield put(homeActions.updateBalancesStart())
+      yield put(epActions.updateBalancesStart())
       // if you decide to re-implement this, you need to control *which* txn
       // you are attempting to clear (in reducer)
       // yield call(delay, 5000)

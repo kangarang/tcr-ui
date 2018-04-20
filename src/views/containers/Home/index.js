@@ -3,21 +3,24 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
-import actions from 'state/ducks/home/actions'
-import txActions from 'state/ducks/transactions/actions'
-import epActions from 'state/ducks/ethProvider/actions'
 import {
   selectError,
   selectAccount,
   selectNetwork,
   selectBalances,
+  selectABIs,
   selectTCR,
   selectRegistry,
-  // selectVoting,
+  selectVoting,
   selectParameters,
   selectStats,
 } from 'state/ducks/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'state/ducks/transactions/selectors'
+
+import homeActions from 'state/ducks/home/actions'
+import txActions from 'state/ducks/transactions/actions'
+import epActions from 'state/ducks/ethProvider/actions'
+
 import { convertedToBaseUnit } from 'state/libs/units'
 
 import Stats from 'views/containers/Stats'
@@ -163,21 +166,20 @@ class Home extends Component {
 
   // TRANSACTIONS
   handleApprove = contract => {
+    const { tcr } = this.props
     const args = [
       this.props[contract].address,
-      convertedToBaseUnit(this.state.numTokens, this.props.tcr.tokenDecimals),
+      convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals),
     ]
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {
+    const { parameters, tcr } = this.props
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(
-        this.props.parameters.get('minDeposit'),
-        this.props.tcr.tokenDecimals
-      )
+      numTokens = convertedToBaseUnit(parameters.get('minDeposit'), tcr.tokenDecimals)
     } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, this.props.tcr.tokenDecimals)
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
     }
 
     const args = [this.state.listingID, numTokens, this.state.data]
@@ -224,7 +226,7 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: network => dispatch(actions.setupEthereumStart(network)),
+    onSetupEthereum: network => dispatch(homeActions.setupEthereumStart(network)),
     onChooseTCR: tcr => dispatch(epActions.chooseTCR(tcr)),
     onSendTransaction: payload => dispatch(txActions.sendTransactionStart(payload)),
   }
@@ -239,9 +241,9 @@ const mapStateToProps = createStructuredSelector({
   balances: selectBalances,
   tcr: selectTCR,
 
-  // abis: selectABIs,
+  abis: selectABIs,
   registry: selectRegistry,
-  // voting: selectVoting,
+  voting: selectVoting,
   // token: selectToken,
   parameters: selectParameters,
 

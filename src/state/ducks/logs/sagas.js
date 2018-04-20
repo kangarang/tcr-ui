@@ -3,28 +3,27 @@ import { delay } from 'redux-saga'
 
 import EthAbi from 'ethjs-abi'
 
-import ethProviderTypes from 'state/ducks/ethProvider/types'
+import * as actions from './actions'
+import * as types from './types'
+
+import epTypes from 'state/ducks/ethProvider/types'
 import { selectNetwork, selectRegistry } from 'state/ducks/home/selectors'
 
 import { getEthjs } from 'state/libs/provider'
-// import { getBlockAndTxnFromLog } from './utils'
-
-import actions from './actions'
-import types from './types'
+import { getBlockAndTxnFromLog } from './utils'
 
 import _abi from './_abi'
 
-export default function* logsSaga() {
-  yield takeLatest(ethProviderTypes.SET_CONTRACTS, getFreshLogs)
+export default function* rootLogsSaga() {
+  yield takeLatest(epTypes.SET_CONTRACTS, getFreshLogs)
   yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
 }
 
-let lastReadBlockNumber
+let lastReadBlockNumber = 0
 
 function* getFreshLogs() {
   try {
     const registry = yield select(selectRegistry)
-    const methodName = '_Application'
     const blockRange = yield {
       fromBlock: '0',
       toBlock: 'latest',
@@ -32,7 +31,7 @@ function* getFreshLogs() {
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      methodName,
+      eventNames: ['_Application', '_Challenge'],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload })
@@ -42,6 +41,7 @@ function* getFreshLogs() {
   }
   yield fork(pollingIntervalSaga)
 }
+
 function* pollingIntervalSaga() {
   let pollInterval = 5000
   const network = yield select(selectNetwork)
@@ -71,13 +71,12 @@ function* pollLogsSaga(action) {
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
 
     const registry = yield select(selectRegistry)
-    const methodName = '_Application'
     const blockRange = action.payload
 
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      methodName,
+      eventNames: ['_Application', '_Challenge'],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload })
@@ -88,7 +87,7 @@ function* pollLogsSaga(action) {
 
 function* decodeLogsSaga(action) {
   const ethjs = yield call(getEthjs)
-  const { abi, contractAddress, methodName, blockRange } = action.payload
+  const { abi, contractAddress, eventNames, blockRange } = action.payload
   const indexedFilterValues = {
     // listingHash:
     //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
@@ -96,7 +95,7 @@ function* decodeLogsSaga(action) {
   const filter = yield call(
     _abi.getFilter,
     contractAddress,
-    methodName,
+    eventNames,
     indexedFilterValues,
     abi,
     blockRange
@@ -107,9 +106,20 @@ function* decodeLogsSaga(action) {
   }
   const decoder = yield call(EthAbi.logDecoder, abi)
   const decodedLogs = yield call(decoder, rawLogs)
-  console.log('decodedLogs:', decodedLogs)
-  // const listings = yield decodedLogs.map(async dLog => {
-  //   const blockTxn = await getBlockAndTxnFromLog(dLog, )
-  //   const listing = await createListing(dLog, blockTxn, tx.from)
-  // })
+  const lawgs = yield rawLogs.map(async (log, index) => {
+    const { block, tx } = await getBlockAndTxnFromLog(log, ethjs)
+    const txData = {
+      txHash: tx.hash,
+      blockHash: block.hash,
+      ts: block.timestamp,
+    }
+    const logData = decodedLogs[index]
+    return {
+      logData,
+      txData,
+      eventName: logData._eventName,
+      msgSender: tx.from,
+    }
+  })
+  yield put(actions.pollLogsSucceeded(lawgs))
 }

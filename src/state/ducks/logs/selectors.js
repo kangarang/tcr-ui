@@ -1,3 +1,7 @@
-import { createSelector } from 'reselect'
+// import { createSelector } from 'reselect'
 
-export const selectLogs = state => state.get('logs')
+function selectLogs(state) {
+  return state.get('logs')
+}
+
+export { selectLogs }
