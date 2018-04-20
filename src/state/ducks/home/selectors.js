@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { selectCandidates, selectWhitelist, selectFaceoffs } from '../listings/selectors'
+import pickBy from 'lodash/fp/pickBy'
 
 export const selectHome = state => state.get('home')
 
@@ -16,6 +16,45 @@ export const selectABIs = createSelector(selectHome, homeState => homeState.get(
 export const selectAllContracts = createSelector(selectHome, homeState =>
   homeState.get('contracts')
 )
+export const selectRegistry = createSelector(selectAllContracts, contracts =>
+  contracts.get('registry')
+)
+export const selectToken = createSelector(selectAllContracts, contracts => contracts.get('token'))
+export const selectVoting = createSelector(selectAllContracts, contracts => contracts.get('voting'))
+export const selectParameterizer = createSelector(selectAllContracts, contracts =>
+  contracts.get('parameterizer')
+)
+
+export const selectAllListings = createSelector(selectHome, homeState => homeState.get('listings'))
+
+export const selectWhitelist = createSelector(
+  selectAllListings,
+  listings => listings.filter(li => li.get('status') === '3')
+  // pickBy(li => li.get('status') === '3', listings)
+)
+export const onlyWhitelistIDs = createSelector(selectWhitelist, whitelist => {
+  const [...keys] = whitelist.keys()
+  return keys
+})
+export const selectCandidates = createSelector(
+  selectAllListings,
+  listings => listings.filter(li => li.get('status') === '1')
+  // pickBy(li => li.get('status') === '1', listings)
+)
+export const onlyCandidateIDs = createSelector(selectCandidates, candidates => {
+  const [...keys] = candidates.keys()
+  return keys
+})
+export const selectFaceoffs = createSelector(
+  selectAllListings,
+  listings => listings.filter(li => li.get('status') === '2')
+  // pickBy(li => li.get('status') === '2', listings)
+)
+export const onlyFaceoffIDs = createSelector(selectFaceoffs, faceoffs => {
+  const [...keys] = faceoffs.keys()
+  return keys
+})
+
 export const selectStats = createSelector(
   [selectCandidates, selectWhitelist, selectFaceoffs],
   (candidates, whitelist, faceoffs) => {
@@ -27,12 +66,4 @@ export const selectStats = createSelector(
       },
     }
   }
-)
-export const selectRegistry = createSelector(selectAllContracts, contracts =>
-  contracts.get('registry')
-)
-export const selectToken = createSelector(selectAllContracts, contracts => contracts.get('token'))
-export const selectVoting = createSelector(selectAllContracts, contracts => contracts.get('voting'))
-export const selectParameterizer = createSelector(selectAllContracts, contracts =>
-  contracts.get('parameterizer')
 )

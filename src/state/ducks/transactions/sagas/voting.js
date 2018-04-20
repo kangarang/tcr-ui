@@ -7,7 +7,7 @@ import { getVoteSaltHash, randInt } from 'state/libs/values'
 import saveFile from 'state/utils/_file'
 import { getEndDateString } from 'state/utils/_datetime'
 
-import types from '../types'
+import * as types from '../types'
 import { sendTransactionSaga } from './index'
 
 export default function* voteSaga() {

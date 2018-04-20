@@ -3,8 +3,8 @@ import { put, call, select, all, takeLatest } from 'redux-saga/effects'
 
 import { getEthjs } from 'state/libs/provider'
 
-import actions from '../actions'
-import types from '../types'
+import * as actions from '../actions'
+import * as types from '../types'
 
 import {
   selectTCR,

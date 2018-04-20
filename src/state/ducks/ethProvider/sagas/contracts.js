@@ -1,14 +1,14 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
 import { selectABIs, selectAccount } from 'state/ducks/home/selectors'
-import homeTypes from 'state/ducks/home/types'
+
+import * as actions from '../actions'
+import * as types from '../types'
+import * as homeTypes from 'state/ducks/home/types'
 
 import { getEthjs } from 'state/libs/provider'
 import { ipfsGetData } from 'state/libs/ipfs'
 import { baseToConvertedUnit } from 'state/libs/units'
-
-import actions from '../actions'
-import types from '../types'
 import { setupRegistry, setupContract } from '../utils'
 
 export default function* contractsSagasRoot() {

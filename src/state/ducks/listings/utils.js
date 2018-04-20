@@ -47,7 +47,7 @@ export async function convertDecodedLogs(dLogs, listings) {
       listings[listing.listingHash] = listing
     }
   }
-  console.log('converted logs/listings', listings)
+  // console.log('converted logs/listings', listings)
   // return a new object of relevant listings
   return listings
 }
@@ -55,32 +55,35 @@ export async function convertDecodedLogs(dLogs, listings) {
 export async function createListing(log, blockTxn, owner) {
   let { listingHash, deposit, appEndDate, data } = log
   let listingID
-  let tokenData
+  let tokenData = {}
 
   // IPFS input validations
-  // Check if the data is a valid ipfs multihash
   if (data.length === 46 && data.includes('Qm')) {
     const ipfsContent = await ipfsGetData(data)
+
+    // Validate listingHash === keccak256(ipfsContent.id)
     if (listingHash === getListingHash(ipfsContent.id)) {
       listingID = ipfsContent.id
-      // Validate listingHash === keccak256(ipfsContent.id)
+
       if (isAddress(listingID.toLowerCase())) {
         // see: https://github.com/ethereum-lists/tokens
         const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
         tokenData = find({ address: listingID }, tokenList)
+
         if (tokenData) {
-          tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${tokenData.address.toLowerCase()}.png`
+          tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${tokenData.address.toLowerCase()}.png`
           console.log('tokenData', tokenData)
         } else {
           tokenData = {}
-          tokenData.imgSrc = `https://raw.githubusercontent.com/TrustWallet/tokens/master/images/${listingID.toLowerCase()}.png`
+          tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${listingID.toLowerCase()}.png`
+          console.log('tokenData', tokenData)
         }
       }
     } else {
       throw new Error('valid multihash, invalid id')
     }
   } else if (listingHash === getListingHash(data)) {
-    // Validate listingHash === keccak256(data)
+    // Validate listingHash === keccak256(data) -- adChain
     listingID = data
   }
   // TODO: account for neither case
@@ -93,20 +96,18 @@ export async function createListing(log, blockTxn, owner) {
   // magically created entirely from inanimate matter
   // ------------------------------------------------
 
-  // prettier-ignore
   const golem = {
-    // meta-data
     listingHash,
     owner,
     challenger: false,
     challengeID: false,
+    pollID: false,
     status: '1',
     ...blockTxn,
     data,
-    // view-data
     tokenData,
     listingID,
-    unstakedDeposit: deposit.toString(),
+    unstakedDeposit: deposit.toString(10),
     appExpiry,
     commitExpiry: false,
     revealExpiry: false,
@@ -155,14 +156,6 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
       }
 
     case '_ApplicationWhitelisted':
-      return {
-        ...golem,
-        status: '3',
-        challenger: false,
-        challengeID: false,
-        commitExpiry: false,
-        revealExpiry: false,
-      }
     case '_ChallengeFailed':
       return {
         ...golem,
@@ -174,23 +167,7 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
       }
 
     case '_ApplicationRemoved':
-      return {
-        ...golem,
-        status: '0',
-        challenger: false,
-        challengeID: false,
-        commitExpiry: false,
-        revealExpiry: false,
-      }
     case '_ListingRemoved':
-      return {
-        ...golem,
-        status: '0',
-        challenger: false,
-        challengeID: false,
-        commitExpiry: false,
-        revealExpiry: false,
-      }
     case '_ChallengeSucceeded':
       return {
         ...golem,

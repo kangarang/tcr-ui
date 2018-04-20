@@ -1,11 +1,12 @@
 import { call, fork, put, takeLatest } from 'redux-saga/effects'
 
-import types from './types'
-import actions from './actions'
+import * as types from './types'
+import * as actions from './actions'
 
 import balancesSaga from 'state/ducks/ethProvider/sagas/index'
 import contractsSagas from 'state/ducks/ethProvider/sagas/contracts'
 import logsSagas from 'state/ducks/logs/sagas'
+import listingsSagas from 'state/ducks/listings/sagas'
 import transactionsSagas from 'state/ducks/transactions/sagas'
 
 import { setEthjs, setEthersProvider } from 'state/libs/provider'
@@ -15,6 +16,7 @@ export default function* rootSaga() {
   yield fork(balancesSaga)
   yield fork(contractsSagas)
   yield fork(logsSagas)
+  yield fork(listingsSagas)
   yield fork(transactionsSagas)
 
   // home sagas

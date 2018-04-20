@@ -1,54 +1,25 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
-import pickBy from 'lodash/fp/pickBy'
 
-import actions from './actions'
-import homeActions from 'state/ducks/home/actions'
-import types from 'state/ducks/ethProvider/types'
-import { selectRegistry } from 'state/ducks/home/selectors'
+import * as actions from './actions'
+import * as homeActions from 'state/ducks/home/actions'
+import * as liActions from 'state/ducks/listings/actions'
 
-import {
-  flattenAndSortByNestedBlockTimestamp,
-  decodeLogs,
-  convertDecodedLogs,
-} from 'state/libs/logs'
+import * as logsTypes from 'state/ducks/logs/types'
+import * as epTypes from 'state/ducks/ethProvider/types'
 
-export default function* rootLogsSaga() {
-  yield takeLatest(types.SET_CONTRACTS, setupLogsSaga)
+import { convertDecodedLogs } from './utils'
+
+export default function* rootListingsSaga() {
+  yield takeLatest(logsTypes.POLL_LOGS_SUCCEEDED, createListingsSaga)
 }
 
-export function* setupLogsSaga() {
-  try {
-    const registry = yield select(selectRegistry)
-    // const aLogs = yield call(decodeLogsSaga, _Application, registry.address)
-    // const applications = yield call(convertDecodedLogs, aLogs, {})
+function* createListingsSaga(action) {
+  const logs = action.payload
+  console.log(logs.length, 'logs:', logs)
 
-    // const cLogs = yield call(decodeLogsSaga, _Challenge, registry.address)
+  const listings = yield call(convertDecodedLogs, logs, {})
+  console.log('listings:', listings)
 
-    // const logs = [
-    //   cLogs,
-    // ]
-    // console.log('logs', logs)
-    // const sorted = yield call(flattenAndSortByNestedBlockTimestamp, logs)
-    // const listings = yield call(convertDecodedLogs, sorted, applications)
-    // const filteredListings = yield pickBy(li => li.status !== '0', listings)
-
-    // if (Object.keys(filteredListings).length > 0) {
-    //   // DISPATCH
-    //   yield put(actions.setListings({ listings: filteredListings, byID: Object.keys(filteredListings) }))
-    //   yield put(homeActions.updateBalancesStart())
-    // }
-  } catch (error) {
-    console.log('setupLogsSaga error', error)
-  }
-}
-
-function* decodeLogsSaga(ContractEvent, contractAddress) {
-  try {
-    const provider = yield select(selectProvider)
-    const decodedLogs = yield call(decodeLogs, provider, ContractEvent, contractAddress)
-    // console.log(ContractEvent.name, 'logs', decodedLogs)
-    return decodedLogs
-  } catch (error) {
-    console.log('decodeLogsSaga error', error)
-  }
+  const byID = Object.keys(listings)
+  yield put(liActions.setListings({ listings, byID }))
 }

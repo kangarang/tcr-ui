@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable'
-import types from './types'
+import * as types from './types'
 
 const initialState = fromJS({
   error: false,

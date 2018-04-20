@@ -25,28 +25,30 @@ function ListingCard(props) {
   const {
     one,
     classes,
-    openSidePanel,
-    chooseTCR,
-    handleUpdateStatus,
     registry,
+    tokenData,
     listingType,
     updateTrigger,
     revealTrigger,
-    tokenData,
+    openSidePanel,
+    chooseTCR,
+    handleUpdateStatus,
   } = props
 
   return (
     <div>
       <Card className={classes.card}>
-        <Img src={tokenData ? tokenData.imgSrc : imgSrc} alt="" />
+        <Img src={tokenData.get('imgSrc') ? tokenData.get('imgSrc') : imgSrc} alt="" />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {tokenData ? (tokenData.name ? tokenData.name : one.listingID) : one.listingID}
+            {tokenData.get('name')
+              ? tokenData.get('name')
+              : one.get('listingID') && one.get('listingID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${one.owner.substring(0, 10)}`}</Typography>
-          <Typography component="p">{one.appExpiry.formattedLocal}</Typography>
+          <Typography component="p">{`BY: ${one.get('owner').substring(0, 10)}`}</Typography>
+          <Typography component="p">{one.getIn(['appExpiry', 'formattedLocal'])}</Typography>
         </CardContent>
 
         <CardActions>
@@ -62,7 +64,7 @@ function ListingCard(props) {
                     >
                       {'Commit Vote'}
                     </Button>
-                    <Countdown end={one.commitExpiry.date} />
+                    <Countdown end={one.getIn(['commitExpiry', 'date'])} />
                   </div>
                 ) : (
                   revealTrigger &&
@@ -75,7 +77,7 @@ function ListingCard(props) {
                       >
                         {'Reveal Vote'}
                       </Button>
-                      <Countdown end={one.revealExpiry.date} />
+                      <Countdown end={one.getIn(['revealExpiry', 'date'])} />
                     </div>
                   )
                 )}
@@ -89,11 +91,11 @@ function ListingCard(props) {
                 >
                   {'Challenge'}
                 </Button>
-                <Countdown end={one.appExpiry.date} />
+                <Countdown end={one.getIn(['appExpiry', 'date'])} />
               </div>
             )}
             {registry && registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
-              <Button onClick={e => chooseTCR(one.listingID)}>{'Select TCR'}</Button>
+              <Button onClick={e => chooseTCR(one.get('listingID'))}>{'Select TCR'}</Button>
             ) : (
               updateTrigger && (
                 <div>

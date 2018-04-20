@@ -13,18 +13,25 @@ import {
   selectRegistry,
   selectVoting,
   selectParameters,
+  selectAllListings,
+  selectFaceoffs,
+  selectWhitelist,
+  selectCandidates,
+  onlyCandidateIDs,
+  onlyFaceoffIDs,
+  onlyWhitelistIDs,
   selectStats,
 } from 'state/ducks/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'state/ducks/transactions/selectors'
 
-import homeActions from 'state/ducks/home/actions'
-import txActions from 'state/ducks/transactions/actions'
-import epActions from 'state/ducks/ethProvider/actions'
+import * as actions from 'state/ducks/home/actions'
+import * as txActions from 'state/ducks/transactions/actions'
+import * as epActions from 'state/ducks/ethProvider/actions'
 
 import { convertedToBaseUnit } from 'state/libs/units'
 
 import Stats from 'views/containers/Stats'
-// import Tabs from 'views/containers/Tabs'
+import Tabs from 'views/containers/Tabs'
 import Apply from 'views/containers/Transaction/Apply'
 // import Challenge from 'views/containers/Transaction/Challenge'
 // import CommitVote from 'views/containers/Transaction/CommitVote'
@@ -107,12 +114,12 @@ class Home extends Component {
         <Stats {...this.props} />
 
         {/* filtered listings */}
-        {/* <Tabs
+        <Tabs
           openSidePanel={this.openSidePanel}
           chooseTCR={this.chooseTCR}
           handleUpdateStatus={this.handleUpdateStatus}
           {...this.props}
-        /> */}
+        />
 
         {/* transaction modules */}
         <Apply
@@ -226,7 +233,7 @@ class Home extends Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSetupEthereum: network => dispatch(homeActions.setupEthereumStart(network)),
+    onSetupEthereum: network => dispatch(actions.setupEthereumStart(network)),
     onChooseTCR: tcr => dispatch(epActions.chooseTCR(tcr)),
     onSendTransaction: payload => dispatch(txActions.sendTransactionStart(payload)),
   }
@@ -251,6 +258,14 @@ const mapStateToProps = createStructuredSelector({
 
   miningStatus: selectMiningStatus,
   latestTxn: selectLatestTxn,
+
+  allListings: selectAllListings,
+  candidates: selectCandidates,
+  candidateIDs: onlyCandidateIDs,
+  faceoffs: selectFaceoffs,
+  faceoffIDs: onlyFaceoffIDs,
+  whitelist: selectWhitelist,
+  whitelistIDs: onlyWhitelistIDs,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

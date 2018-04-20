@@ -5,10 +5,9 @@ import EthAbi from 'ethjs-abi'
 
 import * as actions from './actions'
 import * as types from './types'
+import * as epTypes from 'state/ducks/ethProvider/types'
 
-import epTypes from 'state/ducks/ethProvider/types'
 import { selectNetwork, selectRegistry } from 'state/ducks/home/selectors'
-
 import { getEthjs } from 'state/libs/provider'
 import { getBlockAndTxnFromLog } from './utils'
 
@@ -20,28 +19,6 @@ export default function* rootLogsSaga() {
 }
 
 let lastReadBlockNumber = 0
-
-function* getFreshLogs() {
-  try {
-    const registry = yield select(selectRegistry)
-    const blockRange = yield {
-      fromBlock: '0',
-      toBlock: 'latest',
-    }
-    const payload = {
-      abi: registry.abi,
-      contractAddress: registry.address,
-      eventNames: ['_Application', '_Challenge'],
-      blockRange,
-    }
-    yield call(decodeLogsSaga, { payload })
-  } catch (err) {
-    console.log('Fresh log error:', err)
-    throw new Error(err.message)
-  }
-  yield fork(pollingIntervalSaga)
-}
-
 function* pollingIntervalSaga() {
   let pollInterval = 5000
   const network = yield select(selectNetwork)
@@ -63,7 +40,25 @@ function* pollingIntervalSaga() {
     }
   }
 }
-
+function* getFreshLogs() {
+  try {
+    const registry = yield select(selectRegistry)
+    const payload = {
+      abi: registry.abi,
+      contractAddress: registry.address,
+      eventNames: ['_Application'],
+      blockRange: {
+        fromBlock: '0',
+        toBlock: 'latest',
+      },
+    }
+    yield call(decodeLogsSaga, { payload })
+  } catch (err) {
+    console.log('Fresh log error:', err)
+    throw new Error(err.message)
+  }
+  yield fork(pollingIntervalSaga)
+}
 function* pollLogsSaga(action) {
   try {
     const ethjs = yield call(getEthjs)
@@ -76,15 +71,21 @@ function* pollLogsSaga(action) {
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: ['_Application', '_Challenge'],
+      eventNames: [
+        '_Application',
+        '_Challenge',
+        '_ApplicationWhitelisted',
+        '_ChallengeSucceeded',
+        '_ChallengeFailed',
+      ],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload })
   } catch (err) {
     console.log('Poll logs error:', err)
+    yield put(actions.pollLogsFailed(err))
   }
 }
-
 function* decodeLogsSaga(action) {
   const ethjs = yield call(getEthjs)
   const { abi, contractAddress, eventNames, blockRange } = action.payload
@@ -100,12 +101,15 @@ function* decodeLogsSaga(action) {
     abi,
     blockRange
   )
+  // encoded
   const rawLogs = yield call(ethjs.getLogs, filter)
   if (rawLogs.length === 0) {
     return []
   }
+  // decoder
   const decoder = yield call(EthAbi.logDecoder, abi)
   const decodedLogs = yield call(decoder, rawLogs)
+  // consolidate
   const lawgs = yield rawLogs.map(async (log, index) => {
     const { block, tx } = await getBlockAndTxnFromLog(log, ethjs)
     const txData = {

@@ -1,4 +1,4 @@
-import types from './types'
+import * as types from './types'
 
 const sendTransactionStart = payload => ({
   type: types.SEND_TRANSACTION_START,
@@ -20,7 +20,8 @@ const clearTxn = payload => ({
   type: types.CLEAR_TXN,
   payload,
 })
-export default {
+
+export {
   sendTransactionStart,
   sendTransactionSucceeded,
   sendTransactionFailed,

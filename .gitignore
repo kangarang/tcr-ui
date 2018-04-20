@@ -5,7 +5,7 @@
 /.vscode
 /node_modules
 /build
-/tcr
+/_tcr
 
 .DS_Store
 .firebaserc

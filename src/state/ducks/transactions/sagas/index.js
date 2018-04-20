@@ -1,10 +1,10 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 
-import actions from '../actions'
-import types from '../types'
+import * as actions from '../actions'
+import * as types from '../types'
+import * as epActions from 'state/ducks/ethProvider/actions'
 
-import epActions from 'state/ducks/ethProvider/actions'
 import { selectRegistry, selectVoting, selectToken } from 'state/ducks/home/selectors'
 
 import { getEthjs, getEthersProvider } from 'state/libs/provider'

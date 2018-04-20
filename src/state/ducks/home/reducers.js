@@ -1,7 +1,8 @@
 import { fromJS } from 'immutable'
 
-import epTypes from 'state/ducks/ethProvider/types'
-import types from './types'
+import * as epTypes from '../ethProvider/types'
+import * as liTypes from '../listings/types'
+import * as types from './types'
 
 const initialState = fromJS({
   provider: {},
@@ -31,6 +32,8 @@ const initialState = fromJS({
   parameters: { minDeposit: '0', applyStageLen: '0' },
   latestTxn: {},
   abis: {},
+  listings: {},
+  byID: [],
 })
 
 function homeReducer(state = initialState, action) {
@@ -45,6 +48,14 @@ function homeReducer(state = initialState, action) {
       return state.set('abis', action.abis) // mutable
     case epTypes.SET_REGISTRY_CONTRACT:
       return state.setIn(['contracts', 'registry'], fromJS(action.payload))
+    case liTypes.SET_LISTINGS:
+      return state
+        .set('listings', fromJS(action.payload.listings))
+        .set('byID', fromJS(action.payload.byID))
+    case liTypes.UPDATE_LISTING:
+      return state.setIn(['listings', action.payload.listingHash], fromJS(action.payload))
+    // case liTypes.DELETE_KEY:
+    //   return omit(action.key, state)
     case epTypes.SET_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))

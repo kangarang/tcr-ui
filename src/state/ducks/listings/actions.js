@@ -1,4 +1,4 @@
-import types from './types'
+import * as types from './types'
 
 const updateListing = payload => ({
   type: types.UPDATE_LISTING,
@@ -15,8 +15,4 @@ const deleteKey = key => ({
   key,
 })
 
-export default {
-  updateListing,
-  setListings,
-  deleteKey,
-}
+export { updateListing, setListings, deleteKey }

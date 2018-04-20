@@ -1,4 +1,4 @@
-import types from './types'
+import * as types from './types'
 
 function setupEthereumStart(network) {
   return {
@@ -19,8 +19,4 @@ function setupEthereumFailed(payload) {
   }
 }
 
-export default {
-  setupEthereumStart,
-  setupEthereumSucceeded,
-  setupEthereumFailed,
-}
+export { setupEthereumStart, setupEthereumSucceeded, setupEthereumFailed }

@@ -39,9 +39,14 @@ class SimpleTabs extends Component {
       candidates,
       faceoffs,
       whitelist,
+
+      candidateIDs,
+      faceoffIDs,
+      whitelistIDs,
       openSidePanel,
       chooseTCR,
       handleUpdateStatus,
+      allListings,
     } = this.props
     const { value } = this.state
 
@@ -58,15 +63,15 @@ class SimpleTabs extends Component {
         {value === 0 && (
           <TabContainer>
             <FlexContainer>
-              {Object.keys(whitelist).map(k => (
+              {whitelistIDs.map(id => (
                 <ListingCard
-                  key={k}
-                  one={whitelist[k]}
+                  key={id}
+                  one={whitelist.get(id)}
                   listingType={'whitelist'}
                   openSidePanel={openSidePanel}
                   chooseTCR={chooseTCR}
                   registry={registry}
-                  tokenData={whitelist[k].tokenData}
+                  tokenData={whitelist.getIn([id, 'tokenData'])}
                 />
               ))}
             </FlexContainer>
@@ -76,15 +81,15 @@ class SimpleTabs extends Component {
         {value === 1 && (
           <TabContainer>
             <FlexContainer>
-              {Object.keys(candidates).map(k => (
+              {candidateIDs.map(id => (
                 <ListingCard
-                  key={k}
-                  one={candidates[k]}
+                  key={id}
+                  one={candidates.get(id)}
                   listingType={'candidates'}
                   openSidePanel={openSidePanel}
                   handleUpdateStatus={handleUpdateStatus}
-                  updateTrigger={candidates[k].appExpiry.expired}
-                  tokenData={candidates[k].tokenData}
+                  updateTrigger={candidates.getIn([id, 'appExpiry', 'expired'])}
+                  tokenData={candidates.getIn([id, 'tokenData'])}
                 />
               ))}
             </FlexContainer>
@@ -94,16 +99,16 @@ class SimpleTabs extends Component {
         {value === 2 && (
           <TabContainer>
             <FlexContainer>
-              {Object.keys(faceoffs).map(k => (
+              {faceoffIDs.map(id => (
                 <ListingCard
-                  key={k}
-                  one={faceoffs[k]}
+                  key={id}
+                  one={faceoffs.get(id)}
                   listingType={'faceoffs'}
                   openSidePanel={openSidePanel}
                   handleUpdateStatus={handleUpdateStatus}
-                  updateTrigger={faceoffs[k].revealExpiry.expired}
-                  revealTrigger={faceoffs[k].commitExpiry.expired}
-                  tokenData={faceoffs[k].tokenData}
+                  updateTrigger={faceoffs.getIn([id, 'revealExpiry', 'expired'])}
+                  revealTrigger={faceoffs.getIn([id, 'commitExpiry', 'expired'])}
+                  tokenData={faceoffs.getIn([id, 'tokenData'])}
                 />
               ))}
             </FlexContainer>

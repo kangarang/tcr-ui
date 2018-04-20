@@ -1,4 +1,4 @@
-import types from './types'
+import * as types from './types'
 
 function setABIs(abis) {
   return {
@@ -42,7 +42,7 @@ function updateBalancesFailed(payload) {
   }
 }
 
-export default {
+export {
   setABIs,
   setRegistryContract,
   setContracts,
