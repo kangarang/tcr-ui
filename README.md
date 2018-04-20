@@ -94,34 +94,35 @@ Deploy contracts to Main Network:
 [re-ducks](https://medium.freecodecamp.org/scaling-your-redux-app-with-ducks-6115955638be)
 
 ```
-│
+|
 ├── docs - Documentation
-|── public - Files that don't get compiled, just moved to build
-|   └── index.html - Html template file
+├── public - Files that don't get compiled, just moved to build
+|  └── index.html - Html template file
 ├── src
-|   ├── state - Redux
-|   |   ├── ducks - Redux entities
-|   |   |   ├── [Duck] - Single redux entity
-|   |   |   |   ├── sagas - Asynchronous side-effects
-|   |   |   |   ├── tests - Jest unit tests
-|   |   |   |   ├── actions.js - Action creators / plain objects
-|   |   |   |   ├── index.js - Duck root import / export
-|   |   |   |   ├── reducers.js - Pure functions / immutable.js
-|   |   |   |   ├── selectors.js - State selectors / reselect.js
-|   |   |   |   └── types.js - Action types / string constants
-|   |   |   ├── index.js - Ducks root
-|   |   |   └── reducers - Reducer combiner
-|   │   ├── libs - Framework-agnostic libraries
-|   |   ├── utils - Common utility helper functions
-|   |   └── store.js - Redux reducer and middleware injector
-|   ├── views - React
-|   |   ├── assets - Images, fonts, etc.
-|   |   ├── components - Stateless, dumb components
-|   |   ├── containers - Stateful, smart containers
-|   |   ├── translations - Language JSON dictionaries
-|   |   ├── App.js - Root React component
-|   |   └── global-styles.js - Theme / colors
-|   └── index.js - Entry point for app
+|  ├── state - Redux
+|  |  ├── ducks - Redux modules
+|  |  |  ├── [duck] - Single module
+|  |  |  |  ├── sagas - Asynchronous side-effects
+|  |  |  |  ├── tests - Jest unit tests
+|  |  |  |  ├── actions.js - Action creators / plain objects
+|  |  |  |  ├── index.js - Duck root import / export
+|  |  |  |  ├── reducers.js - Pure functions / immutable.js
+|  |  |  |  ├── selectors.js - State selectors / reselect.js
+|  |  |  |  ├── types.js - Action types / string constants
+|  |  |  |  └── utils.js - Module-specific helpers
+|  |  |  ├── index.js - Ducks root
+|  |  |  └── reducers - Reducer combiner
+|  |  ├── libs - Framework-agnostic libraries
+|  |  ├── utils - Common utility helper functions
+|  |  ├── store.js - Redux reducer and middleware injector
+|  ├── views - React
+|  |  ├── assets - Images, fonts, etc.
+|  |  ├── components - Stateless, dumb components
+|  |  ├── containers - Stateful, smart containers
+|  |  ├── translations - Language JSON dictionaries
+|  |  ├── App.js - Root React component
+|  |  └── global-styles.js - Theme / colors
+|  └── index.js - Entry point for app
 └── server.js - Express.js app
 ```
 
