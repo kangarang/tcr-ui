@@ -76,11 +76,11 @@ export async function createListing(log, blockTxn, owner) {
 
         if (tokenData) {
           tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${tokenData.address.toLowerCase()}.png`
-          console.log('tokenData', tokenData)
+          // console.log('tokenData', tokenData)
         } else {
           tokenData = {}
           tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${listingID.toLowerCase()}.png`
-          console.log('tokenData', tokenData)
+          // console.log('tokenData', tokenData)
         }
       }
     } else {

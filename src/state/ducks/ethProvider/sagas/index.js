@@ -63,7 +63,6 @@ function* updateBalancesSaga() {
     ])
 
     const totalRegistryStakeRaw = yield token.balanceOf(registry.address)
-    console.log('totalRegistryStakeRaw:', totalRegistryStakeRaw)
     const totalRegistryStake = utils.formatUnits(totalRegistryStakeRaw['0'], decimals, {
       commify: true,
     })

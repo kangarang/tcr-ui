@@ -13,12 +13,25 @@ import { getBlockAndTxnFromLog } from './utils'
 
 import _utils from './utils'
 
+let lastReadBlockNumber = 0
+
+const eventNames = [
+  '_Application',
+  '_Challenge',
+  '_ApplicationWhitelisted',
+  '_ApplicationRemoved',
+  '_ListingRemoved',
+  '_ListingWithdrawn',
+  '_TouchAndRemoved',
+  '_ChallengeFailed',
+  '_ChallengeSucceeded',
+  '_RewardClaimed',
+]
 export default function* rootLogsSaga() {
   yield takeLatest(epTypes.SET_CONTRACTS, getFreshLogs)
   yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
 }
 
-let lastReadBlockNumber = 0
 function* pollingIntervalSaga() {
   let pollInterval = 5000
   const network = yield select(selectNetwork)
@@ -46,14 +59,7 @@ function* getFreshLogs() {
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: [
-        '_Application',
-        '_Challenge',
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ChallengeSucceeded',
-        '_ChallengeFailed',
-      ],
+      eventNames,
       blockRange: {
         fromBlock: '0',
         toBlock: 'latest',
@@ -66,6 +72,7 @@ function* getFreshLogs() {
   }
   yield fork(pollingIntervalSaga)
 }
+
 function* pollLogsSaga(action) {
   try {
     const ethjs = yield call(getEthjs)
@@ -74,18 +81,10 @@ function* pollLogsSaga(action) {
 
     const registry = yield select(selectRegistry)
     const blockRange = action.payload
-
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: [
-        '_Application',
-        '_Challenge',
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ChallengeSucceeded',
-        '_ChallengeFailed',
-      ],
+      eventNames,
       blockRange,
     }
     yield call(decodeLogsSaga, { payload })
@@ -94,6 +93,7 @@ function* pollLogsSaga(action) {
     yield put(actions.pollLogsFailed(err))
   }
 }
+
 function* decodeLogsSaga(action) {
   try {
     const ethjs = yield call(getEthjs)
@@ -124,7 +124,7 @@ function* decodeLogsSaga(action) {
       const txData = {
         txHash: tx.hash,
         blockHash: block.hash,
-        ts: block.timestamp,
+        ts: block.timestamp.toString(),
       }
       const logData = decodedLogs[index]
       return {

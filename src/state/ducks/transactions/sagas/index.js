@@ -27,8 +27,10 @@ export function* handleSendTransaction(action) {
     // convert Objects (BNs) -> String
     const newArgs = args.map(rg => {
       if (_.isObject(rg)) {
+        // console.log('is object')
         return rg.toString(10)
       } else if (_.isString(rg)) {
+        // console.log('is string')
         return rg
       }
       // TODO: more typechecking
@@ -79,7 +81,7 @@ export function* registryTxnSaga(action) {
         data: args[2], // data (address)
       })
       // hash the string
-      finalArgs[0] = getListingHash(args[0])
+      finalArgs[0] = yield call(getListingHash, args[0])
       // use ipfs CID as the _data field in the application
       finalArgs[2] = fileHash
     }
@@ -101,7 +103,7 @@ export function* sendTransactionSaga(contract, method, args) {
 
     // ethers: waitForTransaction
     const ethersProvider = yield call(getEthersProvider)
-    const minedTxn = yield ethersProvider.waitForTransaction(txHash).then(txn => txn)
+    const minedTxn = yield ethersProvider.waitForTransaction(txHash).then(tx => tx)
     console.log('minedTxn:', minedTxn)
 
     // ethjs: getTransactionReceipt
@@ -121,7 +123,7 @@ export function* sendTransactionSaga(contract, method, args) {
       // yield call(delay, 5000)
       // yield put(actions.clearTxn(txReceipt))
     } else {
-      throw new Error('Transaction failed')
+      throw new Error(JSON.stringify(txReceipt))
     }
   } catch (error) {
     // MetaMask `reject`
