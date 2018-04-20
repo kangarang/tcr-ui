@@ -33,9 +33,9 @@ import { convertedToBaseUnit } from 'state/libs/units'
 import Stats from 'views/containers/Stats'
 import Tabs from 'views/containers/Tabs'
 import Apply from 'views/containers/Transaction/Apply'
-// import Challenge from 'views/containers/Transaction/Challenge'
-// import CommitVote from 'views/containers/Transaction/CommitVote'
-// import RevealVote from 'views/containers/Transaction/RevealVote'
+import Challenge from 'views/containers/Transaction/Challenge'
+import CommitVote from 'views/containers/Transaction/CommitVote'
+import RevealVote from 'views/containers/Transaction/RevealVote'
 
 import AppBar from 'views/components/AppBar'
 
@@ -73,30 +73,30 @@ class Home extends Component {
     })
   }
 
-  // chooseTCR = one => {
-  //   this.props.onChooseTCR(one)
-  // }
+  chooseTCR = one => {
+    this.props.onChooseTCR(one)
+  }
 
-  // handleFileInput = e => {
-  //   const file = e.target.files[0]
-  //   const fr = new window.FileReader()
+  handleFileInput = e => {
+    const file = e.target.files[0]
+    const fr = new window.FileReader()
 
-  //   fr.onload = () => {
-  //     const contents = fr.result
-  //     const json = JSON.parse(contents)
+    fr.onload = () => {
+      const contents = fr.result
+      const json = JSON.parse(contents)
 
-  //     try {
-  //       this.setState({
-  //         fileInput: json,
-  //       })
-  //     } catch (error) {
-  //       throw new Error('Invalid Commit JSON file')
-  //     }
+      try {
+        this.setState({
+          fileInput: json,
+        })
+      } catch (error) {
+        throw new Error('Invalid Commit JSON file')
+      }
 
-  //     this.getVoterReward(json.pollID, json.salt)
-  //   }
-  //   fr.readAsText(file)
-  // }
+      this.getVoterReward(json.pollID, json.salt)
+    }
+    fr.readAsText(file)
+  }
 
   handleInputChange = (e, t) => {
     this.setState({
@@ -133,7 +133,7 @@ class Home extends Component {
           {...this.props}
         />
 
-        {/* <Challenge
+        <Challenge
           opened={this.state.opened === 'challenge'}
           closeSidePanel={this.closeSidePanel}
           handleInputChange={this.handleInputChange}
@@ -141,9 +141,9 @@ class Home extends Component {
           handleChallenge={this.handleChallenge}
           selectedOne={this.state.selectedOne}
           {...this.props}
-        /> */}
+        />
 
-        {/* {this.state.opened === 'commitVote' && (
+        {this.state.opened === 'commitVote' && (
           <CommitVote
             opened={this.state.opened === 'commitVote'}
             closeSidePanel={this.closeSidePanel}
@@ -154,9 +154,9 @@ class Home extends Component {
             handleRequestVotingRights={this.handleRequestVotingRights}
             {...this.props}
           />
-        )} */}
+        )}
 
-        {/* {this.state.opened === 'revealVote' && (
+        {this.state.opened === 'revealVote' && (
           <RevealVote
             opened={this.state.opened === 'revealVote'}
             closeSidePanel={this.closeSidePanel}
@@ -166,7 +166,7 @@ class Home extends Component {
             handleRevealVote={this.handleRevealVote}
             {...this.props}
           />
-        )} */}
+        )}
       </div>
     )
   }
@@ -192,43 +192,53 @@ class Home extends Component {
     const args = [this.state.listingID, numTokens, this.state.data]
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
-  // handleChallenge = () => {
-  //   const args = [this.state.selectedOne.listingHash, this.state.selectedOne.listingID]
-  //   this.props.onSendTransaction({ methodName: 'challenge', args })
-  // }
-  // handleRequestVotingRights = () => {
-  //   const args = [this.state.numTokens]
-  //   this.props.onSendTransaction({ methodName: 'requestVotingRights', args })
-  // }
-  // handleCommitVote = voteOption => {
-  //   const args = [
-  //     this.state.selectedOne.challengeID,
-  //     voteOption,
-  //     this.state.numTokens,
-  //     this.state.selectedOne.listingID,
-  //   ]
-  //   this.props.onSendTransaction({ methodName: 'commitVote', args })
-  // }
-  // handleRevealVote = () => {
-  //   const args = [
-  //     this.state.selectedOne.challengeID,
-  //     this.state.fileInput.voteOption,
-  //     this.state.fileInput.salt,
-  //   ]
-  //   this.props.onSendTransaction({ methodName: 'revealVote', args })
-  // }
-  // handleUpdateStatus = listing => {
-  //   const args = [listing.listingHash]
-  //   this.props.onSendTransaction({ methodName: 'updateStatus', args })
-  // }
-  // handleRescueTokens = listing => {
-  //   const args = [listing.challengeID]
-  //   this.props.onSendTransaction({ methodName: 'rescueTokens', args })
-  // }
-  // handleClaimVoterReward = () => {
-  //   const args = [this.state.selectedOne.challengeID, this.state.fileInput.salt]
-  //   this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
-  // }
+  handleChallenge = () => {
+    const args = [
+      this.state.selectedOne.get('listingHash'),
+      this.state.selectedOne.get('listingID'),
+    ]
+    this.props.onSendTransaction({ methodName: 'challenge', args })
+  }
+  handleRequestVotingRights = () => {
+    const args = [this.state.numTokens]
+    this.props.onSendTransaction({ methodName: 'requestVotingRights', args })
+  }
+  handleCommitVote = voteOption => {
+    const args = [
+      this.state.selectedOne.get('challengeID'),
+      voteOption,
+      this.state.numTokens,
+      this.state.selectedOne.get('listingID'),
+    ]
+    const commitEndDate = this.state.selectedOne.getIn(['commitExpiry', 'timestamp'])
+    const revealEndDate = this.state.selectedOne.getIn(['revealExpiry', 'timestamp'])
+    this.props.onSendTransaction({
+      methodName: 'commitVote',
+      args,
+      commitEndDate,
+      revealEndDate,
+    })
+  }
+  handleRevealVote = () => {
+    const args = [
+      this.state.selectedOne.get('challengeID'),
+      this.state.fileInput.voteOption,
+      this.state.fileInput.salt,
+    ]
+    this.props.onSendTransaction({ methodName: 'revealVote', args })
+  }
+  handleUpdateStatus = listing => {
+    const args = [listing.get('listingHash')]
+    this.props.onSendTransaction({ methodName: 'updateStatus', args })
+  }
+  handleRescueTokens = listing => {
+    const args = [listing.get('challengeID')]
+    this.props.onSendTransaction({ methodName: 'rescueTokens', args })
+  }
+  handleClaimVoterReward = () => {
+    const args = [this.state.selectedOne.get('challengeID'), this.state.fileInput.salt]
+    this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
+  }
 }
 
 function mapDispatchToProps(dispatch) {

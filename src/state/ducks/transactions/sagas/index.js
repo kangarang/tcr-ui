@@ -94,7 +94,7 @@ export function* registryTxnSaga(action) {
 // TODO: minimize # of dependencies
 export function* sendTransactionSaga(contract, method, args) {
   try {
-    console.log('args:', args)
+    console.log(method, 'args:', args)
     // ethjs-contract: sendTransaction
     const txHash = yield contract[method](...args)
     yield put(actions.txnMining(txHash))
@@ -125,7 +125,11 @@ export function* sendTransactionSaga(contract, method, args) {
     }
   } catch (error) {
     // MetaMask `reject`
-    if (error.toString().includes('MetaMask Tx Signature: User denied transaction signature')) {
+    if (
+      error
+        .toString()
+        .includes('MetaMask Tx Signature: User denied transaction signature')
+    ) {
       console.log('MetaMask tx denied')
       return false
     }

@@ -26,7 +26,11 @@ function* abisSaga() {
     const { id, registry, token, voting, parameterizer } = data
     const abis = {
       id,
-      registry: { abi: registry.abi, bytecode: registry.bytecode, networks: registry.networks },
+      registry: {
+        abi: registry.abi,
+        bytecode: registry.bytecode,
+        networks: registry.networks,
+      },
       token: { abi: token.abi, bytecode: token.bytecode },
       voting: { abi: voting.abi, bytecode: voting.bytecode },
       parameterizer: { abi: parameterizer.abi, bytecode: parameterizer.bytecode },
@@ -72,8 +76,22 @@ function* contractsSaga(action) {
     const registry = action.payload
 
     let [token, voting, parameterizer] = yield all([
-      call(setupContract, abis.token.abi, abis.token.bytecode, account, registry, 'token'),
-      call(setupContract, abis.voting.abi, abis.voting.bytecode, account, registry, 'voting'),
+      call(
+        setupContract,
+        abis.token.abi,
+        abis.token.bytecode,
+        account,
+        registry,
+        'token'
+      ),
+      call(
+        setupContract,
+        abis.voting.abi,
+        abis.voting.bytecode,
+        account,
+        registry,
+        'voting'
+      ),
       call(
         setupContract,
         abis.parameterizer.abi,

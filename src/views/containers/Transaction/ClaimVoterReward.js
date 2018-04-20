@@ -1,5 +1,5 @@
 import React from 'react'
-import translate from 'translations'
+import translate from 'views/translations'
 
 import { SideSplit, SideText } from 'views/containers/Transaction/components'
 
@@ -39,7 +39,9 @@ export default ({
 
     {miningStatus && (
       <div>
-        <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
+        <Button
+          href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
+        >
           {'etherscan'}
         </Button>
         <TxnProgress />

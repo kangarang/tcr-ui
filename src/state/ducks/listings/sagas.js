@@ -1,25 +1,33 @@
-import { select, takeLatest, call, put } from 'redux-saga/effects'
+import { takeLatest, take, fork, call, put, select } from 'redux-saga/effects'
+
+import * as logsTypes from '../logs/types'
+import { selectAllListings } from '../home/selectors'
 
 import * as actions from './actions'
-import * as homeActions from 'state/ducks/home/actions'
-import * as liActions from 'state/ducks/listings/actions'
-
-import * as logsTypes from 'state/ducks/logs/types'
-import * as epTypes from 'state/ducks/ethProvider/types'
-
 import { convertDecodedLogs } from './utils'
 
 export default function* rootListingsSaga() {
-  yield takeLatest(logsTypes.POLL_LOGS_SUCCEEDED, createListingsSaga)
+  // yield takeLatest(logsTypes.POLL_LOGS_SUCCEEDED, createListingsSaga)
+  yield fork(createListingsSaga)
 }
 
-function* createListingsSaga(action) {
-  const logs = action.payload
-  console.log(logs.length, 'logs:', logs)
+function* createListingsSaga() {
+  try {
+    const allListings = yield select(selectAllListings)
+    while (true) {
+      const action = yield take(logsTypes.POLL_LOGS_SUCCEEDED)
+      const logs = action.payload
+      console.log(logs.length, 'logs:', logs)
 
-  const listings = yield call(convertDecodedLogs, logs, {})
-  console.log('listings:', listings)
+      const listings = yield call(convertDecodedLogs, logs, {})
+      console.log('listings:', listings)
 
-  const byID = Object.keys(listings)
-  yield put(liActions.setListings({ listings, byID }))
+      const byID = Object.keys(listings)
+      if (byID.length > 0) {
+        yield put(actions.setListings({ listings, byID }))
+      }
+    }
+  } catch (error) {
+    console.log('createListingsSaga error:', error)
+  }
 }

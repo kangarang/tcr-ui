@@ -8,7 +8,9 @@ export function findGolem(listingHash, listings) {
   return listings[listingHash]
 }
 export function findChallenge(challengeID, listings) {
-  return Object.values(listings).filter(li => li.challengeID.toString() === challengeID.toString())
+  return Object.values(listings).filter(
+    li => li.challengeID.toString() === challengeID.toString()
+  )
 }
 
 // Inputs: decodedLogs: Array, currentListings: Object
@@ -67,7 +69,9 @@ export async function createListing(log, blockTxn, owner) {
 
       if (isAddress(listingID.toLowerCase())) {
         // see: https://github.com/ethereum-lists/tokens
-        const tokenList = await ipfsGetData('QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig')
+        const tokenList = await ipfsGetData(
+          'QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig'
+        )
         tokenData = find({ address: listingID }, tokenList)
 
         if (tokenData) {

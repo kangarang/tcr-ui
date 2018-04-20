@@ -46,7 +46,6 @@ class SimpleTabs extends Component {
       openSidePanel,
       chooseTCR,
       handleUpdateStatus,
-      allListings,
     } = this.props
     const { value } = this.state
 

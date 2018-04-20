@@ -6,7 +6,10 @@ let ethersProvider = undefined
 // return local rpc otherwise
 // set global ethersProvider
 async function setEthersProvider(chainId) {
-  if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !== 'undefined') {
+  if (
+    typeof window.web3 !== 'undefined' &&
+    typeof window.web3.currentProvider !== 'undefined'
+  ) {
     ethersProvider = new providers.Web3Provider(window.web3.currentProvider, { chainId })
     return ethersProvider
   }
@@ -26,7 +29,10 @@ let ethjs = undefined
 // prefer metamask provider
 // return local rpc otherwise
 function setProvider() {
-  if (typeof window.web3 !== 'undefined' && typeof window.web3.currentProvider !== 'undefined') {
+  if (
+    typeof window.web3 !== 'undefined' &&
+    typeof window.web3.currentProvider !== 'undefined'
+  ) {
     // metamask
     return window.web3.currentProvider
   }

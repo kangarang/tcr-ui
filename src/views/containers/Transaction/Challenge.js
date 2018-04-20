@@ -1,5 +1,5 @@
 import React from 'react'
-import translate from 'translations'
+import translate from 'views/translations'
 
 import { MarginDiv } from 'views/components/StyledHome'
 import Button from 'views/components/Button'
@@ -30,10 +30,10 @@ export default ({
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
       <SidePanelSeparator />
 
-      <SideText text={selectedOne && selectedOne.listingID} />
+      <SideText text={selectedOne && selectedOne.get('listingID')} />
 
       <MarginDiv>
-        <Countdown end={selectedOne && selectedOne.appExpiry.date} />
+        <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
       </MarginDiv>
 
       <SidePanelSeparator />
@@ -42,7 +42,7 @@ export default ({
 
       <TotalAmount
         copy={'Total Stake'}
-        minDeposit={parameters.minDeposit}
+        minDeposit={parameters.get('minDeposit')}
         tokenSymbol={tcr.tokenSymbol}
       />
 
@@ -56,7 +56,9 @@ export default ({
         </Button>
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
+            <Button
+              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
+            >
               {'etherscan'}
             </Button>
             <TxnProgress />

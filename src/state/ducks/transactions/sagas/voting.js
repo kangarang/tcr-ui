@@ -20,7 +20,11 @@ export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
-    const tokens = yield call(convertedToBaseUnit, action.payload.args[0], tcr.tokenDecimals)
+    const tokens = yield call(
+      convertedToBaseUnit,
+      action.payload.args[0],
+      tcr.tokenDecimals
+    )
     const args = [tokens]
     yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
   } catch (error) {
@@ -34,7 +38,7 @@ export function* commitVoteSaga(action) {
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
 
-    const { args } = action.payload
+    const { args, commitEndDate, revealEndDate } = action.payload
     const pollID = args[0]
     const voteOption = args[1]
     const numTokens = yield call(convertedToBaseUnit, args[2], tcr.tokenDecimals)
@@ -44,16 +48,18 @@ export function* commitVoteSaga(action) {
     const salt = randInt(1e6, 1e8)
 
     // format args
-    const secretHash = getVoteSaltHash(voteOption, salt.toString(10))
-    const prevPollID = yield voting.getInsertPointForNumTokens(account, numTokens, pollID)
-    const finalArgs = [pollID, secretHash, numTokens, prevPollID.toString(10)]
-
-    // grab the poll from the mapping
-    const pollStruct = yield voting.pollMap(pollID)
+    const secretHash = yield call(getVoteSaltHash, voteOption, salt.toString(10))
+    const prevPollID = yield call(
+      voting.getInsertPointForNumTokens,
+      account,
+      numTokens,
+      pollID
+    )
+    const finalArgs = [pollID, secretHash, numTokens, prevPollID['0'].toString(10)]
 
     // record expiry dates
-    const commitEndDateString = getEndDateString(pollStruct[0].toNumber())
-    const revealEndDateString = getEndDateString(pollStruct[1].toNumber())
+    const commitEndDateString = getEndDateString(commitEndDate)
+    const revealEndDateString = getEndDateString(revealEndDate)
 
     const json = {
       voteOption,
@@ -66,9 +72,9 @@ export function* commitVoteSaga(action) {
       secretHash,
       account,
     }
-
-    const listingDashed = data.replace(' ', '-')
-    const filename = `${pollID}-${listingDashed}-${numTokens}.json`
+    const yon = voteOption === '1' ? 'for' : 'against'
+    // const listingDashed = data.replace(' ', '-')
+    const filename = `${pollID}-${yon}.json`
 
     // TODO: local storage
     saveFile(json, filename)

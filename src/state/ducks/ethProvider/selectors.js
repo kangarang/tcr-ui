@@ -37,8 +37,12 @@ export const selectAllContracts = createSelector(selectEthProvider, ethProviderS
 export const selectRegistry = createSelector(selectAllContracts, contracts =>
   contracts.get('registry')
 )
-export const selectToken = createSelector(selectAllContracts, contracts => contracts.get('token'))
-export const selectVoting = createSelector(selectAllContracts, contracts => contracts.get('voting'))
+export const selectToken = createSelector(selectAllContracts, contracts =>
+  contracts.get('token')
+)
+export const selectVoting = createSelector(selectAllContracts, contracts =>
+  contracts.get('voting')
+)
 export const selectParameterizer = createSelector(selectAllContracts, contracts =>
   contracts.get('parameterizer')
 )

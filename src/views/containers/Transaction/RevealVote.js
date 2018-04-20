@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import translate from 'translations'
+import translate from 'views/translations'
 
 import { baseToConvertedUnit } from 'state/libs/units'
 
@@ -23,22 +23,26 @@ export default class RevealVote extends Component {
   }
 
   getCommitHash = async () => {
-    const poll = await this.props.voting.functions.pollMap(this.props.selectedOne.challengeID)
+    const poll = await this.props.voting.pollMap(
+      this.props.selectedOne.get('challengeID')
+    )
     const votesFor = baseToConvertedUnit(poll[3], this.props.tcr.tokenDecimals)
     const votesAgainst = baseToConvertedUnit(poll[4], this.props.tcr.tokenDecimals)
 
-    const numTokensRaw = await this.props.voting.functions.getNumTokens(
+    const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
-      this.props.selectedOne.challengeID
-    )
+      this.props.selectedOne.get('challengeID')
+    ))['0']
     const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
 
-    const commitHash = await this.props.voting.functions.getCommitHash(
+    const commitHash = (await this.props.voting.getCommitHash(
       this.props.account,
-      this.props.selectedOne.challengeID
-    )
+      this.props.selectedOne.get('challengeID')
+    ))['0']
 
-    if (commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
+    if (
+      commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
+    ) {
       this.setState({
         commitHash,
         numTokens,
@@ -62,9 +66,9 @@ export default class RevealVote extends Component {
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
         <SideSplit
           leftTitle={'Voting Rights'}
-          leftItem={balances.votingRights}
+          leftItem={balances.get('votingRights')}
           rightTitle={'Locked Tokens'}
-          rightItem={balances.lockedTokens}
+          rightItem={balances.get('lockedTokens')}
         />
         <SideSplit
           leftTitle={'Votes For'}
@@ -76,11 +80,11 @@ export default class RevealVote extends Component {
           leftTitle={'Tokens Committed'}
           leftItem={this.state.numTokens}
           rightTitle={'POLL ID'}
-          rightItem={selectedOne && selectedOne.challengeID}
+          rightItem={selectedOne && selectedOne.get('challengeID')}
         />
 
         <SideText small text={'REVEAL VOTE'} />
-        <SideText small text={selectedOne && selectedOne.listingID} />
+        <SideText small text={selectedOne && selectedOne.get('listingID')} />
 
         <SidePanelSeparator />
 
@@ -98,7 +102,9 @@ export default class RevealVote extends Component {
         </MarginDiv>
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
+            <Button
+              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
+            >
               {'etherscan'}
             </Button>
             <TxnProgress />

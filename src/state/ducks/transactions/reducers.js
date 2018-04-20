@@ -18,7 +18,9 @@ export default (state = initialState, action) => {
     case types.SEND_TRANSACTION_FAILED:
       return state.set('error', fromJS(action.payload.error))
     case types.CLEAR_TXN:
-      return state.set('miningStatus', fromJS(false)).set('latestTxn', fromJS({ hash: '' }))
+      return state
+        .set('miningStatus', fromJS(false))
+        .set('latestTxn', fromJS({ hash: '' }))
     default:
       return state
   }

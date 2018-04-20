@@ -46,7 +46,13 @@ function* getFreshLogs() {
     const payload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: ['_Application'],
+      eventNames: [
+        '_Application',
+        '_Challenge',
+        '_ApplicationWhitelisted',
+        '_ChallengeSucceeded',
+        '_ChallengeFailed',
+      ],
       blockRange: {
         fromBlock: '0',
         toBlock: 'latest',
@@ -87,43 +93,49 @@ function* pollLogsSaga(action) {
   }
 }
 function* decodeLogsSaga(action) {
-  const ethjs = yield call(getEthjs)
-  const { abi, contractAddress, eventNames, blockRange } = action.payload
-  const indexedFilterValues = {
-    // listingHash:
-    //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
-  }
-  const filter = yield call(
-    _abi.getFilter,
-    contractAddress,
-    eventNames,
-    indexedFilterValues,
-    abi,
-    blockRange
-  )
-  // encoded
-  const rawLogs = yield call(ethjs.getLogs, filter)
-  if (rawLogs.length === 0) {
-    return []
-  }
-  // decoder
-  const decoder = yield call(EthAbi.logDecoder, abi)
-  const decodedLogs = yield call(decoder, rawLogs)
-  // consolidate
-  const lawgs = yield rawLogs.map(async (log, index) => {
-    const { block, tx } = await getBlockAndTxnFromLog(log, ethjs)
-    const txData = {
-      txHash: tx.hash,
-      blockHash: block.hash,
-      ts: block.timestamp,
+  try {
+    const ethjs = yield call(getEthjs)
+    const { abi, contractAddress, eventNames, blockRange } = action.payload
+    const indexedFilterValues = {
+      // listingHash:
+      //   '0xdea4eb006d5cbb57e2d81cf12458b37f37b2f0885b1ed39fbf4f087155318849',
     }
-    const logData = decodedLogs[index]
-    return {
-      logData,
-      txData,
-      eventName: logData._eventName,
-      msgSender: tx.from,
+    const filter = yield call(
+      _abi.getFilter,
+      contractAddress,
+      eventNames,
+      indexedFilterValues,
+      abi,
+      blockRange
+    )
+    // encoded
+    const rawLogs = yield call(ethjs.getLogs, filter)
+    if (rawLogs.length === 0) {
+      return []
     }
-  })
-  yield put(actions.pollLogsSucceeded(lawgs))
+    // decoder
+    const decoder = yield call(EthAbi.logDecoder, abi)
+    const decodedLogs = yield call(decoder, rawLogs)
+    // consolidate
+    const lawgs = yield rawLogs.map(async (log, index) => {
+      const { block, tx } = await getBlockAndTxnFromLog(log, ethjs)
+      const txData = {
+        txHash: tx.hash,
+        blockHash: block.hash,
+        ts: block.timestamp,
+      }
+      const logData = decodedLogs[index]
+      return {
+        logData,
+        txData,
+        eventName: logData._eventName,
+        msgSender: tx.from,
+      }
+    })
+    if (lawgs.length > 0) {
+      yield put(actions.pollLogsSucceeded(lawgs))
+    }
+  } catch (error) {
+    console.log('logs saga error:', error)
+  }
 }
