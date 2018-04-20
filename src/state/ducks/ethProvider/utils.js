@@ -1,5 +1,5 @@
 import EthContract from 'ethjs-contract'
-import { getEthjs } from './provider'
+import { getEthjs } from 'state/libs/provider'
 
 const getDefaults = account => ({
   from: account,

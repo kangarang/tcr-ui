@@ -3,23 +3,19 @@ import { delay } from 'redux-saga'
 
 import EthAbi from 'ethjs-abi'
 
-import actions from '../actions'
-import types from '../types'
-import homeActions from 'state/ducks/home/actions'
-import homeTypes from 'state/ducks/home/types'
-
-import {
-  selectNetwork,
-  selectRegistry,
-  selectVoting,
-  selectAllListings,
-} from 'state/ducks/home/selectors'
+import ethProviderTypes from 'state/ducks/ethProvider/types'
+import { selectNetwork, selectRegistry } from 'state/ducks/home/selectors'
 
 import { getEthjs } from 'state/libs/provider'
-import _abi from 'state/utils/_abi'
+// import { getBlockAndTxnFromLog } from './utils'
+
+import actions from './actions'
+import types from './types'
+
+import _abi from './_abi'
 
 export default function* logsSaga() {
-  yield takeLatest(homeTypes.SET_CONTRACTS, getFreshLogs)
+  yield takeLatest(ethProviderTypes.SET_CONTRACTS, getFreshLogs)
   yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
 }
 
@@ -112,4 +108,8 @@ function* decodeLogsSaga(action) {
   const decoder = yield call(EthAbi.logDecoder, abi)
   const decodedLogs = yield call(decoder, rawLogs)
   console.log('decodedLogs:', decodedLogs)
+  // const listings = yield decodedLogs.map(async dLog => {
+  //   const blockTxn = await getBlockAndTxnFromLog(dLog, )
+  //   const listing = await createListing(dLog, blockTxn, tx.from)
+  // })
 }

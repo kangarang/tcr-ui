@@ -1,21 +1,9 @@
 import types from './types'
 
-function setupEthereumStart(network) {
-  return {
-    type: types.SETUP_ETHEREUM_START,
-    network,
-  }
-}
 function setABIs(abis) {
   return {
     type: types.SET_ABIS,
     abis,
-  }
-}
-function setupEthereumSucceeded(payload) {
-  return {
-    type: types.SETUP_ETHEREUM_SUCCEEDED,
-    payload,
   }
 }
 function setRegistryContract(payload) {
@@ -36,14 +24,6 @@ function chooseTCR(payload) {
     payload,
   }
 }
-
-function pollLogsStart(payload) {
-  return {
-    type: types.POLL_LOGS_START,
-    payload,
-  }
-}
-
 function updateBalancesStart() {
   return {
     type: types.UPDATE_BALANCES_START,
@@ -55,15 +35,19 @@ function updateBalancesSucceeded(payload) {
     payload,
   }
 }
+function updateBalancesFailed(payload) {
+  return {
+    type: types.UPDATE_BALANCES_FAILED,
+    payload,
+  }
+}
 
 export default {
-  setupEthereumStart,
   setABIs,
-  setupEthereumSucceeded,
   setRegistryContract,
   setContracts,
   chooseTCR,
-  pollLogsStart,
-  updateBalancesSucceeded,
   updateBalancesStart,
+  updateBalancesSucceeded,
+  updateBalancesFailed,
 }

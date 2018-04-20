@@ -1,25 +1,17 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 import _ from 'lodash/fp'
-// import utils from 'ethers/utils'
 
 import homeActions from 'state/ducks/home/actions'
-import {
-  selectRegistry,
-  selectVoting,
-  selectToken,
-  selectAccount,
-} from 'state/ducks/home/selectors'
+import { selectRegistry, selectVoting, selectToken } from 'state/ducks/home/selectors'
 
-import { getEthjs } from 'state/libs/provider'
-import _abi from 'state/utils/_abi'
+import { getEthjs, getEthersProvider } from 'state/libs/provider'
+import { ipfsAddObject } from 'state/libs/ipfs'
+import { getListingHash } from 'state/libs/values'
 
 import actions from '../actions'
 import types from '../types'
 
-import { getEthersProvider } from 'state/libs/provider'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
-import { registryTxnSaga } from './registry'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
@@ -75,9 +67,34 @@ export function* handleSendTransaction(action) {
   }
 }
 
+export function* registryTxnSaga(action) {
+  try {
+    const registry = yield select(selectRegistry)
+    const { methodName, args } = action.payload
+
+    let finalArgs = _.clone(args)
+    if (methodName === 'apply') {
+      const fileHash = yield call(ipfsAddObject, {
+        id: args[0], // listing string (name)
+        data: args[2], // data (address)
+      })
+      // hash the string
+      finalArgs[0] = getListingHash(args[0])
+      // use ipfs CID as the _data field in the application
+      finalArgs[2] = fileHash
+    }
+    console.log('finalArgs', finalArgs)
+
+    yield call(sendTransactionSaga, registry, methodName, finalArgs)
+  } catch (error) {
+    console.log('registryTxn error', error)
+  }
+}
+
 // TODO: minimize # of dependencies
 export function* sendTransactionSaga(contract, method, args) {
   try {
+    console.log('args:', args)
     // ethjs-contract: sendTransaction
     const txHash = yield contract[method](...args)
     yield put(actions.txnMining(txHash))

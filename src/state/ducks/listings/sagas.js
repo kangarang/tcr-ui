@@ -1,10 +1,9 @@
 import { select, takeLatest, call, put } from 'redux-saga/effects'
 import pickBy from 'lodash/fp/pickBy'
 
-import types from 'state/ducks/home/types'
 import actions from './actions'
-
 import homeActions from 'state/ducks/home/actions'
+import types from 'state/ducks/ethProvider/types'
 import { selectRegistry } from 'state/ducks/home/selectors'
 
 import {

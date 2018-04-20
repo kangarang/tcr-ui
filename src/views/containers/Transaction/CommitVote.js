@@ -30,7 +30,7 @@ export default class CommitVote extends Component {
       this.props.account,
       this.props.selectedOne.challengeID
     )
-    const numTokens = baseToConvertedUnit(numTokensRaw, 18)
+    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
     if (commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000') {
       this.setState({
         commitHash,

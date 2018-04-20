@@ -1,6 +1,6 @@
 import { select, call, takeEvery } from 'redux-saga/effects'
 
-import { selectAccount, selectVoting } from 'state/ducks/home/selectors'
+import { selectTCR, selectAccount, selectVoting } from 'state/ducks/home/selectors'
 
 import { convertedToBaseUnit } from 'state/libs/units'
 import { getVoteSaltHash, randInt } from 'state/libs/values'
@@ -19,7 +19,8 @@ export default function* voteSaga() {
 export function* requestVotingRightsSaga(action) {
   try {
     const voting = yield select(selectVoting)
-    const tokens = yield call(convertedToBaseUnit, action.payload.args[0], 18)
+    const tcr = yield select(selectTCR)
+    const tokens = yield call(convertedToBaseUnit, action.payload.args[0], tcr.tokenDecimals)
     const args = [tokens]
     yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
   } catch (error) {
@@ -31,11 +32,12 @@ export function* commitVoteSaga(action) {
   try {
     const account = yield select(selectAccount)
     const voting = yield select(selectVoting)
+    const tcr = yield select(selectTCR)
 
     const { args } = action.payload
     const pollID = args[0]
     const voteOption = args[1]
-    const numTokens = yield call(convertedToBaseUnit, args[2], 18)
+    const numTokens = yield call(convertedToBaseUnit, args[2], tcr.tokenDecimals)
     const data = args[3]
 
     // TODO: improve

@@ -6,7 +6,13 @@ import { getEthjs } from 'state/libs/provider'
 import actions from '../actions'
 import types from '../types'
 
-import { selectTCR, selectAccount, selectRegistry, selectToken, selectVoting } from '../selectors'
+import {
+  selectTCR,
+  selectAccount,
+  selectRegistry,
+  selectToken,
+  selectVoting,
+} from 'state/ducks/home/selectors'
 
 export default function* balancesSaga() {
   yield takeEvery(types.UPDATE_BALANCES_START, updateBalancesSaga)

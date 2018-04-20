@@ -85,8 +85,8 @@ export default ({
           </div>
         ) : (
           <div>
-            {BN(balances.get('registryAllowance')).lt(
-              BN(baseToConvertedUnit(parameters.get('minDeposit'), 18))
+            {/* {BN(balances.get('registryAllowance')).lt(
+              BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.tokenDecimals))
             ) ? (
               <div>
                 <Text color="red">{'YOU NEED TO APPROVE'}</Text>
@@ -98,7 +98,7 @@ export default ({
               <Button onClick={showApprove} mode="">
                 {'Show approve'}
               </Button>
-            )}
+            )} */}
           </div>
         )}
         {miningStatus && (

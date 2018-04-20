@@ -5,10 +5,11 @@ import { SET_CONTRACTS } from 'actions/home'
 import { setListings } from 'actions/listings'
 import { selectAllListings, selectRegistry, selectProvider, selectVoting } from 'selectors'
 
+import types from '../types'
 import { decodeLog, convertDecodedLogs } from 'libs/logs'
 
 export default function* rootEventsSaga() {
-  yield takeLatest(SET_CONTRACTS, setupEventChannels)
+  yield takeLatest(types.SET_CONTRACTS, setupEventChannels)
 }
 
 function* setupEventChannels() {

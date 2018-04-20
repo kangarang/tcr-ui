@@ -24,14 +24,14 @@ export default class RevealVote extends Component {
 
   getCommitHash = async () => {
     const poll = await this.props.voting.functions.pollMap(this.props.selectedOne.challengeID)
-    const votesFor = baseToConvertedUnit(poll[3], 18)
-    const votesAgainst = baseToConvertedUnit(poll[4], 18)
+    const votesFor = baseToConvertedUnit(poll[3], this.props.tcr.tokenDecimals)
+    const votesAgainst = baseToConvertedUnit(poll[4], this.props.tcr.tokenDecimals)
 
     const numTokensRaw = await this.props.voting.functions.getNumTokens(
       this.props.account,
       this.props.selectedOne.challengeID
     )
-    const numTokens = baseToConvertedUnit(numTokensRaw, 18)
+    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
 
     const commitHash = await this.props.voting.functions.getCommitHash(
       this.props.account,

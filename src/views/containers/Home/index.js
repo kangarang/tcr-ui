@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect'
 
 import actions from 'state/ducks/home/actions'
 import txActions from 'state/ducks/transactions/actions'
+import epActions from 'state/ducks/ethProvider/actions'
 import {
   selectError,
   selectAccount,
@@ -162,15 +163,21 @@ class Home extends Component {
 
   // TRANSACTIONS
   handleApprove = contract => {
-    const args = [this.props[contract].address, convertedToBaseUnit(this.state.numTokens, 18)]
+    const args = [
+      this.props[contract].address,
+      convertedToBaseUnit(this.state.numTokens, this.props.tcr.tokenDecimals),
+    ]
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(this.props.parameters.get('minDeposit'), 18)
+      numTokens = convertedToBaseUnit(
+        this.props.parameters.get('minDeposit'),
+        this.props.tcr.tokenDecimals
+      )
     } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, 18)
+      numTokens = convertedToBaseUnit(this.state.numTokens, this.props.tcr.tokenDecimals)
     }
 
     const args = [this.state.listingID, numTokens, this.state.data]
@@ -218,7 +225,7 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(actions.setupEthereumStart(network)),
-    onChooseTCR: tcr => dispatch(actions.chooseTCR(tcr)),
+    onChooseTCR: tcr => dispatch(epActions.chooseTCR(tcr)),
     onSendTransaction: payload => dispatch(txActions.sendTransactionStart(payload)),
   }
 }

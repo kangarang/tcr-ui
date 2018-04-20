@@ -4,7 +4,6 @@ import { timestampToExpiry } from 'state/utils/_datetime'
 import { getListingHash, isAddress } from 'state/libs/values'
 import { ipfsGetData } from 'state/libs/ipfs'
 
-// Get
 export function findGolem(listingHash, listings) {
   return listings[listingHash]
 }

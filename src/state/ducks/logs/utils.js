@@ -1,7 +1,7 @@
 import flatten from 'lodash/fp/flatten'
 import sortBy from 'lodash/fp/sortBy'
 
-import { createListing, findGolem, changeListing, findChallenge } from 'state/libs/listings'
+import { createListing, findGolem, changeListing, findChallenge } from 'state/ducks/listings/utils'
 
 let lastReadBlockNumber = 0
 

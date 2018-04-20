@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable'
 
+import epTypes from 'state/ducks/ethProvider/types'
 import types from './types'
 
 const initialState = fromJS({
@@ -40,18 +41,18 @@ function homeReducer(state = initialState, action) {
       return state
         .set('account', fromJS(action.payload.account))
         .set('network', fromJS(action.payload.network))
-    case types.SET_ABIS:
+    case epTypes.SET_ABIS:
       return state.set('abis', action.abis) // mutable
-    case types.SET_REGISTRY_CONTRACT:
+    case epTypes.SET_REGISTRY_CONTRACT:
       return state.setIn(['contracts', 'registry'], fromJS(action.payload))
-    case types.SET_CONTRACTS:
+    case epTypes.SET_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
         .set('tcr', action.payload.tcr) // mutable
-    case types.UPDATE_BALANCES_SUCCEEDED:
+    case epTypes.UPDATE_BALANCES_SUCCEEDED:
       return state.set('balances', fromJS(action.payload.balances))
-    case types.UPDATE_BALANCES_FAILED:
+    case epTypes.UPDATE_BALANCES_FAILED:
       return state.set('error', fromJS(action.payload.error))
     default:
       return state

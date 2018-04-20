@@ -1,28 +1,28 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
 import { selectABIs, selectAccount } from 'state/ducks/home/selectors'
-import actions from 'state/ducks/home/actions'
-import types from 'state/ducks/home/types'
-// import actions from '../actions'
-// import types from '../types'
+import homeTypes from 'state/ducks/home/types'
 
-import { setupRegistry, setupContract } from 'state/libs/contracts'
 import { getEthjs } from 'state/libs/provider'
 import { ipfsGetData } from 'state/libs/ipfs'
-
 import { baseToConvertedUnit } from 'state/libs/units'
+
+import actions from '../actions'
+import types from '../types'
+import { setupRegistry, setupContract } from '../utils'
 
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
-  yield takeLatest(types.CHOOSE_TCR, registrySaga)
   yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
-  yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
+  yield takeLatest(types.CHOOSE_TCR, registrySaga)
+
+  yield takeLatest(homeTypes.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
 }
 
 function* abisSaga() {
   try {
     // get abis from ipfs
-    const data = yield call(ipfsGetData, 'QmZpeget91fUBZyw9LfhwvB3X5iPTkWLiTtRioWcdrU1LE')
+    const data = yield call(ipfsGetData, 'QmQreb8xP7JBqgvDP5o4WHNnFneoXmiHcBnS6Vf7W98PS5')
     const { id, registry, token, voting, parameterizer } = data
     const abis = {
       id,
