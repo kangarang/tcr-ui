@@ -7,7 +7,7 @@ import * as actions from './actions'
 import * as types from './types'
 import * as epTypes from 'state/ducks/ethProvider/types'
 
-import { selectNetwork, selectRegistry } from 'state/ducks/home/selectors'
+import { selectNetwork, selectRegistry, selectVoting } from 'state/ducks/home/selectors'
 import { getEthjs } from 'state/libs/provider'
 import { getBlockAndTxnFromLog } from './utils'
 
@@ -56,16 +56,25 @@ function* pollingIntervalSaga() {
 function* getFreshLogs() {
   try {
     const registry = yield select(selectRegistry)
-    const payload = {
+    const voting = yield select(selectVoting)
+    const blockRange = {
+      fromBlock: '0',
+      toBlock: 'latest',
+    }
+    const registryPayload = {
       abi: registry.abi,
       contractAddress: registry.address,
       eventNames,
-      blockRange: {
-        fromBlock: '0',
-        toBlock: 'latest',
-      },
+      blockRange,
     }
-    yield call(decodeLogsSaga, { payload })
+    const votingPayload = {
+      abi: voting.abi,
+      contractAddress: voting.address,
+      eventNames,
+      blockRange,
+    }
+    yield call(decodeLogsSaga, { payload: registryPayload })
+    yield call(decodeLogsSaga, { payload: votingPayload })
   } catch (err) {
     console.log('Fresh log error:', err)
     throw new Error(err.message)
@@ -80,14 +89,25 @@ function* pollLogsSaga(action) {
     lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
 
     const registry = yield select(selectRegistry)
+    const voting = yield select(selectVoting)
+
     const blockRange = action.payload
-    const payload = {
+
+    const registryPayload = {
       abi: registry.abi,
       contractAddress: registry.address,
       eventNames,
       blockRange,
     }
-    yield call(decodeLogsSaga, { payload })
+
+    const votingPayload = {
+      abi: voting.abi,
+      contractAddress: voting.address,
+      eventNames,
+      blockRange,
+    }
+    yield call(decodeLogsSaga, { payload: registryPayload })
+    yield call(decodeLogsSaga, { payload: votingPayload })
   } catch (err) {
     console.log('Poll logs error:', err)
     yield put(actions.pollLogsFailed(err))

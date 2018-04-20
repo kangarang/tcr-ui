@@ -26,12 +26,12 @@ export const colors = {
 }
 
 const FONT_SIZES = {
-  xxsmall: '11px',
-  xsmall: '12px',
-  small: '14px',
-  normal: '15px',
+  xxsmall: '8px',
+  xsmall: '10px',
+  small: '12px',
+  normal: '14px',
   large: '16px',
-  xlarge: '20px',
+  xlarge: '18px',
   xxlarge: '22px',
   great: '37px',
 }
@@ -48,6 +48,6 @@ export const font = ({ size = 'normal', weight = 'normal' }) => {
   return `
     font-size: ${fontSize};
     font-weight: ${fontWeight};
-    line-height: 1.5;
+    line-height: 1;
   `
 }

@@ -85,8 +85,6 @@ export function* registryTxnSaga(action) {
       // use ipfs CID as the _data field in the application
       finalArgs[2] = fileHash
     }
-    console.log('finalArgs', finalArgs)
-
     yield call(sendTransactionSaga, registry, methodName, finalArgs)
   } catch (error) {
     console.log('registryTxn error', error)
