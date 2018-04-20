@@ -16,16 +16,16 @@ import _utils from './utils'
 let lastReadBlockNumber = 0
 
 const eventNames = [
-  '_Application',
-  '_Challenge',
-  '_ApplicationWhitelisted',
-  '_ApplicationRemoved',
-  '_ListingRemoved',
-  '_ListingWithdrawn',
-  '_TouchAndRemoved',
-  '_ChallengeFailed',
-  '_ChallengeSucceeded',
-  '_RewardClaimed',
+  // '_Application',
+  // '_Challenge',
+  // '_ApplicationWhitelisted',
+  // '_ApplicationRemoved',
+  // '_ListingRemoved',
+  // '_ListingWithdrawn',
+  // '_TouchAndRemoved',
+  // '_ChallengeFailed',
+  // '_ChallengeSucceeded',
+  // '_RewardClaimed',
 ]
 export default function* rootLogsSaga() {
   yield takeLatest(epTypes.SET_CONTRACTS, getFreshLogs)
