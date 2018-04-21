@@ -38,11 +38,14 @@ function ListingCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <Img src={tokenData.get('imgSrc') ? tokenData.get('imgSrc') : imgSrc} alt="" />
+        <Img
+          src={tokenData && tokenData.get('imgSrc') ? tokenData.get('imgSrc') : imgSrc}
+          alt=""
+        />
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {tokenData.get('name')
+            {tokenData && tokenData.get('name')
               ? tokenData.get('name')
               : one.get('listingID') && one.get('listingID')}
           </Typography>

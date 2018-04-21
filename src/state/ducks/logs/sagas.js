@@ -70,7 +70,7 @@ function* getFreshLogs() {
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames,
+      eventNames: [],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload: registryPayload })
@@ -103,7 +103,7 @@ function* pollLogsSaga(action) {
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames,
+      eventNames: [],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload: registryPayload })
