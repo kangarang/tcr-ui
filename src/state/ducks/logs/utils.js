@@ -1,5 +1,12 @@
 import utils from 'ethers/utils'
-import _ from 'lodash/fp'
+import find from 'lodash/fp/find'
+import map from 'lodash/fp/map'
+import zipWith from 'lodash/fp/zipWith'
+import every from 'lodash/fp/every'
+import isUndefined from 'lodash/fp/isUndefined'
+import isString from 'lodash/fp/isString'
+import isArray from 'lodash/fp/isArray'
+import includes from 'lodash/fp/includes'
 
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)
@@ -11,7 +18,8 @@ export async function getBlockAndTxnFromLog(log, ethjs) {
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
 const _utils = {
   getMethodAbi: async (address, methodName, abi) => {
-    const methodAbi = _.find({ name: methodName }, abi)
+    // prettier-ignore
+    const methodAbi = find({ 'name': methodName }, abi)
     return methodAbi
   },
 
@@ -27,16 +35,18 @@ const _utils = {
       }
     }
 
-    let eventAbi
     const evSigTopics = eventNames.map(eventName => {
-      eventAbi = _.find({ name: eventName }, abi)
+      // prettier-ignore
+      const eventAbi = find({ 'name': eventName }, abi)
       const eventString = _utils.getEventStringFromAbiName(eventAbi, eventName)
       const eventSignature = utils.id(eventString)
       const eventSignatureTopic = utils.hexlify(eventSignature)
       return eventSignatureTopic
     })
-    // console.log('evSigTopics:', evSigTopics)
-    // note: eventAbi is now the last one in the array
+
+    // note: indexed args reserved for first eventName in array
+    // prettier-ignore
+    const eventAbi = find({ 'name': eventNames[0] }, abi)
     const topicsForIndexedArgs = _utils.getTopicsForIndexedArgs(
       eventAbi,
       indexFilterValues
@@ -46,7 +56,7 @@ const _utils = {
       address,
       topics,
     }
-    if (!_.isUndefined(blockRange)) {
+    if (!isUndefined(blockRange)) {
       filter = {
         ...blockRange,
         ...filter,
@@ -57,7 +67,7 @@ const _utils = {
   },
 
   getEventStringFromAbiName: (eventAbi, eventName) => {
-    const types = _.map('type', eventAbi.inputs)
+    const types = map('type', eventAbi.inputs)
     const signature = `${eventAbi.name}(${types.join(',')})`
     return signature
   },
@@ -68,7 +78,7 @@ const _utils = {
       if (!eventInput.indexed) {
         continue
       }
-      if (_.isUndefined(indexFilterValues[eventInput.name])) {
+      if (isUndefined(indexFilterValues[eventInput.name])) {
         // Null is a wildcard topic in a JSON-RPC call
         topics.push(null)
       } else {
@@ -89,30 +99,30 @@ const _utils = {
   },
 
   matchesFilter(log, filter) {
-    if (!_.isUndefined(filter.address) && log.address !== filter.address) {
+    if (!isUndefined(filter.address) && log.address !== filter.address) {
       return false
     }
-    if (!_.isUndefined(filter.topics)) {
+    if (!isUndefined(filter.topics)) {
       return _utils.matchesTopics(log.topics, filter.topics)
     }
     return true
   },
 
   matchesTopics(logTopics, filterTopics) {
-    const matchesTopic = _.zipWith(
+    const matchesTopic = zipWith(
       _utils.matchesTopic.bind(_utils),
       logTopics,
       filterTopics
     )
-    const matchesTopics = _.every(matchesTopic)
+    const matchesTopics = every(matchesTopic)
     return matchesTopics
   },
 
   matchesTopic(logTopic, filterTopic) {
-    if (_.isArray(filterTopic)) {
-      return _.includes(logTopic, filterTopic)
+    if (isArray(filterTopic)) {
+      return includes(logTopic, filterTopic)
     }
-    if (_.isString(filterTopic)) {
+    if (isString(filterTopic)) {
       return filterTopic === logTopic
     }
     // null topic is a wildcard
