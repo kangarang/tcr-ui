@@ -52,8 +52,6 @@ export function buildTimeObject(integer) {
 
   return {
     date,
-    timeleft,
-    timesince,
     timestamp,
     expired: dateHasPassed(timestamp),
     formattedLocal: `${

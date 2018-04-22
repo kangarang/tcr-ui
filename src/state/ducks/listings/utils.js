@@ -27,24 +27,23 @@ export async function convertDecodedLogs(dLogs, listings = fromJS({})) {
         const application = await createListing(logData, txData, msgSender)
         const old = listings.get(application.listingHash)
         if (old === undefined || BN(old.get('ts')).lt(BN(application.ts))) {
-          return listings.set(application.listingHash, fromJS(application))
+          listings = listings.set(application.listingHash, fromJS(application))
         }
       } else if (logData.listingHash) {
         // find the corresponding listing
-        golem = await findGolem(logData.listingHash, fromJS(dLogs))
-        console.log('golem:', golem)
+        golem = findGolem(logData.listingHash, fromJS(dLogs))
       } else if (logData.pollID) {
         // console.log('poll id logData', logData)
-        golem = await findChallenge(logData.pollID, listings)
+        golem = findChallenge(logData.pollID, listings)
       } else if (logData.challengeID) {
         // console.log('challenge id logData', logData)
-        golem = await findChallenge(logData.challengeID, listings)
+        golem = findChallenge(logData.challengeID, listings)
       }
       // imodify the existing listing
       if (golem !== undefined) {
         console.log('golem:', golem)
         const listing = changeListing(golem, logData, txData, eventName, msgSender)
-        return listings.set(listing.listingHash, fromJS(listing))
+        listings = listings.set(listing.listingHash, fromJS(listing))
       }
       return listings
     })
@@ -79,6 +78,9 @@ async function handleMultihash(listingHash, data) {
 }
 
 export async function createListing(log, blockTxn, owner) {
+  if (log._eventName !== '_Application') {
+    throw new Error('not an application')
+  }
   let { listingHash, deposit, appEndDate, data } = log
   let listingID
   let tokenData = {}

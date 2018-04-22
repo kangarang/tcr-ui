@@ -30,16 +30,20 @@ export function* listenForApplications() {
 function* handleNewPollLogsSaga(action) {
   const logs = action.payload
   console.log(`${logs.length} logs`, logs)
+  // const allListings = yield select(selectAllListings)
+  // console.log(JSON.stringify(logs[0]))
+  // // console.log(logs[0].logData.deposit.toString())
+  // const applications = yield call(convertDecodedLogs, logs, fromJS({}))
+  // console.log('applications:', applications[0].toJS())
 
-  let allListings = yield select(selectAllListings)
-  if (!action.applications) {
-    allListings = fromJS({})
-  }
-  const convertedListings = (yield call(convertDecodedLogs, logs, allListings)).filter(
-    each => each.size > 0
-  )
-  console.log('convertedListings:', convertedListings[0].toJS())
-  if (convertedListings.length > 0) {
-    yield put(actions.setListings(Map(convertedListings[0])))
-  }
+  // if (!action.applications) {
+  //   // const convertedListings = yield call(convertDecodedLogs, logs, allListings)
+  //   // console.log('convertedListings:', convertedListings)
+  //   // if (convertedListings.size > 0) {
+  //   //   yield put(actions.setListings(convertedListings))
+  //   // }
+  // } else {
+  //   const applications = yield call(convertDecodedLogs, logs, fromJS({}))
+  //   console.log('applications:', applications)
+  // }
 }

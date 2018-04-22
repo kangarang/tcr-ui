@@ -12,12 +12,12 @@ describe('datetime helpers', async () => {
     expect(result).toBe(false)
   })
 
-  test('should return zero for the same date', () => {
-    const noww = moment()
+  test('should return the correct timestamp for the same date', () => {
+    const now = moment()
       .utc()
-      .unix() // 1520904331
-    const converted = timestampToExpiry(noww)
-    expect(converted.timeleft).toBe(0)
+      .unix()
+    const converted = timestampToExpiry(now)
+    expect(converted.timestamp).toBe(now)
   })
 
   test('should throw an error when given a string', () => {
