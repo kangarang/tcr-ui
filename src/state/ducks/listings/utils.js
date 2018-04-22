@@ -177,7 +177,7 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
   }
 }
 
-const _datetime = {
+export const _datetime = {
   timestampToExpiry: async integer => {
     if (!isNumber(integer)) {
       return new Error('need integer!')

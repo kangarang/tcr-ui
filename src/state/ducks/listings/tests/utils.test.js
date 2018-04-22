@@ -1,7 +1,6 @@
-import { convertDecodedLogs, createListing } from '../utils'
+import { convertDecodedLogs, createListing, _datetime } from '../utils'
 import * as actions from '../actions'
 import { BN } from 'state/libs/units'
-import { timestampToExpiry } from 'state/utils/_datetime'
 import { fromJS } from 'immutable'
 
 describe('suite: ducks/listings/utils:', function() {
@@ -40,7 +39,9 @@ describe('suite: ducks/listings/utils:', function() {
         },
         listingID: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
         unstakedDeposit: '100000000000000000000',
-        appExpiry: await timestampToExpiry(applicationLog.appEndDate.toNumber()),
+        appExpiry: await _datetime.timestampToExpiry(
+          applicationLog.appEndDate.toNumber()
+        ),
         commitExpiry: false,
         revealExpiry: false,
       }
