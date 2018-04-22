@@ -34,7 +34,6 @@
     "history": "4.7.2",
     "immutable": "3.8.2",
     "ipfs-api": "19.0.0",
-    "ipfs-mini": "^1.1.2",
     "jazzicon": "1.5.0",
     "lodash": "4.17.5",
     "material-ui": "1.0.0-beta.40",

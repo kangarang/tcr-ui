@@ -1,7 +1,8 @@
 import { fromJS } from 'immutable'
+import moment from 'moment'
+import isNumber from 'lodash/fp/isNumber'
 import find from 'lodash/fp/find'
 
-import { timestampToExpiry } from 'state/utils/_datetime'
 import { getListingHash, isAddress } from 'state/libs/values'
 import { BN } from 'state/libs/units'
 import { ipfsGetData } from 'state/libs/ipfs'
@@ -85,7 +86,7 @@ export async function createListing(log, blockTxn, owner) {
   let listingID
   let tokenData = {}
   // application expiration details
-  const appExpiry = await timestampToExpiry(appEndDate.toNumber())
+  const appExpiry = await _datetime.timestampToExpiry(appEndDate.toNumber())
 
   // IPFS multihash validation (RUT)
   if (data.length === 46 && data.includes('Qm')) {
@@ -134,29 +135,23 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
         .set('status', fromJS('2'))
         .set('challenger', fromJS(msgSender))
         .set('challengeID', fromJS(log.challengeID.toString()))
-        .set('commitExpiry', timestampToExpiry(log.commitEndDate.toNumber()))
-        .set('revealExpiry', timestampToExpiry(log.revealEndDate.toNumber()))
+        .set('commitExpiry', _datetime.timestampToExpiry(log.commitEndDate.toNumber()))
+        .set('revealExpiry', _datetime.timestampToExpiry(log.revealEndDate.toNumber()))
 
     case '_PollCreated':
       return golem
         .set('status', fromJS('2'))
         .set('pollID', fromJS(log.pollID.toString()))
-        .set('commitExpiry', timestampToExpiry(log.commitEndDate.toNumber()))
-        .set('revealExpiry', timestampToExpiry(log.revealEndDate.toNumber()))
+        .set('commitExpiry', _datetime.timestampToExpiry(log.commitEndDate.toNumber()))
+        .set('revealExpiry', _datetime.timestampToExpiry(log.revealEndDate.toNumber()))
     case '_VoteCommitted':
-      return {
-        ...golem,
-        status: '2',
-        pollID: log.pollID.toString(),
-      }
+      return golem.set('status', fromJS('2')).set('pollID', fromJS(log.pollID.toString()))
     case '_VoteRevealed':
-      return {
-        ...golem,
-        status: '2',
-        pollID: log.pollID.toString(),
-        votesFor: log.votesFor.toString(),
-        votesAgainst: log.votesAgainst.toString(),
-      }
+      return golem
+        .set('status', fromJS('2'))
+        .set('pollID', fromJS(log.pollID.toString()))
+        .set('votesFor', fromJS(log.votesFor.toString()))
+        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
 
     case '_ApplicationWhitelisted':
     case '_ChallengeFailed':
@@ -180,4 +175,63 @@ export function changeListing(golem, log, txData, eventName, msgSender) {
     default:
       return golem
   }
+}
+
+const _datetime = {
+  timestampToExpiry: async integer => {
+    if (!isNumber(integer)) {
+      return new Error('need integer!')
+    }
+    const date = moment.unix(integer).toDate()
+    const timestamp = date.getTime() / 1000
+
+    // prettier-ignore
+    const now = moment().utc().unix()
+
+    const timeleft = timestamp - now
+    const timesince = now - timestamp
+
+    const localTime = [date.getHours(), date.getMinutes()]
+    const localAMPM = _datetime.ampm(localTime[0])
+    const localTimeTwelve = _datetime.getTwelveHour(localTime)
+
+    return {
+      date,
+      timestamp,
+      expired: _datetime.dateHasPassed(timestamp),
+      formattedLocal: `${
+        _datetime.months[date.getMonth()]
+      } ${date.getDate()}, ${date.getFullYear()} ${localTimeTwelve.join(
+        ':'
+      )} ${localAMPM}`,
+    }
+  },
+  dateHasPassed: unixTimestamp => {
+    const date = moment().utc() // moment.utc("2018-03-13T01:24:07.827+00:00")
+    // 1520904108 >= unixTimestamp
+    return date.unix() >= unixTimestamp
+  },
+  ampm: time => {
+    return time < 12 ? 'AM' : 'PM'
+  },
+  getTwelveHour: time => {
+    time[0] = time[0] < 12 ? time[0] : time[0] - 12
+    time[0] = time[0] || 12
+    if (time[1] < 10) time[1] = '0' + time[1]
+    return time
+  },
+  months: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
 }
