@@ -62,6 +62,17 @@ export const onlyWhitelistIDs = createSelector(selectWhitelist, whitelist => {
   const [...keys] = whitelist.keys()
   return keys
 })
+// export const selectSortableData = createSelector(selectWhitelist, listings =>
+//   listings.map(wl => ({
+//     tokenIcon: wl.getIn(['tokenData', 'imgSrc']),
+//     tokenSymbol: wl.getIn(['tokenData', 'symbol']),
+//     tokenName: wl.getIn(['tokenData', 'name']),
+//     trackerUrl: `https://etherscan.io/token/${wl.get('listingID')}`,
+//     tokenSupply: wl.getIn(['tokenData', 'totalSupply']),
+//     fiatPrice: wl.getIn(['tokenData', 'fiatPrice']),
+//     marketCap: wl.getIn(['tokenData', 'marketCap']),
+//   }))
+// )
 
 export const selectStats = createSelector(
   [selectCandidates, selectWhitelist, selectFaceoffs],

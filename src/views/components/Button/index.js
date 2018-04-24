@@ -13,10 +13,20 @@ function Button(props) {
     </A>
   )
 
+  if (props.disabled) {
+    button = (
+      <StyledButton onClick={props.onClick} {...props}>
+        {Children.toArray(props.children)}
+      </StyledButton>
+    )
+  }
+
   // If the Button has a handleRoute prop, we want to render a button
   if (props.handleRoute) {
     button = (
-      <StyledButton onClick={props.handleRoute}>{Children.toArray(props.children)}</StyledButton>
+      <StyledButton onClick={props.handleRoute}>
+        {Children.toArray(props.children)}
+      </StyledButton>
     )
   }
 
