@@ -23,6 +23,7 @@ export const colors = {
   },
   lightBg: '#F8FAFB',
   brightBlue: '#00AFF3',
+  mutedBlue: '#ADC8D9',
 }
 
 const FONT_SIZES = {

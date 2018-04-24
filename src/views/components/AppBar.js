@@ -34,8 +34,8 @@ export default ({ error, openSidePanel, tcr }) => (
       )}
 
       <GridItem gc={2}>
-        <Text size="xlarge" weight="bold">
-          {tcr.registryName}
+        <Text size="xxlarge" weight="bold">
+          {tcr.get('registryName')}
         </Text>
       </GridItem>
 

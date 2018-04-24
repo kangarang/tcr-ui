@@ -20,7 +20,7 @@ export function* requestVotingRightsSaga(action) {
     const tokens = yield call(
       convertedToBaseUnit,
       action.payload.args[0],
-      tcr.tokenDecimals
+      tcr.get('tokenDecimals')
     )
     const args = [tokens]
     yield call(sendTransactionSaga, voting, 'requestVotingRights', args)
@@ -38,7 +38,7 @@ export function* commitVoteSaga(action) {
     const { args, commitEndDate, revealEndDate } = action.payload
     const pollID = args[0]
     const voteOption = args[1]
-    const numTokens = yield call(convertedToBaseUnit, args[2], tcr.tokenDecimals)
+    const numTokens = yield call(convertedToBaseUnit, args[2], tcr.get('tokenDecimals'))
     const data = args[3]
 
     // TODO: improve

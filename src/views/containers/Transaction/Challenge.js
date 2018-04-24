@@ -43,7 +43,7 @@ export default ({
       <TotalAmount
         copy={'Total Stake'}
         minDeposit={parameters.get('minDeposit')}
-        tokenSymbol={tcr.tokenSymbol}
+        tokenSymbol={tcr.get('tokenSymbol')}
       />
 
       <SidePanelSeparator />

@@ -20,7 +20,7 @@ class Stats extends Component {
         <GridItem>
           <CapsDiv>
             {'total '}
-            <TokenSpan>{tcr.tokenSymbol}</TokenSpan>
+            <TokenSpan>{tcr.get('tokenSymbol')}</TokenSpan>
             {' at stake'}
           </CapsDiv>
           <BoldDiv>{balances.get('totalRegistryStake')}</BoldDiv>
@@ -31,34 +31,34 @@ class Stats extends Component {
           <BoldDiv>{stats.sizes.whitelist}</BoldDiv>
         </GridItem>
 
-        <UserInfoGridItem>
-          {error ? (
+        {error ? (
+          <UserInfoGridItem>
             <UserItem>
               <Error>{'Enable MetaMask to log in'}</Error>
             </UserItem>
-          ) : (
-            <div>
-              <UserItem>
-                <BoldDivColored network={network}>{network}</BoldDivColored>
-              </UserItem>
-              <UserItem>
-                <BoldDiv>
-                  {trimDecimalsThree(balances.get('ETH'))}
-                  <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
-                </BoldDiv>
-              </UserItem>
-              <UserItem>
-                <BoldDiv>
-                  {balances.get('token')}
-                  <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
-                </BoldDiv>
-              </UserItem>
-              <UserItem>
-                <Identicon address={account} diameter={30} />
-              </UserItem>
-            </div>
-          )}
-        </UserInfoGridItem>
+          </UserInfoGridItem>
+        ) : (
+          <UserInfoGridItem>
+            <UserItem>
+              <BoldDivColored network={network}>{network}</BoldDivColored>
+            </UserItem>
+            <UserItem>
+              <BoldDiv>
+                {trimDecimalsThree(balances.get('ETH'))}
+                <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
+              </BoldDiv>
+            </UserItem>
+            <UserItem>
+              <BoldDiv>
+                {balances.get('token')}
+                <BoldDivGrey>{tcr.get('tokenSymbol')}</BoldDivGrey>
+              </BoldDiv>
+            </UserItem>
+            <UserItem>
+              <Identicon address={account} diameter={30} />
+            </UserItem>
+          </UserInfoGridItem>
+        )}
       </GridContainer>
     )
   }
@@ -89,9 +89,9 @@ const CapsDiv = styled.div`
   text-transform: uppercase;
 `
 const TokenSpan = styled.span`
-  color: orange;
+  color: #a0db8e;
   font-weight: bold;
-  font-size: 1em;
+  font-size: 1.1em;
 `
 const Error = styled.div`
   color: orange;

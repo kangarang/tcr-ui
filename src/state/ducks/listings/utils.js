@@ -20,9 +20,21 @@ export async function handleMultihash(listingHash, data) {
       tokenData = find({ address: listingID }, tokenList)
       if (tokenData) {
         tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${tokenData.address.toLowerCase()}.png`
+        // tokenData.imgSrc = 'imggSrc'
+        // tokenData.symbol = 'FDSAFD'
+        // tokenData.name = 'cvxcv'
+        // tokenData.totalSupply = 1245123
+        // tokenData.fiatPrice = 5643323
+        // tokenData.marketCap = 15321344231562341532
       } else {
         tokenData = {
           imgSrc: `https://raw.githubusercontent.com/kangarang/tokens/master/images/${listingID.toLowerCase()}.png`,
+          // imgSrc: 'imggSrc',
+          // symbol: 'DEFAULT',
+          // name: 'Default Token',
+          // totalSupply: 1245123,
+          // fiatPrice: 1232152,
+          // marketCap: 1532653613432,
         }
       }
     }
@@ -159,7 +171,7 @@ export async function updateListings(newListings, listings = fromJS({})) {
     }
     const matchingListing = acc.get(val.get('listingHash'))
     // console.log('matchingListing:', matchingListing)
-    if (matchingListing !== undefined && val.get('ts').lt(matchingListing.get('ts'))) {
+    if (matchingListing && val.get('ts').lt(matchingListing.get('ts'))) {
       // duplicate listingHash, older block.timestamp
       return acc
     }

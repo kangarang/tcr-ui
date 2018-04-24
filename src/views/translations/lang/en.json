@@ -17,15 +17,21 @@
     "ins_updateStatus":
       "Update a listing's status to the registry, or resolve a challenge if one exists",
     "ins_claimVoterReward": "Upload the reveal file to claim your reward",
-    "ins_requestVotingRights": "Transfer tokens to the voting contract",
+    "ins_requestVotingRights":
+      "In order to send transactions for voting, you must first Transfer tokens to the voting contract",
     "ins_withdrawVotingRights": "Transfer tokens from the voting contract",
-    "ins_rescueTokens": "Rescue tokens from a poll that you committed in, but did not reveal in",
+    "ins_rescueTokens":
+      "Rescue tokens from a poll that you committed in, but did not reveal in",
 
-    "mm_approve": "After you click approve, MetaMask will prompt you to confirm the approval",
-    "mm_apply": "After you click submit, MetaMask will prompt you to confirm your application",
+    "mm_approve":
+      "After you click approve, MetaMask will prompt you to confirm the approval",
+    "mm_apply":
+      "After you click submit, MetaMask will prompt you to confirm your transaction",
     "mm_challenge":
       "After you click challenge, MetaMask will prompt you to confirm the transaction",
 
+    "must_approve":
+      "You must approve the Registry contract before you can submit an application",
     "details_apply": [
       "You can deposit more than the minimum deposit",
       "Your deposit stays with the application",

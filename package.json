@@ -20,6 +20,7 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
+    "@material-ui/icons": "1.0.0-beta.43",
     "axios": "^0.18.0",
     "babel-polyfill": "6.26.0",
     "bn.js": "4.11.8",
@@ -36,7 +37,7 @@
     "ipfs-api": "20.0.1",
     "jazzicon": "1.5.0",
     "lodash": "4.17.5",
-    "material-ui": "1.0.0-beta.40",
+    "material-ui": "1.0.0-beta.42",
     "moment": "2.22.0",
     "path": "0.12.7",
     "react": "16.3.1",

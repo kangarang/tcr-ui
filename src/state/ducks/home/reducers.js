@@ -34,6 +34,7 @@ const initialState = fromJS({
   abis: {},
   listings: {},
   byID: [],
+  sortableData: {},
 })
 
 function homeReducer(state = initialState, action) {
@@ -53,7 +54,7 @@ function homeReducer(state = initialState, action) {
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))
-        .set('tcr', action.payload.tcr) // mutable
+        .set('tcr', fromJS(action.payload.tcr))
     case epTypes.UPDATE_BALANCES_SUCCEEDED:
       return state.set('balances', fromJS(action.payload.balances))
     case epTypes.UPDATE_BALANCES_FAILED:

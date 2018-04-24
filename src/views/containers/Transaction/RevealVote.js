@@ -26,14 +26,17 @@ export default class RevealVote extends Component {
     const poll = await this.props.voting.pollMap(
       this.props.selectedOne.get('challengeID')
     )
-    const votesFor = baseToConvertedUnit(poll[3], this.props.tcr.tokenDecimals)
-    const votesAgainst = baseToConvertedUnit(poll[4], this.props.tcr.tokenDecimals)
+    const votesFor = baseToConvertedUnit(poll[3], this.props.tcr.get('tokenDecimals'))
+    const votesAgainst = baseToConvertedUnit(poll[4], this.props.tcr.get('tokenDecimals'))
 
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
       this.props.selectedOne.get('challengeID')
     ))['0']
-    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
+    const numTokens = baseToConvertedUnit(
+      numTokensRaw,
+      this.props.tcr.get('tokenDecimals')
+    )
 
     const commitHash = (await this.props.voting.getCommitHash(
       this.props.account,

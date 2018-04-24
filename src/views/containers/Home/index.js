@@ -23,8 +23,10 @@ import {
   onlyWhitelistIDs,
   selectStats,
   selectNotifications,
+  // selectSortableData,
 } from 'state/ducks/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'state/ducks/transactions/selectors'
+import { BN, baseToConvertedUnit } from 'state/libs/units'
 
 import * as actions from 'state/ducks/home/actions'
 import * as txActions from 'state/ducks/transactions/actions'
@@ -33,6 +35,7 @@ import * as epActions from 'state/ducks/ethProvider/actions'
 import { convertedToBaseUnit } from 'state/libs/units'
 
 import Stats from 'views/containers/Stats'
+// import SortableTable from 'views/containers/Table/Sortable'
 import Tabs from 'views/containers/Tabs'
 import Apply from 'views/containers/Transaction/Apply'
 import Challenge from 'views/containers/Transaction/Challenge'
@@ -63,7 +66,7 @@ class Home extends Component {
     })
   }
   showApprove = () => {
-    this.setState({ visibleApprove: true })
+    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
   }
   openSidePanel = (one, openThis) => {
     this.setState({
@@ -115,6 +118,23 @@ class Home extends Component {
         },
       },
     }
+    const needToApproveRegistry = BN(this.props.balances.get('registryAllowance')).lt(
+      BN(
+        baseToConvertedUnit(
+          this.props.parameters.get('minDeposit'),
+          this.props.tcr.get('tokenDecimals')
+        )
+      )
+    )
+    const needToApproveVoting = BN(this.props.balances.get('votingAllowance')).lt(
+      BN(
+        baseToConvertedUnit(
+          this.props.parameters.get('minDeposit'),
+          this.props.tcr.get('tokenDecimals')
+        )
+      )
+    )
+
     return (
       <div>
         <Notifications
@@ -128,59 +148,71 @@ class Home extends Component {
         {/* center general stats */}
         <Stats {...this.props} />
 
-        {/* filtered listings */}
-        <Tabs
-          openSidePanel={this.openSidePanel}
-          chooseTCR={this.chooseTCR}
-          handleUpdateStatus={this.handleUpdateStatus}
-          {...this.props}
-        />
+        {this.props.error ? (
+          <div />
+        ) : (
+          // <SortableTable data={this.props.sortableData.size > 0 ? this.props.sortableData.toArray() : []} />
+          <div>
+            {/* filtered listings */}
+            <Tabs
+              openSidePanel={this.openSidePanel}
+              chooseTCR={this.chooseTCR}
+              handleUpdateStatus={this.handleUpdateStatus}
+              {...this.props}
+            />
 
-        {/* transaction modules */}
-        <Apply
-          opened={this.state.opened === 'apply'}
-          closeSidePanel={this.closeSidePanel}
-          handleInputChange={this.handleInputChange}
-          handleApprove={this.handleApprove}
-          handleApply={this.handleApply}
-          visibleApprove={this.state.visibleApprove}
-          showApprove={this.showApprove}
-          {...this.props}
-        />
+            {/* transaction modules */}
+            <Apply
+              opened={this.state.opened === 'apply'}
+              closeSidePanel={this.closeSidePanel}
+              handleInputChange={this.handleInputChange}
+              handleApprove={this.handleApprove}
+              handleApply={this.handleApply}
+              visibleApprove={this.state.visibleApprove}
+              showApprove={this.showApprove}
+              needToApprove={needToApproveRegistry}
+              {...this.props}
+            />
 
-        <Challenge
-          opened={this.state.opened === 'challenge'}
-          closeSidePanel={this.closeSidePanel}
-          handleInputChange={this.handleInputChange}
-          handleApprove={this.handleApprove}
-          handleChallenge={this.handleChallenge}
-          selectedOne={this.state.selectedOne}
-          {...this.props}
-        />
+            <Challenge
+              opened={this.state.opened === 'challenge'}
+              closeSidePanel={this.closeSidePanel}
+              handleInputChange={this.handleInputChange}
+              handleApprove={this.handleApprove}
+              handleChallenge={this.handleChallenge}
+              selectedOne={this.state.selectedOne}
+              needToApprove={needToApproveRegistry}
+              {...this.props}
+            />
 
-        {this.state.opened === 'commitVote' && (
-          <CommitVote
-            opened={this.state.opened === 'commitVote'}
-            closeSidePanel={this.closeSidePanel}
-            selectedOne={this.state.selectedOne}
-            handleInputChange={this.handleInputChange}
-            handleApprove={this.handleApprove}
-            handleCommitVote={this.handleCommitVote}
-            handleRequestVotingRights={this.handleRequestVotingRights}
-            {...this.props}
-          />
-        )}
+            {this.state.opened === 'commitVote' && (
+              <CommitVote
+                opened={this.state.opened === 'commitVote'}
+                closeSidePanel={this.closeSidePanel}
+                selectedOne={this.state.selectedOne}
+                handleInputChange={this.handleInputChange}
+                handleApprove={this.handleApprove}
+                handleCommitVote={this.handleCommitVote}
+                handleRequestVotingRights={this.handleRequestVotingRights}
+                needToApprove={needToApproveVoting}
+                visibleRequestVotingRights={this.state.visibleRequestVotingRights}
+                showApprove={this.showApprove}
+                {...this.props}
+              />
+            )}
 
-        {this.state.opened === 'revealVote' && (
-          <RevealVote
-            opened={this.state.opened === 'revealVote'}
-            closeSidePanel={this.closeSidePanel}
-            selectedOne={this.state.selectedOne}
-            handleFileInput={this.handleFileInput}
-            handleApprove={this.handleApprove}
-            handleRevealVote={this.handleRevealVote}
-            {...this.props}
-          />
+            {this.state.opened === 'revealVote' && (
+              <RevealVote
+                opened={this.state.opened === 'revealVote'}
+                closeSidePanel={this.closeSidePanel}
+                selectedOne={this.state.selectedOne}
+                handleFileInput={this.handleFileInput}
+                handleApprove={this.handleApprove}
+                handleRevealVote={this.handleRevealVote}
+                {...this.props}
+              />
+            )}
+          </div>
         )}
       </div>
     )
@@ -191,7 +223,7 @@ class Home extends Component {
     const { tcr } = this.props
     const args = [
       this.props[contract].address,
-      convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals),
+      convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals')),
     ]
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
@@ -199,9 +231,12 @@ class Home extends Component {
     const { parameters, tcr } = this.props
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(parameters.get('minDeposit'), tcr.tokenDecimals)
+      numTokens = convertedToBaseUnit(
+        parameters.get('minDeposit'),
+        tcr.get('tokenDecimals')
+      )
     } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
     }
 
     const args = [this.state.listingID, numTokens, this.state.data]
@@ -290,6 +325,7 @@ const mapStateToProps = createStructuredSelector({
   whitelistIDs: onlyWhitelistIDs,
 
   notifications: selectNotifications,
+  // sortableData: selectSortableData,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

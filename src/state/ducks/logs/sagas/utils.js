@@ -29,22 +29,24 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       } was challenged. Poll: ${logData.challengeID.toString()}`
       break
     case '_VoteCommitted':
-      title = `${baseToConvertedUnit(logData.numTokens, tcr.tokenDecimals)} ${
-        tcr.tokenSymbol
-      } committed`
+      title = `${baseToConvertedUnit(
+        logData.numTokens,
+        tcr.get('tokenDecimals')
+      )} ${tcr.get('tokenSymbol')} committed`
       message = `Ends: ${listing.commitExpiry.date}`
       // message = `Ends: ${listing.commitExpiry.date} left to commit vote`
       break
     case '_VoteRevealed':
-      title = `${baseToConvertedUnit(logData.numTokens, tcr.tokenDecimals)} ${
-        tcr.tokenSymbol
-      } revealed`
+      title = `${baseToConvertedUnit(
+        logData.numTokens,
+        tcr.get('tokenDecimals')
+      )} ${tcr.get('tokenSymbol')} revealed`
       message = `Current votesFor: ${baseToConvertedUnit(
         logData.votesFor,
-        tcr.tokenDecimals
+        tcr.get('tokenDecimals')
       )} votesAgainst: ${baseToConvertedUnit(
         logData.votesAgainst,
-        tcr.tokenDecimals
+        tcr.get('tokenDecimals')
       )}. Ends: ${listing.revealExpiry.date}`
       break
     case '_ApplicationWhitelisted':

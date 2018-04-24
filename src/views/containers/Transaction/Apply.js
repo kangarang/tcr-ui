@@ -1,10 +1,13 @@
 import React from 'react'
 
+import { BN, baseToConvertedUnit } from 'state/libs/units'
+
 import translate from 'views/translations'
 import { colors } from 'views/global-styles'
 
 import { MarginDiv } from 'views/components/StyledHome'
 import Button from 'views/components/Button'
+import Text from 'views/components/Text'
 
 import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
@@ -26,33 +29,39 @@ export default ({
   showApprove,
   miningStatus,
   latestTxn,
+  needToApprove,
 }) => (
   <div>
     <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
       <SidePanelSeparator />
 
-      <SideTextInput
-        title="listing id"
-        type="text"
-        handleInputChange={e => handleInputChange(e, 'listingID')}
-      />
+      {needToApprove ? (
+        <SideText small color="grey" text={translate('ins_approve_registry')} />
+      ) : (
+        <div>
+          <SideTextInput
+            title="listing id"
+            type="text"
+            handleInputChange={e => handleInputChange(e, 'listingID')}
+          />
 
-      {/* <SideTextInput
-        title="data"
-        type="text"
-        handleInputChange={e => handleInputChange(e, 'data')}
-      /> */}
+          <SideTextInput
+            title="data"
+            type="text"
+            handleInputChange={e => handleInputChange(e, 'data')}
+          />
 
-      <SidePanelSeparator />
+          <SidePanelSeparator />
 
-      <SideText small color="grey" text={translate('ins_apply')} />
+          <SideText small color="grey" text={translate('ins_apply')} />
 
-      <TotalAmount
-        copy={'Minimum Deposit'}
-        minDeposit={parameters.get('minDeposit')}
-        tokenSymbol={tcr.tokenSymbol}
-      />
-
+          <TotalAmount
+            copy={'Minimum Deposit'}
+            minDeposit={parameters.get('minDeposit')}
+            tokenSymbol={tcr.tokenSymbol}
+          />
+        </div>
+      )}
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
       <SideTextInput
         title="tokens"
@@ -65,9 +74,20 @@ export default ({
       <SideText color="grey" text={translate('mm_apply')} />
 
       <MarginDiv>
-        <Button bgColor={colors.brightBlue} wide fgColor={'white'} onClick={handleApply}>
-          {'SUBMIT APPLICATION'}
-        </Button>
+        {needToApprove ? (
+          <Button onClick={e => handleApprove('registry')} mode="strong">
+            {'Approve tokens for Registry'}
+          </Button>
+        ) : (
+          <Button
+            bgColor={colors.brightBlue}
+            wide
+            fgColor={'white'}
+            onClick={handleApply}
+          >
+            {'SUBMIT APPLICATION'}
+          </Button>
+        )}
       </MarginDiv>
 
       <MarginDiv>
@@ -79,15 +99,20 @@ export default ({
           </div>
         ) : (
           <div>
-            {/* <Text color="red">{'YOU NEED TO APPROVE'}</Text> */}
-            <Button onClick={showApprove} mode="">
-              {'Show approve'}
-            </Button>
+            {needToApprove ? (
+              <Text size="xlarge" color="red" children={translate('must_approve')} />
+            ) : (
+              <Button onClick={showApprove} mode="">
+                {'Show approve'}
+              </Button>
+            )}
           </div>
         )}
         {miningStatus && (
           <div>
-            <Button href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}>
+            <Button
+              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
+            >
               {'etherscan'}
             </Button>
             <TxnProgress />

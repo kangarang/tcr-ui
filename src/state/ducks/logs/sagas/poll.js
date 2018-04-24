@@ -108,7 +108,7 @@ export function* decodeLogsSaga(action) {
       yield put(actions.pollLogsSucceeded(lawgs))
     }
     // notifications
-    if (lawgs.length < 10) {
+    if (lawgs.length < 6) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
   } catch (error) {

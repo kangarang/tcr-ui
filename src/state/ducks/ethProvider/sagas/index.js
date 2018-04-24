@@ -45,7 +45,7 @@ function* updateBalancesSaga() {
     ])
 
     // format: strings, commas, decimals
-    const decimals = tcr.tokenDecimals
+    const decimals = tcr.get('tokenDecimals')
     const [
       ETH,
       tokenBalance,

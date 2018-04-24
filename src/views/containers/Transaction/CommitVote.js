@@ -6,6 +6,7 @@ import { baseToConvertedUnit } from 'state/libs/units'
 
 import { MarginDiv } from 'views/components/StyledHome'
 import Button from 'views/components/Button'
+import Text from 'views/components/Text'
 
 import { SideSplit, SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
@@ -30,7 +31,10 @@ export default class CommitVote extends Component {
       this.props.account,
       this.props.selectedOne.get('challengeID')
     ))['0']
-    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
+    const numTokens = baseToConvertedUnit(
+      numTokensRaw,
+      this.props.tcr.get('tokenDecimals')
+    )
     if (
       commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
     ) {
@@ -52,6 +56,9 @@ export default class CommitVote extends Component {
       handleRequestVotingRights,
       miningStatus,
       latestTxn,
+      needToApprove,
+      showApprove,
+      visibleRequestVotingRights,
     } = this.props
     return (
       <div>
@@ -86,7 +93,9 @@ export default class CommitVote extends Component {
               handleInputChange={e => handleInputChange(e, 'numTokens')}
             />
 
-            {balances.get('votingRights') === '0.0' ? (
+            {needToApprove ? (
+              <Text size="xlarge" color="red" children={translate('must_approve')} />
+            ) : balances.get('votingRights') === '0.0' ? (
               <MarginDiv>
                 <SideText text={translate('ins_requestVotingRights')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>
@@ -106,9 +115,24 @@ export default class CommitVote extends Component {
                 >
                   {'Oppose the applicant'}
                 </Button>
+                <Button onClick={showApprove} mode="">
+                  {'Show request voting rights'}
+                </Button>
               </MarginDiv>
             )}
           </MarginDiv>
+
+          {visibleRequestVotingRights ||
+            (needToApprove && (
+              <MarginDiv>
+                <Button onClick={handleRequestVotingRights} mode="strong" wide>
+                  {'Request Voting Rights'}
+                </Button>
+                <Button onClick={e => handleApprove('voting')} mode="strong" wide>
+                  {'Approve tokens for Voting'}
+                </Button>
+              </MarginDiv>
+            ))}
 
           {miningStatus && (
             <div>
@@ -123,12 +147,6 @@ export default class CommitVote extends Component {
               <TxnProgress />
             </div>
           )}
-
-          <MarginDiv>
-            <Button onClick={e => handleApprove('voting')} mode="strong" wide>
-              {'Approve tokens for Voting'}
-            </Button>
-          </MarginDiv>
         </SidePanel>
       </div>
     )
