@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import translate from 'views/translations'
 
 import { colors } from 'views/global-styles'
-import { baseToConvertedUnit } from 'state/libs/units'
+import { baseToConvertedUnit } from 'redux/libs/units'
 
 import { MarginDiv } from 'views/components/StyledHome'
 import Button from 'views/components/Button'

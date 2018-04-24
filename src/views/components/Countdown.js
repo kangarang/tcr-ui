@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { theme } from 'views/global-styles'
 
-import { difference, formatHtmlDatetime } from 'state/utils/_datetime'
+import { difference, formatHtmlDatetime } from 'redux/utils/_datetime'
 
 import redraw from './redraw'
 import IconTime from './Time'

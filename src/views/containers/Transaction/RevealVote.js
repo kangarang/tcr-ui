@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import translate from 'views/translations'
 
-import { baseToConvertedUnit } from 'state/libs/units'
+import { baseToConvertedUnit } from 'redux/libs/units'
 
 import Button from 'views/components/Button'
 import { SideSplit, SideText } from 'views/containers/Transaction/components'

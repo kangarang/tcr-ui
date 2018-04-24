@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 // import { syncHistoryWithStore } from 'react-router-redux'
-// import createBrowserHistory from 'history/createBrowserHistory'
+import createBrowserHistory from 'history/createBrowserHistory'
 
 import { theme } from 'views/global-styles'
-import configureStore from 'state/store'
+import configureStore from 'redux/store'
 
 import Home from 'views/containers/Home/Loadable'
+import Activities from 'views/containers/Activities/Loadable'
 
 import './App.css'
 
@@ -46,7 +47,7 @@ const muiTheme = createMuiTheme({
 const initialState = {}
 const store = configureStore(initialState)
 
-// const bHistory = createBrowserHistory()
+const history = createBrowserHistory()
 // const history = syncHistoryWithStore(bHistory, store)
 
 const AppWrapper = styled.div`
@@ -64,7 +65,7 @@ const App = () => (
           <Switch>
             <Route exact path="/" component={Home} />
             {/* <Route path="/:user" component={User}/> */}
-            {/* <Route path="/Vote" component={} /> */}
+            <Route path="/activities" component={Activities} />
             {/* <Route component={NoMatch} /> */}
           </Switch>
         </Router>

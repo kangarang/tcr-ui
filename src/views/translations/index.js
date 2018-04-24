@@ -1,7 +1,7 @@
 import React from 'react'
 
-// import { getLanguageSelection } from 'state/config/selectors'
-// import configuredStore from 'state/store'
+// import { getLanguageSelection } from 'redux/config/selectors'
+// import configuredStore from 'redux/store'
 
 import Translate from './Translate'
 
@@ -38,5 +38,9 @@ export function translateRaw(key) {
   // const lang = getLanguageSelection(configuredStore.getState())
   const lang = 'en'
 
-  return (repository[lang] && repository[lang][key]) || repository[fallbackLanguage][key] || key
+  return (
+    (repository[lang] && repository[lang][key]) ||
+    repository[fallbackLanguage][key] ||
+    key
+  )
 }

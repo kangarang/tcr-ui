@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { BN, baseToConvertedUnit } from 'state/libs/units'
+import { BN, baseToConvertedUnit } from 'redux/libs/units'
 
 import translate from 'views/translations'
 import { colors } from 'views/global-styles'

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { colors } from 'views/global-styles'
 
-import { trimDecimalsThree } from 'state/libs/units'
+import { trimDecimalsThree } from 'redux/libs/units'
 
 import Identicon from 'views/components/Identicon'
 

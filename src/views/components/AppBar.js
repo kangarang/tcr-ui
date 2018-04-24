@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import Text from 'views/components/Text'
 import Button from 'views/components/Button'
+import NavBar from '../containers/NavBar'
 
 const Wrapper = styled.div`
   flex-shrink: 0;
@@ -39,7 +40,9 @@ export default ({ error, openSidePanel, tcr }) => (
         </Text>
       </GridItem>
 
-      <GridItem gc={3}>{'Challenge Vote Activities About TCR'}</GridItem>
+      <GridItem gc={3}>
+        <NavBar />
+      </GridItem>
     </GridContainer>
   </Wrapper>
 )

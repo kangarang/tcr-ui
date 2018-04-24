@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import NavLink from './NavLink'
 
-const NavBar = styled.div`
+const Nav = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
@@ -11,16 +11,19 @@ const NavBar = styled.div`
   background-color: white;
 `
 
-class Nav extends Component {
+class NavBar extends Component {
   render() {
     return (
-      <NavBar>
+      <Nav>
         <NavLink strict to="/">
           Home
         </NavLink>
-      </NavBar>
+        <NavLink strict to="/activities">
+          Activities
+        </NavLink>
+      </Nav>
     )
   }
 }
 
-export default Nav
+export default NavBar
