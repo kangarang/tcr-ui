@@ -150,9 +150,10 @@ export async function updateListings(newListings, listings = fromJS({})) {
     // require: _Application only
     if (
       val.hasIn(['logData', '_eventName']) ||
-      !val.has('owner') ||
-      !val.has('listingID') ||
-      !val.has('status')
+      !val.get('owner') ||
+      !val.get('listingID') ||
+      !val.get('status') ||
+      !val.get('listingHash')
     ) {
       return acc
     }
