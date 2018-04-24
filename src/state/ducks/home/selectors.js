@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 
 export const selectHome = state => state.get('home')
+export const selectNotifications = state => state.get('notifications')
 
 export const selectError = createSelector(selectHome, homeState => homeState.get('error'))
 

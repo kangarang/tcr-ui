@@ -18,5 +18,11 @@ function pollLogsFailed(payload) {
     payload,
   }
 }
+function pollApplicationLogsSucceeded(payload) {
+  return {
+    type: types.FRESH_APPLICATIONS,
+    payload,
+  }
+}
 
-export { pollLogsFailed, pollLogsStart, pollLogsSucceeded }
+export { pollLogsFailed, pollLogsStart, pollLogsSucceeded, pollApplicationLogsSucceeded }

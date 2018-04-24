@@ -65,6 +65,7 @@ class SimpleTabs extends Component {
               {whitelistIDs.map(id => (
                 <ListingCard
                   key={id}
+                  listingHash={id}
                   one={whitelist.get(id)}
                   listingType={'whitelist'}
                   openSidePanel={openSidePanel}
@@ -83,6 +84,7 @@ class SimpleTabs extends Component {
               {candidateIDs.map(id => (
                 <ListingCard
                   key={id}
+                  listingHash={id}
                   one={candidates.get(id)}
                   listingType={'candidates'}
                   openSidePanel={openSidePanel}
@@ -101,6 +103,7 @@ class SimpleTabs extends Component {
               {faceoffIDs.map(id => (
                 <ListingCard
                   key={id}
+                  listingHash={id}
                   one={faceoffs.get(id)}
                   listingType={'faceoffs'}
                   openSidePanel={openSidePanel}

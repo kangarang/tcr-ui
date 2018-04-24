@@ -28,6 +28,7 @@ function ListingCard(props) {
     registry,
     tokenData,
     listingType,
+    listingHash,
     updateTrigger,
     revealTrigger,
     openSidePanel,
@@ -110,7 +111,7 @@ function ListingCard(props) {
               updateTrigger && (
                 <div>
                   <Button
-                    onClick={e => handleUpdateStatus(one.get('listingHash'))}
+                    onClick={e => handleUpdateStatus(listingHash)}
                     size="medium"
                     color="primary"
                   >

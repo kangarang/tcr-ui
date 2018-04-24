@@ -13,7 +13,6 @@ export default ({ width, height, classes }) => {
         width={width}
         height={height}
         viewBox="0 0 500 500"
-        enable-background="new 0 0 500 500"
         space="preserve"
       >
         <g>

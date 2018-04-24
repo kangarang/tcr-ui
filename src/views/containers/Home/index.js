@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import Notifications from 'react-notification-system-redux'
 
 import {
   selectError,
@@ -21,6 +22,7 @@ import {
   onlyFaceoffIDs,
   onlyWhitelistIDs,
   selectStats,
+  selectNotifications,
 } from 'state/ducks/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'state/ducks/transactions/selectors'
 
@@ -55,28 +57,23 @@ class Home extends Component {
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-
   closeSidePanel = () => {
     this.setState({
       opened: false,
     })
   }
-
   showApprove = () => {
     this.setState({ visibleApprove: true })
   }
-
   openSidePanel = (one, openThis) => {
     this.setState({
       selectedOne: one,
       opened: openThis,
     })
   }
-
   chooseTCR = one => {
     this.props.onChooseTCR(one)
   }
-
   handleFileInput = e => {
     const file = e.target.files[0]
     const fr = new window.FileReader()
@@ -96,7 +93,6 @@ class Home extends Component {
     }
     fr.readAsText(file)
   }
-
   handleInputChange = (e, t) => {
     this.setState({
       [t]: e.target.value,
@@ -104,8 +100,28 @@ class Home extends Component {
   }
 
   render() {
+    const notificationStyle = {
+      // NotificationContainer: {
+      NotificationItem: {
+        // Override the notification item
+        DefaultStyle: {
+          // Applied to every notification, regardless of the notification level
+          margin: '10px 5px 2px 5px',
+          width: '400px',
+        },
+        info: {
+          // color: 'black',
+          // backgroundColor: 'white',
+        },
+      },
+    }
     return (
       <div>
+        <Notifications
+          style={notificationStyle}
+          notifications={this.props.notifications}
+        />
+
         {/* apply, title, navigation */}
         <AppBar {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
 
@@ -192,10 +208,7 @@ class Home extends Component {
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [
-      this.state.selectedOne.get('listingHash'),
-      this.state.selectedOne.get('listingID'),
-    ]
+    const args = [this.state.selectedOne.get('listingHash'), this.state.data]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {
@@ -275,6 +288,8 @@ const mapStateToProps = createStructuredSelector({
   faceoffIDs: onlyFaceoffIDs,
   whitelist: selectWhitelist,
   whitelistIDs: onlyWhitelistIDs,
+
+  notifications: selectNotifications,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

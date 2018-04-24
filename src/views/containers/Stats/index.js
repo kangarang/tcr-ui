@@ -125,7 +125,9 @@ const BoldDivGrey = styled(BoldDiv)`
 `
 const BoldDivColored = styled(BoldDiv)`
   color: ${props =>
-    props.network === 'rinkeby' ? 'orange' : props.network === 'main' ? 'turquoise' : 'purple'};
+    props.network === 'rinkeby'
+      ? 'orange'
+      : props.network === 'mainnet' ? '#2eab6f' : 'purple'};
 `
 const UserInfoGridItem = styled(GridItem)`
   flex-direction: row;

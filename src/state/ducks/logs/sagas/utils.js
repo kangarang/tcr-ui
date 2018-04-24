@@ -7,11 +7,77 @@ import isUndefined from 'lodash/fp/isUndefined'
 import isString from 'lodash/fp/isString'
 import isArray from 'lodash/fp/isArray'
 import includes from 'lodash/fp/includes'
+import { baseToConvertedUnit } from '../../../libs/units'
 
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)
   const tx = await ethjs.getTransactionByHash(log.transactionHash)
   return { block, tx }
+}
+
+export function getNotificationTitleAndMessage(eventName, logData, tcr, listing) {
+  let title, message
+  switch (eventName) {
+    case '_Application':
+      title = `New application: ${logData.data}`
+      message = `Token: ${logData.data}`
+      break
+    case '_Challenge':
+      title = `New challenge: ${listing.listingID}`
+      message = `${
+        listing.listingID
+      } was challenged. Poll: ${logData.challengeID.toString()}`
+      break
+    case '_VoteCommitted':
+      title = `${baseToConvertedUnit(logData.numTokens, tcr.tokenDecimals)} ${
+        tcr.tokenSymbol
+      } committed`
+      message = `Ends: ${listing.commitExpiry.date}`
+      // message = `Ends: ${listing.commitExpiry.date} left to commit vote`
+      break
+    case '_VoteRevealed':
+      title = `${baseToConvertedUnit(logData.numTokens, tcr.tokenDecimals)} ${
+        tcr.tokenSymbol
+      } revealed`
+      message = `Current votesFor: ${baseToConvertedUnit(
+        logData.votesFor,
+        tcr.tokenDecimals
+      )} votesAgainst: ${baseToConvertedUnit(
+        logData.votesAgainst,
+        tcr.tokenDecimals
+      )}. Ends: ${listing.revealExpiry.date}`
+      break
+    case '_ApplicationWhitelisted':
+      title = `Application added to the registry`
+      message = `Token: ${listing.tokenData.name} (${listing.tokenData.symbol})`
+      break
+    case '_ChallengeFailed':
+      title = `Listing: ${listing.tokenData.name} remains whitelisted after challenge`
+      message = `votesFor: ${listing.votesFor}, votesAgainst: ${
+        listing.votesAgainst
+      }, voterReward: ${listing.voterReward}, challengeReward: ${listing.challengeReward}`
+      break
+    case '_ChallengeSucceeded':
+      title = `Application: ${listing.tokenData.name} removed after challenge`
+      message = `votesFor: ${listing.votesFor}, votesAgainst: ${
+        listing.votesAgainst
+      }, voterReward: ${listing.voterReward}, challengeReward: ${listing.challengeReward}`
+      break
+    case '_ListingRemoved':
+      title = 'Listing removed after challenge'
+      message = `Token: ${listing.tokenData.name} (${listing.tokenData.symbol})`
+      break
+    case '_PollCreated':
+      // title = 'Poll created'
+      // message = `Poll: ${logData.pollID.toString()}`
+      title = false
+      message = false
+      break
+    default:
+      title = 'default title'
+      message = `event: ${logData._eventName}`
+  }
+  return { title, message }
 }
 
 // adapted from:
