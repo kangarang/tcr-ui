@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import Button from 'material-ui/Button'
 import { colors } from 'views/global-styles'
 
 import { trimDecimalsThree } from 'state/libs/units'
@@ -8,23 +7,8 @@ import { trimDecimalsThree } from 'state/libs/units'
 import Identicon from 'views/components/Identicon'
 
 class Stats extends Component {
-  state = {
-    anchorEl: null,
-  }
-
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget })
-  }
-
-  handleClose = () => {
-    this.setState({ anchorEl: null })
-  }
-
   render() {
-    const { anchorEl } = this.state
-    const { account, balances, tcr, network, stats } = this.props
-
-    // const items = []
+    const { account, balances, tcr, network, stats, error } = this.props
 
     return (
       <GridContainer>
@@ -34,7 +18,11 @@ class Stats extends Component {
         </GridItem>
 
         <GridItem>
-          <CapsDiv>{`total ${tcr.tokenSymbol} at stake`}</CapsDiv>
+          <CapsDiv>
+            {'total '}
+            <TokenSpan>{tcr.tokenSymbol}</TokenSpan>
+            {' at stake'}
+          </CapsDiv>
           <BoldDiv>{balances.get('totalRegistryStake')}</BoldDiv>
         </GridItem>
 
@@ -44,45 +32,32 @@ class Stats extends Component {
         </GridItem>
 
         <UserInfoGridItem>
-          <UserItem>
-            <BoldDivColored network={network}>{network}</BoldDivColored>
-          </UserItem>
-          <UserItem>
-            <BoldDiv>
-              {trimDecimalsThree(balances.get('ETH'))}
-              <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
-            </BoldDiv>
-          </UserItem>
-          <UserItem>
-            <BoldDiv>
-              {balances.get('token')}
-              <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
-            </BoldDiv>
-          </UserItem>
-
-          <div>
-            <Button
-              aria-owns={anchorEl ? 'simple-menu' : null}
-              aria-haspopup="true"
-              onClick={this.handleClick}
-            >
-              <Identicon address={account} diameter={30} />
-            </Button>
-            {/* <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={this.handleClose}
-              transition={Fade}
-            >
-              <MenuItem onClick={this.handleClose}>
-                <div>{`Account: ${account.substring(0, 10)}...`}</div>
-              </MenuItem>
-              <MenuItem onClick={this.handleClose}>
-                <div>{network}</div>
-              </MenuItem>
-            </Menu> */}
-          </div>
+          {error ? (
+            <UserItem>
+              <Error>{'Enable MetaMask to log in'}</Error>
+            </UserItem>
+          ) : (
+            <div>
+              <UserItem>
+                <BoldDivColored network={network}>{network}</BoldDivColored>
+              </UserItem>
+              <UserItem>
+                <BoldDiv>
+                  {trimDecimalsThree(balances.get('ETH'))}
+                  <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
+                </BoldDiv>
+              </UserItem>
+              <UserItem>
+                <BoldDiv>
+                  {balances.get('token')}
+                  <BoldDivGrey>{tcr.tokenSymbol}</BoldDivGrey>
+                </BoldDiv>
+              </UserItem>
+              <UserItem>
+                <Identicon address={account} diameter={30} />
+              </UserItem>
+            </div>
+          )}
         </UserInfoGridItem>
       </GridContainer>
     )
@@ -110,12 +85,23 @@ const GridItem = styled.div`
   background-color: white;
 `
 const CapsDiv = styled.div`
+  font-size: 0.9em;
   text-transform: uppercase;
+`
+const TokenSpan = styled.span`
+  color: orange;
+  font-weight: bold;
+  font-size: 1em;
+`
+const Error = styled.div`
+  color: orange;
+  font-weight: bold;
+  font-size: 1.2em;
 `
 const BoldDiv = styled(CapsDiv)`
   color: black;
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1em;
 `
 const BoldDivGrey = styled(BoldDiv)`
   display: inline;

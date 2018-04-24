@@ -23,19 +23,18 @@ export default function* rootSaga() {
 
   // home sagas
   yield takeLatest(types.SETUP_ETHEREUM_START, genesis)
-  // yield takeLatest(SET_REGISTRY_CONTRACT, fetchGovernXSaga)
 }
 
 export function* genesis() {
   try {
     const ethjs = yield call(setEthjs)
-    const account = (yield call(ethjs.accounts))[0]
     const networkID = yield call(ethjs.net_version)
     yield call(setEthersProvider, parseInt(networkID, 10))
     const network =
       networkID === '4'
         ? 'rinkeby'
         : networkID === '1' ? 'mainnet' : networkID === '420' ? 'ganache' : 'unknown'
+    const account = (yield call(ethjs.accounts))[0]
 
     if (account === undefined) {
       throw new Error('Account undefined')
@@ -47,7 +46,6 @@ export function* genesis() {
     yield put(actions.setupEthereumFailed({ error }))
   }
 }
-export function* fetchGovernXSaga() {}
 
 export function* governXNotifications() {
   try {

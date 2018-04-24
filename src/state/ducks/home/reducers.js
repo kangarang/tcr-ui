@@ -6,7 +6,7 @@ import * as types from './types'
 
 const initialState = fromJS({
   provider: {},
-  account: '',
+  account: '0x0000000000000000000000000000000000000000',
   network: '',
   balances: {
     ETH: '0',
@@ -18,9 +18,9 @@ const initialState = fromJS({
     totalRegistryStake: '0',
   },
   tcr: {
-    tokenName: '',
-    registryName: '',
-    tokenSymbol: '',
+    tokenName: 'TOKE',
+    registryName: 'Token-Curated Registry',
+    tokenSymbol: 'TOKENS',
     tokenDecimals: '18',
   },
   contracts: {
@@ -44,6 +44,7 @@ function homeReducer(state = initialState, action) {
       return state
         .set('account', fromJS(action.payload.account))
         .set('network', fromJS(action.payload.network))
+        .set('error', fromJS(false))
     case epTypes.SET_ABIS:
       return state.set('abis', action.abis) // mutable
     case epTypes.SET_REGISTRY_CONTRACT:

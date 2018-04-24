@@ -17,6 +17,7 @@ export default function* contractsSagasRoot() {
   yield takeLatest(types.CHOOSE_TCR, registrySaga)
 
   yield takeLatest(homeTypes.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
+  yield takeLatest(homeTypes.SETUP_ETHEREUM_FAILED, abisSaga)
 }
 
 function* abisSaga() {

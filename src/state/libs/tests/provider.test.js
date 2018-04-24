@@ -1,10 +1,15 @@
-import { setProvider, getEthjs, getEthersProvider, setupSignerProvider } from '../provider'
+import {
+  setProvider,
+  getEthjs,
+  getEthersProvider,
+  setupSignerProvider,
+} from '../provider'
 
 describe('libs: provider', async () => {
   describe('function: setProvider', () => {
-    test('should return ethjs provider at http://localhost:8545', () => {
+    test('should return ethjs provider at https://rinkeby.infura.io in test node_env', () => {
       const provider = setProvider()
-      expect(provider.host).toBe('http://localhost:8545')
+      expect(provider.host).toBe('https://rinkeby.infura.io')
     })
   })
 

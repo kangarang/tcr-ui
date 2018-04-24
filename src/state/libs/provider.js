@@ -35,9 +35,13 @@ function setProvider() {
   ) {
     // metamask
     return window.web3.currentProvider
+  } else if (process.env.NODE_ENV === 'development') {
+    // ganache-cli
+    return new Ethjs.HttpProvider(`http://localhost:8545`)
+  } else if (process.env.NODE_ENV === 'test') {
+    // rinkeby infura
+    return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
   }
-  // ganache-cli
-  return new Ethjs.HttpProvider(`http://localhost:8545`)
 }
 
 // set ethjs and return it

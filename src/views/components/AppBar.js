@@ -22,24 +22,24 @@ const GridItem = styled.div`
 
 export default ({ error, openSidePanel, tcr }) => (
   <Wrapper>
-    {error ? (
-      <GridContainer>
-        <div>{error.message}</div>
-      </GridContainer>
-    ) : (
-      <GridContainer>
+    <GridContainer>
+      {error ? (
+        <GridItem gc={1}>
+          <div>{''}</div>
+        </GridItem>
+      ) : (
         <GridItem gc={1}>
           <Button onClick={openSidePanel}>{'Start an application'}</Button>
         </GridItem>
+      )}
 
-        <GridItem gc={2}>
-          <Text size="xlarge" weight="bold">
-            {tcr.registryName}
-          </Text>
-        </GridItem>
+      <GridItem gc={2}>
+        <Text size="xlarge" weight="bold">
+          {tcr.registryName}
+        </Text>
+      </GridItem>
 
-        <GridItem gc={3}>{'Challenge Vote Activities About TCR'}</GridItem>
-      </GridContainer>
-    )}
+      <GridItem gc={3}>{'Challenge Vote Activities About TCR'}</GridItem>
+    </GridContainer>
   </Wrapper>
 )
