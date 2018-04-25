@@ -112,7 +112,6 @@ export function* sendTransactionSaga(contract, method, args) {
     // successful sendTransaction
     if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {
       const txLogs = txReceipt.logs
-      console.log('txLogs:', txLogs)
       // dispatch tx receipt, update balances
       yield put(actions.sendTransactionSucceeded(txReceipt))
       yield put(epActions.updateBalancesStart())

@@ -32,7 +32,6 @@ export function* handleNewPollLogsSaga(action) {
   try {
     const allListings = yield select(selectAllListings)
     const logs = action.payload
-    console.log('action:', action)
 
     if (action.applications) {
       console.log(logs.length, '_Application logs:', logs)

@@ -3,8 +3,6 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
-// import { syncHistoryWithStore } from 'react-router-redux'
-import createBrowserHistory from 'history/createBrowserHistory'
 
 import { theme } from 'views/global-styles'
 import configureStore from 'redux/store'
@@ -42,13 +40,8 @@ const muiTheme = createMuiTheme({
   },
 })
 
-// console.log('theme:', muiTheme)
-
 const initialState = {}
 const store = configureStore(initialState)
-
-const history = createBrowserHistory()
-// const history = syncHistoryWithStore(bHistory, store)
 
 const AppWrapper = styled.div`
   display: flex;
@@ -64,9 +57,7 @@ const App = () => (
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
-            {/* <Route path="/:user" component={User}/> */}
             <Route path="/activities" component={Activities} />
-            {/* <Route component={NoMatch} /> */}
           </Switch>
         </Router>
       </MuiThemeProvider>

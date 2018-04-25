@@ -4,14 +4,14 @@ import { reducer as notifications } from 'react-notification-system-redux'
 
 import homeReducer from './home'
 import transactionsReducer from './transactions'
-import activities from './activities'
+// import activities from './activities'
 
 export default function createReducer() {
   return combineReducers({
     routing: routerReducer,
     home: homeReducer,
     transactions: transactionsReducer,
-    notifications: notifications,
-    activities,
+    notifications,
+    // activities,
   })
 }

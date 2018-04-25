@@ -44,7 +44,7 @@ function* getFreshLogs() {
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames: [],
+      eventNames: ['_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
     yield call(decodeLogsSaga, { payload: votingPayload })

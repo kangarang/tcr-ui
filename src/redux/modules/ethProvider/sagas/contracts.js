@@ -145,10 +145,10 @@ function* contractsSaga(action) {
           parameterizer,
         },
         tcr: {
-          tokenSymbol: tokenSymbolResult['0'],
           tokenName: tokenNameResult['0'],
-          tokenDecimals,
+          tokenSymbol: tokenSymbolResult['0'],
           registryName: registryNameResult['0'],
+          tokenDecimals,
         },
       })
     )

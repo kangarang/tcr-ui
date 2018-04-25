@@ -27,26 +27,29 @@ export function* notificationsSaga(log) {
     if (matchingListing) {
       listing = matchingListing.toJS()
     }
+
+    // ipfs multihash
     if (logData.data && logData.data.length === 46 && logData.data.includes('Qm')) {
       const { listingID } = yield call(handleMultihash, logData.listingHash, logData.data)
       logData.data = listingID
     }
-    // TODO: change .toJS()
+
     const { title, message } = getNotificationTitleAndMessage(
       eventName,
       logData,
       tcr,
       listing
     )
+
     if (title && message) {
       const noti = {
         uid: txData.txHash + txData.logIndex + logData._eventName,
         title,
         message,
-        position: 'tr',
+        position: 'bl',
         autoDismiss: 0,
         action: {
-          label: 'See more',
+          label: 'Click',
           callback: () => console.log('click!'),
         },
       }

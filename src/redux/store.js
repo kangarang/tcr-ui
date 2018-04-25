@@ -8,6 +8,7 @@ import rootSaga from './modules/home/sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 
+// print Immutable objects as JS objects
 const stateTransformer = state => {
   if (Iterable.isIterable(state)) return state.toJS()
   return state

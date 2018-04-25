@@ -20,7 +20,6 @@ export async function handleMultihash(listingHash, data) {
       tokenData = find({ address: listingID }, tokenList)
       if (tokenData) {
         tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${tokenData.address.toLowerCase()}.png`
-        // tokenData.imgSrc = 'imggSrc'
         // tokenData.symbol = 'FDSAFD'
         // tokenData.name = 'cvxcv'
         // tokenData.totalSupply = 1245123
@@ -29,10 +28,9 @@ export async function handleMultihash(listingHash, data) {
       } else {
         tokenData = {
           imgSrc: `https://raw.githubusercontent.com/kangarang/tokens/master/images/${listingID.toLowerCase()}.png`,
-          // imgSrc: 'imggSrc',
           // symbol: 'DEFAULT',
           // name: 'Default Token',
-          // totalSupply: 1245123,
+          // totalSupply: 1245127,
           // fiatPrice: 1232152,
           // marketCap: 1532653613432,
         }
@@ -153,13 +151,20 @@ export async function updateAssortedListings(newListings, listings = fromJS({}))
       )
       return acc.set(match.get('listingHash'), changed)
     }
+    // if (val.get('eventName') === '_Application') {
+    //   const application = createListing(
+    //     val.get('logData'),
+    //     val.get('txData'),
+    //     val.get('msgSender')
+    //   )
+    //   return acc.set(application.listingHash, fromJS(application))
+    // }
     return acc
   }, fromJS(listings))
 }
 // only return _Application listings
 export async function updateListings(newListings, listings = fromJS({})) {
   return fromJS(newListings).reduce((acc, val) => {
-    // require: _Application only
     if (
       val.hasIn(['logData', '_eventName']) ||
       !val.get('owner') ||

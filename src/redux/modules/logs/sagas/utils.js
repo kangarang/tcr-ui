@@ -34,7 +34,6 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
         tcr.get('tokenDecimals')
       )} ${tcr.get('tokenSymbol')} committed`
       message = `Ends: ${listing.commitExpiry.date}`
-      // message = `Ends: ${listing.commitExpiry.date} left to commit vote`
       break
     case '_VoteRevealed':
       title = `${baseToConvertedUnit(

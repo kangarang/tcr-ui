@@ -32,8 +32,8 @@ function* pollLogsSaga(action) {
       '_ListingRemoved',
       '_ListingWithdrawn',
       '_Challenge',
-      // '_ChallengeFailed',
-      // '_ChallengeSucceeded',
+      '_ChallengeFailed',
+      '_ChallengeSucceeded',
       '_TouchAndRemoved',
       '_RewardClaimed',
     ]
@@ -45,7 +45,7 @@ function* pollLogsSaga(action) {
       blockRange,
     }
 
-    const vEvents = ['_PollCreated', '_VoteCommitted', '_VoteRevealed']
+    const vEvents = ['_VoteCommitted', '_VoteRevealed']
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
@@ -64,9 +64,13 @@ export function* decodeLogsSaga(action) {
   try {
     const ethjs = yield call(getEthjs)
     const { abi, contractAddress, eventNames, blockRange } = action.payload
+
+    // here, we can specify values of indexed event emissions
     const indexedFilterValues = {
       // listingHash: '0xdea4eb00...',
     }
+
+    // get filter
     const filter = yield call(
       _utils.getFilter,
       contractAddress,
@@ -75,12 +79,15 @@ export function* decodeLogsSaga(action) {
       abi,
       blockRange
     )
-    // encoded
+
+    // get raw encoded logs
     const rawLogs = yield call(ethjs.getLogs, filter)
     if (rawLogs.length === 0) return []
-    // decoder
+
+    // decode logs
     const decoder = yield call(EthAbi.logDecoder, abi)
     const decodedLogs = yield call(decoder, rawLogs)
+
     // consolidate: logData, txData, eventName, msgSender
     const lawgs = yield all(
       rawLogs.map(async (log, index) => {
@@ -101,23 +108,22 @@ export function* decodeLogsSaga(action) {
         }
       })
     )
-    // dispatch
+
     if (action.applications) {
+      // only applications
       yield put(actions.pollApplicationLogsSucceeded(lawgs))
     } else if (lawgs.length > 0) {
+      // variety
       yield put(actions.pollLogsSucceeded(lawgs))
     }
+
     // notifications
     if (lawgs.length < 6) {
-      yield all(lawgs.map(lawg => notificationsSaga(lawg)))
+      lawgs.map(lawg => notificationsSaga(lawg))
     }
   } catch (error) {
     console.log('logs saga error:', error)
   }
-}
-
-export default function* rootLogsSaga() {
-  yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
 }
 
 export function* initPolling() {
@@ -142,4 +148,8 @@ export function* initPolling() {
       console.log('Polling Log Saga error', err)
     }
   }
+}
+
+export default function* rootLogsSaga() {
+  yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
 }

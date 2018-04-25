@@ -2,7 +2,7 @@ import React from 'react'
 import { withStyles } from 'material-ui/styles'
 import { CircularProgress } from 'material-ui/Progress'
 
-import ConsenSys from 'views/components/Loading/ConsenSys'
+// import ConsenSys from 'views/components/Loading/ConsenSys'
 
 const styles = theme => ({
   progress: {
