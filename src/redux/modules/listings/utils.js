@@ -1,7 +1,5 @@
 import { fromJS } from 'immutable'
 import find from 'lodash/fp/find'
-import filter from 'lodash/fp/filter'
-import mapValues from 'lodash/fp/mapValues'
 
 import { getListingHash, isAddress } from 'redux/libs/values'
 import { timestampToExpiry } from 'redux/utils/_datetime'

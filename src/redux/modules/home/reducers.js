@@ -1,7 +1,6 @@
 import { fromJS } from 'immutable'
 
 import * as epTypes from '../ethProvider/types'
-import * as liTypes from '../listings/types'
 import * as types from './types'
 
 const initialState = fromJS({
@@ -32,8 +31,6 @@ const initialState = fromJS({
   parameters: { minDeposit: '0', applyStageLen: '0' },
   latestTxn: {},
   abis: {},
-  listings: {},
-  byID: [],
   sortableData: {},
 })
 
@@ -59,12 +56,6 @@ function homeReducer(state = initialState, action) {
       return state.set('balances', fromJS(action.payload.balances))
     case epTypes.UPDATE_BALANCES_FAILED:
       return state.set('error', fromJS(action.payload.error))
-    case liTypes.SET_LISTINGS:
-      return state.set('listings', fromJS(action.payload))
-    case liTypes.UPDATE_LISTING:
-      return state.setIn(['listings', action.payload.listingHash], fromJS(action.payload))
-    // case liTypes.DELETE_KEY:
-    //   return omit(action.key, state)
     default:
       return state
   }

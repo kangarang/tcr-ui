@@ -12,7 +12,8 @@ import {
 import { getNotificationTitleAndMessage } from './utils'
 import { findListing } from 'redux/modules/listings/utils'
 
-import { selectTCR, selectAllListings } from 'redux/modules/home/selectors'
+import { selectAllListings } from 'redux/modules/listings/selectors'
+import { selectTCR } from 'redux/modules/home/selectors'
 import { handleMultihash } from '../../listings/utils'
 
 export function* notificationsSaga(log) {

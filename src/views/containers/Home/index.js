@@ -13,23 +13,14 @@ import {
   selectRegistry,
   selectVoting,
   selectParameters,
-  selectAllListings,
-  selectFaceoffs,
-  selectWhitelist,
-  selectCandidates,
-  onlyCandidateIDs,
-  onlyFaceoffIDs,
-  onlyWhitelistIDs,
   selectStats,
 } from 'redux/modules/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'redux/modules/transactions/selectors'
-import { BN, baseToConvertedUnit } from 'redux/libs/units'
-
 import * as actions from 'redux/modules/home/actions'
 import * as txActions from 'redux/modules/transactions/actions'
 import * as epActions from 'redux/modules/ethProvider/actions'
 
-import { convertedToBaseUnit } from 'redux/libs/units'
+import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'redux/libs/units'
 
 import Header from 'views/components/Header'
 
@@ -259,30 +250,18 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   error: selectError,
-
   account: selectAccount,
   network: selectNetwork,
-
   balances: selectBalances,
-  tcr: selectTCR,
-
   abis: selectABIs,
+  tcr: selectTCR,
   registry: selectRegistry,
   voting: selectVoting,
   parameters: selectParameters,
-
   stats: selectStats,
 
   miningStatus: selectMiningStatus,
   latestTxn: selectLatestTxn,
-
-  allListings: selectAllListings,
-  candidates: selectCandidates,
-  candidateIDs: onlyCandidateIDs,
-  faceoffs: selectFaceoffs,
-  faceoffIDs: onlyFaceoffIDs,
-  whitelist: selectWhitelist,
-  whitelistIDs: onlyWhitelistIDs,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

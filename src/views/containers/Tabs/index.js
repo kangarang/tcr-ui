@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 import AppBar from 'material-ui/AppBar'
 import { withStyles } from 'material-ui/styles'
@@ -6,6 +9,16 @@ import Tabs, { Tab } from 'material-ui/Tabs'
 import Typography from 'material-ui/Typography'
 
 import ListingCard from './ListingCard'
+
+import {
+  selectAllListings,
+  selectFaceoffs,
+  selectWhitelist,
+  selectCandidates,
+  onlyCandidateIDs,
+  onlyFaceoffIDs,
+  onlyWhitelistIDs,
+} from 'redux/modules/listings/selectors'
 
 function TabContainer(props) {
   return (
@@ -125,4 +138,16 @@ const FlexContainer = styled.div`
   display: flex;
 `
 
-export default withStyles(styles)(SimpleTabs)
+const mapStateToProps = createStructuredSelector({
+  allListings: selectAllListings,
+  candidates: selectCandidates,
+  candidateIDs: onlyCandidateIDs,
+  faceoffs: selectFaceoffs,
+  faceoffIDs: onlyFaceoffIDs,
+  whitelist: selectWhitelist,
+  whitelistIDs: onlyWhitelistIDs,
+})
+
+const withConnect = connect(mapStateToProps)
+
+export default compose(withStyles(styles)(withConnect(SimpleTabs)))

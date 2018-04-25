@@ -1,7 +1,7 @@
 import { all, take, takeEvery, fork, call, put, select } from 'redux-saga/effects'
 
 import * as logsTypes from '../logs/types'
-import { selectAllListings } from '../home/selectors'
+import { selectAllListings } from './selectors'
 
 import * as actions from './actions'
 import { updateListings, createListing, updateAssortedListings } from './utils'
@@ -23,6 +23,8 @@ export function* listenForApplications() {
   }
 }
 
+// TODO: check for involved listings (Activities)
+// TODO: discard stale listings
 export function* handleNewPollLogsSaga(action) {
   try {
     const allListings = yield select(selectAllListings)

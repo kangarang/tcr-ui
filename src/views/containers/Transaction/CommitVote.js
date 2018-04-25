@@ -58,7 +58,6 @@ export default class CommitVote extends Component {
       latestTxn,
       needToApprove,
       showApprove,
-      visibleRequestVotingRights,
     } = this.props
     return (
       <div>
