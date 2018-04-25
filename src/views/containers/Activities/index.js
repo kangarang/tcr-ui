@@ -42,7 +42,7 @@ import Challenge from 'views/containers/Transaction/Challenge'
 import CommitVote from 'views/containers/Transaction/CommitVote'
 import RevealVote from 'views/containers/Transaction/RevealVote'
 
-import AppBar from 'views/components/AppBar'
+import Header from 'views/components/Header'
 
 class Home extends Component {
   state = {
@@ -143,7 +143,7 @@ class Home extends Component {
         />
 
         {/* apply, title, navigation */}
-        <AppBar {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
+        <Header {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
 
         {/* center general stats */}
         <Stats {...this.props} />

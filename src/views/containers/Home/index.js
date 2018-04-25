@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
-import Notifications from 'react-notification-system-redux'
 
 import {
   selectError,
@@ -22,8 +21,6 @@ import {
   onlyFaceoffIDs,
   onlyWhitelistIDs,
   selectStats,
-  selectNotifications,
-  // selectSortableData,
 } from 'redux/modules/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'redux/modules/transactions/selectors'
 import { BN, baseToConvertedUnit } from 'redux/libs/units'
@@ -34,19 +31,17 @@ import * as epActions from 'redux/modules/ethProvider/actions'
 
 import { convertedToBaseUnit } from 'redux/libs/units'
 
+import Header from 'views/components/Header'
+
 import Stats from 'views/containers/Stats'
-// import SortableTable from 'views/containers/Table/Sortable'
 import Tabs from 'views/containers/Tabs'
 import Apply from 'views/containers/Transaction/Apply'
 import Challenge from 'views/containers/Transaction/Challenge'
 import CommitVote from 'views/containers/Transaction/CommitVote'
 import RevealVote from 'views/containers/Transaction/RevealVote'
 
-import AppBar from 'views/components/AppBar'
-
 class Home extends Component {
   state = {
-    activeItem: 0,
     opened: false,
     listingID: '',
     data: '',
@@ -54,7 +49,7 @@ class Home extends Component {
     selectedOne: false,
     fileInput: false,
     methodName: false,
-    visibleApprove: false,
+    visibleApprove: true,
     expand: '',
   }
   componentDidMount() {
@@ -66,7 +61,7 @@ class Home extends Component {
     })
   }
   showApprove = () => {
-    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
+    this.setState({ visibleApprove: true })
   }
   openSidePanel = (one, openThis) => {
     this.setState({
@@ -103,57 +98,24 @@ class Home extends Component {
   }
 
   render() {
-    const notificationStyle = {
-      // NotificationContainer: {
-      NotificationItem: {
-        // Override the notification item
-        DefaultStyle: {
-          // Applied to every notification, regardless of the notification level
-          margin: '10px 5px 2px 5px',
-          width: '400px',
-        },
-        info: {
-          // color: 'black',
-          // backgroundColor: 'white',
-        },
-      },
-    }
-    const needToApproveRegistry = BN(this.props.balances.get('registryAllowance')).lt(
-      BN(
-        baseToConvertedUnit(
-          this.props.parameters.get('minDeposit'),
-          this.props.tcr.get('tokenDecimals')
-        )
-      )
+    const { error, balances, tcr, parameters } = this.props
+    const needToApproveRegistry = BN(balances.get('registryAllowance')).lt(
+      BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
     )
-    const needToApproveVoting = BN(this.props.balances.get('votingAllowance')).lt(
-      BN(
-        baseToConvertedUnit(
-          this.props.parameters.get('minDeposit'),
-          this.props.tcr.get('tokenDecimals')
-        )
-      )
+    const needToApproveVoting = BN(balances.get('votingAllowance')).lt(
+      BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
     )
 
     return (
       <div>
-        <Notifications
-          style={notificationStyle}
-          notifications={this.props.notifications}
-        />
+        <Header {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
 
-        {/* apply, title, navigation */}
-        <AppBar {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
-
-        {/* center general stats */}
         <Stats {...this.props} />
 
-        {this.props.error ? (
+        {error ? (
           <div />
         ) : (
-          // <SortableTable data={this.props.sortableData.size > 0 ? this.props.sortableData.toArray() : []} />
           <div>
-            {/* filtered listings */}
             <Tabs
               openSidePanel={this.openSidePanel}
               chooseTCR={this.chooseTCR}
@@ -161,7 +123,6 @@ class Home extends Component {
               {...this.props}
             />
 
-            {/* transaction modules */}
             <Apply
               opened={this.state.opened === 'apply'}
               closeSidePanel={this.closeSidePanel}
@@ -308,7 +269,6 @@ const mapStateToProps = createStructuredSelector({
   abis: selectABIs,
   registry: selectRegistry,
   voting: selectVoting,
-  // token: selectToken,
   parameters: selectParameters,
 
   stats: selectStats,
@@ -323,9 +283,6 @@ const mapStateToProps = createStructuredSelector({
   faceoffIDs: onlyFaceoffIDs,
   whitelist: selectWhitelist,
   whitelistIDs: onlyWhitelistIDs,
-
-  notifications: selectNotifications,
-  // sortableData: selectSortableData,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

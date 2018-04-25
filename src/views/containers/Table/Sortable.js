@@ -32,6 +32,7 @@ function createData(
 ) {
   counter += 1
   return {
+    id: counter,
     tokenIcon,
     tokenSymbol,
     tokenName,
@@ -43,10 +44,10 @@ function createData(
 }
 
 const columnData = [
-  { id: 'tokenIcon', numeric: false, disablePadding: false, label: 'Token' },
+  { id: 'tokenIcon', numeric: false, disablePadding: true, label: 'Token' },
   { id: 'tokenSymbol', numeric: false, disablePadding: false, label: 'Symbol' },
   { id: 'tokenName', numeric: false, disablePadding: false, label: 'Name' },
-  { id: 'trackerUrl', numeric: false, disablePadding: false, label: 'Etherscan' },
+  { id: 'trackerUrl', numeric: false, disablePadding: true, label: 'Etherscan' },
   { id: 'totalSupply', numeric: true, disablePadding: false, label: 'Total Supply' },
   { id: 'fiatPrice', numeric: true, disablePadding: false, label: 'Fiat Price' },
   {
@@ -280,13 +281,12 @@ class EnhancedTable extends Component {
         )
       )
       .sort((a, b) => (a.marketCap < b.marketCap ? -1 : 1))
-    console.log(data)
+    console.log('data', data)
     const emptyRows =
       rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
     return (
       <Paper className={classes.root}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <EnhancedTableHead
