@@ -1,5 +1,7 @@
 import { fromJS } from 'immutable'
 import find from 'lodash/fp/find'
+import filter from 'lodash/fp/filter'
+import mapValues from 'lodash/fp/mapValues'
 
 import { getListingHash, isAddress } from 'redux/libs/values'
 import { timestampToExpiry } from 'redux/utils/_datetime'
@@ -11,15 +13,23 @@ export async function handleMultihash(listingHash, data) {
   if (listingHash === getListingHash(ipfsContent.id)) {
     const listingID = ipfsContent.id
     let tokenData = {}
+
     // validate address
     if (isAddress(listingID.toLowerCase())) {
       // see: https://github.com/ethereum-lists/tokens
       const tokenList = await ipfsGetData(
-        'QmchyVUfV34qD3HP23ZBX2yx4bHYzZNaVEiG1kWFiEheig'
+        'QmeGuDXfZAa24HYg2orHNbYxMNgNARuo3ioV6xf38GS9jb'
       )
-      tokenData = find({ address: listingID }, tokenList)
-      if (tokenData) {
-        tokenData.imgSrc = `https://raw.githubusercontent.com/kangarang/tokens/master/images/${tokenData.address.toLowerCase()}.png`
+      tokenData = find(
+        toke => toke.address.toLowerCase() === listingID.toLowerCase(),
+        tokenList
+      )
+      console.log('tokenData:', tokenData)
+
+      const baseUrl = `https://raw.githubusercontent.com/kangarang/tokens/master/images/`
+
+      if (tokenData && tokenData.address) {
+        tokenData.imgSrc = `${baseUrl}${tokenData.address.toLowerCase()}.png`
         // tokenData.symbol = 'FDSAFD'
         // tokenData.name = 'cvxcv'
         // tokenData.totalSupply = 1245123
@@ -27,7 +37,7 @@ export async function handleMultihash(listingHash, data) {
         // tokenData.marketCap = 15321344231562341532
       } else {
         tokenData = {
-          imgSrc: `https://raw.githubusercontent.com/kangarang/tokens/master/images/${listingID.toLowerCase()}.png`,
+          imgSrc: `${baseUrl}${listingID.toLowerCase()}.png`,
           // symbol: 'DEFAULT',
           // name: 'Default Token',
           // totalSupply: 1245127,

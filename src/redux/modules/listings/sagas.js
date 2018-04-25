@@ -16,12 +16,7 @@ export function* listenForApplications() {
   try {
     while (true) {
       const action = yield take(logsTypes.FRESH_APPLICATIONS)
-      console.log('_Application action:', action)
-      const aaction = {
-        payload: action.payload,
-        applications: true,
-      }
-      yield call(handleNewPollLogsSaga, aaction)
+      yield call(handleNewPollLogsSaga, action)
     }
   } catch (error) {
     console.log('listenForApplications error:', error)
@@ -33,22 +28,36 @@ export function* handleNewPollLogsSaga(action) {
     const allListings = yield select(selectAllListings)
     const logs = action.payload
 
-    if (action.applications) {
-      console.log(logs.length, '_Application logs:', logs)
+    const candidates = logs.filter(log => log.eventName === '_Application')
+    const assorted = logs.filter(log => log.eventName !== '_Application')
+
+    // create listings
+    if (candidates.length) {
+      console.log(candidates.length, '_Application logs:', candidates)
       const listings = yield all(
-        logs.map(aLog => createListing(aLog.logData, aLog.txData, aLog.msgSender))
+        candidates.map(candidate =>
+          createListing(candidate.logData, candidate.txData, candidate.msgSender)
+        )
       )
+      // update listings
       const applications = yield call(updateListings, listings, allListings)
-
-      yield put(actions.setListings(applications))
-    } else {
-      console.log(logs.length, 'assorted logs:', logs)
-      const updatedListings = yield call(updateAssortedListings, logs, allListings)
-
-      if (!updatedListings.equals(allListings)) {
-        yield put(actions.setListings(updatedListings))
+      // check equality
+      if (applications.equals(allListings)) {
+        console.log('listings === allListings')
       } else {
-        console.log('updatedListings.equals(allListings)')
+        yield put(actions.setListings(applications))
+      }
+    }
+
+    // update listings
+    if (assorted.length) {
+      console.log(assorted.length, 'assorted logs:', assorted)
+      const updatedListings = yield call(updateAssortedListings, assorted, allListings)
+      // check: equality
+      if (updatedListings.equals(allListings)) {
+        console.log('updatedListings === allListings')
+      } else {
+        yield put(actions.setListings(updatedListings))
       }
     }
   } catch (error) {
