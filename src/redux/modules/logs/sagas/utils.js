@@ -19,14 +19,13 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
   let title, message
   switch (eventName) {
     case '_Application':
-      title = `New application: ${listing.tokenData.name} (${listing.tokenData.symbol})`
-      message = `Token address: ${logData.data}`
+      title = `Application: ${listing.tokenData.name || 'unknown'} (${listing.tokenData
+        .symbol || 'unknown'})`
+      message = `Message: ${logData.data || 'n/a'}`
       break
     case '_Challenge':
-      title = `New challenge against: ${listing.tokenData.name}`
-      message = `${
-        listing.listingID
-      } was challenged. Poll: ${logData.challengeID.toString()}`
+      title = `Challenge: ${listing.tokenData.name || 'unknown'}`
+      message = `Message: ${logData.data || 'n/a'}`
       break
     case '_VoteCommitted':
       title = `${baseToConvertedUnit(
@@ -59,18 +58,16 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       }, voterReward: ${listing.voterReward}, challengeReward: ${listing.challengeReward}`
       break
     case '_ChallengeSucceeded':
-      title = `Application: ${listing.tokenData.name} removed after challenge`
+      title = `${listing.listingID} removed after challenge`
       message = `votesFor: ${listing.votesFor}, votesAgainst: ${
         listing.votesAgainst
-      }, voterReward: ${listing.voterReward}, challengeReward: ${listing.challengeReward}`
+      }, challengeReward: ${listing.challengeReward}`
       break
     case '_ListingRemoved':
       title = 'Listing removed after challenge'
       message = `Token: ${listing.tokenData.name} (${listing.tokenData.symbol})`
       break
     case '_PollCreated':
-      // title = 'Poll created'
-      // message = `Poll: ${logData.pollID.toString()}`
       title = false
       message = false
       break

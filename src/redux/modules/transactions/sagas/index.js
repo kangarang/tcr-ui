@@ -1,4 +1,4 @@
-import { select, put, call, takeEvery } from 'redux-saga/effects'
+import { select, put, call, fork, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 
 import * as actions from '../actions'
@@ -12,6 +12,7 @@ import { ipfsAddObject } from 'redux/libs/ipfs'
 import { getListingHash } from 'redux/libs/values'
 
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
+import { pendingTxns } from '../../notifications'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
@@ -91,28 +92,29 @@ export function* registryTxnSaga(action) {
   }
 }
 
-// TODO: minimize # of dependencies
 export function* sendTransactionSaga(contract, method, args) {
   try {
     console.log(method, 'args:', args)
-    // ethjs-contract: sendTransaction
+
+    // ethjs: sendTransaction
     const txHash = yield call(contract[method], ...args)
     yield put(actions.txnMining(txHash))
 
+    // pending tx notification
+    yield fork(pendingTxns, method, txHash)
+
     // ethers: waitForTransaction
     const ethersProvider = yield call(getEthersProvider)
-    const minedTxn = yield ethersProvider.waitForTransaction(txHash).then(tx => tx)
-    // console.log('minedTxn:', minedTxn)
+    const minedTxn = yield ethersProvider.waitForTransaction(txHash)
+    console.log('minedTxn:', minedTxn)
 
-    // ethjs: getTransactionReceipt
+    // get tx receipt
     const ethjs = yield call(getEthjs)
     const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
-    // console.log('txReceipt:', txReceipt)
+    console.log('txReceipt:', txReceipt)
 
-    // successful sendTransaction
+    // dispatch on success
     if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {
-      // const txLogs = txReceipt.logs
-      // dispatch tx receipt, update balances
       yield put(actions.sendTransactionSucceeded(txReceipt))
       yield put(epActions.updateBalancesStart())
       // if you decide to re-implement this, you need to control *which* txn

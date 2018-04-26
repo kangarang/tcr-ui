@@ -20,7 +20,7 @@ export async function handleMultihash(listingHash, data) {
         toke => toke.address.toLowerCase() === listingID.toLowerCase(),
         tokenList
       )
-      console.log('tokenData:', tokenData)
+      // console.log('tokenData:', tokenData)
 
       const baseUrl = `https://raw.githubusercontent.com/kangarang/tokens/master/images/`
 
