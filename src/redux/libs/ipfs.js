@@ -1,26 +1,21 @@
-import ipfsAPI from 'ipfs-api'
-import _ from 'lodash/fp'
+import IPFS from 'ipfs-mini'
+import isString from 'lodash/fp/isString'
 
-// import IPFS from 'ipfs-mini'
-// const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
-
-const config = { host: 'ipfs.infura.io', port: 5001, protocol: 'https' }
-const ipfs = ipfsAPI(config)
+const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 export async function ipfsGetData(multihash) {
-  if (!_.isString(multihash)) {
+  if (!isString(multihash)) {
     return new Error('multihash must be String')
   } else if (!multihash.startsWith('Qm')) {
     return new Error('multihash must start with "Qm"')
   }
 
-  let content
-  const ipfsPath = await ipfs.files.get(multihash)
-  ipfsPath.forEach(file => {
-    // console.log(file)
-    content = JSON.parse(file.content.toString('utf8'))
+  return new Promise((resolve, reject) => {
+    ipfs.catJSON(multihash, (err, result) => {
+      if (err) reject(new Error(err))
+      resolve(result)
+    })
   })
-  return content
 }
 
 // TODO: type checking
@@ -28,13 +23,13 @@ export async function ipfsGetData(multihash) {
 export async function ipfsAddObject(obj) {
   // TODO: verify keccak256
   const CID = await new Promise((resolve, reject) => {
-    ipfs.files.add(Buffer.from(JSON.stringify(obj)), (err, result) => {
+    ipfs.addJSON(obj, (err, result) => {
       if (err) reject(new Error(err))
       resolve(result)
     })
   })
   console.log('CID:', CID)
-  return CID[0].hash
+  return CID
 }
 
 export const ipfsABIsHash = 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu'

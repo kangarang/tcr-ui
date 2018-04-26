@@ -85,11 +85,11 @@ export async function createListing(log, blockTxn, owner) {
     challenger: false,
     challengeID: false,
     challengeData: false,
-    commitExpiry: false,
-    revealExpiry: false,
-    votesFor: false,
-    votesAgainst: false,
-    challengeReward: false,
+    commitExpiry: {},
+    revealExpiry: {},
+    votesFor: '0',
+    votesAgainst: '0',
+    challengeReward: '0',
   }
 }
 
