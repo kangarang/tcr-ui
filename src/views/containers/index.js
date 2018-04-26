@@ -1,2 +1,2 @@
-import TabSection from './TabSection'
-export default TabSection
+import Home from './Home'
+export default Home

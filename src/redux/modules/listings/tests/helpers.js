@@ -19,8 +19,12 @@ export default {
       ts: BN(ts),
       data: 'QmVLmoaS3peX82wgFWBo1VFodTYuM1LzzdCBNzyHWkK97R',
       tokenData: {
+        address: '0xD0D6D6C5Fe4a677D343cC433536BB717bAe167dD',
+        decimals: 9,
         imgSrc:
           'https://raw.githubusercontent.com/kangarang/tokens/master/images/0xd0d6d6c5fe4a677d343cc433536bb717bae167dd.png',
+        name: 'AdToken',
+        symbol: 'ADT',
       },
       listingID,
       unstakedDeposit: '100000000000000000000',

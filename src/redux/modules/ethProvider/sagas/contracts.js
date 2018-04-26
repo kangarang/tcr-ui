@@ -7,7 +7,7 @@ import * as types from '../types'
 import * as homeTypes from 'redux/modules/home/types'
 
 import { getEthjs } from 'redux/libs/provider'
-import { ipfsGetData } from 'redux/libs/ipfs'
+import { ipfsGetData, ipfsABIsHash } from 'redux/libs/ipfs'
 import { baseToConvertedUnit } from 'redux/libs/units'
 import { setupRegistry, setupContract } from '../utils'
 
@@ -23,7 +23,7 @@ export default function* contractsSagasRoot() {
 function* abisSaga() {
   try {
     // get abis from ipfs
-    const data = yield call(ipfsGetData, 'QmQreb8xP7JBqgvDP5o4WHNnFneoXmiHcBnS6Vf7W98PS5')
+    const data = yield call(ipfsGetData, ipfsABIsHash)
     const { id, registry, token, voting, parameterizer } = data
     const abis = {
       id,
@@ -124,9 +124,10 @@ function* contractsSaga(action) {
       call(token.symbol),
       call(registry.name),
     ])
+    // set the html title tag
+    document.title = registryNameResult['0']
 
     const tokenDecimals = tokenDecimalsResult['0'].toString(10)
-
     const parameters = {
       minDeposit: baseToConvertedUnit(minDeposit['0'].toString(10), tokenDecimals),
       applyStageLen: applyStageLen['0'].toString(10),

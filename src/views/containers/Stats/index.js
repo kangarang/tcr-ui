@@ -55,7 +55,14 @@ class Stats extends Component {
               </BoldDiv>
             </UserItem>
             <UserItem>
-              <Identicon address={account} diameter={30} />
+              <a
+                target="_blank"
+                href={`https://${
+                  network !== 'mainnet' ? network + '.' : ''
+                }etherscan.io/address/${account}`}
+              >
+                <Identicon address={account} diameter={30} />
+              </a>
             </UserItem>
           </UserInfoGridItem>
         )}

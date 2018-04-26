@@ -3,7 +3,7 @@ import find from 'lodash/fp/find'
 
 import { getListingHash, isAddress } from 'redux/libs/values'
 import { timestampToExpiry } from 'redux/utils/_datetime'
-import { ipfsGetData } from 'redux/libs/ipfs'
+import { ipfsGetData, ipfsTokensHash } from 'redux/libs/ipfs'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -15,9 +15,7 @@ export async function handleMultihash(listingHash, data) {
     // validate address
     if (isAddress(listingID.toLowerCase())) {
       // see: https://github.com/ethereum-lists/tokens
-      const tokenList = await ipfsGetData(
-        'QmeGuDXfZAa24HYg2orHNbYxMNgNARuo3ioV6xf38GS9jb'
-      )
+      const tokenList = await ipfsGetData(ipfsTokensHash)
       tokenData = find(
         toke => toke.address.toLowerCase() === listingID.toLowerCase(),
         tokenList
@@ -159,17 +157,10 @@ export async function updateAssortedListings(newListings, listings = fromJS({}))
       )
       return acc.set(match.get('listingHash'), changed)
     }
-    // if (val.get('eventName') === '_Application') {
-    //   const application = createListing(
-    //     val.get('logData'),
-    //     val.get('txData'),
-    //     val.get('msgSender')
-    //   )
-    //   return acc.set(application.listingHash, fromJS(application))
-    // }
     return acc
   }, fromJS(listings))
 }
+
 // only return _Application listings
 export async function updateListings(newListings, listings = fromJS({})) {
   return fromJS(newListings).reduce((acc, val) => {
@@ -180,6 +171,7 @@ export async function updateListings(newListings, listings = fromJS({})) {
       !val.get('status') ||
       !val.get('listingHash')
     ) {
+      console.log('BUG: not a listing!')
       return acc
     }
     const matchingListing = acc.get(val.get('listingHash'))

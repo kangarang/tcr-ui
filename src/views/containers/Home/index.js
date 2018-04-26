@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
+import Notifications from 'react-notification-system-redux'
 
 import {
   selectError,
@@ -14,6 +15,7 @@ import {
   selectVoting,
   selectParameters,
   selectStats,
+  selectNotifications,
 } from 'redux/modules/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'redux/modules/transactions/selectors'
 import * as actions from 'redux/modules/home/actions'
@@ -22,15 +24,26 @@ import * as epActions from 'redux/modules/ethProvider/actions'
 
 import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'redux/libs/units'
 
-import Header from 'views/components/Header'
-
-import Stats from 'views/containers/Stats'
-import Tabs from 'views/containers/Tabs'
+import Listings from 'views/containers/Listings'
 import Apply from 'views/containers/Transaction/Apply'
+import Header from 'views/components/Header'
+import Stats from 'views/containers/Stats'
 import Challenge from 'views/containers/Transaction/Challenge'
 import CommitVote from 'views/containers/Transaction/CommitVote'
 import RevealVote from 'views/containers/Transaction/RevealVote'
 
+const notificationStyles = {
+  NotificationItem: {
+    DefaultStyle: {
+      margin: '10px 5px 2px 5px',
+      width: '400px',
+    },
+    info: {
+      // color: 'black',
+      // backgroundColor: 'white',
+    },
+  },
+}
 class Home extends Component {
   state = {
     opened: false,
@@ -89,7 +102,16 @@ class Home extends Component {
   }
 
   render() {
-    const { error, balances, tcr, parameters } = this.props
+    const {
+      error,
+      balances,
+      tcr,
+      parameters,
+      notifications,
+      account,
+      network,
+      stats,
+    } = this.props
     const needToApproveRegistry = BN(balances.get('registryAllowance')).lt(
       BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
     )
@@ -99,73 +121,84 @@ class Home extends Component {
 
     return (
       <div>
-        <Header {...this.props} openSidePanel={e => this.openSidePanel(null, 'apply')} />
+        <Header
+          openSidePanel={e => this.openSidePanel(null, 'apply')}
+          error={error}
+          tcr={tcr}
+        />
 
-        <Stats {...this.props} />
+        <Stats
+          error={error}
+          balances={balances}
+          network={network}
+          account={account}
+          stats={stats}
+          tcr={tcr}
+        />
 
-        {error ? (
-          <div />
-        ) : (
-          <div>
-            <Tabs
-              openSidePanel={this.openSidePanel}
-              chooseTCR={this.chooseTCR}
-              handleUpdateStatus={this.handleUpdateStatus}
-              {...this.props}
-            />
+        <div className="TabSection-spacer" />
 
-            <Apply
-              opened={this.state.opened === 'apply'}
-              closeSidePanel={this.closeSidePanel}
-              handleInputChange={this.handleInputChange}
-              handleApprove={this.handleApprove}
-              handleApply={this.handleApply}
-              visibleApprove={this.state.visibleApprove}
-              showApprove={this.showApprove}
-              needToApprove={needToApproveRegistry}
-              {...this.props}
-            />
+        <Listings
+          openSidePanel={this.openSidePanel}
+          chooseTCR={this.chooseTCR}
+          handleUpdateStatus={this.handleUpdateStatus}
+          {...this.props}
+        />
 
-            <Challenge
-              opened={this.state.opened === 'challenge'}
-              closeSidePanel={this.closeSidePanel}
-              handleInputChange={this.handleInputChange}
-              handleApprove={this.handleApprove}
-              handleChallenge={this.handleChallenge}
-              selectedOne={this.state.selectedOne}
-              needToApprove={needToApproveRegistry}
-              {...this.props}
-            />
-
-            {this.state.opened === 'commitVote' && (
-              <CommitVote
-                opened={this.state.opened === 'commitVote'}
-                closeSidePanel={this.closeSidePanel}
-                selectedOne={this.state.selectedOne}
-                handleInputChange={this.handleInputChange}
-                handleApprove={this.handleApprove}
-                handleCommitVote={this.handleCommitVote}
-                handleRequestVotingRights={this.handleRequestVotingRights}
-                needToApprove={needToApproveVoting}
-                visibleRequestVotingRights={this.state.visibleRequestVotingRights}
-                showApprove={this.showApprove}
-                {...this.props}
-              />
-            )}
-
-            {this.state.opened === 'revealVote' && (
-              <RevealVote
-                opened={this.state.opened === 'revealVote'}
-                closeSidePanel={this.closeSidePanel}
-                selectedOne={this.state.selectedOne}
-                handleFileInput={this.handleFileInput}
-                handleApprove={this.handleApprove}
-                handleRevealVote={this.handleRevealVote}
-                {...this.props}
-              />
-            )}
-          </div>
+        {this.state.opened === 'apply' && (
+          <Apply
+            opened={this.state.opened === 'apply'}
+            closeSidePanel={this.closeSidePanel}
+            handleInputChange={this.handleInputChange}
+            handleApprove={this.handleApprove}
+            handleApply={this.handleApply}
+            visibleApprove={this.state.visibleApprove}
+            showApprove={this.showApprove}
+            needToApprove={needToApproveRegistry}
+            {...this.props}
+          />
         )}
+        {this.state.opened === 'challenge' && (
+          <Challenge
+            opened={this.state.opened === 'challenge'}
+            closeSidePanel={this.closeSidePanel}
+            handleInputChange={this.handleInputChange}
+            handleApprove={this.handleApprove}
+            handleChallenge={this.handleChallenge}
+            selectedOne={this.state.selectedOne}
+            needToApprove={needToApproveRegistry}
+            {...this.props}
+          />
+        )}
+        {this.state.opened === 'commitVote' && (
+          <CommitVote
+            opened={this.state.opened === 'commitVote'}
+            closeSidePanel={this.closeSidePanel}
+            selectedOne={this.state.selectedOne}
+            handleInputChange={this.handleInputChange}
+            handleApprove={this.handleApprove}
+            handleCommitVote={this.handleCommitVote}
+            handleRequestVotingRights={this.handleRequestVotingRights}
+            needToApprove={needToApproveVoting}
+            visibleRequestVotingRights={this.state.visibleRequestVotingRights}
+            showApprove={this.showApprove}
+            {...this.props}
+          />
+        )}
+
+        {this.state.opened === 'revealVote' && (
+          <RevealVote
+            opened={this.state.opened === 'revealVote'}
+            closeSidePanel={this.closeSidePanel}
+            selectedOne={this.state.selectedOne}
+            handleFileInput={this.handleFileInput}
+            handleApprove={this.handleApprove}
+            handleRevealVote={this.handleRevealVote}
+            {...this.props}
+          />
+        )}
+
+        <Notifications style={notificationStyles} notifications={[] || notifications} />
       </div>
     )
   }
@@ -262,6 +295,7 @@ const mapStateToProps = createStructuredSelector({
 
   miningStatus: selectMiningStatus,
   latestTxn: selectLatestTxn,
+  notifications: selectNotifications,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

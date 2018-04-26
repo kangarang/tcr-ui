@@ -35,7 +35,7 @@
 
 // import Stats from 'views/containers/Stats'
 // // import SortableTable from 'views/containers/Table/Sortable'
-// import Tabs from 'views/containers/Tabs'
+// import Listings from 'views/containers/Listings'
 // import Apply from 'views/containers/Transaction/Apply'
 // import Challenge from 'views/containers/Transaction/Challenge'
 // import CommitVote from 'views/containers/Transaction/CommitVote'
@@ -153,7 +153,7 @@
 //           // <SortableTable data={this.props.sortableData.size > 0 ? this.props.sortableData.toArray() : []} />
 //           <div>
 //             {/* filtered listings */}
-//             <Tabs
+//             <Listings
 //               openSidePanel={this.openSidePanel}
 //               chooseTCR={this.chooseTCR}
 //               handleUpdateStatus={this.handleUpdateStatus}
