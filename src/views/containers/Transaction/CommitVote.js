@@ -11,7 +11,6 @@ import Text from 'views/components/Text'
 import { SideSplit, SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
-import TxnProgress from './TxnProgress'
 
 export default class CommitVote extends Component {
   state = {
@@ -54,9 +53,7 @@ export default class CommitVote extends Component {
       handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
-      showApprove,
       needToApprove,
-      visibleRequestVotingRights,
     } = this.props
     return (
       <div>

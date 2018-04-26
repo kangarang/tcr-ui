@@ -12,8 +12,6 @@ import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
 import SidePanel from './components/SidePanel'
 
-import TxnProgress from './TxnProgress'
-
 export default ({
   opened,
   closeSidePanel,

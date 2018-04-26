@@ -1,13 +1,13 @@
 import React from 'react'
-import { select, call, take, fork, put } from 'redux-saga/effects'
+import { select, take, fork, put } from 'redux-saga/effects'
 import {
-  show,
   success,
-  error,
-  warning,
   info,
   hide,
-  removeAll,
+  // show,
+  // error,
+  // warning,
+  // removeAll,
 } from 'react-notification-system-redux'
 import { selectNetwork } from '../home/selectors'
 import Identicon from 'views/components/Identicon'
@@ -47,8 +47,8 @@ export function* minedTxn(txHash) {
     const network = yield select(selectNetwork)
 
     while (true) {
-      const success = yield take(types.SEND_TRANSACTION_SUCCEEDED)
-      yield put(hide(success.payload.transactionHash))
+      const action = yield take(types.SEND_TRANSACTION_SUCCEEDED)
+      yield put(hide(action.payload.transactionHash))
 
       const noti = {
         uid: txHash,
@@ -64,7 +64,7 @@ export function* minedTxn(txHash) {
         position: 'tl',
         autoDismiss: 5,
       }
-      yield put(info(noti))
+      yield put(success(noti))
     }
   } catch (error) {
     console.log('minedTxn error:', error)

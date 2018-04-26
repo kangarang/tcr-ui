@@ -10,8 +10,6 @@ import { SideText } from './components'
 import TotalAmount from './components/TotalAmount'
 import SidePanelSeparator from './components/SidePanelSeparator'
 
-import TxnProgress from './TxnProgress'
-
 export default ({
   opened,
   closeSidePanel,

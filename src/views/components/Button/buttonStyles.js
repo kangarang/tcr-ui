@@ -10,11 +10,14 @@ const buttonStyles = css`
   width: ${({ wide }) => (wide ? '100%' : 'auto')};
 
   font-size: 14px;
+  ${({ color }) => {
+    return `color: ${color || colors.offBlack}`
+  }};
+  ${({ size, weight }) => font({ size, weight })};
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   letter-spacing: 1.5px;
 
   background-color: ${({ bgColor }) => bgColor && bgColor};
-  color: ${({ fgColor }) => (fgColor ? fgColor : colors.offBlack)};
   border: 2px solid transparent;
   border-image: linear-gradient(
     to right,
@@ -35,15 +38,3 @@ const buttonStyles = css`
 `
 
 export default buttonStyles
-
-// ${({ size, weight }) => font({ size, weight })};
-// ${({ smallcaps }) => {
-//   if (!smallcaps) return ''
-//   return `
-//     text-transform: lowercase;
-//     font-variant: small-caps;
-//   `
-// }};
-// ${({ color }) => {
-//   return `color: ${color || '#000000'}`
-// }};

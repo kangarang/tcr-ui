@@ -9,7 +9,6 @@ import { MarginDiv, FileInput } from 'views/components/StyledHome'
 
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
-import TxnProgress from './TxnProgress'
 
 export default class RevealVote extends Component {
   state = {
