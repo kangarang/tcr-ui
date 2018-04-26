@@ -25,7 +25,7 @@ const Main = styled.div`
 
 const Part = styled.div`
   width: 50%;
-  padding: 20px ${SidePanel.HORIZONTAL_PADDING}px;
+  padding: 10px ${SidePanel.HORIZONTAL_PADDING}px;
   &:first-child {
     border-right: 1px solid ${theme.contentBorder};
   }

@@ -86,33 +86,21 @@ export default class RevealVote extends Component {
           rightItem={selectedOne && selectedOne.get('challengeID')}
         />
 
-        <SideText small text={'REVEAL VOTE'} />
-        <SideText small text={selectedOne && selectedOne.get('listingID')} />
+        <SideText
+          small
+          text={`Reveal for vote: ${selectedOne && selectedOne.get('listingID')}`}
+        />
 
         <SidePanelSeparator />
-
-        <SideText text={'INSTRUCTIONS'} />
-
         <SideText text={translate('ins_revealVote')} />
 
-        <MarginDiv>
-          <FileInput type="file" name="file" onChange={handleFileInput} />
-        </MarginDiv>
+        <FileInput type="file" name="file" onChange={handleFileInput} />
         <MarginDiv>
           <Button onClick={handleRevealVote} mode="strong" wide>
             {'Reveal Vote'}
           </Button>
         </MarginDiv>
-        {miningStatus && (
-          <div>
-            <Button
-              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
-            >
-              {'etherscan'}
-            </Button>
-            <TxnProgress />
-          </div>
-        )}
+        {miningStatus && <TxnProgress />}
       </SidePanel>
     )
   }

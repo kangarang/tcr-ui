@@ -1,19 +1,24 @@
 import React from 'react'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
-import Card, { CardActions, CardContent } from 'material-ui/Card'
+import Card from 'material-ui/Card'
 
 import Button from 'views/components/Button'
 import Img from 'views/components/Img'
 import Countdown from 'views/components/Countdown'
 
 import imgSrc from 'views/assets/icons/eth.png'
+import styled from 'styled-components'
+
+const CardContent = styled.div`
+  padding: 1em;
+`
 
 const styles = {
   card: {
-    width: 240,
-    margin: 5,
-    padding: '1em',
+    width: 200,
+    margin: 20,
+    padding: '.5em',
   },
   media: {
     height: 100,
@@ -59,69 +64,67 @@ function ListingCard(props) {
           </Typography>
         </CardContent>
 
-        <CardActions>
-          <div>
-            {listingType === 'faceoffs' ? (
-              <div>
-                {!revealTrigger && !updateTrigger ? (
-                  <div>
-                    <Button
-                      onClick={e => openSidePanel(one, 'commitVote')}
-                      size="medium"
-                      color="primary"
-                    >
-                      {'Commit Vote'}
-                    </Button>
-                    <Countdown end={one.getIn(['commitExpiry', 'date'])} />
-                  </div>
-                ) : (
-                  revealTrigger &&
-                  !updateTrigger && (
-                    <div>
-                      <Button
-                        onClick={e => openSidePanel(one, 'revealVote')}
-                        size="medium"
-                        color="primary"
-                      >
-                        {'Reveal Vote'}
-                      </Button>
-                      <Countdown end={one.getIn(['revealExpiry', 'date'])} />
-                    </div>
-                  )
-                )}
-              </div>
-            ) : (
-              <div>
-                <Button
-                  onClick={e => openSidePanel(one, 'challenge')}
-                  size="medium"
-                  color="primary"
-                >
-                  {'Challenge'}
-                </Button>
-                <Countdown end={one.getIn(['appExpiry', 'date'])} />
-              </div>
-            )}
-            {registry &&
-            registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
-              <Button onClick={e => chooseTCR(one.get('listingID'))}>
-                {'Select TCR'}
-              </Button>
-            ) : (
-              updateTrigger && (
+        <div>
+          {listingType === 'faceoffs' ? (
+            <div>
+              {!revealTrigger && !updateTrigger ? (
                 <div>
                   <Button
-                    onClick={e => handleUpdateStatus(listingHash)}
-                    size="medium"
+                    onClick={e => openSidePanel(one, 'commitVote')}
+                    wide
                     color="primary"
                   >
-                    {'Update Status'}
+                    {'Commit Vote'}
                   </Button>
+                  <Countdown end={one.getIn(['commitExpiry', 'date'])} />
                 </div>
-              )
-            )}
-          </div>
-        </CardActions>
+              ) : (
+                revealTrigger &&
+                !updateTrigger && (
+                  <div>
+                    <Button
+                      onClick={e => openSidePanel(one, 'revealVote')}
+                      wide
+                      color="primary"
+                    >
+                      {'Reveal Vote'}
+                    </Button>
+                    <Countdown end={one.getIn(['revealExpiry', 'date'])} />
+                  </div>
+                )
+              )}
+            </div>
+          ) : (
+            <div>
+              <Button
+                onClick={e => openSidePanel(one, 'challenge')}
+                wide
+                color="secondary"
+              >
+                {'Challenge'}
+              </Button>
+              <Countdown end={one.getIn(['appExpiry', 'date'])} />
+            </div>
+          )}
+          {registry &&
+          registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
+            <Button onClick={e => chooseTCR(one.get('listingID'))} wide>
+              {'Select TCR'}
+            </Button>
+          ) : (
+            updateTrigger && (
+              <div>
+                <Button
+                  onClick={e => handleUpdateStatus(listingHash)}
+                  wide
+                  color="primary"
+                >
+                  {'Update Status'}
+                </Button>
+              </div>
+            )
+          )}
+        </div>
       </Card>
     </div>
   )

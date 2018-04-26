@@ -7,8 +7,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { theme } from 'views/global-styles'
 import configureStore from 'redux/store'
 
-import Home from 'views/containers/Home/Loadable'
-import Activities from 'views/containers/Activities/Loadable'
+import Home from 'views/containers/Home'
 
 import './App.css'
 
@@ -57,7 +56,6 @@ const App = () => (
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/activities" component={Activities} />
           </Switch>
         </Router>
       </MuiThemeProvider>

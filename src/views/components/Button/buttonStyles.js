@@ -1,13 +1,13 @@
 import { css } from 'styled-components'
-import { colors } from '../../global-styles'
+import { colors, font } from '../../global-styles'
 
 const buttonStyles = css`
   display: inline-block;
   outline: 0;
   user-select: none;
   cursor: pointer;
-  padding: ${({ wide }) => (wide ? '1em 1.5em' : '0.5em 1.5em')};
-  width: ${({ wide }) => (wide ? '150%' : 'auto')};
+  padding: ${({ wide }) => (wide ? '0.5em 1em' : '0.5em 1em')};
+  width: ${({ wide }) => (wide ? '100%' : 'auto')};
 
   font-size: 14px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -15,7 +15,6 @@ const buttonStyles = css`
 
   background-color: ${({ bgColor }) => bgColor && bgColor};
   color: ${({ fgColor }) => (fgColor ? fgColor : colors.offBlack)};
-
   border: 2px solid transparent;
   border-image: linear-gradient(
     to right,
@@ -36,3 +35,15 @@ const buttonStyles = css`
 `
 
 export default buttonStyles
+
+// ${({ size, weight }) => font({ size, weight })};
+// ${({ smallcaps }) => {
+//   if (!smallcaps) return ''
+//   return `
+//     text-transform: lowercase;
+//     font-variant: small-caps;
+//   `
+// }};
+// ${({ color }) => {
+//   return `color: ${color || '#000000'}`
+// }};

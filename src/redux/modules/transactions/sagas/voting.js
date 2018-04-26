@@ -71,9 +71,9 @@ export function* commitVoteSaga(action) {
     }
     const yon = voteOption === '1' ? 'for' : 'against'
     // const listingDashed = data.replace(' ', '-')
-    const filename = `${pollID}-${yon}.json`
+    const filename = `${pollID}-${yon}-${data.substring(0, 8)}.json`
 
-    // TODO: local storage
+    // TODO: local storag
     saveFile(json, filename)
     yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
   } catch (error) {

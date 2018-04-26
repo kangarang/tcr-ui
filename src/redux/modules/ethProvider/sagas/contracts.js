@@ -149,6 +149,7 @@ function* contractsSaga(action) {
           tokenName: tokenNameResult['0'],
           tokenSymbol: tokenSymbolResult['0'],
           registryName: registryNameResult['0'],
+          registryAddress: registry.address,
           tokenDecimals,
         },
       })

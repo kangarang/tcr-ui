@@ -15,10 +15,12 @@ class NavBar extends Component {
   render() {
     return (
       <Nav>
+        <NavLink strict to="/" />
         <NavLink strict to="/">
           Home
         </NavLink>
-        <NavLink strict to="/activities">
+        <NavLink strict to="/" />
+        <NavLink strict to="/">
           Activities
         </NavLink>
       </Nav>

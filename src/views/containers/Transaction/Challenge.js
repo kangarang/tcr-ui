@@ -54,16 +54,7 @@ export default ({
         <Button onClick={handleChallenge} mode="strong" wide>
           {'CHALLENGE'}
         </Button>
-        {miningStatus && (
-          <div>
-            <Button
-              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
-            >
-              {'etherscan'}
-            </Button>
-            <TxnProgress />
-          </div>
-        )}
+        {miningStatus && <TxnProgress />}
       </MarginDiv>
     </SidePanel>
   </div>

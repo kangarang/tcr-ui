@@ -6,17 +6,19 @@ import Text from 'views/components/Text'
 const MarginDiv = styled.div`
   margin: 2em 0;
 `
-export default ({ title, text, small, color }) => (
+export default ({ title, text, small, color, size }) => (
   <div>
     {title && (
       <MarginDiv>
-        <Text color="grey" smallcaps={small}>
+        <Text color="grey" smallcaps={small} size={size}>
           {title}
         </Text>
       </MarginDiv>
     )}
     <MarginDiv>
-      <Text color={color}>{text}</Text>
+      <Text color={color} size={size}>
+        {text}
+      </Text>
     </MarginDiv>
   </div>
 )

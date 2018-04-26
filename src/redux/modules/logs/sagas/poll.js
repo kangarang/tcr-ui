@@ -45,7 +45,7 @@ function* pollLogsSaga(action) {
       blockRange,
     }
 
-    const vEvents = ['_VoteCommitted', '_VoteRevealed']
+    const vEvents = ['_PollCreated', '_VoteCommitted', '_VoteRevealed']
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
@@ -117,9 +117,10 @@ export function* decodeLogsSaga(action) {
       yield put(actions.pollLogsSucceeded(lawgs))
     }
 
+    console.log('lawgs:', lawgs)
     // notifications
     if (lawgs.length < 6) {
-      lawgs.map(lawg => notificationsSaga(lawg))
+      yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
   } catch (error) {
     console.log('logs saga error:', error)

@@ -38,33 +38,30 @@ export default ({
       ) : (
         <div>
           <SideTextInput
-            title="listing id"
+            title="token address"
             type="text"
             handleInputChange={e => handleInputChange(e, 'listingID')}
           />
-
-          <SideTextInput
-            title="data"
-            type="text"
-            handleInputChange={e => handleInputChange(e, 'data')}
-          />
-
-          <SidePanelSeparator />
 
           <SideText small color="grey" text={translate('ins_apply')} />
 
           <TotalAmount
             copy={'Minimum Deposit'}
             minDeposit={parameters.get('minDeposit')}
-            tokenSymbol={tcr.tokenSymbol}
+            tokenSymbol={tcr.get('tokenSymbol')}
           />
         </div>
       )}
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
       <SideTextInput
-        title="tokens"
+        title="token amount"
         type="number"
         handleInputChange={e => handleInputChange(e, 'numTokens')}
+      />
+      <SideTextInput
+        title="data"
+        type="text"
+        handleInputChange={e => handleInputChange(e, 'data')}
       />
 
       <SidePanelSeparator />
@@ -89,34 +86,19 @@ export default ({
       </MarginDiv>
 
       <MarginDiv>
-        {visibleApprove ? (
-          <div>
-            <Button onClick={e => handleApprove('registry')} mode="strong">
-              {'Approve tokens for Registry'}
-            </Button>
-          </div>
+        {!visibleApprove ? (
+          <Button onClick={showApprove} mode="">
+            {'Show approve'}
+          </Button>
         ) : (
           <div>
-            {needToApprove ? (
+            {needToApprove && (
               <Text size="xlarge" color="red" children={translate('must_approve')} />
-            ) : (
-              <Button onClick={showApprove} mode="">
-                {'Show approve'}
-              </Button>
             )}
           </div>
         )}
-        {miningStatus && (
-          <div>
-            <Button
-              href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
-            >
-              {'etherscan'}
-            </Button>
-            <TxnProgress />
-          </div>
-        )}
       </MarginDiv>
+      {miningStatus && <TxnProgress />}
     </SidePanel>
   </div>
 )

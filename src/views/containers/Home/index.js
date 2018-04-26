@@ -24,13 +24,15 @@ import * as epActions from 'redux/modules/ethProvider/actions'
 
 import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'redux/libs/units'
 
-import Listings from 'views/containers/Listings'
 import Apply from 'views/containers/Transaction/Apply'
-import Header from 'views/components/Header'
-import Stats from 'views/containers/Stats'
 import Challenge from 'views/containers/Transaction/Challenge'
 import CommitVote from 'views/containers/Transaction/CommitVote'
 import RevealVote from 'views/containers/Transaction/RevealVote'
+
+import Header from 'views/components/Header'
+import Stats from 'views/components/Stats'
+import Listings from '../Listings/Loadable'
+import styled from 'styled-components'
 
 const notificationStyles = {
   NotificationItem: {
@@ -44,6 +46,10 @@ const notificationStyles = {
     },
   },
 }
+
+const HomeWrapper = styled.div`
+  width: 100vw;
+`
 class Home extends Component {
   state = {
     opened: false,
@@ -55,6 +61,7 @@ class Home extends Component {
     methodName: false,
     visibleApprove: true,
     expand: '',
+    visibleRequestVotingRights: false,
   }
   componentDidMount() {
     this.props.onSetupEthereum()
@@ -65,7 +72,7 @@ class Home extends Component {
     })
   }
   showApprove = () => {
-    this.setState({ visibleApprove: true })
+    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
   }
   openSidePanel = (one, openThis) => {
     this.setState({
@@ -120,10 +127,12 @@ class Home extends Component {
     )
 
     return (
-      <div>
+      <HomeWrapper>
         <Header
-          openSidePanel={e => this.openSidePanel(null, 'apply')}
           error={error}
+          openSidePanel={e => this.openSidePanel(null, 'apply')}
+          network={network}
+          account={account}
           tcr={tcr}
         />
 
@@ -135,8 +144,6 @@ class Home extends Component {
           stats={stats}
           tcr={tcr}
         />
-
-        <div className="TabSection-spacer" />
 
         <Listings
           openSidePanel={this.openSidePanel}
@@ -198,8 +205,8 @@ class Home extends Component {
           />
         )}
 
-        <Notifications style={notificationStyles} notifications={[] || notifications} />
-      </div>
+        <Notifications style={notificationStyles} notifications={notifications} />
+      </HomeWrapper>
     )
   }
 

@@ -21,50 +21,55 @@ const Countdown = ({ end }) => {
   }
 
   return (
-    <Main dateTime={formatHtmlDatetime(end)}>
-      <IconWrapper>
-        <IconTime />
-      </IconWrapper>
-      {totalInSeconds > 0 ? (
-        <span>
-          {days !== 0 && (
-            <Part>
-              {formatUnit(days)}
-              <Unit>D</Unit>
-              <Separator />
-            </Part>
-          )}
-          {hours !== 0 && (
-            <Part>
-              {formatUnit(hours)}
-              <Unit>H</Unit>
-              <Separator>:</Separator>
-            </Part>
-          )}
-          {minutes !== 0 && (
-            <Part>
-              {formatUnit(minutes)}
-              <Unit>M</Unit>
-              <Separator>:</Separator>
-            </Part>
-          )}
-          {seconds !== 0 && (
-            <Part>
-              {formatUnit(seconds)}
-              <Unit>S</Unit>
-            </Part>
-          )}
-        </span>
-      ) : (
-        <TimeOut>Time out</TimeOut>
-      )}
-    </Main>
+    <Paddiv>
+      <Main dateTime={formatHtmlDatetime(end)}>
+        <IconWrapper>
+          <IconTime />
+        </IconWrapper>
+        {totalInSeconds > 0 ? (
+          <span>
+            {days !== 0 && (
+              <Part>
+                {formatUnit(days)}
+                <Unit>D</Unit>
+                <Separator />
+              </Part>
+            )}
+            {hours !== 0 && (
+              <Part>
+                {formatUnit(hours)}
+                <Unit>H</Unit>
+                <Separator>:</Separator>
+              </Part>
+            )}
+            {minutes !== 0 && (
+              <Part>
+                {formatUnit(minutes)}
+                <Unit>M</Unit>
+                <Separator>:</Separator>
+              </Part>
+            )}
+            {seconds !== 0 && (
+              <Part>
+                {formatUnit(seconds)}
+                <Unit>S</Unit>
+              </Part>
+            )}
+          </span>
+        ) : (
+          <TimeOut>Time out</TimeOut>
+        )}
+      </Main>
+    </Paddiv>
   )
 }
 
 const Main = styled.time`
   width: 12em;
   white-space: nowrap;
+`
+const Paddiv = styled.div`
+  padding: 0.5em;
 `
 
 const IconWrapper = styled.span`
@@ -84,7 +89,7 @@ const Separator = styled.span`
 `
 
 const Unit = styled.span`
-  margin-left: 2px;
+  margin-left: 4px;
   font-size: 12px;
   color: ${theme.textPrimary};
 `

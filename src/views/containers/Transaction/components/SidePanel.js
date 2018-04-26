@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
 
 import Text from 'views/components/Text'
-
 import { colors } from 'views/global-styles'
 
 const PANEL_WIDTH = 450
@@ -49,10 +48,10 @@ const StyledPanel = styled.aside`
 
 const StyledPanelHeader = styled.header`
   position: relative;
-  padding-top: 30px;
+  padding-top: 20px;
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 `
 
 const StyledPanelScrollView = styled.div`
@@ -120,7 +119,11 @@ class SidePanel extends Component {
           const styles = this.motionStyles(progress)
           return (
             <StyledSidePanel hidden={progress === 0} opened={opened}>
-              <Overlay opened={opened} style={styles.overlay} onClick={this.handleClose} />
+              <Overlay
+                opened={opened}
+                style={styles.overlay}
+                onClick={this.handleClose}
+              />
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
                   <h1>

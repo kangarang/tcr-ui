@@ -9,7 +9,7 @@ const MarginDiv = styled.div`
 `
 const styles = {
   textInput: {
-    height: '50px',
+    height: '40px',
   },
 }
 export default ({ title, type, handleInputChange }) => (

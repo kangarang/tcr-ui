@@ -35,7 +35,8 @@ export function* notificationsSaga(log) {
       logData.data = listingID
     }
 
-    const { title, message } = getNotificationTitleAndMessage(
+    const { title, message } = yield call(
+      getNotificationTitleAndMessage,
       eventName,
       logData,
       tcr,
@@ -47,10 +48,10 @@ export function* notificationsSaga(log) {
         uid: txData.txHash + txData.logIndex + logData._eventName,
         title,
         message,
-        position: 'bl',
+        position: 'tl',
         autoDismiss: 0,
         action: {
-          label: 'Click',
+          label: 'cb',
           callback: () => console.log('click!'),
         },
       }

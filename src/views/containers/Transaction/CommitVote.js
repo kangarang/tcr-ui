@@ -58,21 +58,16 @@ export default class CommitVote extends Component {
       latestTxn,
       needToApprove,
       showApprove,
+      visibleRequestVotingRights,
     } = this.props
     return (
       <div>
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SideSplit
-            leftTitle={'Poll ID'}
-            leftItem={selectedOne && selectedOne.get('challengeID')}
-            rightTitle={'Token Balance'}
-            rightItem={balances.get('token')}
-          />
-          <SideSplit
-            leftTitle={'Commit Hash'}
-            leftItem={this.state.commitHash.substring(0, 10)}
-            rightTitle={'Tokens Committed'}
-            rightItem={this.state.numTokens}
+            leftTitle={'Token Balance'}
+            leftItem={balances.get('token')}
+            rightTitle={'Voting Allowance'}
+            rightItem={balances.get('votingAllowance')}
           />
           <SideSplit
             leftTitle={'Voting Rights'}
@@ -81,7 +76,7 @@ export default class CommitVote extends Component {
             rightItem={balances.get('lockedTokens')}
           />
 
-          <SideText text={selectedOne && selectedOne.get('listingID')} />
+          <SideText size="xlarge" text={selectedOne && selectedOne.get('listingID')} />
 
           <SidePanelSeparator />
 
@@ -95,14 +90,14 @@ export default class CommitVote extends Component {
             {needToApprove ? (
               <Text size="xlarge" color="red" children={translate('must_approve')} />
             ) : balances.get('votingRights') === '0.0' ? (
-              <MarginDiv>
+              <div>
                 <SideText text={translate('ins_requestVotingRights')} />
                 <Button onClick={handleRequestVotingRights} mode="strong" wide>
                   {'Request Voting Rights'}
                 </Button>
-              </MarginDiv>
+              </div>
             ) : (
-              <MarginDiv>
+              <div>
                 <SideText text={translate('ins_commitVote')} />
                 <Button onClick={e => handleCommitVote('1')}>
                   {'Support the applicant'}
@@ -114,10 +109,7 @@ export default class CommitVote extends Component {
                 >
                   {'Oppose the applicant'}
                 </Button>
-                <Button onClick={showApprove} mode="">
-                  {'Show request voting rights'}
-                </Button>
-              </MarginDiv>
+              </div>
             )}
           </MarginDiv>
 
@@ -132,19 +124,7 @@ export default class CommitVote extends Component {
             </MarginDiv>
           )}
 
-          {miningStatus && (
-            <div>
-              <Button
-                wide
-                href={`https://rinkeby.etherscan.io/tx/${latestTxn.get(
-                  'transactionHash'
-                )}`}
-              >
-                {'etherscan'}
-              </Button>
-              <TxnProgress />
-            </div>
-          )}
+          {miningStatus && <TxnProgress />}
         </SidePanel>
       </div>
     )
