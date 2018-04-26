@@ -23,8 +23,6 @@ export default ({
   handleApprove,
   handleChallenge,
   selectedOne,
-  miningStatus,
-  latestTxn,
 }) => (
   <div>
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
@@ -54,7 +52,6 @@ export default ({
         <Button onClick={handleChallenge} mode="strong" wide>
           {'CHALLENGE'}
         </Button>
-        {miningStatus && <TxnProgress />}
       </MarginDiv>
     </SidePanel>
   </div>

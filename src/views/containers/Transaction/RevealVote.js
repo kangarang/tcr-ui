@@ -62,8 +62,6 @@ export default class RevealVote extends Component {
       handleFileInput,
       handleRevealVote,
       selectedOne,
-      miningStatus,
-      latestTxn,
     } = this.props
     return (
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
@@ -100,7 +98,6 @@ export default class RevealVote extends Component {
             {'Reveal Vote'}
           </Button>
         </MarginDiv>
-        {miningStatus && <TxnProgress />}
       </SidePanel>
     )
   }

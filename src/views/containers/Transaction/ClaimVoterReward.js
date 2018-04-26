@@ -19,8 +19,6 @@ export default ({
   handleFileInput,
   handleRevealVote,
   selectedOne,
-  miningStatus,
-  latestTxn,
 }) => (
   <SidePanel
     title="Claim Voter Reward"
@@ -36,16 +34,5 @@ export default ({
         {'Claim Voter Reward'}
       </Button>
     </MarginDiv>
-
-    {miningStatus && (
-      <div>
-        <Button
-          href={`https://rinkeby.etherscan.io/tx/${latestTxn.get('transactionHash')}`}
-        >
-          {'etherscan'}
-        </Button>
-        <TxnProgress />
-      </div>
-    )}
   </SidePanel>
 )

@@ -54,10 +54,8 @@ export default class CommitVote extends Component {
       handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
-      miningStatus,
-      latestTxn,
-      needToApprove,
       showApprove,
+      needToApprove,
       visibleRequestVotingRights,
     } = this.props
     return (
@@ -76,7 +74,18 @@ export default class CommitVote extends Component {
             rightItem={balances.get('lockedTokens')}
           />
 
-          <SideText size="xlarge" text={selectedOne && selectedOne.get('listingID')} />
+          <SideText
+            size="large"
+            title="token"
+            small
+            text={
+              selectedOne &&
+              `${selectedOne.getIn(['tokenData', 'name'])} (${selectedOne.getIn([
+                'tokenData',
+                'symbol',
+              ])})`
+            }
+          />
 
           <SidePanelSeparator />
 
@@ -123,8 +132,6 @@ export default class CommitVote extends Component {
               </Button>
             </MarginDiv>
           )}
-
-          {miningStatus && <TxnProgress />}
         </SidePanel>
       </div>
     )

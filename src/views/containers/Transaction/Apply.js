@@ -23,11 +23,9 @@ export default ({
   handleInputChange,
   handleApprove,
   handleApply,
-  visibleApprove,
   showApprove,
-  miningStatus,
-  latestTxn,
   needToApprove,
+  visibleApprove,
 }) => (
   <div>
     <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
@@ -98,7 +96,6 @@ export default ({
           </div>
         )}
       </MarginDiv>
-      {miningStatus && <TxnProgress />}
     </SidePanel>
   </div>
 )
