@@ -48,17 +48,21 @@ export default ({
           />
         </div>
       )}
+
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
       <SideTextInput
         title="token amount"
         type="number"
         handleInputChange={e => handleInputChange(e, 'numTokens')}
       />
-      <SideTextInput
-        title="data"
-        type="text"
-        handleInputChange={e => handleInputChange(e, 'data')}
-      />
+
+      {!needToApprove && (
+        <SideTextInput
+          title="data"
+          type="text"
+          handleInputChange={e => handleInputChange(e, 'data')}
+        />
+      )}
 
       <SidePanelSeparator />
 
@@ -89,7 +93,15 @@ export default ({
         ) : (
           <div>
             {needToApprove && (
-              <Text size="xlarge" color="red" children={translate('must_approve')} />
+              <Text
+                size="xlarge"
+                color="red"
+                children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${balances.get(
+                  'registryAllowance'
+                )}. The minimum deposit for application in the Registry is ${parameters.get(
+                  'minDeposit'
+                )} ${tcr.get('tokenSymbol')}`}
+              />
             )}
           </div>
         )}

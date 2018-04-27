@@ -1,16 +1,13 @@
 /_archive
-/.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+/_tcr
 /.vscode
+/build
 /coverage
 /node_modules
-/build
-/_tcr
+/scripts/abis
 /src/views/assets/tokens
 
 .DS_Store
 .firebaserc
 firebase.json
 notes.md
-src/state/libs/abis

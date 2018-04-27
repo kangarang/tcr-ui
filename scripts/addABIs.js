@@ -1,7 +1,7 @@
-import abis from './index'
-import { ipfsAddObject } from 'redux/libs/ipfs'
+const abis = require('./abis')
+const { ipfsAddObject } = require('../src/redux/libs/ipfs')
 
-export async function addABIs() {
+async function addABIs() {
   const data = {
     id: 'Prospect Park',
     registry: abis.registry,
@@ -10,5 +10,8 @@ export async function addABIs() {
     parameterizer: abis.parameterizer,
   }
   const hash = await ipfsAddObject(data)
+  console.log('object added to ipfs. hash:', hash)
   return hash
 }
+
+addABIs()

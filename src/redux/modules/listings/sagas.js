@@ -4,7 +4,14 @@ import * as logsTypes from '../logs/types'
 import { selectAllListings } from './selectors'
 
 import * as actions from './actions'
-import { updateListings, createListing, updateAssortedListings } from './utils'
+import {
+  updateListings,
+  createListing,
+  updateAssortedListings,
+  findListing,
+} from './utils'
+
+import { baseToConvertedUnit } from '../../libs/units'
 
 export default function* rootListingsSaga() {
   yield takeEvery(logsTypes.POLL_LOGS_SUCCEEDED, handleNewPollLogsSaga)
@@ -54,6 +61,19 @@ export function* handleNewPollLogsSaga(action) {
     // update listings
     if (assorted.length) {
       console.log(assorted.length, 'assorted logs:', assorted)
+
+      assorted.forEach(event => {
+        const match = findListing(event.logData, allListings)
+        if (event.logData.numTokens && match) {
+          console.log(
+            event.msgSender.slice(0, 10),
+            ' | ',
+            baseToConvertedUnit(event.logData.numTokens, 9).toString(),
+            match.get('listingID')
+          )
+        }
+      })
+
       const updatedListings = yield call(updateAssortedListings, assorted, allListings)
       // check: equality
       if (updatedListings.equals(allListings)) {

@@ -13,6 +13,9 @@ import styled from 'styled-components'
 const CardContent = styled.div`
   padding: 1em;
 `
+const PadDiv = styled.div`
+  padding-top: 1em;
+`
 
 const styles = {
   card: {
@@ -56,12 +59,17 @@ function ListingCard(props) {
               : one.get('listingID') && one.get('listingID')}
           </Typography>
 
-          <Typography component="p">{`BY: ${one
-            .get('owner')
-            .substring(0, 10)}`}</Typography>
-          <Typography component="p">
-            {one.getIn(['appExpiry', 'formattedLocal'])}
-          </Typography>
+          <PadDiv>
+            <Typography component="p">
+              <a
+                target="_blank"
+                href={`https://gateway.ipfs.io/ipfs/${one.get('data')}`}
+              >{`More info`}</a>
+            </Typography>
+            <Typography component="p">
+              {`Block: ${one.get('blockNumber').toString()}`}
+            </Typography>
+          </PadDiv>
         </CardContent>
 
         <div>
