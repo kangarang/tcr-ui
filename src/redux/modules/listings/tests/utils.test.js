@@ -19,7 +19,7 @@ const simpleHashes = [
 
 describe('listings utils', async () => {
   describe('function: createListing', async () => {
-    test('should correctly convert an _Application log -> listing entity', async () => {
+    test.skip('should correctly convert an _Application log -> listing entity', async () => {
       const logData = {
         applicant: '0xd09cc3bc67e4294c4a446d8e4a2934a921410ed7',
         appEndDate: BN('1534147293'),

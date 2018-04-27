@@ -1,9 +1,11 @@
 import { fromJS } from 'immutable'
 import find from 'lodash/fp/find'
 
+import tokenList from 'config/tokens/eth.json'
+
 import { getListingHash, isAddress } from 'redux/libs/values'
 import { timestampToExpiry } from 'redux/utils/_datetime'
-import { ipfsGetData, ipfsTokensHash } from 'redux/libs/ipfs'
+import { ipfsGetData } from 'redux/libs/ipfs'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -14,8 +16,6 @@ export async function handleMultihash(listingHash, data) {
 
     // validate address
     if (isAddress(listingID.toLowerCase())) {
-      // see: https://github.com/ethereum-lists/tokens
-      const tokenList = await ipfsGetData(ipfsTokensHash)
       tokenData = find(
         toke => toke.address.toLowerCase() === listingID.toLowerCase(),
         tokenList
@@ -33,7 +33,7 @@ export async function handleMultihash(listingHash, data) {
         // tokenData.marketCap = 15321344231562341532
       } else {
         tokenData = {
-          imgSrc: `${baseUrl}${listingID.toLowerCase()}.png`,
+          imgSrc: ``,
           // symbol: 'DEFAULT',
           // name: 'Default Token',
           // totalSupply: 1245127,
