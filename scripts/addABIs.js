@@ -1,5 +1,5 @@
-const abis = require('./abis')
-const { ipfsAddObject } = require('./utils')
+import abis from './abis'
+import { ipfsAddObject } from './src/redux/libs/ipfs'
 
 async function addABIs() {
   const data = {
