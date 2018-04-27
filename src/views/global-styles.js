@@ -49,6 +49,5 @@ export const font = ({ size = 'normal', weight = 'normal' }) => {
   return `
     font-size: ${fontSize};
     font-weight: ${fontWeight};
-    line-height: 1;
   `
 }

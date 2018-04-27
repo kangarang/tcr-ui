@@ -13,25 +13,41 @@ import { selectNetwork } from '../home/selectors'
 import Identicon from 'views/components/Identicon'
 
 import * as types from '../transactions/types'
+import styled from 'styled-components'
+
+const FlexDiv = styled.div`
+  display: flex;
+  padding: 0.4em;
+`
 
 export function getEtherscanLink(network, txHash) {
   if (network === 'mainnet') {
-    return `https://etherscan.io/tx/${txHash}`
+    return (
+      <FlexDiv>
+        <Identicon address={txHash} diameter={14} />
+        <a target="_blank" href={`https://etherscan.io/tx/${txHash}`}>
+          {'Etherscan'}
+        </a>
+      </FlexDiv>
+    )
   }
-  return `https://${network}.etherscan.io/tx/${txHash}`
+  return (
+    <FlexDiv>
+      <Identicon address={txHash} diameter={14} />
+      <a target="_blank" href={`https://${network}.etherscan.io/tx/${txHash}`}>
+        {'Etherscan'}
+      </a>
+    </FlexDiv>
+  )
 }
 
-export function* pendingTxns(methodName, txHash) {
+export function* pendingTxns(methodName, txHash, args) {
   try {
     const network = yield select(selectNetwork)
     const noti = {
       uid: txHash,
-      title: `Pending ${methodName} transaction: ${txHash.slice(0, 8)}`,
-      message: (
-        <a target="_blank" href={`${getEtherscanLink(network, txHash)}`}>
-          {'Etherscan'}
-        </a>
-      ),
+      title: `Pending ${methodName}. Tx Hash: ${txHash.slice(0, 8)}`,
+      message: getEtherscanLink(network, txHash),
       position: 'tl',
       autoDismiss: 0,
     }
@@ -53,14 +69,7 @@ export function* minedTxn(txHash) {
       const noti = {
         uid: txHash,
         title: `${txHash.slice(0, 8)} mined`,
-        message: (
-          <div>
-            <Identicon address={txHash} diameter={7} />
-            <a target="_blank" href={`${getEtherscanLink(network, txHash)}`}>
-              {'Etherscan'}
-            </a>
-          </div>
-        ),
+        message: getEtherscanLink(network, txHash),
         position: 'tl',
         autoDismiss: 5,
       }

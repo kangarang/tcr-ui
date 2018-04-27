@@ -69,11 +69,7 @@ function ListingCard(props) {
             <div>
               {!revealTrigger && !updateTrigger ? (
                 <div>
-                  <Button
-                    onClick={e => openSidePanel(one, 'commitVote')}
-                    wide
-                    color="primary"
-                  >
+                  <Button onClick={e => openSidePanel(one, 'commitVote')} color="primary">
                     {'Commit Vote'}
                   </Button>
                   <Countdown end={one.getIn(['commitExpiry', 'date'])} />
@@ -84,7 +80,6 @@ function ListingCard(props) {
                   <div>
                     <Button
                       onClick={e => openSidePanel(one, 'revealVote')}
-                      wide
                       color="primary"
                     >
                       {'Reveal Vote'}
@@ -96,11 +91,7 @@ function ListingCard(props) {
             </div>
           ) : (
             <div>
-              <Button
-                onClick={e => openSidePanel(one, 'challenge')}
-                wide
-                color="secondary"
-              >
+              <Button onClick={e => openSidePanel(one, 'challenge')} color="secondary">
                 {'Challenge'}
               </Button>
               <Countdown end={one.getIn(['appExpiry', 'date'])} />
@@ -113,15 +104,9 @@ function ListingCard(props) {
             </Button>
           ) : (
             updateTrigger && (
-              <div>
-                <Button
-                  onClick={e => handleUpdateStatus(listingHash)}
-                  wide
-                  color="primary"
-                >
-                  {'Update Status'}
-                </Button>
-              </div>
+              <Button onClick={e => handleUpdateStatus(listingHash)} color="primary">
+                {'Update Status'}
+              </Button>
             )
           )}
         </div>

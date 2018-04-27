@@ -109,17 +109,38 @@ export function* decodeLogsSaga(action) {
       })
     )
 
-    if (action.applications) {
-      // only applications
-      yield put(actions.pollApplicationLogsSucceeded(lawgs))
-    } else if (lawgs.length > 0) {
+    // const candidates = yield lawgs.filter(log => log.eventName === '_Application')
+    // const assorted = yield lawgs.filter(log => log.eventName !== '_Application')
+
+    // if (candidates.length) {
+    //   // only applications
+    //   yield put(actions.pollApplicationLogsSucceeded(candidates))
+    // }
+
+    // if (assorted.length) {
+    //   // variety
+    //   yield put(actions.pollLogsSucceeded(assorted))
+    // }
+
+    // // notifications
+    // if (lawgs.length < 4) {
+    //   yield all(lawgs.map(lawg => notificationsSaga(lawg)))
+    // }
+    // if (action.applications) {
+    //   // only applications
+    //   yield put(actions.pollApplicationLogsSucceeded(lawgs))
+    // } else if (lawgs.length > 0) {
+    //   // variety
+    //   yield put(actions.pollLogsSucceeded(lawgs))
+    // }
+    if (lawgs.length > 0) {
       // variety
       yield put(actions.pollLogsSucceeded(lawgs))
     }
 
     console.log('lawgs:', lawgs)
     // notifications
-    if (lawgs.length < 6) {
+    if (lawgs.length < 4) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
   } catch (error) {

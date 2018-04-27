@@ -19,8 +19,9 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
   let title, message
   switch (eventName) {
     case '_Application':
-      title = `Application: ${listing.tokenData.name || 'unknown'} (${listing.tokenData
-        .symbol || 'unknown'})`
+      title = `Application: ${listing.tokenData.name ||
+        logData.listingHash.slice(0, 8)} (${listing.tokenData.symbol ||
+        'unknown symbol'})`
       message = `Message: ${logData.data || 'n/a'}`
       break
     case '_Challenge':
