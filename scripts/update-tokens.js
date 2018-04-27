@@ -1,6 +1,6 @@
 const fs = require('fs-extra')
 const path = require('path')
-const { ipfsTokensHash, ipfsGetData } = require('../src/redux/libs/ipfs')
+const { ipfsTokensHash, ipfsGetData } = require('./utils')
 
 // see: https://github.com/ethereum-lists/tokens
 // & -> https://github.com/MyCryptoHQ/MyCrypto/blob/develop/scripts/update-tokens.ts

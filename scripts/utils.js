@@ -1,9 +1,9 @@
-import IPFS from 'ipfs-mini'
-import isString from 'lodash/fp/isString'
+const IPFS = require('ipfs-mini')
+const isString = require('lodash/fp/isString')
 
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
-export async function ipfsGetData(multihash) {
+async function ipfsGetData(multihash) {
   if (!isString(multihash)) {
     return new Error('multihash must be String')
   } else if (!multihash.startsWith('Qm')) {
@@ -20,7 +20,7 @@ export async function ipfsGetData(multihash) {
 
 // TODO: type checking
 // TODO: add tests
-export async function ipfsAddObject(obj) {
+async function ipfsAddObject(obj) {
   // TODO: verify keccak256
   const CID = await new Promise((resolve, reject) => {
     ipfs.addJSON(obj, (err, result) => {
@@ -32,5 +32,12 @@ export async function ipfsAddObject(obj) {
   return CID
 }
 
-export const ipfsABIsHash = 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu'
-export const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
+const ipfsABIsHash = 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu'
+const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
+
+module.exports = {
+  ipfsGetData,
+  ipfsAddObject,
+  ipfsABIsHash,
+  ipfsTokensHash,
+}
