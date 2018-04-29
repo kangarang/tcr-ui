@@ -62,6 +62,7 @@ class Home extends Component {
     visibleApprove: true,
     expand: '',
     visibleRequestVotingRights: false,
+    depositMore: false,
   }
   componentDidMount() {
     this.props.onSetupEthereum()
@@ -71,14 +72,14 @@ class Home extends Component {
       opened: false,
     })
   }
-  showApprove = () => {
-    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
-  }
   openSidePanel = (one, openThis) => {
     this.setState({
       selectedOne: one,
       opened: openThis,
     })
+  }
+  showApprove = () => {
+    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
   }
   chooseTCR = one => {
     this.props.onChooseTCR(one)
@@ -162,6 +163,7 @@ class Home extends Component {
             visibleApprove={this.state.visibleApprove}
             showApprove={this.showApprove}
             needToApprove={needToApproveRegistry}
+            depositMore={this.state.depositMore}
             {...this.props}
           />
         )}

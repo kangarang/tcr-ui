@@ -14,6 +14,7 @@ import SidePanel from './components/SidePanel'
 
 export default ({
   opened,
+  depositMore,
   closeSidePanel,
   tcr,
   parameters,
@@ -50,11 +51,13 @@ export default ({
       )}
 
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
-      <SideTextInput
-        title="token amount"
-        type="number"
-        handleInputChange={e => handleInputChange(e, 'numTokens')}
-      />
+      {depositMore && (
+        <SideTextInput
+          title="token amount"
+          type="number"
+          handleInputChange={e => handleInputChange(e, 'numTokens')}
+        />
+      )}
 
       {!needToApprove && (
         <SideTextInput
@@ -74,12 +77,7 @@ export default ({
             {'Approve tokens for Registry'}
           </Button>
         ) : (
-          <Button
-            bgColor={colors.brightBlue}
-            wide
-            fgColor={'white'}
-            onClick={handleApply}
-          >
+          <Button bgColor={colors.brightBlue} wide color={'white'} onClick={handleApply}>
             {'SUBMIT APPLICATION'}
           </Button>
         )}

@@ -7,7 +7,7 @@ import { Motion, spring } from 'react-motion'
 import Text from 'views/components/Text'
 import { colors } from 'views/global-styles'
 
-const PANEL_WIDTH = 450
+const PANEL_WIDTH = 400
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
 const PANEL_HIDE_RIGHT = -PANEL_WIDTH * 1.6
 const CONTENT_PADDING = 50
