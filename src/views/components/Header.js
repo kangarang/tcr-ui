@@ -14,7 +14,7 @@ const GridContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  padding: 1em;
+  padding: 0.2em 1em;
 `
 
 const GridItem = styled.div`

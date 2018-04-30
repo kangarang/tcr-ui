@@ -19,18 +19,13 @@ const buttonStyles = css`
 
   background-color: ${({ bgColor }) => bgColor && bgColor};
   border: 2px solid transparent;
-  /* border-image: linear-gradient(
-    to right,
-    ${colors.gradient.left} 0%,
-    ${colors.gradient.right} 100%
-  ); */
   ${({ methodName }) =>
     methodName &&
     `border-image: linear-gradient(to right, ${colors.gradient[methodName].left} 0%, ${
       colors.gradient[methodName].right
     } 100%);`};
   border-radius: 2px;
-  border-image-slice: ${({ bgColor }) => (bgColor ? '0' : '2')};
+  border-image-slice: ${({ bgColor }) => (bgColor ? '0' : '4')};
 
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: all 0.22s;

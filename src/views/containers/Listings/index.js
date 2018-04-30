@@ -77,9 +77,12 @@ class TablePaginationActions extends React.Component {
   }
   handleKeyPress = () => {
     document.addEventListener('keydown', e => {
-      if (e.code === 'ArrowLeft') {
+      if (e.code === 'ArrowLeft' && this.props.page !== 0) {
         this.handleBackButtonClick(e)
-      } else if (e.code === 'ArrowRight') {
+      } else if (
+        e.code === 'ArrowRight' &&
+        !(this.props.page >= Math.ceil(this.props.count / this.props.rowsPerPage) - 1)
+      ) {
         this.handleNextButtonClick(e)
       }
     })
