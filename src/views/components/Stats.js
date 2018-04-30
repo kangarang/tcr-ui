@@ -8,10 +8,10 @@ import Identicon from './Identicon'
 
 export default ({ account, balances, tcr, network, stats, error }) => (
   <GridContainer>
-    <GridItem>
+    <GridItemPad>
       <CapsDiv>{'total applications'}</CapsDiv>
       <BoldDiv>{stats.sizes.candidates}</BoldDiv>
-    </GridItem>
+    </GridItemPad>
 
     <GridItem>
       <CapsDiv>
@@ -68,22 +68,25 @@ export default ({ account, balances, tcr, network, stats, error }) => (
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 9fr 6fr 6fr 11fr;
-  grid-column-gap: 2px;
+  grid-column-gap: 1px;
   align-items: center;
   height: 5.5em;
   color: ${colors.offBlack};
-  background-color: lightgrey; // grid-line color
-  border: 1px solid black;
-  box-sizing: border-box;
+  background-color: ${colors.paleGrey}; // grid-line color
+  border-top: 1px solid ${colors.paleGrey};
+  border-bottom: 1px solid ${colors.paleGrey};
 `
 const GridItem = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
+  align-items: flex-start;
   height: 100%;
-  padding: 0 2em;
+  padding: 0 1.5em;
   background-color: white;
+`
+const GridItemPad = styled(GridItem)`
+  padding-left: 180px;
 `
 const CapsDiv = styled.div`
   font-size: 0.9em;

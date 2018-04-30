@@ -68,7 +68,7 @@ class CommitVote extends Component {
     activeStep: 0,
   }
   componentDidMount() {
-    this.getCommitHash()
+    // this.getCommitHash()
   }
 
   getCommitHash = async () => {
@@ -127,7 +127,7 @@ class CommitVote extends Component {
     const steps = getSteps()
     const { activeStep } = this.state
     return (
-      <div>
+      <div className={classes.root}>
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           {/* <Img alt="" src={selectedOne.getIn(['tokenData', 'imgSrc'])} /> */}
           <SideText

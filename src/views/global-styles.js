@@ -24,6 +24,8 @@ export const colors = {
   lightBg: '#F8FAFB',
   brightBlue: '#00AFF3',
   mutedBlue: '#ADC8D9',
+  paleGrey: '#B9C7CF',
+  darkGrey: '#788995',
 }
 
 const FONT_SIZES = {

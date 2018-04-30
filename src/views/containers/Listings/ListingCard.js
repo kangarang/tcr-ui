@@ -16,16 +16,24 @@ const CardContent = styled.div`
 const PadDiv = styled.div`
   padding-top: 1em;
 `
+const ButtonContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+`
 
 const styles = {
   card: {
-    width: 160,
+    width: 180,
+    height: 420,
     margin: 10,
-    padding: '.1em',
+    padding: '.5em',
+    overflow: 'hidden',
+    borderRadius: 5,
+    position: 'relative',
   },
   media: {
-    height: 50,
-    margin: 4,
+    height: 180,
   },
 }
 
@@ -43,10 +51,12 @@ function ListingCard(props) {
   return (
     <div>
       <Card className={classes.card}>
-        <Img
-          src={tokenData && tokenData.get('imgSrc') ? tokenData.get('imgSrc') : imgSrc}
-          alt=""
-        />
+        <div className={classes.media}>
+          <Img
+            src={tokenData && tokenData.get('imgSrc') ? tokenData.get('imgSrc') : imgSrc}
+            alt=""
+          />
+        </div>
 
         <CardContent>
           <Typography variant="title" component="h3">
@@ -68,7 +78,7 @@ function ListingCard(props) {
           </PadDiv>
         </CardContent>
 
-        <div>
+        <ButtonContainer>
           {listingType === 'faceoffs' ? (
             <div>
               {!revealTrigger && !updateTrigger ? (
@@ -95,7 +105,11 @@ function ListingCard(props) {
             </div>
           ) : (
             <div>
-              <Button onClick={e => openSidePanel(one, 'challenge')} color="secondary">
+              <Button
+                wide
+                onClick={e => openSidePanel(one, 'challenge')}
+                color="secondary"
+              >
                 {'Challenge'}
               </Button>
               <Countdown end={one.getIn(['appExpiry', 'date'])} />
@@ -106,7 +120,7 @@ function ListingCard(props) {
               {'Update Status'}
             </Button>
           )}
-        </div>
+        </ButtonContainer>
       </Card>
     </div>
   )

@@ -6,7 +6,7 @@ const buttonStyles = css`
   outline: 0;
   user-select: none;
   cursor: pointer;
-  padding: ${({ wide }) => (wide ? '0.5em 1.5em' : '0.5em 1em')};
+  padding: ${({ wide }) => (wide ? '0.5em 1.2em' : '0.5em 1em')};
   width: ${({ wide }) => (wide ? '100%' : 'auto')};
 
   font-size: 14px;
@@ -24,6 +24,7 @@ const buttonStyles = css`
     ${colors.gradient.left} 0%,
     ${colors.gradient.right} 100%
   );
+  border-radius: 2px;
   border-image-slice: ${({ bgColor }) => (bgColor ? '0' : '2')};
 
   box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);

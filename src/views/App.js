@@ -34,6 +34,12 @@ const muiTheme = createMuiTheme({
         } 100%)`,
         border: 0,
         height: 3,
+        width: '100%',
+      },
+    },
+    MuiTab: {
+      wrapper: {
+        alignItems: 'flex-start',
       },
     },
   },

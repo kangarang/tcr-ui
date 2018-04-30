@@ -15,6 +15,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 import LastPageIcon from '@material-ui/icons/LastPage'
 
 import ListingCard from './ListingCard'
+import { colors } from '../../global-styles'
 
 import {
   selectAllListings,
@@ -110,7 +111,7 @@ const styles = theme => ({
   },
   appBar: {
     boxShadow: '0 0 0 0',
-    borderBottom: '1px solid grey',
+    borderBottom: `.5px solid ${colors.paleGrey}`,
   },
 })
 
@@ -167,7 +168,12 @@ class SimpleTabs extends Component {
         <ListingsWrapper>
           <Paper className={classes.root}>
             <AppBar className={classes.appBar} position="static" color="inherit">
-              <Tabs value={value} onChange={this.handleChange} indicatorColor="primary">
+              <Tabs
+                centered={false}
+                value={value}
+                onChange={this.handleChange}
+                indicatorColor="primary"
+              >
                 <Tab label="registry" />
                 <Tab label="applications" />
                 <Tab label="voting" />
@@ -249,10 +255,11 @@ class SimpleTabs extends Component {
 
 const ListingsWrapper = styled.div`
   width: 84vw;
-  margin: 0 auto;
+  margin: 10px auto 0;
 `
 const FlexContainer = styled.div`
   display: flex;
+  margin: 10px auto 0;
 `
 function mapDispatchToProps(dispatch) {
   return {
