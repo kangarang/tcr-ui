@@ -46,7 +46,7 @@ export default ({ account, balances, tcr, network, stats, error }) => (
         </UserItem>
         <UserItem>
           <BoldDiv>
-            {trimDecimalsThree(balances.get('token'))}
+            {balances.get('token')}
             <BoldDivGrey>{tcr.get('tokenSymbol')}</BoldDivGrey>
           </BoldDiv>
         </UserItem>

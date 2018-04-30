@@ -13,17 +13,19 @@ import SidePanelSeparator from './components/SidePanelSeparator'
 export default ({
   opened,
   closeSidePanel,
-  token,
   tcr,
   parameters,
-  balances,
   handleInputChange,
   handleApprove,
   handleChallenge,
+  needToApprove,
   selectedOne,
 }) => (
   <div>
     <SidePanel title="Challenge a Listing" opened={opened} onClose={closeSidePanel}>
+      {needToApprove && (
+        <SideText small color="grey" text={translate('ins_approve_registry')} />
+      )}
       <SidePanelSeparator />
 
       <SideText text={selectedOne && selectedOne.get('listingID')} />
@@ -47,9 +49,15 @@ export default ({
       <SideText color="grey" text={translate('mm_challenge')} />
 
       <MarginDiv>
-        <Button onClick={handleChallenge} mode="strong" wide>
-          {'CHALLENGE'}
-        </Button>
+        {needToApprove ? (
+          <Button onClick={e => handleApprove('registry')} mode="strong">
+            {'Approve tokens for Registry'}
+          </Button>
+        ) : (
+          <Button onClick={handleChallenge} mode="strong" wide>
+            {'CHALLENGE'}
+          </Button>
+        )}
       </MarginDiv>
     </SidePanel>
   </div>

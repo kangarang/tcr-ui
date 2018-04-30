@@ -4,7 +4,7 @@ import translate from 'views/translations'
 import { baseToConvertedUnit } from 'redux/libs/units'
 
 import Button from 'views/components/Button'
-import { SideSplit, SideText } from 'views/containers/Transaction/components'
+import { SideSplit, SideText } from 'views/containers/Transactions/components'
 import { MarginDiv, FileInput } from 'views/components/StyledHome'
 
 import SidePanelSeparator from './components/SidePanelSeparator'

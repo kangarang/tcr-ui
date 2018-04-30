@@ -20,7 +20,7 @@ class NavBar extends Component {
           Home
         </NavLink>
         <NavLink strict to="/" />
-        <NavLink strict to="/">
+        <NavLink strict to="/activities">
           Activities
         </NavLink>
       </Nav>

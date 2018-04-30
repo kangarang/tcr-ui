@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import AppBar from 'material-ui/AppBar'
 import { withStyles } from 'material-ui/styles'
 import Tabs, { Tab } from 'material-ui/Tabs'
+import Typography from 'material-ui/Typography'
 import { TablePagination, TableRow } from 'material-ui/Table'
 import Paper from 'material-ui/Paper'
 import IconButton from 'material-ui/IconButton'
@@ -18,12 +19,8 @@ import ListingCard from './ListingCard'
 
 import {
   selectAllListings,
-  selectFaceoffs,
-  selectWhitelist,
-  selectCandidates,
-  onlyCandidateIDs,
-  onlyFaceoffIDs,
-  onlyWhitelistIDs,
+  selectExpired,
+  onlyExpiredIDs,
 } from 'redux/modules/listings/selectors'
 import * as actions from 'redux/modules/listings/actions'
 
@@ -98,19 +95,22 @@ class TablePaginationActions extends React.Component {
 const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(
   TablePaginationActions
 )
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: '1em 1em 0' }}>
+      {props.children}
+    </Typography>
+  )
+}
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.contentBackground,
-    boxShadow: '0 0 0 0',
   },
   tableWrapper: {
     overflowX: 'auto',
-    padding: '0',
-  },
-  appBar: {
-    boxShadow: '0 0 0 0',
-    borderBottom: '1px solid grey',
+    padding: '0 2em',
   },
 })
 
@@ -139,41 +139,30 @@ class SimpleTabs extends Component {
   render() {
     const {
       registry,
-      candidates,
-      faceoffs,
-      whitelist,
+      expired,
 
-      candidateIDs,
-      faceoffIDs,
-      whitelistIDs,
-      chooseTCR,
+      expiredIDs,
       classes,
     } = this.props
     const { rowsPerPage, page, value } = this.state
 
     let data
     if (value === 0) {
-      data = whitelistIDs
-    } else if (value === 1) {
-      data = candidateIDs
-    } else if (value === 2) {
-      data = faceoffIDs
+      data = expiredIDs
     }
     const emptyRows =
       rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
     return (
       <Transactions>
-        <ListingsWrapper>
-          <Paper className={classes.root}>
-            <AppBar className={classes.appBar} position="static" color="inherit">
-              <Tabs value={value} onChange={this.handleChange} indicatorColor="primary">
-                <Tab label="registry" />
-                <Tab label="applications" />
-                <Tab label="voting" />
-              </Tabs>
-            </AppBar>
-            <div className={classes.tableWrapper}>
+        <Paper className={classes.root}>
+          <AppBar position="static" color="inherit">
+            <Tabs value={value} onChange={this.handleChange} indicatorColor="primary">
+              <Tab label="expired" />
+            </Tabs>
+          </AppBar>
+          <div className={classes.tableWrapper}>
+            <TabContainer>
               <FlexContainer>
                 {value === 0 &&
                   data
@@ -182,75 +171,40 @@ class SimpleTabs extends Component {
                       return (
                         <ListingCard
                           key={id}
-                          one={whitelist.get(id)}
-                          listingType={'whitelist'}
+                          listingHash={id}
+                          one={expired.get(id)}
+                          listingType={'expired'}
                           openSidePanel={this.openSidePanel}
-                          chooseTCR={chooseTCR}
                           registry={registry}
-                          tokenData={whitelist.getIn([id, 'tokenData'])}
-                        />
-                      )
-                    })}
-                {value === 1 &&
-                  data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(id => {
-                      return (
-                        <ListingCard
-                          key={id}
-                          one={candidates.get(id)}
-                          listingType={'candidates'}
-                          openSidePanel={this.openSidePanel}
-                          updateTrigger={candidates.getIn([id, 'appExpiry', 'expired'])}
-                          tokenData={candidates.getIn([id, 'tokenData'])}
-                        />
-                      )
-                    })}
-                {value === 2 &&
-                  data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(id => {
-                      return (
-                        <ListingCard
-                          key={id}
-                          one={faceoffs.get(id)}
-                          listingType={'faceoffs'}
-                          openSidePanel={this.openSidePanel}
-                          updateTrigger={faceoffs.getIn([id, 'revealExpiry', 'expired'])}
-                          revealTrigger={faceoffs.getIn([id, 'commitExpiry', 'expired'])}
-                          tokenData={faceoffs.getIn([id, 'tokenData'])}
+                          tokenData={expired.getIn([id, 'tokenData'])}
                         />
                       )
                     })}
               </FlexContainer>
-              {emptyRows === 5 && (
-                <TableRow component="div" style={{ height: 60 * emptyRows }}>
-                  <div />
-                </TableRow>
-              )}
+            </TabContainer>
+            {emptyRows === 5 && (
+              <TableRow component="div" style={{ height: 60 * emptyRows }}>
+                <div />
+              </TableRow>
+            )}
 
-              <TablePagination
-                component="div"
-                colSpan={3}
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                Actions={TablePaginationActionsWrapped}
-              />
-            </div>
-          </Paper>
-        </ListingsWrapper>
+            <TablePagination
+              component="div"
+              colSpan={3}
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              Actions={TablePaginationActionsWrapped}
+            />
+          </div>
+        </Paper>
       </Transactions>
     )
   }
 }
 
-const ListingsWrapper = styled.div`
-  width: 84vw;
-  margin: 0 auto;
-`
 const FlexContainer = styled.div`
   display: flex;
 `
@@ -262,13 +216,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  allListings: selectAllListings,
-  candidates: selectCandidates,
-  candidateIDs: onlyCandidateIDs,
-  faceoffs: selectFaceoffs,
-  faceoffIDs: onlyFaceoffIDs,
-  whitelist: selectWhitelist,
-  whitelistIDs: onlyWhitelistIDs,
+  expired: selectExpired,
+  expiredIDs: onlyExpiredIDs,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

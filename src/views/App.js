@@ -1,13 +1,13 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 
 import { theme } from 'views/global-styles'
 import configureStore from 'redux/store'
 
-import Home from 'views/containers/Home'
+import Home from 'views/containers/Home/Loadable'
 
 import './App.css'
 
@@ -54,9 +54,7 @@ const App = () => (
     <Provider store={store}>
       <MuiThemeProvider theme={muiTheme}>
         <Router>
-          <Switch>
-            <Route exact path="/" component={Home} />
-          </Switch>
+          <Home />
         </Router>
       </MuiThemeProvider>
     </Provider>

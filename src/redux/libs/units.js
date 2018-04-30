@@ -8,9 +8,6 @@ export const BN = small => {
     return small
   }
   if (isString(small)) {
-    if (small.includes('.')) {
-      throw new Error('No decimals')
-    }
     return new BNJS(small, 10)
   }
   if (isNumber(small)) {

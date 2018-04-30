@@ -15,4 +15,10 @@ const deleteKey = key => ({
   key,
 })
 
-export { updateListing, setListings, deleteKey }
+const openSidePanel = (listing, methodName) => ({
+  type: types.OPEN_SIDE_PANEL,
+  listing,
+  methodName,
+})
+
+export { updateListing, setListings, deleteKey, openSidePanel }

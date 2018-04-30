@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles, withTheme } from 'material-ui/styles'
+import { withStyles } from 'material-ui/styles'
 import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper'
 import Button from 'material-ui/Button'
 import Paper from 'material-ui/Paper'
@@ -122,4 +122,4 @@ VerticalLinearStepper.propTypes = {
   classes: PropTypes.object,
 }
 
-export default withStyles(styles)(withTheme()(VerticalLinearStepper))
+export default withStyles(styles)(VerticalLinearStepper)

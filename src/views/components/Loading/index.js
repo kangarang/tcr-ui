@@ -1,13 +1,11 @@
 import React from 'react'
 
-// import Circle from './Circle'
+import Circle from './Circle'
 import Wrapper from './Wrapper'
-import ConsenSys from './ConsenSys'
 
 const LoadingIndicator = () => (
   <Wrapper>
-    <ConsenSys height={100} width={100} classes={'logo spin'} />
-    {/* <Circle />
+    <Circle />
     <Circle rotate={30} delay={-1.1} />
     <Circle rotate={60} delay={-1} />
     <Circle rotate={90} delay={-0.9} />
@@ -18,7 +16,7 @@ const LoadingIndicator = () => (
     <Circle rotate={240} delay={-0.4} />
     <Circle rotate={270} delay={-0.3} />
     <Circle rotate={300} delay={-0.2} />
-    <Circle rotate={330} delay={-0.1} /> */}
+    <Circle rotate={330} delay={-0.1} />
   </Wrapper>
 )
 

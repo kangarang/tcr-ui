@@ -43,6 +43,7 @@ export function* commitVoteSaga(action) {
 
     // TODO: improve
     const salt = randInt(1e6, 1e8)
+    // const salt = args[4]
 
     // format args
     const secretHash = yield call(getVoteSaltHash, voteOption, salt.toString(10))

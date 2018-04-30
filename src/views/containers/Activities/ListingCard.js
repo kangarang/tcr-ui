@@ -19,13 +19,13 @@ const PadDiv = styled.div`
 
 const styles = {
   card: {
-    width: 160,
-    margin: 10,
-    padding: '.1em',
+    width: 200,
+    margin: 20,
+    padding: '.5em',
   },
   media: {
-    height: 50,
-    margin: 4,
+    height: 100,
+    margin: 5,
   },
 }
 
@@ -33,11 +33,15 @@ function ListingCard(props) {
   const {
     one,
     classes,
+    registry,
     tokenData,
     listingType,
+    listingHash,
     updateTrigger,
     revealTrigger,
     openSidePanel,
+    chooseTCR,
+    handleUpdateStatus,
   } = props
 
   return (
@@ -93,18 +97,34 @@ function ListingCard(props) {
                 )
               )}
             </div>
-          ) : (
+          ) : listingType !== 'expired' ? (
             <div>
               <Button onClick={e => openSidePanel(one, 'challenge')} color="secondary">
                 {'Challenge'}
               </Button>
               <Countdown end={one.getIn(['appExpiry', 'date'])} />
             </div>
+          ) : (
+            <div>
+              <Button
+                onClick={e => openSidePanel(one, 'claimVoterReward')}
+                color="secondary"
+              >
+                {'Claim Voter Reward'}
+              </Button>
+            </div>
           )}
-          {updateTrigger && (
-            <Button onClick={e => openSidePanel(one, 'commitVote')} color="primary">
-              {'Update Status'}
+          {registry &&
+          registry.address === '0x9fc1917a8ba87db75e308c9de45d99813f63e64a' ? (
+            <Button onClick={e => chooseTCR(one.get('listingID'))} wide>
+              {'Select TCR'}
             </Button>
+          ) : (
+            updateTrigger && (
+              <Button onClick={e => handleUpdateStatus(listingHash)} color="primary">
+                {'Update Status'}
+              </Button>
+            )
           )}
         </div>
       </Card>
