@@ -112,6 +112,7 @@ export function* decodeLogsSaga(action) {
 
     if (lawgs.length > 0) {
       // variety
+      console.log(decodedLogs.length, eventNames, 'logs:', decodedLogs)
       yield put(actions.pollLogsSucceeded(lawgs))
     }
     // notifications

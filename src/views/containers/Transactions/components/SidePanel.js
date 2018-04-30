@@ -10,7 +10,7 @@ import { colors } from 'views/global-styles'
 const PANEL_WIDTH = 400
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
 const PANEL_HIDE_RIGHT = -PANEL_WIDTH * 1.6
-const CONTENT_PADDING = 50
+const CONTENT_PADDING = 40
 const PANEL_INNER_WIDTH = PANEL_WIDTH - CONTENT_PADDING * 2
 
 const StyledSidePanel = styled.div`
@@ -48,7 +48,7 @@ const StyledPanel = styled.aside`
 
 const StyledPanelHeader = styled.header`
   position: relative;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
   padding-bottom: 10px;
@@ -127,7 +127,7 @@ class SidePanel extends Component {
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
                   <h1>
-                    <Text size="xxlarge">{title}</Text>
+                    <Text size="xlarge">{title}</Text>
                   </h1>
                 </StyledPanelHeader>
                 <StyledPanelScrollView>

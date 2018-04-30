@@ -8,6 +8,7 @@ function saveFile(data = '', filename = 'download.txt') {
   const blob = new window.Blob([data], { type: 'text/plain;charset=utf-8' })
 
   FileSaver.saveAs(blob, filename)
+  return blob
 }
 
 export function makeBlob(mime, str) {

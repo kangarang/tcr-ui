@@ -37,6 +37,9 @@ const muiTheme = createMuiTheme({
         width: '100%',
       },
     },
+    MuiPaper: {
+      root: {},
+    },
     MuiTab: {
       wrapper: {
         alignItems: 'flex-start',

@@ -116,7 +116,7 @@ function ListingCard(props) {
             </div>
           )}
           {updateTrigger && (
-            <Button onClick={e => openSidePanel(one, 'commitVote')} color="primary">
+            <Button onClick={e => openSidePanel(one, 'updateStatus')} color="primary">
               {'Update Status'}
             </Button>
           )}

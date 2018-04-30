@@ -35,15 +35,11 @@ export function* commitVoteSaga(action) {
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
 
-    const { args, commitEndDate, revealEndDate } = action.payload
+    const { args } = action.payload
     const pollID = args[0]
     const voteOption = args[1]
     const numTokens = yield call(convertedToBaseUnit, args[2], tcr.get('tokenDecimals'))
-    const data = args[3]
-
-    // TODO: improve
-    const salt = randInt(1e6, 1e8)
-    // const salt = args[4]
+    const salt = args[3]
 
     // format args
     const secretHash = yield call(getVoteSaltHash, voteOption, salt.toString(10))
@@ -55,27 +51,6 @@ export function* commitVoteSaga(action) {
     )
     const finalArgs = [pollID, secretHash, numTokens, prevPollID['0'].toString(10)]
 
-    // record expiry dates
-    const commitEndDateString = getEndDateString(commitEndDate)
-    const revealEndDateString = getEndDateString(revealEndDate)
-
-    const json = {
-      voteOption,
-      numTokens,
-      commitEnd: commitEndDateString,
-      revealEnd: revealEndDateString,
-      pollID,
-      data,
-      salt: salt.toString(10),
-      secretHash,
-      account,
-    }
-    const yon = voteOption === '1' ? 'for' : 'against'
-    // const listingDashed = data.replace(' ', '-')
-    const filename = `${pollID}-${yon}-${data.substring(0, 8)}.json`
-
-    // TODO: local storag
-    saveFile(json, filename)
     yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
   } catch (error) {
     console.log('commit vote saga error', error)

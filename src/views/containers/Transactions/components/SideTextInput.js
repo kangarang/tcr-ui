@@ -12,7 +12,7 @@ const styles = {
     height: '40px',
   },
 }
-export default ({ title, type, handleInputChange }) => (
+export default ({ title, type, handleInputChange, placeholder, value }) => (
   <div>
     <MarginDiv>
       <Text color="grey" smallcaps>
@@ -20,7 +20,13 @@ export default ({ title, type, handleInputChange }) => (
       </Text>
     </MarginDiv>
     <MarginDiv>
-      <TextInput onChange={handleInputChange} wide type={type} style={styles.textInput} />
+      <TextInput
+        onChange={handleInputChange}
+        type={type}
+        style={styles.textInput}
+        placeholder={placeholder}
+        value={value}
+      />
     </MarginDiv>
   </div>
 )

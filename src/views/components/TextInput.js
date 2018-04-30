@@ -7,8 +7,8 @@ import { font, theme } from 'views/global-styles'
 
 const StyledInput = styled.input`
   ${font({ size: 'small', weight: 'normal' })};
-  width: ${({ wide }) => (wide ? '100%' : 'auto')};
-  padding: 5px 10px;
+  width: ${({ wide }) => (wide ? '100%' : '90%')};
+  padding: 0.3em 1em;
   background: ${theme.contentBackground};
   border: 1px solid ${theme.contentBorder};
   border-radius: 3px;

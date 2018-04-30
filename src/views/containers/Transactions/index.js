@@ -136,6 +136,7 @@ class Transactions extends Component {
             voting={voting}
             tcr={tcr}
             account={account}
+            numTokens={this.state.numTokens}
           />
         )}
         {sidePanelMethod === 'revealVote' && (
@@ -198,20 +199,16 @@ class Transactions extends Component {
     const args = [this.state.numTokens]
     this.props.onSendTransaction({ methodName: 'requestVotingRights', args })
   }
-  handleCommitVote = voteOption => {
+  handleCommitVote = (voteOption, salt) => {
     const args = [
       this.props.sidePanelListing.get('challengeID'),
       voteOption,
       this.state.numTokens,
-      this.props.sidePanelListing.get('listingID'),
+      salt,
     ]
-    const commitEndDate = this.props.sidePanelListing.getIn(['commitExpiry', 'timestamp'])
-    const revealEndDate = this.props.sidePanelListing.getIn(['revealExpiry', 'timestamp'])
     this.props.onSendTransaction({
       methodName: 'commitVote',
       args,
-      commitEndDate,
-      revealEndDate,
     })
   }
   handleRevealVote = () => {
