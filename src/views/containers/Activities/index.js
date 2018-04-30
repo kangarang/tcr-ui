@@ -17,11 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage'
 
 import ListingCard from './ListingCard'
 
-import {
-  selectAllListings,
-  selectExpired,
-  onlyExpiredIDs,
-} from 'redux/modules/listings/selectors'
+import { selectExpired, onlyExpiredIDs } from 'redux/modules/listings/selectors'
 import * as actions from 'redux/modules/listings/actions'
 
 import Transactions from 'views/containers/Transactions/Loadable'

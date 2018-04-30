@@ -3,9 +3,7 @@ import { select, call } from 'redux-saga/effects'
 import { selectTCR, selectAccount, selectVoting } from 'redux/modules/home/selectors'
 
 import { convertedToBaseUnit } from 'redux/libs/units'
-import { getVoteSaltHash, randInt } from 'redux/libs/values'
-import saveFile from 'redux/utils/_file'
-import { getEndDateString } from 'redux/utils/_datetime'
+import { getVoteSaltHash } from 'redux/libs/values'
 
 import { sendTransactionSaga } from './index'
 

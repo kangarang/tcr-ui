@@ -11,14 +11,11 @@ import { getVoteSaltHash, randInt } from 'redux/libs/values'
 import { getEndDateString } from 'redux/utils/_datetime'
 import saveFile from 'redux/utils/_file'
 
-import translate from 'views/translations'
 import { colors } from 'views/global-styles'
-import { MarginDiv } from 'views/components/StyledHome'
-import Img from 'views/components/Img'
 import Button from 'views/components/Button'
 import Text from 'views/components/Text'
 
-import { SideSplit, SideText, SideTextInput } from './components'
+import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
 
@@ -178,13 +175,10 @@ class CommitVote extends Component {
     const {
       opened,
       closeSidePanel,
-      balances,
       selectedOne,
       handleInputChange,
-      handleApprove,
       handleCommitVote,
       handleRequestVotingRights,
-      needToApprove,
       classes,
     } = this.props
     const steps = this.getSteps()
