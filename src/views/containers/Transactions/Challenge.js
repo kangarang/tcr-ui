@@ -54,7 +54,7 @@ export default ({
             {'Approve tokens for Registry'}
           </Button>
         ) : (
-          <Button onClick={handleChallenge} mode="strong" wide>
+          <Button methodName="challenge" onClick={handleChallenge} mode="strong" wide>
             {'CHALLENGE'}
           </Button>
         )}

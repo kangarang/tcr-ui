@@ -18,8 +18,30 @@ export const colors = {
   darkRed: '#9A4540',
   blue2: '#A4BEE7',
   gradient: {
-    right: '#8FD3F4',
-    left: '#84FAB0',
+    revealVote: {
+      right: '#85D3D4',
+      left: '#74FAB0',
+    },
+    commitVote: {
+      right: '#4F4344',
+      left: '#14FA30',
+    },
+    approve: {
+      right: '#8FD3F4',
+      left: '#84FAB0',
+    },
+    apply: {
+      right: '#8FD3F4',
+      left: '#84FAB0',
+    },
+    challenge: {
+      right: '#D0021B',
+      left: '#3C8BFB',
+    },
+    updateStatus: {
+      right: '#A8EDEA',
+      left: '#F9D7E3',
+    },
   },
   lightBg: '#F8FAFB',
   brightBlue: '#00AFF3',

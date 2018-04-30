@@ -93,7 +93,7 @@ export default class RevealVote extends Component {
 
         <FileInput type="file" name="file" onChange={handleFileInput} />
         <MarginDiv>
-          <Button onClick={handleRevealVote} mode="strong" wide>
+          <Button methodName="revealVote" onClick={handleRevealVote} mode="strong" wide>
             {'Reveal Vote'}
           </Button>
         </MarginDiv>

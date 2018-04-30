@@ -253,7 +253,12 @@ class CommitVote extends Component {
                           type="number"
                           handleInputChange={e => handleInputChange(e, 'numTokens')}
                         />
-                        <Button onClick={handleRequestVotingRights} mode="strong" wide>
+                        <Button
+                          methodName="requestVotingRights"
+                          onClick={handleRequestVotingRights}
+                          mode="strong"
+                          wide
+                        >
                           {'Request Voting Rights'}
                         </Button>
                       </div>
@@ -288,6 +293,7 @@ class CommitVote extends Component {
                           }
                           mode="strong"
                           wide
+                          methodName="commitVote"
                         >
                           {'Send Transaction'}
                         </Button>

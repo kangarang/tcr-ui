@@ -73,11 +73,21 @@ export default ({
 
       <MarginDiv>
         {needToApprove ? (
-          <Button onClick={e => handleApprove('registry')} mode="strong">
+          <Button
+            methodName="approve"
+            onClick={e => handleApprove('registry')}
+            mode="strong"
+          >
             {'Approve tokens for Registry'}
           </Button>
         ) : (
-          <Button bgColor={colors.brightBlue} wide color={'white'} onClick={handleApply}>
+          <Button
+            methodName="apply"
+            bgColor={colors.brightBlue}
+            wide
+            color={'white'}
+            onClick={handleApply}
+          >
             {'SUBMIT APPLICATION'}
           </Button>
         )}

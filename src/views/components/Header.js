@@ -33,7 +33,9 @@ export default ({ error, openSidePanel, network, tcr }) => (
         </GridItem>
       ) : (
         <GridItem gc={1}>
-          <Button onClick={openSidePanel}>{'Start an application'}</Button>
+          <Button methodName="apply" onClick={openSidePanel}>
+            {'Start an application'}
+          </Button>
         </GridItem>
       )}
 

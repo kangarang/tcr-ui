@@ -28,6 +28,7 @@ export default ({
           onClick={e => handleUpdateStatus(selectedOne.get('listingHash'))}
           mode="strong"
           wide
+          methodName="updateStatus"
         >
           {'UPDATE STATUS'}
         </Button>
