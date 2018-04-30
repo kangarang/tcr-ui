@@ -26,6 +26,7 @@ import {
   onlyFaceoffIDs,
   onlyWhitelistIDs,
 } from 'redux/modules/listings/selectors'
+import { selectStats } from 'redux/modules/home/selectors'
 import * as actions from 'redux/modules/listings/actions'
 
 import Transactions from 'views/containers/Transactions/Loadable'
@@ -36,9 +37,26 @@ const actionsStyles = theme => ({
     color: theme.textSecondary,
     marginLeft: theme.spacing.unit * 2.5,
   },
+  prevPage: {
+    position: 'fixed',
+    left: '30px',
+    top: '45%',
+    height: '5em',
+    width: '5em',
+  },
+  nextPage: {
+    position: 'fixed',
+    right: '30px',
+    top: '45%',
+    height: '5em',
+    width: '5em',
+  },
 })
 
 class TablePaginationActions extends React.Component {
+  componentDidMount() {
+    this.handleKeyPress()
+  }
   handleFirstPageButtonClick = event => {
     this.props.onChangePage(event, 0)
   }
@@ -57,9 +75,18 @@ class TablePaginationActions extends React.Component {
       Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1)
     )
   }
+  handleKeyPress = () => {
+    document.addEventListener('keydown', e => {
+      if (e.code === 'ArrowLeft') {
+        this.handleBackButtonClick(e)
+      } else if (e.code === 'ArrowRight') {
+        this.handleNextButtonClick(e)
+      }
+    })
+  }
 
   render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props
+    const { classes, count, page, rowsPerPage } = this.props
 
     return (
       <div className={classes.root}>
@@ -68,37 +95,47 @@ class TablePaginationActions extends React.Component {
           disabled={page === 0}
           aria-label="First Page"
         >
-          {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+          <FirstPageIcon />
         </IconButton>
         <IconButton
           onClick={this.handleBackButtonClick}
           disabled={page === 0}
           aria-label="Previous Page"
+          className={classes.prevPage}
         >
-          {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+          <KeyboardArrowLeft />
         </IconButton>
         <IconButton
           onClick={this.handleNextButtonClick}
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Next Page"
+          className={classes.nextPage}
         >
-          {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+          <KeyboardArrowRight />
         </IconButton>
         <IconButton
           onClick={this.handleLastPageButtonClick}
           disabled={page >= Math.ceil(count / rowsPerPage) - 1}
           aria-label="Last Page"
         >
-          {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+          <LastPageIcon />
         </IconButton>
       </div>
     )
   }
 }
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(
-  TablePaginationActions
-)
+const TablePaginationActionsWrapped = withStyles(actionsStyles)(TablePaginationActions)
+
+const ListingsWrapper = styled.div`
+  width: 80vw;
+  margin: 20px auto 0;
+`
+const FlexContainer = styled.div`
+  display: flex;
+  margin: 30px auto 0;
+`
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -106,12 +143,19 @@ const styles = theme => ({
     boxShadow: '0 0 0 0',
   },
   tableWrapper: {
-    overflowX: 'auto',
+    // overflowX: 'auto',
     padding: '0',
   },
   appBar: {
     boxShadow: '0 0 0 0',
     borderBottom: `.5px solid ${colors.paleGrey}`,
+  },
+  tab: {
+    '& > span': {
+      '& > span': {
+        paddingLeft: '5px',
+      },
+    },
   },
 })
 
@@ -143,7 +187,7 @@ class SimpleTabs extends Component {
       candidates,
       faceoffs,
       whitelist,
-
+      stats,
       candidateIDs,
       faceoffIDs,
       whitelistIDs,
@@ -174,9 +218,15 @@ class SimpleTabs extends Component {
                 onChange={this.handleChange}
                 indicatorColor="primary"
               >
-                <Tab label="registry" />
-                <Tab label="applications" />
-                <Tab label="voting" />
+                <Tab
+                  className={classes.tab}
+                  label={`registry (${stats.sizes.whitelist})`}
+                />
+                <Tab
+                  className={classes.tab}
+                  label={`applications (${stats.sizes.candidates})`}
+                />
+                <Tab className={classes.tab} label={`voting (${stats.sizes.faceoffs})`} />
               </Tabs>
             </AppBar>
             <div className={classes.tableWrapper}>
@@ -230,19 +280,18 @@ class SimpleTabs extends Component {
                     })}
               </FlexContainer>
               {emptyRows === 5 && (
-                <TableRow component="div" style={{ height: 60 * emptyRows }}>
+                <TableRow component="div" style={{ height: 80 * emptyRows }}>
                   <div />
                 </TableRow>
               )}
 
               <TablePagination
-                component="div"
+                component="span"
                 colSpan={3}
                 count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 Actions={TablePaginationActionsWrapped}
               />
             </div>
@@ -253,14 +302,6 @@ class SimpleTabs extends Component {
   }
 }
 
-const ListingsWrapper = styled.div`
-  width: 84vw;
-  margin: 10px auto 0;
-`
-const FlexContainer = styled.div`
-  display: flex;
-  margin: 10px auto 0;
-`
 function mapDispatchToProps(dispatch) {
   return {
     onOpenSidePanel: (selectedOne, openThis) =>
@@ -276,6 +317,7 @@ const mapStateToProps = createStructuredSelector({
   faceoffIDs: onlyFaceoffIDs,
   whitelist: selectWhitelist,
   whitelistIDs: onlyWhitelistIDs,
+  stats: selectStats,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

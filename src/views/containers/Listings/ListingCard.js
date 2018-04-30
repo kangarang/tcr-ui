@@ -24,16 +24,16 @@ const ButtonContainer = styled.div`
 
 const styles = {
   card: {
-    width: 180,
-    height: 420,
-    margin: 10,
+    width: 170,
+    height: 410,
+    margin: 15,
     padding: '.5em',
     overflow: 'hidden',
     borderRadius: 5,
     position: 'relative',
   },
   media: {
-    height: 180,
+    height: 170,
   },
 }
 
