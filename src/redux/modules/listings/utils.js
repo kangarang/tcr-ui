@@ -171,7 +171,7 @@ export async function updateListings(newListings, listings = fromJS({})) {
       !val.get('status') ||
       !val.get('listingHash')
     ) {
-      console.log('BUG: not a listing!')
+      // console.log('BUG: not a listing!')
       return acc
     }
     const matchingListing = acc.get(val.get('listingHash'))

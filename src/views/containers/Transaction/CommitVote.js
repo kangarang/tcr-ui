@@ -119,16 +119,14 @@ export default class CommitVote extends Component {
             )}
           </MarginDiv>
 
-          {needToApprove && (
-            <MarginDiv>
-              <Button onClick={handleRequestVotingRights} mode="strong" wide>
-                {'Request Voting Rights'}
-              </Button>
-              <Button onClick={e => handleApprove('voting')} mode="strong" wide>
-                {'Approve tokens for Voting'}
-              </Button>
-            </MarginDiv>
-          )}
+          <MarginDiv>
+            <Button onClick={handleRequestVotingRights} mode="strong" wide>
+              {'Request Voting Rights'}
+            </Button>
+            <Button onClick={e => handleApprove('voting')} mode="strong" wide>
+              {'Approve tokens for Voting'}
+            </Button>
+          </MarginDiv>
         </SidePanel>
       </div>
     )
