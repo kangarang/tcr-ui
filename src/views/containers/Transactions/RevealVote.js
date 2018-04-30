@@ -18,7 +18,7 @@ export default class RevealVote extends Component {
     votesAgainst: '',
   }
   componentDidMount() {
-    this.getCommitHash()
+    // this.getCommitHash()
   }
 
   getCommitHash = async () => {

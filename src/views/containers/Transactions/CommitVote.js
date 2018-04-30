@@ -44,16 +44,6 @@ const styles = theme => ({
   },
 })
 
-function getSteps() {
-  return [
-    'Choose your side',
-    'Request voting rights',
-    'Commit tokens',
-    'Save secret vote file',
-    'Send transaction',
-  ]
-}
-
 function getStepContent(step) {
   switch (step) {
     case 0:
@@ -78,6 +68,7 @@ class CommitVote extends Component {
     activeStep: 0,
     selectedValue: '',
     salt: randInt(1e6, 1e9),
+    choice: '',
   }
   componentDidMount() {
     // this.getCommitHash()
@@ -104,6 +95,16 @@ class CommitVote extends Component {
       })
     }
   }
+
+  getSteps = () => {
+    return [
+      'Choose your side',
+      'Request voting rights',
+      'Commit tokens',
+      'Download secret vote file',
+      'Send transaction',
+    ]
+  }
   handleNext = num => {
     if (BN(this.props.balances.get('votingRights')).gt(0) && typeof num === 'number') {
       this.setState({
@@ -126,7 +127,11 @@ class CommitVote extends Component {
     })
   }
   handleChange = event => {
-    this.setState({ selectedValue: event.target.value })
+    const choice =
+      event.target.value === '0'
+        ? '- Oppose'
+        : event.target.value === '1' ? '- Support' : ''
+    this.setState({ selectedValue: event.target.value, choice })
     this.handleNext(2)
   }
   handleChangeSalt = event => {
@@ -182,7 +187,7 @@ class CommitVote extends Component {
       needToApprove,
       classes,
     } = this.props
-    const steps = getSteps()
+    const steps = this.getSteps()
     const { activeStep } = this.state
     return (
       <div className={classes.root}>
@@ -193,14 +198,8 @@ class CommitVote extends Component {
             size="medium"
             text={
               selectedOne &&
-              `${selectedOne.getIn(['tokenData', 'name'])} (${selectedOne.getIn([
-                'tokenData',
-                'symbol',
-              ])}) ${
-                this.state.selectedValue === '0'
-                  ? '- AGAINST'
-                  : this.state.selectedValue === '1' ? '- SUPPORT' : ''
-              }`
+              `${selectedOne.getIn(['tokenData', 'name']) ||
+                selectedOne.get('listingID')} ${this.state.choice}`
             }
           />
 
@@ -246,6 +245,9 @@ class CommitVote extends Component {
                     )}
                     {index === 1 && (
                       <div className={classes.actionsContainer}>
+                        <div>
+                          {`Voting rights: ${this.props.balances.get('votingRights')}`}
+                        </div>
                         <SideTextInput
                           title="token amount"
                           type="number"
@@ -293,13 +295,15 @@ class CommitVote extends Component {
                     )}
                     <div className={classes.actionsContainer}>
                       <div>
-                        <Button
-                          disabled={activeStep === 0}
-                          onClick={this.handleBack}
-                          className={classes.button}
-                        >
-                          {'Back'}
-                        </Button>
+                        {activeStep !== 0 && (
+                          <Button
+                            disabled={activeStep === 0}
+                            onClick={this.handleBack}
+                            className={classes.button}
+                          >
+                            {'Back'}
+                          </Button>
+                        )}
                         {activeStep !== 0 &&
                           activeStep !== 3 &&
                           activeStep !== 4 && (

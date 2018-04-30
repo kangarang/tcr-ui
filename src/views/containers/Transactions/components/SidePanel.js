@@ -48,7 +48,7 @@ const StyledPanel = styled.aside`
 
 const StyledPanelHeader = styled.header`
   position: relative;
-  padding-top: 10px;
+  padding-top: 20px;
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
   padding-bottom: 10px;

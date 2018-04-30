@@ -4,7 +4,7 @@ import { getEthjs } from 'redux/libs/provider'
 // TODO: estimate gas prices
 const getDefaults = account => ({
   from: account,
-  gas: 5000000,
+  gas: 2500000,
   gasPrice: 4000000000,
 })
 

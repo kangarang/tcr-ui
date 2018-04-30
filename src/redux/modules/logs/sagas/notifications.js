@@ -43,17 +43,17 @@ export function* notificationsSaga(log) {
       listing
     )
 
-    if (title && message) {
+    if (title) {
       const noti = {
         uid: txData.txHash + txData.logIndex + logData._eventName,
         title,
         message,
         position: 'tl',
-        autoDismiss: 0,
-        action: {
-          label: 'cb',
-          callback: () => console.log('click!'),
-        },
+        autoDismiss: 30,
+        // action: {
+        //   label: 'cb',
+        //   callback: () => console.log('click!'),
+        // },
       }
       yield put(info(noti))
     }
