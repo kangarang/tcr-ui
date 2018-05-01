@@ -10,7 +10,6 @@ const Container = styled.div`
   justify-content: center;
   height: 100%;
   overflow: hidden;
-  margin: 15px;
 `
 const Wrapper = styled.div`
   display: flex;

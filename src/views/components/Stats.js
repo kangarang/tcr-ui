@@ -70,7 +70,7 @@ const GridContainer = styled.div`
   grid-template-columns: 9fr 6fr 6fr 11fr;
   grid-column-gap: 1px;
   align-items: center;
-  height: 5.5em;
+  height: 4.7em;
   color: ${colors.offBlack};
   background-color: ${colors.paleGrey}; // grid-line color
   border-top: 1px solid ${colors.paleGrey};

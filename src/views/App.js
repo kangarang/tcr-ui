@@ -45,6 +45,11 @@ const muiTheme = createMuiTheme({
         alignItems: 'flex-start',
       },
     },
+    MuiInput: {
+      root: {
+        display: 'none',
+      },
+    },
     MuiToolbar: {
       gutters: {},
     },

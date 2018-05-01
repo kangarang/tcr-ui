@@ -18,29 +18,55 @@ export const colors = {
   darkRed: '#9A4540',
   blue2: '#A4BEE7',
   gradient: {
+    requestVotingRights: {
+      right: '#85D3D4',
+      left: '#74FAB0',
+      shadow: '#F9D7E3',
+    },
     revealVote: {
       right: '#85D3D4',
       left: '#74FAB0',
+      shadow: '#F9D7E3',
     },
     commitVote: {
-      right: '#4F4344',
-      left: '#14FA30',
+      right: '#85D3D4',
+      left: '#74FAB0',
+      shadow: '#F9D7E3',
     },
     approve: {
       right: '#8FD3F4',
       left: '#84FAB0',
+      shadow: '#F9D7E3',
     },
     apply: {
       right: '#8FD3F4',
       left: '#84FAB0',
+      shadow: '#F9D7E3',
     },
     challenge: {
       right: '#D0021B',
       left: '#3C8BFB',
+      shadow: '#F9D7E3',
+    },
+    download: {
+      right: '#A8EDEA',
+      left: '#F9D7E3',
+      shadow: '#F9D7E3',
     },
     updateStatus: {
       right: '#A8EDEA',
       left: '#F9D7E3',
+      shadow: '#afe7ff',
+    },
+    back: {
+      right: '#D0021B',
+      left: '#3C8BFB',
+      shadow: '#F9D7E3',
+    },
+    next: {
+      right: '#8FD3F4',
+      left: '#84FAB0',
+      shadow: '#F9D7E3',
     },
   },
   lightBg: '#F8FAFB',

@@ -14,10 +14,12 @@ import saveFile from 'redux/utils/_file'
 import { colors } from 'views/global-styles'
 import Button from 'views/components/Button'
 import Text from 'views/components/Text'
+import Img from 'views/components/Img'
 
 import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
+import styled from 'styled-components'
 
 const styles = theme => ({
   root: {
@@ -27,10 +29,10 @@ const styles = theme => ({
     },
   },
   checked: {},
-  button: {},
   actionsContainer: {
     marginBottom: theme.spacing.unit,
     marginTop: theme.spacing.unit * 2,
+    color: `${colors.darkGrey}`,
   },
   resetContainer: {
     padding: theme.spacing.unit,
@@ -118,6 +120,14 @@ class CommitVote extends Component {
       activeStep: this.state.activeStep - 1,
     })
   }
+  handleClickStepLabel = (e, index) => {
+    e.preventDefault()
+    if (index < this.state.activeStep) {
+      this.setState({
+        activeStep: index,
+      })
+    }
+  }
   handleReset = () => {
     this.setState({
       activeStep: 0,
@@ -181,6 +191,75 @@ class CommitVote extends Component {
       handleRequestVotingRights,
       classes,
     } = this.props
+    const stepps = [
+      <div className={classes.actionsContainer}>
+        <div>
+          <Radio
+            checked={this.state.selectedValue === '1'}
+            onClick={this.handleChange}
+            value="1"
+            name="radio-button-demo"
+            aria-label="FOR"
+          />
+          <Text size="large">{'Support'}</Text>
+        </div>
+        <div>
+          <Radio
+            checked={this.state.selectedValue === '0'}
+            onClick={this.handleChange}
+            value="0"
+            name="radio-button-demo"
+            aria-label="AGAINST"
+          />
+          <Text size="large">{'Oppose'}</Text>
+        </div>
+      </div>,
+      <div className={classes.actionsContainer}>
+        <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
+        <SideTextInput
+          title="token amount"
+          type="number"
+          handleInputChange={e => handleInputChange(e, 'numTokens')}
+        />
+        <Button
+          methodName="requestVotingRights"
+          onClick={handleRequestVotingRights}
+          mode="strong"
+          wide
+        >
+          {'Request Voting Rights'}
+        </Button>
+      </div>,
+
+      <div className={classes.actionsContainer}>
+        <SideTextInput
+          title="token amount"
+          type="number"
+          handleInputChange={e => handleInputChange(e, 'numTokens')}
+        />
+      </div>,
+      <div className={classes.actionsContainer}>
+        <SideTextInput
+          title="salt"
+          type="number"
+          handleInputChange={e => this.handleChangeSalt(e)}
+          value={this.state.salt}
+        />
+        <Button methodName="download" onClick={this.handleSaveFile} mode="strong" wide>
+          {'Download commit'}
+        </Button>
+      </div>,
+      <div className={classes.actionsContainer}>
+        <Button
+          onClick={e => handleCommitVote(this.state.selectedValue, this.state.salt)}
+          mode="strong"
+          wide
+          methodName="commitVote"
+        >
+          {'Send Transaction'}
+        </Button>
+      </div>,
+    ]
     const steps = this.getSteps()
     const { activeStep } = this.state
     return (
@@ -188,14 +267,26 @@ class CommitVote extends Component {
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SidePanelSeparator />
           {/* <Img alt="" src={selectedOne.getIn(['tokenData', 'imgSrc'])} /> */}
-          <SideText
-            size="medium"
-            text={
-              selectedOne &&
-              `${selectedOne.getIn(['tokenData', 'name']) ||
-                selectedOne.get('listingID')} ${this.state.choice}`
-            }
-          />
+          <FlexContainer>
+            <IconWrapper>
+              <Img
+                src={
+                  selectedOne &&
+                  selectedOne.hasIn(['tokenData', 'imgSrc']) &&
+                  selectedOne.getIn(['tokenData', 'imgSrc'])
+                }
+                alt=""
+              />
+            </IconWrapper>
+            <SideText
+              size="medium"
+              text={
+                selectedOne &&
+                `${selectedOne.getIn(['tokenData', 'name']) ||
+                  selectedOne.get('listingID')} ${this.state.choice}`
+              }
+            />
+          </FlexContainer>
 
           <Stepper
             className={classes.stepper}
@@ -205,118 +296,43 @@ class CommitVote extends Component {
             {steps.map((label, index) => {
               return (
                 <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                  <StepLabel
+                    onClick={e => this.handleClickStepLabel(e, index)}
+                    classes={{
+                      iconContainer: classes.iconContainer,
+                      label: classes.label,
+                    }}
+                  >
+                    {label}
+                  </StepLabel>
                   <StepContent>
                     <Typography>{getStepContent(index)}</Typography>
 
-                    {index === 0 && (
-                      <div className={classes.actionsContainer}>
-                        <div>
-                          <Radio
-                            checked={this.state.selectedValue === '1'}
-                            onChange={this.handleChange}
-                            value="1"
-                            name="radio-button-demo"
-                            aria-label="FOR"
-                            classes={{
-                              root: classes.root,
-                              checked: classes.checked,
-                            }}
-                          />
-                          <Text size="large">{'Support'}</Text>
-                        </div>
-                        <div>
-                          <Radio
-                            checked={this.state.selectedValue === '0'}
-                            onChange={this.handleChange}
-                            value="0"
-                            name="radio-button-demo"
-                            aria-label="AGAINST"
-                          />
-                          <Text size="large">{'Oppose'}</Text>
-                        </div>
-                      </div>
-                    )}
-                    {index === 1 && (
-                      <div className={classes.actionsContainer}>
-                        <div>
-                          {`Voting rights: ${this.props.balances.get('votingRights')}`}
-                        </div>
-                        <SideTextInput
-                          title="token amount"
-                          type="number"
-                          handleInputChange={e => handleInputChange(e, 'numTokens')}
-                        />
-                        <Button
-                          methodName="requestVotingRights"
-                          onClick={handleRequestVotingRights}
-                          mode="strong"
-                          wide
-                        >
-                          {'Request Voting Rights'}
-                        </Button>
-                      </div>
-                    )}
-                    {index === 2 && (
-                      <div className={classes.actionsContainer}>
-                        <SideTextInput
-                          title="token amount"
-                          type="number"
-                          handleInputChange={e => handleInputChange(e, 'numTokens')}
-                        />
-                      </div>
-                    )}
-                    {index === 3 && (
-                      <div className={classes.actionsContainer}>
-                        <SideTextInput
-                          title="salt"
-                          type="number"
-                          handleInputChange={e => this.handleChangeSalt(e)}
-                          value={this.state.salt}
-                        />
-                        <Button onClick={this.handleSaveFile} mode="strong" wide>
-                          {'Download commit'}
-                        </Button>
-                      </div>
-                    )}
-                    {index === 4 && (
-                      <div className={classes.actionsContainer}>
-                        <Button
-                          onClick={e =>
-                            handleCommitVote(this.state.selectedValue, this.state.salt)
-                          }
-                          mode="strong"
-                          wide
-                          methodName="commitVote"
-                        >
-                          {'Send Transaction'}
-                        </Button>
-                      </div>
-                    )}
                     <div className={classes.actionsContainer}>
-                      <div>
-                        {activeStep !== 0 && (
+                      {stepps[index]}
+                      {activeStep !== 0 && (
+                        <Button
+                          disabled={activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                          methodName="back"
+                        >
+                          {'Back'}
+                        </Button>
+                      )}
+                      {activeStep !== 0 &&
+                        activeStep !== 3 &&
+                        activeStep !== 4 && (
                           <Button
-                            disabled={activeStep === 0}
-                            onClick={this.handleBack}
+                            variant="raised"
+                            color="primary"
+                            onClick={this.handleNext}
                             className={classes.button}
+                            methodName="next"
                           >
-                            {'Back'}
+                            {'Next'}
                           </Button>
                         )}
-                        {activeStep !== 0 &&
-                          activeStep !== 3 &&
-                          activeStep !== 4 && (
-                            <Button
-                              variant="raised"
-                              color="primary"
-                              onClick={this.handleNext}
-                              className={classes.button}
-                            >
-                              {'Next'}
-                            </Button>
-                          )}
-                      </div>
                     </div>
                   </StepContent>
                 </Step>
@@ -336,5 +352,14 @@ class CommitVote extends Component {
     )
   }
 }
+const FlexContainer = styled.div`
+  display: flex;
+`
+const IconWrapper = styled.div`
+  display: flex;
+  height: 80px;
+  width: 80px;
+  margin: 10px;
+`
 
 export default withStyles(styles)(CommitVote)

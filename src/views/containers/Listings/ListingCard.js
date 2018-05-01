@@ -14,7 +14,7 @@ const CardContent = styled.div`
   padding: 1em;
 `
 const PadDiv = styled.div`
-  padding-top: 1em;
+  padding-top: 0.5em;
 `
 const ButtonContainer = styled.div`
   position: absolute;
@@ -25,7 +25,7 @@ const ButtonContainer = styled.div`
 const styles = {
   card: {
     width: 170,
-    height: 410,
+    height: 400,
     margin: 15,
     padding: '.5em',
     overflow: 'hidden',
@@ -34,7 +34,9 @@ const styles = {
   },
   media: {
     height: 170,
+    margin: 15,
   },
+  buttContainer: {},
 }
 
 function ListingCard(props) {
@@ -65,7 +67,7 @@ function ListingCard(props) {
               : one.get('listingID') && one.get('listingID')}
           </Typography>
 
-          <PadDiv>
+          <PadDiv className={classes.buttContainer}>
             <Typography component="p">
               <a
                 target="_blank"
@@ -83,6 +85,7 @@ function ListingCard(props) {
             <div>
               {!revealTrigger && !updateTrigger ? (
                 <div>
+                  <Countdown end={one.getIn(['commitExpiry', 'date'])} />
                   <Button
                     methodName="commitVote"
                     onClick={e => openSidePanel(one, 'commitVote')}
@@ -90,12 +93,12 @@ function ListingCard(props) {
                   >
                     {'Commit Vote'}
                   </Button>
-                  <Countdown end={one.getIn(['commitExpiry', 'date'])} />
                 </div>
               ) : (
                 revealTrigger &&
                 !updateTrigger && (
                   <div>
+                    <Countdown end={one.getIn(['revealExpiry', 'date'])} />
                     <Button
                       onClick={e => openSidePanel(one, 'revealVote')}
                       color="primary"
@@ -103,13 +106,13 @@ function ListingCard(props) {
                     >
                       {'Reveal Vote'}
                     </Button>
-                    <Countdown end={one.getIn(['revealExpiry', 'date'])} />
                   </div>
                 )
               )}
             </div>
           ) : (
             <div>
+              <Countdown end={one.getIn(['appExpiry', 'date'])} />
               <Button
                 wide
                 onClick={e => openSidePanel(one, 'challenge')}
@@ -118,13 +121,12 @@ function ListingCard(props) {
               >
                 {'Challenge'}
               </Button>
-              <Countdown end={one.getIn(['appExpiry', 'date'])} />
             </div>
           )}
           {updateTrigger && (
             <Button
               methodName="updateStatus"
-              onClick={e => openSidePanel(one, 'updateStatus')}
+              onClick={e => openSidePanel(one, 'commitVote')}
               color="primary"
             >
               {'Update Status'}
