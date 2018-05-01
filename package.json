@@ -18,9 +18,7 @@
     "precommit": "lint-staged",
     "fix": "eslint --fix ./src",
     "lint": "eslint ./src",
-    "update:tokens": "babel-node scripts/update-tokens",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "update:tokens": "babel-node scripts/update-tokens"
   },
   "dependencies": {
     "@material-ui/icons": "1.0.0-beta.43",
@@ -77,10 +75,6 @@
     "lint-staged": "7.0.0",
     "prettier": "1.11.1",
     "react-test-renderer": "16.3.1",
-    "@storybook/react": "^3.4.3",
-    "@storybook/addon-actions": "^3.4.3",
-    "@storybook/addon-links": "^3.4.3",
-    "@storybook/addons": "^3.4.3",
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0"
   },
