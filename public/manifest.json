@@ -1,5 +1,5 @@
 {
-  "short_name": "TCR UI",
+  "short_name": "tcr-ui",
   "name":
     "A client-side shell to interact with token-curated registries",
   "icons": [

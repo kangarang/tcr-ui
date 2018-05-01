@@ -1,4 +1,4 @@
-import { select, call, takeEvery } from 'redux-saga/effects'
+import { select, call } from 'redux-saga/effects'
 
 import { selectTCR, selectAccount, selectVoting } from 'state/ducks/home/selectors'
 
@@ -7,7 +7,6 @@ import { getVoteSaltHash, randInt } from 'state/libs/values'
 import saveFile from 'state/utils/_file'
 import { getEndDateString } from 'state/utils/_datetime'
 
-import * as types from '../types'
 import { sendTransactionSaga } from './index'
 
 export default function* voteSaga() {

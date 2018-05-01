@@ -32,19 +32,8 @@ export function timestampToExpiry(integer) {
   if (!isNumber(integer)) {
     return new Error('need integer!')
   }
-  return buildTimeObject(integer)
-}
-// adapted from:
-// https://github.com/AugurProject/augur/tree/seadragon/src/utils
-export function buildTimeObject(integer) {
   const date = moment.unix(integer).toDate()
   const timestamp = date.getTime() / 1000
-
-  // prettier-ignore
-  const now = moment().utc().unix()
-
-  const timeleft = timestamp - now
-  const timesince = now - timestamp
 
   const localTime = [date.getHours(), date.getMinutes()]
   const localAMPM = ampm(localTime[0])

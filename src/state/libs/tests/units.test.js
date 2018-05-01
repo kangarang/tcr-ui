@@ -1,6 +1,6 @@
 import { baseToConvertedUnit, convertedToBaseUnit } from 'state/libs/units'
 
-describe('unit conversion helpers', () => {
+describe('libs: units', () => {
   test('should return the converted number as a string', () => {
     const converted = baseToConvertedUnit(50000000000000000000, 18)
     expect(converted).toBe('50')
@@ -11,7 +11,7 @@ describe('unit conversion helpers', () => {
     expect(base).toBe('50000000000000000000')
   })
 
-  describe('should throw error if given undefined inputs', async () => {
+  describe('input type checking / error handling', async () => {
     test('baseToConvertedUnit', () => {
       try {
         baseToConvertedUnit(undefined, 18)

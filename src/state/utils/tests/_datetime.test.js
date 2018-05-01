@@ -13,9 +13,8 @@ describe('datetime helpers', async () => {
   })
 
   test('should return the correct timestamp for the same date', () => {
-    const now = moment()
-      .utc()
-      .unix()
+    // prettier-ignore
+    const now = moment().utc().unix()
     const converted = timestampToExpiry(now)
     expect(converted.timestamp).toBe(now)
   })

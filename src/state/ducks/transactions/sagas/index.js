@@ -102,12 +102,12 @@ export function* sendTransactionSaga(contract, method, args) {
     // ethers: waitForTransaction
     const ethersProvider = yield call(getEthersProvider)
     const minedTxn = yield ethersProvider.waitForTransaction(txHash).then(tx => tx)
-    console.log('minedTxn:', minedTxn)
+    // console.log('minedTxn:', minedTxn)
 
     // ethjs: getTransactionReceipt
     const ethjs = yield call(getEthjs)
     const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
-    console.log('txReceipt:', txReceipt)
+    // console.log('txReceipt:', txReceipt)
 
     // successful sendTransaction
     if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {

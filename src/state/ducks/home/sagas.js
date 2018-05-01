@@ -3,8 +3,7 @@ import { call, fork, select, put, takeLatest } from 'redux-saga/effects'
 
 import * as types from './types'
 import * as actions from './actions'
-import { SET_REGISTRY_CONTRACT } from '../ethProvider/types'
-import { selectAllListings, selectRegistry, selectNetwork } from './selectors'
+import { selectRegistry, selectNetwork } from './selectors'
 
 import balancesSaga from 'state/ducks/ethProvider/sagas/index'
 import contractsSagas from 'state/ducks/ethProvider/sagas/contracts'
