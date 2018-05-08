@@ -110,6 +110,9 @@ export function* sendTransactionSaga(contract, method, args) {
     const minedTxn = yield ethersProvider.waitForTransaction(txHash)
     console.log('minedTxn:', minedTxn)
 
+    // BUG: sometimes, ethjs doesn't pick up the transaction in time. racing?
+    // maybe try: const minedTxn = yield call(ethersProvider.waitForTransaction, txHash)
+
     // get tx receipt
     const ethjs = yield call(getEthjs)
     const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
