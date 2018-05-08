@@ -5,6 +5,7 @@
 /coverage
 /node_modules
 /scripts/abis
+/scripts/tokens
 /src/views/assets/tokens
 
 .DS_Store

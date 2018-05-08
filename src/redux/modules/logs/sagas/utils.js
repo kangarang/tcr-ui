@@ -7,7 +7,8 @@ import isUndefined from 'lodash/fp/isUndefined'
 import isString from 'lodash/fp/isString'
 import isArray from 'lodash/fp/isArray'
 import includes from 'lodash/fp/includes'
-import { baseToConvertedUnit } from '../../../libs/units'
+
+import { baseToConvertedUnit } from 'redux/libs/units'
 
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)

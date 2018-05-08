@@ -26,16 +26,16 @@ function* pollLogsSaga(action) {
     const blockRange = action.payload
 
     const rEvents = [
-      '_Application',
-      '_ApplicationWhitelisted',
-      '_ApplicationRemoved',
-      '_ListingRemoved',
-      '_ListingWithdrawn',
-      '_Challenge',
-      '_ChallengeFailed',
-      '_ChallengeSucceeded',
-      '_TouchAndRemoved',
-      '_RewardClaimed',
+      // '_Application',
+      // '_ApplicationWhitelisted',
+      // '_ApplicationRemoved',
+      // '_ListingRemoved',
+      // '_ListingWithdrawn',
+      // '_Challenge',
+      // '_ChallengeFailed',
+      // '_ChallengeSucceeded',
+      // '_TouchAndRemoved',
+      // '_RewardClaimed',
     ]
 
     const registryPayload = {
