@@ -103,6 +103,7 @@ function* contractsSaga(action) {
       ),
     ])
 
+    // query the contract for config data
     const [
       minDeposit,
       applyStageLen,
@@ -129,6 +130,7 @@ function* contractsSaga(action) {
 
     const tokenDecimals = tokenDecimalsResult['0'].toString(10)
     const parameters = {
+      // convert minDeposit based on the decimals of the token
       minDeposit: baseToConvertedUnit(minDeposit['0'].toString(10), tokenDecimals),
       applyStageLen: applyStageLen['0'].toString(10),
       commitStageLen: commitStageLen['0'].toString(10),
@@ -136,6 +138,7 @@ function* contractsSaga(action) {
       dispensationPct: dispensationPct['0'].toString(10),
     }
 
+    // dispatch: parameters, contracts, and tcr config data
     yield put(
       actions.setContracts({
         parameters,

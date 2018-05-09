@@ -169,11 +169,17 @@ class Transactions extends Component {
 
   // TRANSACTIONS
   handleApprove = contract => {
-    const { tcr } = this.props
-    const args = [
-      this.props[contract].address,
-      convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals')),
-    ]
+    const { parameters, tcr } = this.props
+    let numTokens
+    if (this.state.numTokens === '') {
+      numTokens = convertedToBaseUnit(
+        parameters.get('minDeposit'),
+        tcr.get('tokenDecimals')
+      )
+    } else {
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+    }
+    const args = [this.props[contract].address, numTokens]
     this.props.onSendTransaction({ methodName: 'approve', args })
   }
   handleApply = () => {

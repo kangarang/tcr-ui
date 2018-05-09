@@ -35,7 +35,7 @@ export default ({
       ) : (
         <div>
           <SideTextInput
-            title="token address"
+            title="Listing ID"
             type="text"
             handleInputChange={e => handleInputChange(e, 'listingID')}
           />
