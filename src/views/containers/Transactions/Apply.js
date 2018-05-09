@@ -51,13 +51,11 @@ export default ({
       )}
 
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
-      {depositMore && (
-        <SideTextInput
-          title="token amount"
-          type="number"
-          handleInputChange={e => handleInputChange(e, 'numTokens')}
-        />
-      )}
+      <SideTextInput
+        title="token amount"
+        type="number"
+        handleInputChange={e => handleInputChange(e, 'numTokens')}
+      />
 
       {!needToApprove && (
         <SideTextInput
