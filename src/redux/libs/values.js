@@ -1,22 +1,23 @@
 import utils from 'ethers/utils'
+import { BN } from './units'
+import { randomBytes } from 'crypto'
 
-export function randInt(min, max) {
-  if (max === undefined) {
-    max = min
-    min = 0
-  }
-  if (typeof min !== 'number' || typeof max !== 'number') {
-    throw new TypeError('All args should have been numbers')
-  }
-  return Math.floor(Math.random() * (max - min + 1) + min)
+export function randomSalt() {
+  const salt = BN(`0x${randomBytes(32).toString('hex')}`)
+  console.log('salt.toString(10):', salt.toString(10))
+  return salt.toString(10)
 }
 
 export function getVoteSaltHash(vote, salt) {
-  return utils.solidityKeccak256(['uint', 'uint'], [vote, salt])
+  const hash = utils.solidityKeccak256(['uint', 'uint'], [vote, salt])
+  // console.log('hash:', hash)
+  return hash
 }
 
 export function getListingHash(listing) {
-  return utils.solidityKeccak256(['string'], [listing])
+  const listingHash = utils.solidityKeccak256(['string'], [listing])
+  // console.log('listingHash:', listingHash)
+  return listingHash
 }
 
 // from: https://github.com/0xProject/0x-monorepo/blob/development/packages/utils/src/address_utils.ts

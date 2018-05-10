@@ -1,29 +1,14 @@
-import { isAddress, randInt, getListingHash } from '../values'
+import { isAddress, randomSalt, getListingHash } from '../values'
+import { BN } from '../units'
 
 describe('libs: values', () => {
-  test('should return a random integer between 10 and 50', () => {
-    const result = randInt(10, 50)
-    expect(result).toBeLessThanOrEqual(50)
-    expect(result).toBeGreaterThanOrEqual(10)
-  })
+  test('should return a random integer', () => {
+    const result = randomSalt()
+    const biggestNumber = BN('2').pow(BN('256'))
 
-  test('should return a random integer between 10000 and 500000', () => {
-    const result = randInt(10000, 500000)
-    expect(result).toBeLessThanOrEqual(500000)
-    expect(result).toBeGreaterThanOrEqual(10000)
-  })
-
-  test('should throw if given a value other than a number', () => {
-    try {
-      const result = randInt('20', 50)
-    } catch (err) {
-      expect(err.message).toBe('All args should have been numbers')
-    }
-    try {
-      const result = randInt(20, '50')
-    } catch (err) {
-      expect(err.message).toBe('All args should have been numbers')
-    }
+    const actual = BN(result).lte(biggestNumber)
+    const expected = true
+    expect(actual).toBe(expected)
   })
 
   describe('function: getListingHash', async () => {

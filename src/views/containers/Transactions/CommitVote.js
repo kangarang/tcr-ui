@@ -7,7 +7,7 @@ import Radio from 'material-ui/Radio'
 import green from 'material-ui/colors/green'
 
 import { baseToConvertedUnit, BN } from 'redux/libs/units'
-import { getVoteSaltHash, randInt } from 'redux/libs/values'
+import { getVoteSaltHash, randomSalt } from 'redux/libs/values'
 import { getEndDateString } from 'redux/utils/_datetime'
 import saveFile from 'redux/utils/_file'
 
@@ -66,7 +66,7 @@ class CommitVote extends Component {
     numTokens: '',
     activeStep: 0,
     selectedValue: '',
-    salt: randInt(1e6, 1e9),
+    salt: randomSalt(),
     choice: '',
   }
   componentDidMount() {
@@ -241,7 +241,7 @@ class CommitVote extends Component {
       <div className={classes.actionsContainer}>
         <SideTextInput
           title="salt"
-          type="number"
+          type="text"
           handleInputChange={e => this.handleChangeSalt(e)}
           value={this.state.salt}
         />
