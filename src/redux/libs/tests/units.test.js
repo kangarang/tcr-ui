@@ -44,8 +44,14 @@ describe('libs: units', () => {
 
     test('should throw if given a number w/ decimals', async () => {
       const nonNum = '0.34'
+      const two = '9.42671'
+      const three = '4213.471'
+      const four = '0.4'
       try {
         BN(nonNum)
+        BN(two)
+        BN(three)
+        BN(four)
       } catch (error) {
         expect(error.message).toBe('No decimals')
       }
