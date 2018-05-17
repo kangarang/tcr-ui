@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper'
 import { withStyles } from 'material-ui'
-import Paper from 'material-ui/Paper'
 import Typography from 'material-ui/Typography'
 import Radio from 'material-ui/Radio'
 import green from 'material-ui/colors/green'
@@ -98,14 +97,18 @@ class CommitVote extends Component {
   getSteps = () => {
     return [
       'Choose your side',
-      'Request voting rights',
+      'Approve Voting contract / Request voting rights',
       'Commit tokens',
       'Download secret vote file',
       'Send transaction',
     ]
   }
   handleNext = num => {
-    if (BN(this.props.balances.get('votingRights')).gt(0) && typeof num === 'number') {
+    if (
+      BN(this.props.balances.get('votingRights')).gt(0) &&
+      BN(this.props.balances.get('votingAllowance')).gt(0) &&
+      typeof num === 'number'
+    ) {
       this.setState({
         activeStep: this.state.activeStep + num,
       })
@@ -150,7 +153,7 @@ class CommitVote extends Component {
     const commitEndDate = this.props.selectedOne.getIn(['commitExpiry', 'timestamp'])
     const revealEndDate = this.props.selectedOne.getIn(['revealExpiry', 'timestamp'])
 
-    // // record expiry dates
+    // record expiry dates
     const commitEndDateString = getEndDateString(commitEndDate)
     const revealEndDateString = getEndDateString(revealEndDate)
     const salt = this.state.salt.toString(10)
@@ -188,7 +191,9 @@ class CommitVote extends Component {
       selectedOne,
       handleInputChange,
       handleCommitVote,
+      handleApprove,
       handleRequestVotingRights,
+      needToApprove,
       classes,
     } = this.props
     const stepps = [
@@ -215,22 +220,35 @@ class CommitVote extends Component {
         </div>
       </div>,
       <div className={classes.actionsContainer}>
+        <div>{`Voting allowance: ${this.props.balances.get('votingAllowance')}`}</div>
         <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
         <SideTextInput
           title="token amount"
           type="number"
           handleInputChange={e => handleInputChange(e, 'numTokens')}
         />
-        <Button
-          methodName="requestVotingRights"
-          onClick={handleRequestVotingRights}
-          mode="strong"
-          wide
-        >
-          {'Request Voting Rights'}
-        </Button>
+        {needToApprove ? (
+          <div>
+            <Button
+              methodName="approve"
+              onClick={e => handleApprove('voting')}
+              mode="strong"
+              wide
+            >
+              {'Approve Voting contract'}
+            </Button>
+          </div>
+        ) : (
+          <Button
+            methodName="requestVotingRights"
+            onClick={handleRequestVotingRights}
+            mode="strong"
+            wide
+          >
+            {'Request Voting Rights'}
+          </Button>
+        )}
       </div>,
-
       <div className={classes.actionsContainer}>
         <SideTextInput
           title="token amount"
@@ -266,18 +284,20 @@ class CommitVote extends Component {
       <div className={classes.root}>
         <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SidePanelSeparator />
-          {/* <Img alt="" src={selectedOne.getIn(['tokenData', 'imgSrc'])} /> */}
+
           <FlexContainer>
-            <IconWrapper>
-              <Img
-                src={
-                  selectedOne &&
-                  selectedOne.hasIn(['tokenData', 'imgSrc']) &&
-                  selectedOne.getIn(['tokenData', 'imgSrc'])
-                }
-                alt=""
-              />
-            </IconWrapper>
+            {selectedOne.hasIn(['tokenData', 'imgSrc']) && (
+              <IconWrapper>
+                <Img
+                  src={
+                    selectedOne &&
+                    selectedOne.hasIn(['tokenData', 'imgSrc']) &&
+                    selectedOne.getIn(['tokenData', 'imgSrc'])
+                  }
+                  alt=""
+                />
+              </IconWrapper>
+            )}
             <SideText
               size="medium"
               text={
@@ -339,14 +359,6 @@ class CommitVote extends Component {
               )
             })}
           </Stepper>
-          {activeStep === steps.length && (
-            <Paper square elevation={0} className={classes.resetContainer}>
-              <Typography>All steps completed - you&quot;re finished</Typography>
-              <Button onClick={this.handleReset} className={classes.button}>
-                Reset
-              </Button>
-            </Paper>
-          )}
         </SidePanel>
       </div>
     )

@@ -4,8 +4,8 @@ import { getEthjs } from 'redux/libs/provider'
 // TODO: estimate gas prices
 const getDefaults = account => ({
   from: account,
-  gas: 200000,
-  gasPrice: 2000000000,
+  gas: 2000000,
+  gasPrice: 4000000000,
 })
 
 export async function setupRegistry(abi, bytecode, account, address) {

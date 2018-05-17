@@ -13,6 +13,7 @@ import { getListingHash } from 'redux/libs/values'
 
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 import { pendingTxns } from '../../notifications'
+import { delay } from 'redux-saga'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
@@ -112,6 +113,7 @@ export function* sendTransactionSaga(contract, method, args) {
 
     // BUG: sometimes, ethjs doesn't pick up the transaction in time. racing?
     // maybe try: const minedTxn = yield call(ethersProvider.waitForTransaction, txHash)
+    yield call(delay, 2000)
 
     // get tx receipt
     const ethjs = yield call(getEthjs)
