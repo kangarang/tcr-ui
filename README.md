@@ -61,10 +61,8 @@ Clone contracts:
 
 Build JSON ABI artifacts:
 
-(Note: only have to run once. _While ganache-cli is running_)
-
 ```
-  $ npm run install && npm run compile
+  $ npm run compile
 ```
 
 Deploy contracts to local RPC:

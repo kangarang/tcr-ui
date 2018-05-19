@@ -57,7 +57,8 @@
     "redux-saga": "0.16.0",
     "redux-saga-test-plan": "3.6.0",
     "reselect": "3.0.1",
-    "styled-components": "3.2.5"
+    "styled-components": "3.2.5",
+    "trezor.js": "6.15.19"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
