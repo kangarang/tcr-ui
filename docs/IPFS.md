@@ -52,18 +52,17 @@ const listingHash = keccak256(listingString)
 // 0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2
 
 // Add the JSON object to IPFS
-const CID = ipfs.files.add(Buffer.from(JSON.stringify(obj)))
-console.log(CID[0].hash)
+const CID = ipfs.addJSON(obj)
+console.log(CID)
 // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
 
-// Data is the ipfs multihash of the added json object
-const data = CID[0].hash
-// Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
+// `data` is the ipfs multihash of the added json object
+const data = CID
 
-// If you called ipfs.get(data), you will be able to see the json obj
-// This is what clients will do to build the context of the application (see below)
-const ipfsPath = ipfs.files.get(data)
+// If you called ipfs.catJSON(data) right now, you will be able to see the json obj
 // { "id": "consensysclassic.net" }
+// This is what clients will do once they see the application log
+// to build the context of the application (see below)
 
 // Apply
 registry.apply(listingHash, 50000, data)
@@ -73,20 +72,14 @@ registry.apply(listingHash, 50000, data)
 // on the client side...
 
 // event _Application(listingHash, deposit, data)
-// _Application('0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2', 50000, 'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7')
+// _Application('0xfc11ba76da28...', 50000, 'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7')
 
 const eventResult = [
-  '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2',
-  50000,
-  'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7',
+  '0xfc11ba76da281550e957189c9909d866c8fb72034ec6724e6a60906a776d0fe2', // listingHash
+  50000, // deposit
+  'Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7', // data - ipfs multihash
 ]
 
-const ipfsPath = ipfs.files.get(eventResult[2])
-
-ipfsPath.forEach(file => {
-  console.log(file.path)
-  // Qmf2CPd4ZwpP7vGEHvsk8DWdvatxSdc7iXXBv2bRJvuCp7
-  console.log(file.content.toString('utf8'))
-  // {"id":"consensysclassic.net"}
-})
+const ipfsContent = ipfs.catJSON(eventResult[2])
+// {"id":"consensysclassic.net"}
 ```
