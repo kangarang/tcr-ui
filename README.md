@@ -97,9 +97,9 @@ Deploy contracts to Main Network:
 ├── public - Files that don't get compiled, just moved to build
 |  └── index.html - Html template file
 ├── src
-|  ├── state - Redux
-|  |  ├── ducks - Redux modules
-|  |  |  ├── [duck] - Single module
+|  ├── redux - Redux-related
+|  |  ├── modules - Redux modules
+|  |  |  ├── [module] - Single module
 |  |  |  |  ├── sagas - Asynchronous side-effects
 |  |  |  |  ├── tests - Jest unit tests
 |  |  |  |  ├── actions.js - Action creators / plain objects

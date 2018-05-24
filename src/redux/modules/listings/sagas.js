@@ -63,22 +63,22 @@ export function* handleNewPollLogsSaga(action) {
 
     // update listings
     if (assorted.length) {
-      // console.log(assorted.length, 'assorted logs:', assorted)
+      console.log(assorted.length, 'assorted logs:', assorted)
 
-      assorted.forEach(event => {
-        const match = findListing(event.logData, allListings)
-        if (event.logData.numTokens && match) {
-          console.log(
-            event.msgSender.slice(0, 10),
-            ' | ',
-            baseToConvertedUnit(
-              event.logData.numTokens,
-              tcr.get('tokenDecimals')
-            ).toString(),
-            match.get('listingID')
-          )
-        }
-      })
+      // assorted.forEach(event => {
+      //   const match = findListing(event.logData, allListings)
+      //   if (event.logData.numTokens && match) {
+      //     console.log(
+      //       event.msgSender.slice(0, 10),
+      //       ' | ',
+      //       baseToConvertedUnit(
+      //         event.logData.numTokens,
+      //         tcr.get('tokenDecimals')
+      //       ).toString(),
+      //       match.get('listingID')
+      //     )
+      //   }
+      // })
 
       const updatedListings = yield call(updateAssortedListings, assorted, allListings)
       // check: equality

@@ -4,7 +4,6 @@
 /build
 /coverage
 /node_modules
-/scripts/abis
 /scripts/tokens
 /src/views/assets/tokens
 
