@@ -5,7 +5,7 @@ import Typography from 'material-ui/Typography'
 import Radio from 'material-ui/Radio'
 import green from 'material-ui/colors/green'
 
-import { baseToConvertedUnit, BN } from 'redux/libs/units'
+import { baseToConvertedUnit } from 'redux/libs/units'
 import { getVoteSaltHash, randomSalt } from 'redux/libs/values'
 import { getEndDateString } from 'redux/utils/_datetime'
 import saveFile from 'redux/utils/_file'
@@ -105,16 +105,16 @@ class CommitVote extends Component {
   }
   handleNext = num => {
     if (
-      BN(this.props.balances.get('votingRights')).gt(0) &&
-      BN(this.props.balances.get('votingAllowance')).gt(0) &&
-      typeof num === 'number'
+      this.props.balances.get('votingRights') === '0.0' ||
+      this.props.balances.get('votingAllowance') === '0.0' ||
+      typeof num !== 'number'
     ) {
       this.setState({
-        activeStep: this.state.activeStep + num,
+        activeStep: this.state.activeStep + 1,
       })
     } else {
       this.setState({
-        activeStep: this.state.activeStep + 1,
+        activeStep: this.state.activeStep + num,
       })
     }
   }
@@ -250,6 +250,7 @@ class CommitVote extends Component {
         )}
       </div>,
       <div className={classes.actionsContainer}>
+        <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
         <SideTextInput
           title="token amount"
           type="number"

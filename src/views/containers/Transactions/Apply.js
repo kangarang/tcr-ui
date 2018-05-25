@@ -35,7 +35,7 @@ export default ({
       ) : (
         <div>
           <SideTextInput
-            title="Listing ID"
+            title="Listing Name"
             type="text"
             handleInputChange={e => handleInputChange(e, 'listingID')}
           />
@@ -51,15 +51,15 @@ export default ({
       )}
 
       {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
-      <SideTextInput
+      {/* <SideTextInput
         title="token amount"
         type="number"
         handleInputChange={e => handleInputChange(e, 'numTokens')}
-      />
+      /> */}
 
       {!needToApprove && (
         <SideTextInput
-          title="data"
+          title="img url"
           type="text"
           handleInputChange={e => handleInputChange(e, 'data')}
         />

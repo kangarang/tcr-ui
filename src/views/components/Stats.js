@@ -6,7 +6,7 @@ import { trimDecimalsThree } from 'redux/libs/units'
 
 import Identicon from './Identicon'
 
-export default ({ account, balances, tcr, network, stats, error }) => (
+export default ({ account, balances, tcr, network, stats, error, openSidePanel }) => (
   <GridContainer>
     <GridItemPad>
       <CapsDiv>{'total applications'}</CapsDiv>
@@ -47,7 +47,7 @@ export default ({ account, balances, tcr, network, stats, error }) => (
         <UserItem>
           <BoldDiv>
             {balances.get('token')}
-            <BoldDivGrey>{tcr.get('tokenSymbol')}</BoldDivGrey>
+            <BoldDivGrey onClick={openSidePanel}>{tcr.get('tokenSymbol')}</BoldDivGrey>
           </BoldDiv>
         </UserItem>
         <UserItem>

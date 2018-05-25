@@ -15,10 +15,10 @@
     "fix": "eslint --fix ./src",
     "lint": "eslint ./src",
     "precommit": "lint-staged",
-    "start": "npm run dev",
-    "start:prod": "npm run build && node server.js",
+    "start": "node server.js",
     "test": "react-scripts test --env=jsdom",
-    "update:tokens": "babel-node scripts/update-tokens"
+    "update:tokens": "babel-node scripts/update-tokens",
+    "update:abis": "babel-node scripts/addABIs"
   },
   "dependencies": {
     "@material-ui/icons": "1.0.0-beta.43",

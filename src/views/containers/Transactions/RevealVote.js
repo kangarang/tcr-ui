@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import translate from 'views/translations'
+// import translate from 'views/translations'
 
 import { baseToConvertedUnit } from 'redux/libs/units'
 
@@ -18,7 +18,7 @@ export default class RevealVote extends Component {
     votesAgainst: '',
   }
   componentDidMount() {
-    // this.getCommitHash()
+    this.getCommitHash()
   }
 
   getCommitHash = async () => {
@@ -77,7 +77,7 @@ export default class RevealVote extends Component {
           rightItem={this.state.votesAgainst}
         />
         <SideSplit
-          leftTitle={'Tokens Committed'}
+          leftTitle={'Tokens you committed'}
           leftItem={this.state.numTokens}
           rightTitle={'POLL ID'}
           rightItem={selectedOne && selectedOne.get('challengeID')}
@@ -89,14 +89,29 @@ export default class RevealVote extends Component {
         />
 
         <SidePanelSeparator />
-        <SideText text={translate('ins_revealVote')} />
+        {this.state.commitHash ? (
+          <div>
+            <SideText
+              text={
+                'In order to reveal your previously committed vote, upload the JSON commit file'
+              }
+            />
 
-        <FileInput type="file" name="file" onChange={handleFileInput} />
-        <MarginDiv>
-          <Button methodName="revealVote" onClick={handleRevealVote} mode="strong" wide>
-            {'Reveal Vote'}
-          </Button>
-        </MarginDiv>
+            <FileInput type="file" name="file" onChange={handleFileInput} />
+            <MarginDiv>
+              <Button
+                methodName="revealVote"
+                onClick={handleRevealVote}
+                mode="strong"
+                wide
+              >
+                {'Reveal Vote'}
+              </Button>
+            </MarginDiv>
+          </div>
+        ) : (
+          <SideText text={'You have not voted in this poll.'} />
+        )}
       </SidePanel>
     )
   }

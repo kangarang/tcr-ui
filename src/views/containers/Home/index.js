@@ -62,6 +62,7 @@ class Home extends Component {
           balances={balances}
           stats={stats}
           tcr={tcr}
+          openSidePanel={e => this.props.onOpenSidePanel(null, 'transfer')}
         />
 
         <Switch>

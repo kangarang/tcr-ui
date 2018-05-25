@@ -22,6 +22,8 @@ import * as txActions from 'redux/modules/transactions/actions'
 import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'redux/libs/units'
 
 import Apply from 'views/containers/Transactions/Apply'
+import Transfer from 'views/containers/Transactions/Transfer'
+import NoBalance from 'views/containers/Transactions/NoBalance'
 import Challenge from 'views/containers/Transactions/Challenge'
 import CommitVote from 'views/containers/Transactions/CommitVote'
 import RevealVote from 'views/containers/Transactions/RevealVote'
@@ -38,6 +40,7 @@ class Transactions extends Component {
     listingID: '',
     data: '',
     numTokens: '',
+    transferTo: '',
     fileInput: false,
     visibleApprove: true,
     visibleRequestVotingRights: false,
@@ -89,73 +92,90 @@ class Transactions extends Component {
     const needToApproveRegistry = BN(balances.get('registryAllowance')).lt(
       BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
     )
-    const needToApproveVoting = BN(balances.get('votingAllowance')).lt(
-      BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
-    )
+    const needToApproveVoting = balances.get('votingAllowance') === '0.0'
 
     return (
       <TransactionsWrapper>
         {children}
 
-        <Apply
-          opened={sidePanelMethod === 'apply'}
-          needToApprove={needToApproveRegistry}
-          depositMore={this.state.depositMore}
-          visibleApprove={this.state.visibleApprove}
-          closeSidePanel={this.closeSidePanel}
-          handleInputChange={this.handleInputChange}
-          handleApprove={this.handleApprove}
-          handleApply={this.handleApply}
-          showApprove={this.showApprove}
-          {...this.props}
-        />
-        <Challenge
-          opened={sidePanelMethod === 'challenge'}
-          closeSidePanel={this.closeSidePanel}
-          tcr={tcr}
-          parameters={parameters}
-          selectedOne={sidePanelListing}
-          needToApprove={needToApproveRegistry}
-          handleInputChange={this.handleInputChange}
-          handleApprove={this.handleApprove}
-          handleChallenge={this.handleChallenge}
-        />
-        {sidePanelMethod === 'commitVote' && (
-          <CommitVote
-            selectedOne={sidePanelListing}
-            opened={sidePanelMethod === 'commitVote'}
-            needToApprove={needToApproveVoting}
-            visibleRequestVotingRights={this.state.visibleRequestVotingRights}
+        {balances.get('token') === '0.0' ? (
+          <NoBalance
+            opened={sidePanelMethod !== ''}
             closeSidePanel={this.closeSidePanel}
             handleInputChange={this.handleInputChange}
-            handleApprove={this.handleApprove}
-            handleCommitVote={this.handleCommitVote}
-            handleRequestVotingRights={this.handleRequestVotingRights}
-            showApprove={this.showApprove}
-            balances={balances}
-            voting={voting}
-            tcr={tcr}
-            account={account}
-            numTokens={this.state.numTokens}
+            {...this.props}
           />
+        ) : (
+          <div>
+            <Transfer
+              opened={sidePanelMethod === 'transfer'}
+              closeSidePanel={this.closeSidePanel}
+              handleInputChange={this.handleInputChange}
+              handleTransfer={this.handleTransfer}
+              {...this.props}
+            />
+            <Apply
+              opened={sidePanelMethod === 'apply'}
+              needToApprove={needToApproveRegistry}
+              depositMore={this.state.depositMore}
+              visibleApprove={this.state.visibleApprove}
+              closeSidePanel={this.closeSidePanel}
+              handleInputChange={this.handleInputChange}
+              handleApprove={this.handleApprove}
+              handleApply={this.handleApply}
+              showApprove={this.showApprove}
+              {...this.props}
+            />
+            <Challenge
+              opened={sidePanelMethod === 'challenge'}
+              closeSidePanel={this.closeSidePanel}
+              tcr={tcr}
+              parameters={parameters}
+              selectedOne={sidePanelListing}
+              needToApprove={needToApproveRegistry}
+              handleInputChange={this.handleInputChange}
+              handleApprove={this.handleApprove}
+              handleChallenge={this.handleChallenge}
+            />
+            {sidePanelMethod === 'commitVote' && (
+              <CommitVote
+                selectedOne={sidePanelListing}
+                opened={sidePanelMethod === 'commitVote'}
+                needToApprove={needToApproveVoting}
+                visibleRequestVotingRights={this.state.visibleRequestVotingRights}
+                closeSidePanel={this.closeSidePanel}
+                handleInputChange={this.handleInputChange}
+                handleApprove={this.handleApprove}
+                handleCommitVote={this.handleCommitVote}
+                handleRequestVotingRights={this.handleRequestVotingRights}
+                showApprove={this.showApprove}
+                balances={balances}
+                voting={voting}
+                tcr={tcr}
+                account={account}
+                numTokens={this.state.numTokens}
+              />
+            )}
+            {sidePanelMethod === 'revealVote' && (
+              <RevealVote
+                selectedOne={sidePanelListing}
+                opened={sidePanelMethod === 'revealVote'}
+                balances={balances}
+                closeSidePanel={this.closeSidePanel}
+                handleFileInput={this.handleFileInput}
+                handleRevealVote={this.handleRevealVote}
+                {...this.props}
+              />
+            )}
+            <ClaimVoterReward
+              selectedOne={sidePanelListing}
+              opened={sidePanelMethod === 'claimVoterReward'}
+              closeSidePanel={this.closeSidePanel}
+              handleFileInput={this.handleFileInput}
+              handleClaimVoterReward={this.handleClaimVoterReward}
+            />
+          </div>
         )}
-        {sidePanelMethod === 'revealVote' && (
-          <RevealVote
-            selectedOne={sidePanelListing}
-            opened={sidePanelMethod === 'revealVote'}
-            balances={balances}
-            closeSidePanel={this.closeSidePanel}
-            handleFileInput={this.handleFileInput}
-            handleRevealVote={this.handleRevealVote}
-          />
-        )}
-        <ClaimVoterReward
-          selectedOne={sidePanelListing}
-          opened={sidePanelMethod === 'claimVoterReward'}
-          closeSidePanel={this.closeSidePanel}
-          handleFileInput={this.handleFileInput}
-          handleClaimVoterReward={this.handleClaimVoterReward}
-        />
         <UpdateStatus
           selectedOne={sidePanelListing}
           opened={sidePanelMethod === 'updateStatus'}
@@ -181,6 +201,13 @@ class Transactions extends Component {
     }
     const args = [this.props[contract].address, numTokens]
     this.props.onSendTransaction({ methodName: 'approve', args })
+  }
+  handleTransfer = () => {
+    const { parameters, tcr } = this.props
+    const numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+
+    const args = [this.state.transferTo, numTokens]
+    this.props.onSendTransaction({ methodName: 'transfer', args })
   }
   handleApply = () => {
     const { parameters, tcr } = this.props
