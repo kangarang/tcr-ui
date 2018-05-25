@@ -8,11 +8,11 @@ import {
   updateListings,
   createListing,
   updateAssortedListings,
-  findListing,
+  // findListing,
 } from './utils'
 
-import { baseToConvertedUnit } from '../../libs/units'
-import { selectTCR } from '../home/selectors'
+// import { baseToConvertedUnit } from '../../libs/units'
+// import { selectTCR } from '../home/selectors'
 
 export default function* rootListingsSaga() {
   yield takeEvery(logsTypes.POLL_LOGS_SUCCEEDED, handleNewPollLogsSaga)
@@ -36,7 +36,7 @@ export function* listenForApplications() {
 export function* handleNewPollLogsSaga(action) {
   try {
     const allListings = yield select(selectAllListings)
-    const tcr = yield select(selectTCR)
+    // const tcr = yield select(selectTCR)
     const logs = action.payload
 
     const candidates = logs.filter(log => log.eventName === '_Application')

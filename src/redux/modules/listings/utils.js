@@ -22,7 +22,8 @@ export async function handleMultihash(listingHash, data) {
       )
       // console.log('tokenData:', tokenData)
 
-      const baseUrl = `https://raw.githubusercontent.com/kangarang/tokens/master/images/`
+      // TODO: move to api module
+      const baseUrl = `https://raw.githubusercontent.com/kangarang/token-icons/master/images/`
 
       if (tokenData && tokenData.address) {
         tokenData.imgSrc = `${baseUrl}${tokenData.address.toLowerCase()}.png`
@@ -41,6 +42,8 @@ export async function handleMultihash(listingHash, data) {
           // marketCap: 1532653613432,
         }
       }
+    } else if (ipfsContent.data) {
+      tokenData.imgSrc = ipfsContent.data
     }
     return { listingID, tokenData }
   }

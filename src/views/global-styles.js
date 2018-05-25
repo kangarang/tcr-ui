@@ -23,9 +23,14 @@ export const colors = {
       left: '#74FAB0',
       shadow: '#F9D7E3',
     },
+    transfer: {
+      right: '#D0021B',
+      left: '#3C8BFB',
+      shadow: '#F9D7E3',
+    },
     revealVote: {
-      right: '#85D3D4',
-      left: '#74FAB0',
+      right: '#D0021B',
+      left: '#3C8BFB',
       shadow: '#F9D7E3',
     },
     commitVote: {

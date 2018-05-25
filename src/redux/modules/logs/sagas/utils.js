@@ -21,8 +21,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
   switch (eventName) {
     case '_Application':
       title = `Application: ${listing.tokenData.name ||
-        logData.listingHash.slice(0, 8)} (${listing.tokenData.symbol ||
-        'unknown symbol'})`
+        logData.listingHash.slice(0, 8)} (${listing.tokenData.symbol || ''})`
       message = logData.data || false
       break
     case '_Challenge':
@@ -33,7 +32,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       title = `${baseToConvertedUnit(
         logData.numTokens,
         tcr.get('tokenDecimals')
-      )} ${tcr.get('tokenSymbol')} committed`
+      )} ${tcr.get('tokenSymbol')} committed in poll: ${logData.pollID}`
       message = `Ends: ${listing.commitExpiry.date}`
       break
     case '_VoteRevealed':
