@@ -1,11 +1,9 @@
 /_archive
-/_tcr
 /.vscode
 /build
 /coverage
 /node_modules
 /scripts/tokens
-/src/views/assets/tokens
 
 .DS_Store
 .firebaserc

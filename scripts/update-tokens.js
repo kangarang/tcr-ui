@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { ipfsTokensHash, ipfsGetData } from 'redux/libs/ipfs'
+import { ipfsTokensHash, ipfsGetData } from 'libs/ipfs'
 
 // see: https://github.com/ethereum-lists/tokens
 // & -> https://github.com/MyCryptoHQ/MyCrypto/blob/develop/scripts/update-tokens.ts

@@ -1,5 +1,5 @@
 import abis from './abis'
-import { ipfsAddObject } from 'redux/libs/ipfs'
+import { ipfsAddObject } from 'libs/ipfs'
 
 async function addABIs() {
   const data = {

@@ -29,7 +29,7 @@ Clone & run app in dev mode in browser, rebuild on file changes
   $ npm run dev
 ```
 
-**TCR**:
+**TCR (optional)**:
 
 Clone & install/compile smart contracts
 
