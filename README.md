@@ -10,9 +10,58 @@
 
 "Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
 
-TCRs use an intrinsic token to incentivize a community to curate and reach decentralized consensus on a Registry of high-quality entries
+TCRs use an intrinsic token to incentivize a community to reach decentralized consensus and curate a registry of high-quality entries
 
 ---
+
+## Quickstart
+
+### **Local blockchain/RPC**
+
+[ganache-cli](https://github.com/trufflesuite/ganache-cli)
+
+Warning: Do not use this mnemonic on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
+
+```
+  $ npm install -g ganache-cli
+  $ ganache-cli --port 8545 -v -i 420 --mnemonic "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+```
+
+### **TCR smart contracts**
+
+**Clone contracts**:
+
+```
+  $ git clone https://github.com/kangarang/tcr.git
+  $ cd tcr
+  $ npm install
+```
+
+**Build JSON ABI artifacts**:
+
+```
+  $ npm run compile
+```
+
+**Deploy contracts (choose 1)**:
+
+local test network: `ganache-cli`
+
+```
+  $ npm run deploy-ganache
+```
+
+rinkeby test network
+
+```
+  $ npm run deploy-rinkeby
+```
+
+ethereum main network
+
+```
+  $ npm run deploy-mainnet
+```
 
 ## Commands / Run
 
@@ -40,66 +89,39 @@ Run unit tests with Jest
   $ npm test
 ```
 
-### **Local blockchain/RPC** (optional)
+---
 
-[ganache-cli](https://github.com/trufflesuite/ganache-cli) - `http://localhost:8545`
+## Application Binary Interfaces
 
-```
-  $ npm install -g ganache-cli
-  $ ganache-cli
-```
+tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` (same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis))
 
-### **Deploy** (optional)
+The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config/registry.json](../src/config/registry.json)
 
-Clone contracts:
+If you do not want to rely on hardcoding the address, you can add a custom set of ABIs to IPFS:
 
-```
-  $ git clone git@github.com:kangarang/tcr.git
-  $ cd tcr
-  $ npm install
-```
+1.  Edit the `"address"` of the appropriate `"networks"` section of [/scripts/abis/Registry.json](../scripts/abis/Registry.json)
+1.  Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed)
+1.  Update the `ipfsABIsHash` variable in [/src/redux/libs/ipfs.js](../src/redux/libs/ipfs.js) to the IPFS multihash
 
-Build JSON ABI artifacts:
-
-```
-  $ npm run compile
-```
-
-Deploy contracts to local RPC:
-
-```
-  $ npm run deploy-ganache
-```
-
-Deploy contracts to Rinkeby Test Network:
-
-```
-  $ npm run deploy-rinkeby
-```
-
-Deploy contracts to Main Network:
-
-```
-  $ npm run deploy-mainnet
-```
+[more info](./docs/IPFS.md)
 
 ---
 
 ## Directory structure
-
-[ducks](https://github.com/erikras/ducks-modular-redux)
-
-[re-ducks](https://medium.freecodecamp.org/scaling-your-redux-app-with-ducks-6115955638be)
 
 ```
 |
 ├── docs - Documentation
 ├── public - Files that don't get compiled, just moved to build
 |  └── index.html - Html template file
+├── scripts
+|  └── abis - TCR contract JSON ABIs
 ├── src
+|  ├── config - Config data
 |  ├── redux - Redux-related
+|  |  ├── libs - Framework-agnostic libraries
 |  |  ├── modules - Redux modules
-|  |  |  ├── [module] - Single module
+|  |  |  ├── [module] - Single Redux module
 |  |  |  |  ├── sagas - Asynchronous side-effects
 |  |  |  |  ├── tests - Jest unit tests
 |  |  |  |  ├── actions.js - Action creators / plain objects
@@ -110,7 +132,6 @@ Deploy contracts to Main Network:
 |  |  |  |  └── utils.js - Module-specific helpers
 |  |  |  ├── index.js - Ducks root
 |  |  |  └── reducers - Reducer combiner
-|  |  ├── libs - Framework-agnostic libraries
 |  |  ├── utils - Common utility helper functions
 |  |  ├── store.js - Redux reducer and middleware injector
 |  ├── views - React
@@ -123,6 +144,10 @@ Deploy contracts to Main Network:
 |  └── index.js - Entry point for app
 └── server.js - Express.js app
 ```
+
+[ducks](https://github.com/erikras/ducks-modular-redux)
+
+[re-ducks](https://medium.freecodecamp.org/scaling-your-redux-app-with-ducks-6115955638be)
 
 ---
 

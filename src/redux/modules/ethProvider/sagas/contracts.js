@@ -11,6 +11,8 @@ import { ipfsGetData, ipfsABIsHash } from 'redux/libs/ipfs'
 import { baseToConvertedUnit } from 'redux/libs/units'
 import { setupRegistry, setupContract } from '../utils'
 
+import { hardcodedRegistryAddress } from 'config/registry.json'
+
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
   yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
@@ -55,6 +57,38 @@ export function* registrySaga(action) {
     // if action.payload.address, use that address (CHOOSE_TCR)
     // otherwise, use the default address (factory tcr)
     let { address } = action.payload || abis.registry.networks[networkID]
+
+    if (hardcodedRegistryAddress !== '') {
+      address = hardcodedRegistryAddress
+      console.log(
+        'WARNING! You are using the hardcoded address from /src/config/registry.json:',
+        address
+      )
+    }
+
+    const codeAtAddress = yield call(ethjs.getCode, address)
+
+    if (codeAtAddress === '0x0' || codeAtAddress === '0x00') {
+      console.log('ERROR! A registry was not found at the address:', address)
+      console.log(
+        'Notice: tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` (same ABIs as the ones located in /scripts/abis/).'
+      )
+      console.log(
+        'The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in /src/config/registry.json.'
+      )
+      console.log(
+        'Pro-tip: If you do not want to rely on hardcoding the address, you can add a custom ABI to IPFS:'
+      )
+      console.log(
+        '1. Edit the "address" of the appropriate "networks" section of /scripts/abis/Registry.json.'
+      )
+      console.log(
+        '2. Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed).'
+      )
+      console.log(
+        '3. Update the `ipfsABIsHash` variable in /src/redux/libs/ipfs.js to the IPFS multihash.'
+      )
+    }
 
     const registry = yield call(
       setupRegistry,

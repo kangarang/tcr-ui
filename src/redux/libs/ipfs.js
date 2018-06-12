@@ -1,4 +1,5 @@
 import IPFS from 'ipfs-mini'
+// import fs from 'fs-extra'
 // import ow from 'ow'
 
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
@@ -29,6 +30,11 @@ export async function ipfsAddObject(obj) {
     })
   })
   console.log('CID:', CID)
+
+  // if (process.argv[1].includes('addABIs')) {
+  //   fs.writeJsonSync('./config/')
+  // }
+
   return CID
 }
 
