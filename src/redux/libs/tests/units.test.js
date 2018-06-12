@@ -17,22 +17,6 @@ describe('libs: units', () => {
       const base = convertedToBaseUnit(50, 18)
       expect(base).toBe('50000000000000000000')
     })
-
-    test('baseToConvertedUnit should throw if given undefined', () => {
-      try {
-        baseToConvertedUnit(undefined, 18)
-      } catch (error) {
-        expect(error.message).toBe('invalid type')
-      }
-    })
-
-    test('convertedToBaseUnit should throw if given undefined', () => {
-      try {
-        convertedToBaseUnit(undefined, 18)
-      } catch (error) {
-        expect(error.message).toBe('invalid type')
-      }
-    })
   })
 
   describe('function: BN', () => {
@@ -56,17 +40,6 @@ describe('libs: units', () => {
         expect(error.message).toBe('No decimals')
       }
     })
-
-    test('should throw if given an object', () => {
-      try {
-        const obj = {
-          key: 'value',
-        }
-        BN(obj)
-      } catch (err) {
-        expect(err.message).toBe('invalid type')
-      }
-    })
   })
 
   describe('function: trimDecimalsThree', () => {
@@ -80,14 +53,6 @@ describe('libs: units', () => {
       const actual = trimDecimalsThree('43444492.849384902384')
       const expected = '43444492.849'
       expect(actual).toBe(expected)
-    })
-
-    test('should throw if given a type other than string', () => {
-      try {
-        trimDecimalsThree(3542531322.32134143432)
-      } catch (err) {
-        expect(err.message).toBe('invalid type; expected string')
-      }
     })
   })
 })
