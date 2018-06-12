@@ -20,12 +20,15 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
 
 [ganache-cli](https://github.com/trufflesuite/ganache-cli)
 
-Warning: Do not use this mnemonic on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
+```
+  $ npm run rpc
+```
 
-```
-  $ npm install -g ganache-cli
-  $ ganache-cli --port 8545 -v -i 420 --mnemonic "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
-```
+- port: 8545
+- network_id: 420
+- mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+
+Warning: Do not use this mnemonic on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
 
 ### **TCR smart contracts**
 
