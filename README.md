@@ -16,7 +16,25 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
 
 ## Quickstart
 
-### **Local blockchain/RPC**
+### NOTICE: commands prefixed with `$` are run in this repo (tcr-ui), while commands prefixed with `>` are run in a separate shell, in a [tcr](https://github.com/kangarang/tcr) repo
+
+**Clone TCR-UI**:
+
+```
+  $ git clone https://github.com/kangarang/tcr-ui.git
+  $ cd tcr-ui
+  $ npm install
+```
+
+**Clone TCR smart contracts**:
+
+```
+  > git clone https://github.com/kangarang/tcr.git
+  > cd tcr
+  > npm install
+```
+
+### **Local blockchain/RPC (optional)**
 
 [ganache-cli](https://github.com/trufflesuite/ganache-cli)
 
@@ -24,47 +42,27 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
   $ npm run rpc
 ```
 
-- port: 8545
-- network_id: 420
-- mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
+* port: 8545
+* network_id: 420
+* mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
 
 Warning: Do not use this mnemonic on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
 
-### **TCR smart contracts**
+### **Deploy contracts (optional)**:
 
-**Clone contracts**:
-
-```
-  $ git clone https://github.com/kangarang/tcr.git
-  $ cd tcr
-  $ npm install
-```
-
-**Build JSON ABI artifacts**:
+local test network
 
 ```
-  $ npm run compile
-```
-
-**Deploy contracts (choose 1)**:
-
-local test network: `ganache-cli`
-
-```
-  $ npm run deploy-ganache
+  > npm run deploy-ganache
 ```
 
 rinkeby test network
 
 ```
-  $ npm run deploy-rinkeby
+  > npm run deploy-rinkeby
 ```
 
-ethereum main network
-
-```
-  $ npm run deploy-mainnet
-```
+---
 
 ## Commands / Run
 
@@ -81,7 +79,7 @@ Run app in dev mode in browser, rebuild on file changes
 Build production server app
 
 ```
-$ npm run build
+  $ npm run build
 ```
 
 ### **Tests**
