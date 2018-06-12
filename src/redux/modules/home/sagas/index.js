@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { call, fork, select, put, takeLatest } from 'redux-saga/effects'
 
-import * as types from './types'
-import * as actions from './actions'
-import { selectRegistry, selectNetwork } from './selectors'
+import * as types from '../types'
+import * as actions from '../actions'
+import { selectRegistry, selectNetwork } from '../selectors'
 
-import balancesSaga from 'redux/modules/ethProvider/sagas/index'
-import contractsSagas from 'redux/modules/ethProvider/sagas/contracts'
+import balancesSaga from './balances'
+import contractsSagas from './contracts'
 import logsSagas from 'redux/modules/logs/sagas'
 import listingsSagas from 'redux/modules/listings/sagas'
 import transactionsSagas from 'redux/modules/transactions/sagas'

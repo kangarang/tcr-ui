@@ -3,7 +3,7 @@ import _ from 'lodash/fp'
 
 import * as actions from '../actions'
 import * as types from '../types'
-import * as epActions from 'redux/modules/ethProvider/actions'
+import * as epActions from 'redux/modules/home/actions'
 
 import { selectRegistry, selectVoting, selectToken } from 'redux/modules/home/selectors'
 

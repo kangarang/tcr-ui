@@ -1,10 +1,9 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
-import { selectABIs, selectAccount } from 'redux/modules/home/selectors'
+import { selectABIs, selectAccount } from '../selectors'
 
 import * as actions from '../actions'
 import * as types from '../types'
-import * as homeTypes from 'redux/modules/home/types'
 
 import { getEthjs } from 'redux/libs/provider'
 import { ipfsGetData, ipfsABIsHash } from 'redux/libs/ipfs'
@@ -18,8 +17,8 @@ export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
   yield takeLatest(types.CHOOSE_TCR, registrySaga)
 
-  yield takeLatest(homeTypes.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
-  yield takeLatest(homeTypes.SETUP_ETHEREUM_FAILED, abisSaga)
+  yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
+  yield takeLatest(types.SETUP_ETHEREUM_FAILED, abisSaga)
 }
 
 function* abisSaga() {

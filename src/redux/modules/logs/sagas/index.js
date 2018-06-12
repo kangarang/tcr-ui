@@ -1,7 +1,7 @@
 import { select, takeLatest, fork, call } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
-import * as epTypes from 'redux/modules/ethProvider/types'
+import * as epTypes from 'redux/modules/home/types'
 
 import { selectRegistry, selectVoting } from 'redux/modules/home/selectors'
 
