@@ -1,46 +1,34 @@
-import isString from 'lodash/fp/isString'
-import isNumber from 'lodash/fp/isNumber'
-import isObject from 'lodash/fp/isObject'
 import BNJS from 'bn.js'
+// import ow from 'ow'
 
 export const BN = small => {
-  if (BNJS.isBN(small)) {
-    return small
-  }
-  if (isString(small)) {
-    return new BNJS(small, 10)
-  }
-  if (isNumber(small)) {
-    return new BNJS(small.toString(10), 10)
-  }
-  throw new TypeError('invalid type')
+  return new BNJS(small.toString(10), 10)
 }
 
 // Trim to 3 trailing decimals
 export const trimDecimalsThree = n => {
-  if (!isString(n)) {
-    throw new Error('invalid type; expected string')
-  }
+  // ow(n, ow.string)
+
   return (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
 }
 
 // blockchain -> human
 // 1,000,000.000,000,000 -> 1,000,000
 export const baseToConvertedUnit = (amount, decimals) => {
-  if (!isString(amount) && !isObject(amount) && !isNumber(amount)) {
-    throw new Error('invalid type')
-  }
-  const decimalPower = BN(10).pow(BN(decimals))
-  const convertedUnit = BN(amount).div(decimalPower)
-  return convertedUnit.toString(10)
+  // ow(amount, ow.any(ow.string, ow.number, ow.object))
+
+  const decimalPower = BN('10').pow(BN(decimals.toString()))
+  const convertedUnit = BN(amount.toString()).div(BN(decimalPower))
+  // console.log('decimalPower, convertedUnit:', decimalPower, convertedUnit)
+  return convertedUnit.toString()
 }
 // human -> blockchain
 // 1,000,000 -> 1,000,000,000,000,000
 export const convertedToBaseUnit = (amount, decimals) => {
-  if (!isString(amount) && !isObject(amount) && !isNumber(amount)) {
-    throw new Error('invalid type')
-  }
-  const decimalPower = BN(10).pow(BN(decimals))
+  // ow(amount, ow.any(ow.string, ow.number, ow.object))
+
+  const decimalPower = BN('10').pow(BN(decimals.toString()))
   const baseUnit = BN(amount).mul(decimalPower)
-  return baseUnit.toString(10)
+  // console.log('decimalPower, baseUnit:', decimalPower, baseUnit)
+  return baseUnit.toString()
 }
