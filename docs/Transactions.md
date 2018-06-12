@@ -110,32 +110,14 @@ Scenario 2. IF there IS a challenge:
   registry.claimVoterReward(uint _challengeID, uint _salt)
 ```
 
-* lorem ipsum
-* `msg.sender`:
-
 ---
 
 ```
   voting.withdrawVotingRights(uint _numTokens)
 ```
 
-* lorem ipsum
-* `msg.sender`:
-
 ---
 
 ```
   voting.rescueTokens(uint _pollID)
 ```
-
-* lorem ipsum
-* `msg.sender`:
-
----
-
-```
-  parameterizer.startPoll(uint _voteQuorum, uint _commitDuration, uint _revealDuration)
-```
-
-* lorem ipsum
-* `msg.sender`:

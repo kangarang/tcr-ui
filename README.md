@@ -153,20 +153,9 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 
 ## Docs
 
-**State Changes**
-
-* [Lifecycle of a Listing](./docs/Lifecycle-of-a-Listing.md)
 * [Events](./docs/Events.md)
-
-**TCR Endpoints**
-
 * [Transactions](./docs/Transactions.md)
-* [Calls](./docs/Calls.md)
-
-**InterPlanetary Shenanigans**
-
 * [IPFS](./docs/IPFS.md)
-* [IPLD](./docs/IPLD.md)
 
 ---
 
