@@ -16,22 +16,28 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
 
 ## Quickstart
 
-### NOTICE: commands prefixed with `$` are run in this repo (tcr-ui), while commands prefixed with `>` are run in a separate shell, in a [tcr](https://github.com/kangarang/tcr) repo
+### _NOTICE_: commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
 
-**Clone TCR-UI**:
+**TCR-UI**:
+
+Clone & run app in dev mode in browser, rebuild on file changes
 
 ```
   $ git clone https://github.com/kangarang/tcr-ui.git
   $ cd tcr-ui
   $ npm install
+  $ npm run dev
 ```
 
-**Clone TCR smart contracts**:
+**TCR**:
+
+Clone & install/compile smart contracts
 
 ```
   > git clone https://github.com/kangarang/tcr.git
   > cd tcr
   > npm install
+  > npm run compile
 ```
 
 ### **Local blockchain/RPC (optional)**
@@ -42,11 +48,7 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
   $ npm run rpc
 ```
 
-* port: 8545
-* network_id: 420
-* mnemonic: "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
-
-Warning: Do not use this mnemonic on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
+Warning: Do not use the mnemonic associated with this command on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
 
 ### **Deploy contracts (optional)**:
 
@@ -64,25 +66,7 @@ rinkeby test network
 
 ---
 
-## Commands / Run
-
-### **Development**
-
-Run app in dev mode in browser, rebuild on file changes
-
-```
-  $ npm run dev
-```
-
-### **Build**
-
-Build production server app
-
-```
-  $ npm run build
-```
-
-### **Tests**
+## **Tests**
 
 Run unit tests with Jest
 
@@ -94,7 +78,7 @@ Run unit tests with Jest
 
 ## Application Binary Interfaces
 
-tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` (same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis))
+tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis)
 
 The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config/registry.json](../src/config/registry.json)
 
@@ -145,10 +129,6 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 |  └── index.js - Entry point for app
 └── server.js - Express.js app
 ```
-
-[ducks](https://github.com/erikras/ducks-modular-redux)
-
-[re-ducks](https://medium.freecodecamp.org/scaling-your-redux-app-with-ducks-6115955638be)
 
 ---
 
