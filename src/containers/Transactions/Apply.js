@@ -71,13 +71,20 @@ export default ({
 
       <MarginDiv>
         {needToApprove ? (
-          <Button
-            methodName="approve"
-            onClick={e => handleApprove('registry')}
-            mode="strong"
-          >
-            {'Approve tokens for Registry'}
-          </Button>
+          <div>
+            <SideTextInput
+              title="token amount"
+              type="number"
+              handleInputChange={e => handleInputChange(e, 'numTokens')}
+            />
+            <Button
+              methodName="approve"
+              onClick={e => handleApprove('registry')}
+              mode="strong"
+            >
+              {'Approve tokens for Registry'}
+            </Button>
+          </div>
         ) : (
           <Button
             methodName="apply"
