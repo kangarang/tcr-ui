@@ -33,7 +33,9 @@ export function* genesis() {
     const network =
       networkID === '4'
         ? 'rinkeby'
-        : networkID === '1' ? 'mainnet' : networkID === '420' ? 'ganache' : 'unknown'
+        : networkID === '1'
+          ? 'mainnet'
+          : networkID === '420' || networkID === '9001' ? 'ganache' : 'unknown'
     const account = (yield call(ethjs.accounts))[0]
 
     if (account === undefined) {

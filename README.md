@@ -14,13 +14,13 @@ TCRs use an intrinsic token to incentivize a community to reach decentralized co
 
 ---
 
-## Quickstart
+## Getting started
 
 ### _NOTICE_: commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
 
 **TCR-UI**:
 
-Clone & run app in dev mode in browser, rebuild on file changes
+Clone & run app in dev mode in browser, rebuild on file changes - `localhost:3000`
 
 ```
   $ git clone https://github.com/kangarang/tcr-ui.git
@@ -28,6 +28,24 @@ Clone & run app in dev mode in browser, rebuild on file changes
   $ npm install
   $ npm run dev
 ```
+
+**Tests**
+
+Run unit tests with Jest
+
+```
+  $ npm test
+```
+
+**Local blockchain/RPC (optional)**:
+
+[ganache-cli](https://github.com/trufflesuite/ganache-cli) - `localhost:8545`
+
+```
+  $ npm run rpc
+```
+
+Warning: Do not use the mnemonic associated with this command on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
 
 **TCR (optional)**:
 
@@ -40,17 +58,7 @@ Clone & install/compile smart contracts
   > npm run compile
 ```
 
-### **Local blockchain/RPC (optional)**
-
-[ganache-cli](https://github.com/trufflesuite/ganache-cli)
-
-```
-  $ npm run rpc
-```
-
-Warning: Do not use the mnemonic associated with this command on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
-
-### **Deploy contracts (optional)**:
+**Deploy contracts (optional)**:
 
 local test network
 
@@ -62,16 +70,6 @@ rinkeby test network
 
 ```
   > npm run deploy-rinkeby
-```
-
----
-
-## **Tests**
-
-Run unit tests with Jest
-
-```
-  $ npm test
 ```
 
 ---

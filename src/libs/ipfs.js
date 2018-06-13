@@ -22,7 +22,6 @@ export async function ipfsGetData(multihash) {
 export async function ipfsAddObject(obj) {
   // ow(obj, ow.object)
 
-  // TODO: verify keccak256
   const CID = await new Promise((resolve, reject) => {
     ipfs.addJSON(obj, (err, result) => {
       if (err) reject(new Error(err))
@@ -38,10 +37,7 @@ export async function ipfsAddObject(obj) {
   return CID
 }
 
-// mainnet: n/a, rinkeby: sunset
-// export const ipfsABIsHash = 'QmRUo4m9dT1M1DQhCtXhrsct4Tta7wRaFooKG3dVTbiUUv'
-
-// mainnet: adChain, rinkeby: sunset
-export const ipfsABIsHash = 'QmXtDN1SVvRVj2AzJYzSoujhSuNe7yPUKop4fDL8EKHHFV'
+// mainnet: adChain, rinkeby: sunset, 420: test, 9001: test
+export const ipfsABIsHash = 'QmQSxEDhY9nJUMjDXA1xVek5fcBzgLpwcjgbQwtjrEJrfi'
 
 export const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
