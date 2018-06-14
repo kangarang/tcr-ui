@@ -27,19 +27,12 @@ export async function handleMultihash(listingHash, data) {
 
       if (tokenData && tokenData.address) {
         tokenData.imgSrc = `${baseUrl}${tokenData.address.toLowerCase()}.png`
-        // tokenData.symbol = 'FDSAFD'
-        // tokenData.name = 'cvxcv'
-        // tokenData.totalSupply = 1245123
-        // tokenData.fiatPrice = 5643323
-        // tokenData.marketCap = 15321344231562341532
       } else {
         tokenData = {
           imgSrc: ``,
           // symbol: 'DEFAULT',
           // name: 'Default Token',
           // totalSupply: 1245127,
-          // fiatPrice: 1232152,
-          // marketCap: 1532653613432,
         }
       }
     } else if (ipfsContent.data) {
@@ -62,7 +55,7 @@ export async function createListing(log, blockTxn, owner) {
   let tokenData = {}
 
   // IPFS multihash validation (RUT)
-  if (data.length === 46 && data.includes('Qm')) {
+  if (data.length === 46 && data.startsWith('Qm')) {
     const res = await handleMultihash(listingHash, data)
     listingID = res.listingID
     tokenData = res.tokenData

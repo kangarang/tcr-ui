@@ -42,10 +42,19 @@ export function* handleNewPollLogsSaga(action) {
     const candidates = logs.filter(log => log.eventName === '_Application')
     const assorted = logs.filter(log => log.eventName !== '_Application')
 
+    // TODO: if duplicate, return
+    // console.log('allListings:', allListings)
+    // console.log('candidates:', candidates)
+    // if (logs.length === 1) {
+
+    // }
+
     // create listings
     if (candidates.length) {
       // console.log(candidates.length, '_Application logs:', candidates)
 
+      // BUG: ipfs.infura is having issues handling >6 requests at a time
+      // workaround: batch the candidates and concat results
       const listings = yield all(
         candidates.map(candidate =>
           createListing(candidate.logData, candidate.txData, candidate.msgSender)
