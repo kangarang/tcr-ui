@@ -201,7 +201,15 @@ class Transactions extends Component {
   }
   handleTransfer = () => {
     const { parameters, tcr } = this.props
-    const numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+    let numTokens
+    if (this.state.numTokens === '') {
+      numTokens = convertedToBaseUnit(
+        parameters.get('minDeposit'),
+        tcr.get('tokenDecimals')
+      )
+    } else {
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+    }
 
     const args = [this.state.transferTo, numTokens]
     this.props.onSendTransaction({ methodName: 'transfer', args })

@@ -13,6 +13,7 @@ import {
   selectTCR,
   selectStats,
   selectNotifications,
+  selectAllContracts,
 } from 'modules/home/selectors'
 import * as actions from 'modules/home/actions'
 import * as liActions from 'modules/listings/actions'
@@ -43,7 +44,16 @@ class Home extends Component {
     this.props.onOpenSidePanel(null, 'apply')
   }
   render() {
-    const { error, account, network, balances, stats, tcr, notifications } = this.props
+    const {
+      error,
+      account,
+      network,
+      balances,
+      stats,
+      tcr,
+      notifications,
+      contracts,
+    } = this.props
 
     return (
       <div>
@@ -53,6 +63,7 @@ class Home extends Component {
           account={account}
           network={network}
           tcr={tcr}
+          contracts={contracts}
         />
 
         <Stats
@@ -91,6 +102,7 @@ const mapStateToProps = createStructuredSelector({
   balances: selectBalances,
   tcr: selectTCR,
   stats: selectStats,
+  contracts: selectAllContracts,
 
   notifications: selectNotifications,
 })

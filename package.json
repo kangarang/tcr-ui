@@ -22,6 +22,7 @@
     "update:abis": "babel-node scripts/addABIs"
   },
   "dependencies": {
+    "@material-ui/core": "^1.2.1",
     "@material-ui/icons": "1.0.0-beta.43",
     "axios": "^0.18.0",
     "babel-polyfill": "6.26.0",

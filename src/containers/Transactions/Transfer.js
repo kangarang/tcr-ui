@@ -1,15 +1,12 @@
 import React from 'react'
 
-import translate from 'translations'
 import { colors } from 'global-styles'
 
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
-import Text from 'components/Text'
 
 import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
-import TotalAmount from './components/TotalAmount'
 import SidePanel from './components/SidePanel'
 
 export default ({
