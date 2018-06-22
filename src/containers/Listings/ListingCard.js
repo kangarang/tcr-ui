@@ -48,6 +48,7 @@ function ListingCard(props) {
     updateTrigger,
     revealTrigger,
     openSidePanel,
+    claimRewardTrigger,
   } = props
 
   return (
@@ -122,6 +123,15 @@ function ListingCard(props) {
                 {'Challenge'}
               </Button>
             </div>
+          )}
+          {claimRewardTrigger && (
+            <Button
+              methodName="claimReward"
+              onClick={e => openSidePanel(one, 'claimReward')}
+              color="primary"
+            >
+              {'Claim Reward'}
+            </Button>
           )}
           {updateTrigger && (
             <Button

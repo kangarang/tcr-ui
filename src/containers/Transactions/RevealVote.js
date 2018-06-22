@@ -12,47 +12,61 @@ import SidePanel from './components/SidePanel'
 
 export default class RevealVote extends Component {
   state = {
-    commitHash: '',
+    didCommit: false,
+    didReveal: false,
     numTokens: '',
     votesFor: '',
     votesAgainst: '',
   }
-  componentDidMount() {
-    this.getCommitHash()
+
+  constructor(props) {
+    super(props)
+    this.getCommitHash = this.getCommitHash.bind(this)
   }
 
-  getCommitHash = async () => {
-    const poll = await this.props.voting.pollMap(
-      this.props.selectedOne.get('challengeID')
+  componentDidMount() {
+    if (this.props.selectedOne.get('challengeID') !== false) {
+      this.getCommitHash()
+    }
+  }
+
+  async getCommitHash() {
+    const votesFor = baseToConvertedUnit(
+      this.props.selectedOne.get('votesFor'),
+      this.props.tcr.get('tokenDecimals')
     )
-    const votesFor = baseToConvertedUnit(poll[3], this.props.tcr.get('tokenDecimals'))
-    const votesAgainst = baseToConvertedUnit(poll[4], this.props.tcr.get('tokenDecimals'))
+    const votesAgainst = baseToConvertedUnit(
+      this.props.selectedOne.get('votesAgainst'),
+      this.props.tcr.get('tokenDecimals')
+    )
 
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
       this.props.selectedOne.get('challengeID')
     ))['0']
     const numTokens = baseToConvertedUnit(
-      numTokensRaw,
+      numTokensRaw.toString(),
       this.props.tcr.get('tokenDecimals')
     )
 
-    const commitHash = (await this.props.voting.getCommitHash(
+    const didCommit = (await this.props.voting.didCommit(
+      this.props.account,
+      this.props.selectedOne.get('challengeID')
+    ))['0']
+    const didReveal = (await this.props.voting.didReveal(
       this.props.account,
       this.props.selectedOne.get('challengeID')
     ))['0']
 
-    if (
-      commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
-    ) {
-      this.setState({
-        commitHash,
-        numTokens,
-        votesFor,
-        votesAgainst,
-      })
-    }
+    this.setState({
+      didCommit,
+      didReveal,
+      numTokens,
+      votesFor,
+      votesAgainst,
+    })
   }
+
   render() {
     const {
       opened,
@@ -62,6 +76,7 @@ export default class RevealVote extends Component {
       handleRevealVote,
       selectedOne,
     } = this.props
+
     return (
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
         <SideSplit
@@ -89,7 +104,14 @@ export default class RevealVote extends Component {
         />
 
         <SidePanelSeparator />
-        {this.state.commitHash ? (
+
+        {this.state.didReveal ? (
+          <SideText
+            text={`You have already revealed with ${
+              this.state.numTokens
+            } tokens for this poll`}
+          />
+        ) : this.state.didCommit ? (
           <div>
             <SideText
               text={

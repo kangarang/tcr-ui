@@ -107,7 +107,7 @@ Scenario 2. IF there IS a challenge:
 ---
 
 ```
-  registry.claimVoterReward(uint _challengeID, uint _salt)
+  registry.claimReward(uint _challengeID, uint _salt)
 ```
 
 ---

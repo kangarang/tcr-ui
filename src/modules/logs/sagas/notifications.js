@@ -45,11 +45,11 @@ export function* notificationsSaga(log) {
 
     if (title) {
       const noti = {
-        uid: txData.txHash + txData.logIndex + logData._eventName,
+        uid: txData.txHash,
         title,
         message,
-        position: 'tl',
-        autoDismiss: 30,
+        position: 'bl',
+        autoDismiss: 10,
         // action: {
         //   label: 'cb',
         //   callback: () => console.log('click!'),

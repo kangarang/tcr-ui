@@ -21,7 +21,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
   switch (eventName) {
     case '_Application':
       title = `Application: ${listing.tokenData.name ||
-        logData.listingHash.slice(0, 8)} (${listing.tokenData.symbol || ''})`
+        logData.listingHash.slice(0, 8)} ${listing.tokenData.symbol || ''}`
       message = logData.data || false
       break
     case '_Challenge':
@@ -33,7 +33,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
         logData.numTokens,
         tcr.get('tokenDecimals')
       )} ${tcr.get('tokenSymbol')} committed in poll: ${logData.pollID}`
-      message = `Ends: ${listing.commitExpiry.date}`
+      message = `Voter: ${logData.voter}`
       break
     case '_VoteRevealed':
       title = `${baseToConvertedUnit(
@@ -46,7 +46,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       )} votesAgainst: ${baseToConvertedUnit(
         logData.votesAgainst,
         tcr.get('tokenDecimals')
-      )}. Ends: ${listing.revealExpiry.date}`
+      )}. Voter: ${logData.voter}`
       break
     case '_ApplicationWhitelisted':
       title = `Application added to the registry`
@@ -88,7 +88,7 @@ const _utils = {
     return methodAbi
   },
 
-  getFilter: async (address, eventNames, indexFilterValues, abi, blockRange) => {
+  getFilter: async (address, eventNames, indexFilterValues = {}, abi, blockRange) => {
     if (eventNames.length === 0) {
       const filter = {
         address: address,

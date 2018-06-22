@@ -63,7 +63,7 @@ export function* handleSendTransaction(action) {
       case 'transfer':
         yield call(sendTransactionSaga, token, methodName, newArgs)
         break
-      case 'claimVoteReward':
+      case 'claimReward':
         yield call(sendTransactionSaga, registry, methodName, newArgs)
         break
       default:

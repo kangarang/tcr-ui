@@ -41,34 +41,36 @@ Run unit tests with Jest
 
 [ganache-cli](https://github.com/trufflesuite/ganache-cli) - `localhost:8545`
 
+Warning: Do not use the mnemonic associated with this command on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
+
 ```
+  # start local blockchain and rpc server
   $ npm run rpc
 ```
 
-Warning: Do not use the mnemonic associated with this command on ethereum main network. [You will lose your funds!](https://www.reddit.com/r/ethereum/comments/7z4n6a/people_are_using_the_hardcoded_ganache_seedphrase/)
-
 **TCR (optional)**:
 
-Clone & install/compile smart contracts
-
 ```
+  # clone tcr smart contracts
   > git clone https://github.com/kangarang/tcr.git
   > cd tcr
+
+  # install node dependencies and ethpm dependencies
   > npm install
+
+  # compile smart contracts
   > npm run compile
 ```
 
 **Deploy contracts (optional)**:
 
-local test network
-
 ```
+  # migrate contracts to local test network (port: 8545)
   > npm run deploy-ganache
 ```
 
-rinkeby test network
-
 ```
+  # migrate contracts to rinkeby test network (network_id: 4)
   > npm run deploy-rinkeby
 ```
 

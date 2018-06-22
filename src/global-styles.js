@@ -18,6 +18,11 @@ export const colors = {
   darkRed: '#9A4540',
   blue2: '#A4BEE7',
   gradient: {
+    claimReward: {
+      right: '#85D3D4',
+      left: '#74FAB0',
+      shadow: '#F9D7E3',
+    },
     requestVotingRights: {
       right: '#85D3D4',
       left: '#74FAB0',

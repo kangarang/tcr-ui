@@ -6,7 +6,13 @@ import EthAbi from 'ethjs-abi'
 import * as actions from '../actions'
 import * as types from '../types'
 
-import { selectNetwork, selectRegistry, selectVoting } from 'modules/home/selectors'
+import {
+  selectNetwork,
+  selectRegistry,
+  selectVoting,
+  selectToken,
+  selectAccount,
+} from 'modules/home/selectors'
 import { getEthjs } from 'libs/provider'
 import _utils, { getBlockAndTxnFromLog } from './utils'
 
@@ -22,38 +28,49 @@ function* pollLogsSaga(action) {
 
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
+    const token = yield select(selectToken)
+    const account = yield select(selectAccount)
 
     const blockRange = action.payload
-
-    const rEvents = [
-      // '_Application',
-      // '_ApplicationWhitelisted',
-      // '_ApplicationRemoved',
-      // '_ListingRemoved',
-      // '_ListingWithdrawn',
-      // '_Challenge',
-      // '_ChallengeFailed',
-      // '_ChallengeSucceeded',
-      // '_TouchAndRemoved',
-      // '_RewardClaimed',
-    ]
 
     const registryPayload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: rEvents,
+      eventNames: [
+        // '_Application',
+        // '_ApplicationWhitelisted',
+        // '_ApplicationRemoved',
+        // '_ListingRemoved',
+        // '_ListingWithdrawn',
+        // '_Challenge',
+        // '_ChallengeFailed',
+        // '_ChallengeSucceeded',
+        // '_TouchAndRemoved',
+        // '_RewardClaimed',
+      ],
       blockRange,
     }
 
-    const vEvents = ['_PollCreated', '_VoteCommitted', '_VoteRevealed']
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames: vEvents,
+      eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
       blockRange,
+    }
+    const tokenPayload = {
+      abi: token.abi,
+      contractAddress: token.address,
+      eventNames: ['Transfer'],
+      blockRange,
+      indexedFilterValues: {
+        // here, we can specify values of indexed event emissions
+        _to: account,
+        _from: registry.address,
+      },
     }
     yield call(decodeLogsSaga, { payload: registryPayload })
     yield call(decodeLogsSaga, { payload: votingPayload })
+    yield call(decodeLogsSaga, { payload: tokenPayload })
   } catch (err) {
     console.log('Poll logs error:', err)
     yield put(actions.pollLogsFailed(err))
@@ -63,12 +80,13 @@ function* pollLogsSaga(action) {
 export function* decodeLogsSaga(action) {
   try {
     const ethjs = yield call(getEthjs)
-    const { abi, contractAddress, eventNames, blockRange } = action.payload
-
-    // here, we can specify values of indexed event emissions
-    const indexedFilterValues = {
-      // listingHash: '0xdea4eb00...',
-    }
+    const {
+      abi,
+      contractAddress,
+      eventNames,
+      blockRange,
+      indexedFilterValues,
+    } = action.payload
 
     // get filter
     const filter = yield call(
@@ -116,7 +134,7 @@ export function* decodeLogsSaga(action) {
       yield put(actions.pollLogsSucceeded(lawgs))
     }
     // notifications
-    if (lawgs.length < 4) {
+    if (lawgs.length < 3) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
   } catch (error) {

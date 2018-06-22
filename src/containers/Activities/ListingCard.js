@@ -106,11 +106,8 @@ function ListingCard(props) {
             </div>
           ) : (
             <div>
-              <Button
-                onClick={e => openSidePanel(one, 'claimVoterReward')}
-                color="secondary"
-              >
-                {'Claim Voter Reward'}
+              <Button onClick={e => openSidePanel(one, 'claimReward')} color="secondary">
+                {'Claim Reward'}
               </Button>
             </div>
           )}

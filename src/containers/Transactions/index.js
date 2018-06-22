@@ -25,7 +25,7 @@ import Challenge from 'containers/Transactions/Challenge'
 import CommitVote from 'containers/Transactions/CommitVote'
 import RevealVote from 'containers/Transactions/RevealVote'
 import UpdateStatus from 'containers/Transactions/UpdateStatus'
-import ClaimVoterReward from 'containers/Transactions/ClaimVoterReward'
+import ClaimReward from 'containers/Transactions/ClaimReward'
 
 import styled from 'styled-components'
 
@@ -84,6 +84,7 @@ class Transactions extends Component {
       sidePanelMethod,
       children,
       voting,
+      registry,
     } = this.props
 
     const needToApproveRegistry = BN(balances.get('registryAllowance')).lt(
@@ -151,6 +152,7 @@ class Transactions extends Component {
                 tcr={tcr}
                 account={account}
                 numTokens={this.state.numTokens}
+                registry={registry}
               />
             )}
             {sidePanelMethod === 'revealVote' && (
@@ -161,16 +163,25 @@ class Transactions extends Component {
                 closeSidePanel={this.closeSidePanel}
                 handleFileInput={this.handleFileInput}
                 handleRevealVote={this.handleRevealVote}
-                {...this.props}
+                voting={voting}
+                tcr={tcr}
+                account={account}
+                registry={registry}
               />
             )}
-            <ClaimVoterReward
-              selectedOne={sidePanelListing}
-              opened={sidePanelMethod === 'claimVoterReward'}
-              closeSidePanel={this.closeSidePanel}
-              handleFileInput={this.handleFileInput}
-              handleClaimVoterReward={this.handleClaimVoterReward}
-            />
+            {sidePanelMethod === 'claimReward' && (
+              <ClaimReward
+                selectedOne={sidePanelListing}
+                opened={sidePanelMethod === 'claimReward'}
+                closeSidePanel={this.closeSidePanel}
+                handleFileInput={this.handleFileInput}
+                handleClaimReward={this.handleClaimReward}
+                voting={voting}
+                tcr={tcr}
+                account={account}
+                registry={registry}
+              />
+            )}
           </div>
         )}
         <UpdateStatus
@@ -265,12 +276,12 @@ class Transactions extends Component {
     const args = [listing.get('challengeID')]
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
-  handleClaimVoterReward = () => {
+  handleClaimReward = () => {
     const args = [
       this.props.sidePanelListing.get('challengeID'),
       this.state.fileInput.salt,
     ]
-    this.props.onSendTransaction({ methodName: 'claimVoterReward', args })
+    this.props.onSendTransaction({ methodName: 'claimReward', args })
   }
 }
 

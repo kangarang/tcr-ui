@@ -69,8 +69,9 @@ class CommitVote extends Component {
     choice: '',
   }
   componentDidMount() {
-    // this.getCommitHash()
+    this.getCommitHash()
   }
+
   getCommitHash = async () => {
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,

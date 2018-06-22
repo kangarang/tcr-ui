@@ -48,8 +48,8 @@ export function* pendingTxns(methodName, txHash, args) {
       uid: txHash,
       title: `Pending ${methodName}. Tx Hash: ${txHash.slice(0, 8)}`,
       message: getEtherscanLink(network, txHash),
-      position: 'tl',
-      autoDismiss: 0,
+      position: 'bl',
+      autoDismiss: 10,
     }
     yield put(info(noti))
     yield fork(minedTxn, txHash)
@@ -70,8 +70,8 @@ export function* minedTxn(txHash) {
         uid: txHash,
         title: `${txHash.slice(0, 8)} mined`,
         message: getEtherscanLink(network, txHash),
-        position: 'tl',
-        autoDismiss: 5,
+        position: 'bl',
+        autoDismiss: 10,
       }
       yield put(success(noti))
     }
