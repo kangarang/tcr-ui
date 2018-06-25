@@ -195,6 +195,10 @@ class Transactions extends Component {
     )
   }
 
+  // personal message signature recovery
+  handlePersonalSign = () => {
+    this.props.onSendTransaction({ methodName: 'personalSign', args: [] })
+  }
   // TRANSACTIONS
   handleApprove = contract => {
     const { parameters, tcr } = this.props
