@@ -1,7 +1,7 @@
-import { select, takeLatest, fork, call } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
+import { select, takeLatest, take, fork, call } from 'redux-saga/effects'
 
 import * as epTypes from 'modules/home/types'
+import * as liTypes from 'modules/listings/types'
 
 import { selectRegistry, selectVoting } from 'modules/home/selectors'
 
@@ -30,13 +30,23 @@ function* getFreshLogs() {
     }
     yield call(decodeLogsSaga, { payload, applications: true })
 
-    // TODO: wait for success
-    yield call(delay, 1000)
+    // wait for success
+    yield take(liTypes.SET_LISTINGS)
 
     // registry logs
     const fullPayload = {
       ...payload,
-      eventNames: [],
+      eventNames: [
+        '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
+        '_ListingRemoved',
+        '_ListingWithdrawn',
+        '_Challenge',
+        '_ChallengeFailed',
+        '_ChallengeSucceeded',
+        '_TouchAndRemoved',
+        '_RewardClaimed',
+      ],
     }
     yield call(decodeLogsSaga, { payload: fullPayload })
 

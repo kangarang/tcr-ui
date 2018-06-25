@@ -4,15 +4,8 @@ import * as logsTypes from '../logs/types'
 import { selectAllListings } from './selectors'
 
 import * as actions from './actions'
-import {
-  updateListings,
-  createListing,
-  updateAssortedListings,
-  // findListing,
-} from './utils'
-
-// import { baseToConvertedUnit } from '../../libs/units'
-// import { selectTCR } from '../home/selectors'
+import { updateListings, createListing, updateAssortedListings } from './utils'
+import { delay } from 'redux-saga'
 
 export default function* rootListingsSaga() {
   yield takeEvery(logsTypes.POLL_LOGS_SUCCEEDED, handleNewPollLogsSaga)
@@ -31,35 +24,45 @@ export function* listenForApplications() {
   }
 }
 
+// ipfs.infura rate limit: > 6 requests at a time
+// workaround: batch the candidates and concat results
+function* batchCreateListings(candidates, listings) {
+  const chunkCandidates = candidates.slice(0, 4)
+  console.log('chunkCandidates:', chunkCandidates)
+  console.log('listings:', listings)
+
+  if (chunkCandidates.length > 0) {
+    const chunkListings = yield all(
+      chunkCandidates.map(candidate =>
+        createListing(candidate.logData, candidate.txData, candidate.msgSender)
+      )
+    )
+    if (candidates.length > 4) {
+      yield call(delay, 400)
+    }
+    return yield call(
+      batchCreateListings,
+      candidates.slice(4),
+      listings.concat(chunkListings)
+    )
+  }
+  return listings
+}
+
 // TODO: check for involved listings (Activities)
 // TODO: discard stale listings
 export function* handleNewPollLogsSaga(action) {
   try {
     const allListings = yield select(selectAllListings)
-    // const tcr = yield select(selectTCR)
     const logs = action.payload
 
     const candidates = logs.filter(log => log.eventName === '_Application')
     const assorted = logs.filter(log => log.eventName !== '_Application')
 
-    // TODO: if duplicate, return
-    // console.log('allListings:', allListings)
-    // console.log('candidates:', candidates)
-    // if (logs.length === 1) {
-
-    // }
-
-    // create listings
     if (candidates.length) {
-      // console.log(candidates.length, '_Application logs:', candidates)
-
-      // BUG: ipfs.infura is having issues handling >6 requests at a time
-      // workaround: batch the candidates and concat results
-      const listings = yield all(
-        candidates.map(candidate =>
-          createListing(candidate.logData, candidate.txData, candidate.msgSender)
-        )
-      )
+      console.log(candidates.length, '_Application logs:', candidates)
+      // create listings
+      const listings = yield call(batchCreateListings, candidates, [])
       // update listings
       const applications = yield call(updateListings, listings, allListings)
       // check equality
@@ -73,22 +76,6 @@ export function* handleNewPollLogsSaga(action) {
     // update listings
     if (assorted.length) {
       console.log(assorted.length, 'assorted logs:', assorted)
-
-      // assorted.forEach(event => {
-      //   const match = findListing(event.logData, allListings)
-      //   if (event.logData.numTokens && match) {
-      //     console.log(
-      //       event.msgSender.slice(0, 10),
-      //       ' | ',
-      //       baseToConvertedUnit(
-      //         event.logData.numTokens,
-      //         tcr.get('tokenDecimals')
-      //       ).toString(),
-      //       match.get('listingID')
-      //     )
-      //   }
-      // })
-
       const updatedListings = yield call(updateAssortedListings, assorted, allListings)
       // check: equality
       if (updatedListings.equals(allListings)) {

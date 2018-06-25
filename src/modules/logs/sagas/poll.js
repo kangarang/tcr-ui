@@ -36,18 +36,7 @@ function* pollLogsSaga(action) {
     const registryPayload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: [
-        // '_Application',
-        // '_ApplicationWhitelisted',
-        // '_ApplicationRemoved',
-        // '_ListingRemoved',
-        // '_ListingWithdrawn',
-        // '_Challenge',
-        // '_ChallengeFailed',
-        // '_ChallengeSucceeded',
-        // '_TouchAndRemoved',
-        // '_RewardClaimed',
-      ],
+      eventNames: [],
       blockRange,
     }
 
