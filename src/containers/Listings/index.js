@@ -12,6 +12,7 @@ import Paper from 'material-ui/Paper'
 import ListingCard from './ListingCard'
 import { colors } from '../../global-styles'
 
+import { baseToConvertedUnit } from 'libs/units'
 import {
   selectAllListings,
   selectFaceoffs,
@@ -26,6 +27,7 @@ import {
   selectVoting,
   selectAccount,
   selectRegistry,
+  selectTCR,
 } from 'modules/home/selectors'
 import * as actions from 'modules/listings/actions'
 
@@ -81,6 +83,25 @@ class SimpleTabs extends Component {
 
   handleChangePage = (event, page) => {
     this.setState({ page })
+  }
+
+  handleCheckReward = async id => {
+    console.log('id:', id)
+    if (id) {
+      const tc = (await this.props.registry.tokenClaims(id, this.props.account))['0']
+      const didReveal = (await this.props.voting.didReveal(this.props.account, id))['0']
+      const numTokens = baseToConvertedUnit(
+        (await this.props.voting.getNumTokens(this.props.account, id))['0'],
+        this.props.tcr.get('tokenDecimals')
+      )
+      console.log('tokenClaim:', tc)
+      console.log('didReveal:', didReveal)
+      console.log('numTokens:', numTokens)
+      if (didReveal && numTokens !== '0') {
+        return true
+      }
+    }
+    return false
   }
 
   handleChangeRowsPerPage = event => {
@@ -174,6 +195,7 @@ class SimpleTabs extends Component {
                           account={account}
                           registry={registry}
                           value={value}
+                          claimRewardTrigger={false}
                         />
                       )
                     })}
@@ -190,6 +212,7 @@ class SimpleTabs extends Component {
                           updateTrigger={candidates.getIn([id, 'appExpiry', 'expired'])}
                           tokenData={candidates.getIn([id, 'tokenData'])}
                           value={value}
+                          claimRewardTrigger={false}
                         />
                       )
                     })}
@@ -210,6 +233,8 @@ class SimpleTabs extends Component {
                           account={account}
                           registry={registry}
                           value={value}
+                          // claimRewardTrigger={await this.handleCheckReward(candidates.getIn[id, 'challengeID'])}
+                          claimRewardTrigger={false}
                         />
                       )
                     })}
@@ -260,6 +285,7 @@ const mapStateToProps = createStructuredSelector({
   voting: selectVoting,
   account: selectAccount,
   registry: selectRegistry,
+  tcr: selectTCR,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
