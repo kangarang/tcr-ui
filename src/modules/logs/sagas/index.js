@@ -1,21 +1,20 @@
-import { select, takeLatest, take, fork, call } from 'redux-saga/effects'
+import { select, takeLatest, take, fork, put } from 'redux-saga/effects'
 
-import * as epTypes from 'modules/home/types'
-import * as liTypes from 'modules/listings/types'
+import { homeTypes, homeSelectors } from 'modules/home'
+import { liTypes } from 'modules/listings'
+import * as actions from '../actions'
 
-import { selectRegistry, selectVoting } from 'modules/home/selectors'
-
-import rootPollLogsSaga, { initPolling, decodeLogsSaga } from './poll'
+import rootPollLogsSaga, { initPolling } from './poll'
 
 export default function* rootLogsSaga() {
   yield fork(rootPollLogsSaga)
-  yield takeLatest(epTypes.SET_CONTRACTS, getFreshLogs)
+  yield takeLatest(homeTypes.SET_CONTRACTS, getFreshLogs)
 }
 
 function* getFreshLogs() {
   try {
-    const registry = yield select(selectRegistry)
-    const voting = yield select(selectVoting)
+    const registry = yield select(homeSelectors.selectRegistry)
+    const voting = yield select(homeSelectors.selectVoting)
     const blockRange = {
       fromBlock: '0',
       toBlock: 'latest',
@@ -28,7 +27,7 @@ function* getFreshLogs() {
       eventNames: ['_Application'],
       blockRange,
     }
-    yield call(decodeLogsSaga, { payload, applications: true })
+    yield put(actions.decodeLogsStart(payload))
 
     // wait for success
     yield take(liTypes.SET_LISTINGS)
@@ -48,7 +47,7 @@ function* getFreshLogs() {
         '_RewardClaimed',
       ],
     }
-    yield call(decodeLogsSaga, { payload: fullPayload })
+    yield put(actions.decodeLogsStart(fullPayload))
 
     // voting logs
     const votingPayload = {
@@ -57,10 +56,11 @@ function* getFreshLogs() {
       eventNames: ['_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
-    yield call(decodeLogsSaga, { payload: votingPayload })
+    yield put(actions.decodeLogsStart(votingPayload))
+
+    // start polling
+    yield fork(initPolling)
   } catch (err) {
-    console.log('Fresh log error:', err)
-    throw new Error(err.message)
+    yield put(actions.pollLogsFailed(err))
   }
-  yield fork(initPolling)
 }

@@ -9,6 +9,8 @@ import {
   // removeAll,
 } from 'react-notification-system-redux'
 
+import * as actions from '../actions'
+
 import { getNotificationTitleAndMessage } from './utils'
 import { findListing } from 'modules/listings/utils'
 
@@ -57,7 +59,7 @@ export function* notificationsSaga(log) {
       }
       yield put(info(noti))
     }
-  } catch (error) {
-    console.log('notificationsSaga error:', error)
+  } catch (err) {
+    yield put(actions.showNotificationFailed(err))
   }
 }

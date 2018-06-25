@@ -1,4 +1,4 @@
-import { select, all, takeLatest, call, put } from 'redux-saga/effects'
+import { select, all, takeEvery, takeLatest, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import EthAbi from 'ethjs-abi'
@@ -39,7 +39,6 @@ function* pollLogsSaga(action) {
       eventNames: [],
       blockRange,
     }
-
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
@@ -57,11 +56,10 @@ function* pollLogsSaga(action) {
         _from: registry.address,
       },
     }
-    yield call(decodeLogsSaga, { payload: registryPayload })
-    yield call(decodeLogsSaga, { payload: votingPayload })
-    yield call(decodeLogsSaga, { payload: tokenPayload })
+    yield put(actions.decodeLogsStart(registryPayload))
+    yield put(actions.decodeLogsStart(votingPayload))
+    yield put(actions.decodeLogsStart(tokenPayload))
   } catch (err) {
-    console.log('Poll logs error:', err)
     yield put(actions.pollLogsFailed(err))
   }
 }
@@ -120,27 +118,26 @@ export function* decodeLogsSaga(action) {
     if (lawgs.length > 0) {
       // variety
       console.log(decodedLogs.length, eventNames, 'logs:', decodedLogs)
-      yield put(actions.pollLogsSucceeded(lawgs))
+      yield put(actions.decodeLogsSucceeded(lawgs))
     }
     // notifications
     if (lawgs.length < 3) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
-  } catch (error) {
-    console.log('logs saga error:', error)
+  } catch (err) {
+    yield put(actions.decodeLogsFailed(err))
   }
 }
 
 export function* initPolling() {
-  const network = yield select(selectNetwork)
-  let pollInterval = 5000
-
-  if (network === 'rinkeby') {
-    pollInterval = 3000
-  }
-
   while (true) {
     try {
+      const network = yield select(selectNetwork)
+      let pollInterval = 5000
+
+      if (network === 'rinkeby') {
+        pollInterval = 3000
+      }
       // wait, then dispatch another poll request
       yield call(delay, pollInterval)
       yield put(
@@ -150,11 +147,12 @@ export function* initPolling() {
         })
       )
     } catch (err) {
-      console.log('Polling Log Saga error', err)
+      yield put(actions.pollLogsFailed(err))
     }
   }
 }
 
 export default function* rootLogsSaga() {
   yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
+  yield takeEvery(types.DECODE_LOGS_START, decodeLogsSaga)
 }

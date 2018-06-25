@@ -6,6 +6,7 @@ import tokenList from 'config/tokens/eth.json'
 import { getListingHash, isAddress } from 'libs/values'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from 'libs/ipfs'
+import { saveLocal } from '../../utils/_localStorage'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -67,7 +68,7 @@ export async function createListing(log, blockTxn, owner) {
   // TODO: validate for neither case
 
   // starting structure for every listing entity
-  return {
+  const listing = {
     listingHash,
     owner,
     data,
@@ -87,6 +88,10 @@ export async function createListing(log, blockTxn, owner) {
     votesAgainst: '0',
     challengeReward: '0',
   }
+
+  // save to local storage
+  await saveLocal(listingHash, listing)
+  return listing
 }
 
 // TODO: move into actual reducer and change the redux store directly for clarity
@@ -151,6 +156,10 @@ export async function updateAssortedListings(newListings, listings = fromJS({}))
         val.get('txData'),
         val.get('eventName')
       )
+      // // get claimReward
+      // if ((changed.get('status') === '3') && changed.get('challengeID')) {
+
+      // }
       return acc.set(match.get('listingHash'), changed)
     }
     return acc
@@ -167,11 +176,10 @@ export async function updateListings(newListings, listings = fromJS({})) {
       !val.get('status') ||
       !val.get('listingHash')
     ) {
-      // console.log('BUG: not a listing!')
+      console.log('!not a listing!')
       return acc
     }
     const matchingListing = acc.get(val.get('listingHash'))
-    // console.log('matchingListing:', matchingListing)
     if (matchingListing && val.get('ts').lt(matchingListing.get('ts'))) {
       // duplicate listingHash, older block.timestamp
       return acc

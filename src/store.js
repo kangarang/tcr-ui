@@ -5,6 +5,7 @@ import { fromJS, Iterable } from 'immutable'
 
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
+import { DECODE_LOGS_START } from './modules/logs/types'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -15,6 +16,7 @@ const stateTransformer = state => {
 }
 
 const logger = createLogger({
+  predicate: (getState, action) => action.type !== DECODE_LOGS_START,
   collapsed: (getState, action, logEntry) => !action.error,
   stateTransformer,
 })

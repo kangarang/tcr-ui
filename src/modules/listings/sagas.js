@@ -8,7 +8,7 @@ import { updateListings, createListing, updateAssortedListings } from './utils'
 import { delay } from 'redux-saga'
 
 export default function* rootListingsSaga() {
-  yield takeEvery(logsTypes.POLL_LOGS_SUCCEEDED, handleNewPollLogsSaga)
+  yield takeEvery(logsTypes.DECODE_LOGS_SUCCEEDED, handleNewPollLogsSaga)
   yield fork(listenForApplications)
 }
 
