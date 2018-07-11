@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 import { selectCandidates, selectWhitelist, selectFaceoffs } from '../listings/selectors'
-// import {selectNotifications} from '../notifications/selectors'
+
 export const selectNotifications = state => state.get('notifications')
 
 export const selectHome = state => state.get('home')

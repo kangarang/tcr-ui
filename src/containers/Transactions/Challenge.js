@@ -28,10 +28,12 @@ export default ({
       )}
       <SidePanelSeparator />
 
-      <SideText text={selectedOne && selectedOne.get('listingID')} />
+      <SideText text={selectedOne && selectedOne.listingID} />
 
       <MarginDiv>
-        <Countdown end={selectedOne && selectedOne.getIn(['appExpiry', 'date'])} />
+        <Countdown
+          end={selectedOne && selectedOne.appExpiry ? selectedOne.appExpiry.date : false}
+        />
       </MarginDiv>
 
       <SidePanelSeparator />
@@ -40,8 +42,8 @@ export default ({
 
       <TotalAmount
         copy={'Total Stake'}
-        minDeposit={parameters.get('minDeposit')}
-        tokenSymbol={tcr.get('tokenSymbol')}
+        minDeposit={parameters.minDeposit}
+        tokenSymbol={tcr.tokenSymbol}
       />
 
       <SidePanelSeparator />

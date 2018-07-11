@@ -79,16 +79,13 @@ class CommitVote extends Component {
     console.log('this.props:', this.props)
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
     const commitHash = (await this.props.voting.getCommitHash(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
-    const numTokens = baseToConvertedUnit(
-      numTokensRaw,
-      this.props.tcr.get('tokenDecimals')
-    )
+    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
     if (
       commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
     ) {
@@ -110,8 +107,8 @@ class CommitVote extends Component {
   }
   handleNext = num => {
     if (
-      this.props.balances.get('votingRights') === '0.0' ||
-      this.props.balances.get('votingAllowance') === '0.0' ||
+      this.props.balances.votingRights === '0.0' ||
+      this.props.balances.votingAllowance === '0.0' ||
       typeof num !== 'number'
     ) {
       this.setState({
@@ -155,16 +152,16 @@ class CommitVote extends Component {
     })
   }
   handleSaveFile = () => {
-    const commitEndDate = this.props.selectedOne.getIn(['commitExpiry', 'timestamp'])
-    const revealEndDate = this.props.selectedOne.getIn(['revealExpiry', 'timestamp'])
+    const commitEndDate = this.props.selectedOne.commitExpiry.timestamp
+    const revealEndDate = this.props.selectedOne.revealExpiry.timestamp
 
     // record expiry dates
     const commitEndDateString = getEndDateString(commitEndDate)
     const revealEndDateString = getEndDateString(revealEndDate)
     const salt = this.state.salt.toString(10)
     const voteOption = this.state.selectedValue
-    const pollID = this.props.selectedOne.get('challengeID')
-    const listingID = this.props.selectedOne.get('listingID')
+    const pollID = this.props.selectedOne.challengeID
+    const listingID = this.props.selectedOne.listingID
 
     const secretHash = getVoteSaltHash(voteOption, salt)
     const json = {
@@ -224,8 +221,8 @@ class CommitVote extends Component {
         </div>
       </div>,
       <div className={classes.actionsContainer}>
-        <div>{`Voting allowance: ${this.props.balances.get('votingAllowance')}`}</div>
-        <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
+        <div>{`Voting allowance: ${this.props.balances.votingAllowance}`}</div>
+        <div>{`Voting rights: ${this.props.balances.votingRights}`}</div>
         <SideTextInput
           title="token amount"
           type="number"
@@ -245,8 +242,8 @@ class CommitVote extends Component {
         )}
       </div>,
       <div className={classes.actionsContainer}>
-        <div>{`Voting allowance: ${this.props.balances.get('votingAllowance')}`}</div>
-        <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
+        <div>{`Voting allowance: ${this.props.balances.votingAllowance}`}</div>
+        <div>{`Voting rights: ${this.props.balances.votingRights}`}</div>
         <SideTextInput
           title="token amount"
           type="number"
@@ -283,13 +280,13 @@ class CommitVote extends Component {
           <SidePanelSeparator />
 
           <FlexContainer>
-            {selectedOne.hasIn(['tokenData', 'imgSrc']) && (
+            {selectedOne.tokenData.imgSrc && (
               <IconWrapper>
                 <Img
                   src={
                     selectedOne &&
-                    selectedOne.hasIn(['tokenData', 'imgSrc']) &&
-                    selectedOne.getIn(['tokenData', 'imgSrc'])
+                    selectedOne.tokenData.imgSrc &&
+                    selectedOne.tokenData.imgSrc
                   }
                   alt=""
                 />
@@ -299,8 +296,9 @@ class CommitVote extends Component {
               size="medium"
               text={
                 selectedOne &&
-                `${selectedOne.getIn(['tokenData', 'name']) ||
-                  selectedOne.get('listingID')} ${this.state.choice}`
+                `${selectedOne.tokenData.name || selectedOne.listingID} ${
+                  this.state.choice
+                }`
               }
             />
           </FlexContainer>

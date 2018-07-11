@@ -44,8 +44,8 @@ export default ({
 
           <TotalAmount
             copy={'Minimum Deposit'}
-            minDeposit={parameters.get('minDeposit')}
-            tokenSymbol={tcr.get('tokenSymbol')}
+            minDeposit={parameters.minDeposit}
+            tokenSymbol={tcr.tokenSymbol}
           />
         </div>
       )}
@@ -111,9 +111,9 @@ export default ({
                 color="red"
                 children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${balances.get(
                   'registryAllowance'
-                )}. The minimum deposit for application in the Registry is ${parameters.get(
-                  'minDeposit'
-                )} ${tcr.get('tokenSymbol')}`}
+                )}. The minimum deposit for application in the Registry is ${
+                  parameters.minDeposit
+                } ${tcr.tokenSymbol}`}
               />
             )}
           </div>

@@ -25,8 +25,8 @@ export default class UpdateStatus extends Component {
 
   componentDidMount() {
     if (
-      this.props.selectedOne.get('challengeID') !== false &&
-      this.props.selectedOne.get('challengeID') !== undefined
+      this.props.selectedOne.challengeID !== false &&
+      this.props.selectedOne.challengeID !== undefined
     ) {
       this.getCommitHash()
     }
@@ -34,30 +34,30 @@ export default class UpdateStatus extends Component {
 
   async getCommitHash() {
     const votesFor = baseToConvertedUnit(
-      this.props.selectedOne.get('votesFor'),
-      this.props.tcr.get('tokenDecimals')
+      this.props.selectedOne.votesFor,
+      this.props.tcr.tokenDecimals
     )
     const votesAgainst = baseToConvertedUnit(
-      this.props.selectedOne.get('votesAgainst'),
-      this.props.tcr.get('tokenDecimals')
+      this.props.selectedOne.votesAgainst,
+      this.props.tcr.tokenDecimals
     )
 
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
     const numTokens = baseToConvertedUnit(
       numTokensRaw.toString(),
-      this.props.tcr.get('tokenDecimals')
+      this.props.tcr.tokenDecimals
     )
 
     const didCommit = (await this.props.voting.didCommit(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
     const didReveal = (await this.props.voting.didReveal(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
 
     this.setState({
@@ -82,17 +82,17 @@ export default class UpdateStatus extends Component {
             <div>
               <SideSplit
                 leftTitle={'Votes For'}
-                leftItem={selectedOne.get('votesFor')}
+                leftItem={selectedOne.votesFor}
                 rightTitle={'Votes Against'}
-                rightItem={selectedOne.get('votesAgainst')}
+                rightItem={selectedOne.votesAgainst}
               />
               <SideSplit
                 leftTitle={'Tokens you committed'}
                 leftItem={this.state.numTokens}
                 rightTitle={'POLL ID'}
-                rightItem={selectedOne && selectedOne.get('challengeID')}
+                rightItem={selectedOne && selectedOne.challengeID}
               />
-              <SideText text={selectedOne && selectedOne.get('listingID')} />
+              <SideText text={selectedOne && selectedOne.listingID} />
             </div>
           )}
 
@@ -103,7 +103,7 @@ export default class UpdateStatus extends Component {
           <MarginDiv>
             {selectedOne && (
               <Button
-                onClick={e => handleUpdateStatus(selectedOne.get('listingHash'))}
+                onClick={e => handleUpdateStatus(selectedOne.listingHash)}
                 mode="strong"
                 wide
                 methodName="updateStatus"

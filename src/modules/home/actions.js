@@ -21,10 +21,10 @@ export function setupEthereumFailed(payload) {
   }
 }
 
-export function setABIs(abis) {
+export function setABIs(payload) {
   return {
     type: types.SET_ABIS,
-    abis,
+    payload,
   }
 }
 

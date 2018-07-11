@@ -13,6 +13,7 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
 import ListingCard from './ListingCard'
+import toJS from 'components/toJS'
 import { colors } from '../../global-styles'
 
 import {
@@ -190,11 +191,11 @@ class SimpleTabs extends Component {
                       return (
                         <ListingCard
                           key={id}
-                          one={whitelist.get(id)}
+                          one={whitelist[id]}
                           listingType={'whitelist'}
                           openSidePanel={this.openSidePanel}
                           chooseTCR={chooseTCR}
-                          tokenData={whitelist.getIn([id, 'tokenData'])}
+                          tokenData={whitelist[id].tokenData}
                           voting={voting}
                           account={account}
                           registry={registry}
@@ -210,11 +211,11 @@ class SimpleTabs extends Component {
                       return (
                         <ListingCard
                           key={id}
-                          one={candidates.get(id)}
+                          one={candidates[id]}
                           listingType={'candidates'}
                           openSidePanel={this.openSidePanel}
-                          updateTrigger={candidates.getIn([id, 'appExpiry', 'expired'])}
-                          tokenData={candidates.getIn([id, 'tokenData'])}
+                          updateTrigger={candidates[id].appExpiry.expired}
+                          tokenData={candidates[id].tokenData}
                           value={value}
                           claimRewardTrigger={false}
                         />
@@ -227,12 +228,12 @@ class SimpleTabs extends Component {
                       return (
                         <ListingCard
                           key={id}
-                          one={faceoffs.get(id)}
+                          one={faceoffs[id]}
                           listingType={'faceoffs'}
                           openSidePanel={this.openSidePanel}
-                          updateTrigger={faceoffs.getIn([id, 'revealExpiry', 'expired'])}
-                          revealTrigger={faceoffs.getIn([id, 'commitExpiry', 'expired'])}
-                          tokenData={faceoffs.getIn([id, 'tokenData'])}
+                          updateTrigger={faceoffs[id].revealExpiry.expired}
+                          revealTrigger={faceoffs[id].commitExpiry.expired}
+                          tokenData={faceoffs[id].tokenData}
                           voting={voting}
                           account={account}
                           registry={registry}
@@ -297,4 +298,4 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-export default compose(withStyles(styles)(withConnect(SimpleTabs)))
+export default compose(withStyles(styles)(withConnect(toJS(SimpleTabs))))

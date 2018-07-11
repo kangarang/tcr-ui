@@ -16,10 +16,10 @@ export default ({ account, balances, tcr, network, stats, error, openSidePanel }
     <GridItem>
       <CapsDiv>
         {'total '}
-        <TokenSpan>{tcr.get('tokenSymbol')}</TokenSpan>
+        <TokenSpan>{tcr.tokenSymbol}</TokenSpan>
         {' at stake'}
       </CapsDiv>
-      <BoldDiv>{balances.get('totalRegistryStake')}</BoldDiv>
+      <BoldDiv>{balances.totalRegistryStake}</BoldDiv>
     </GridItem>
 
     <GridItem>
@@ -40,14 +40,14 @@ export default ({ account, balances, tcr, network, stats, error, openSidePanel }
         </UserItem>
         <UserItem>
           <BoldDiv>
-            {trimDecimalsThree(balances.get('ETH'))}
+            {trimDecimalsThree(balances.ETH)}
             <BoldDivGrey>{'ΞTH'}</BoldDivGrey>
           </BoldDiv>
         </UserItem>
         <UserItem>
           <BoldDiv>
-            {balances.get('token')}
-            <BoldDivGrey onClick={openSidePanel}>{tcr.get('tokenSymbol')}</BoldDivGrey>
+            {balances.token}
+            <BoldDivGrey onClick={openSidePanel}>{tcr.tokenSymbol}</BoldDivGrey>
           </BoldDiv>
         </UserItem>
         <UserItem>

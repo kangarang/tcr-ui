@@ -64,12 +64,12 @@ export default class Header extends Component {
               target="_blank"
               href={`https://${
                 network !== 'mainnet' ? network + '.' : ''
-              }etherscan.io/address/${tcr.get('registryAddress')}`}
+              }etherscan.io/address/${tcr.registryAddress}`}
             >
-              <Identicon address={tcr.get('registryAddress')} diameter={20} />
+              <Identicon address={tcr.registryAddress} diameter={20} />
             </a>
             <Text size="xxlarge" weight="bold">
-              {tcr.get('registryName')}
+              {tcr.registryName}
             </Text>
           </GridItemF>
 
@@ -80,10 +80,10 @@ export default class Header extends Component {
             onClose={this.handleClose}
           >
             <MenuItem onClick={this.handleClose}>{`Registry: ${
-              contracts.get('registry').address
+              contracts.registry.address
             }`}</MenuItem>
             <MenuItem onClick={this.handleClose}>{`Token: ${
-              contracts.get('token').address
+              contracts.token.address
             }`}</MenuItem>
             <MenuItem onClick={this.handleClose}>test</MenuItem>
           </Menu>

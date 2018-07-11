@@ -14,7 +14,7 @@ export default ({ opened, closeSidePanel, tcr, handleInputChange }) => (
       <MarginDiv>
         <SideText
           color="red"
-          text={`You must have ${tcr.get('tokenName')} to participate in this TCR`}
+          text={`You must have ${tcr.tokenName} to participate in this TCR`}
         />
       </MarginDiv>
 

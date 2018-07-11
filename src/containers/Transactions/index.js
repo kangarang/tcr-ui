@@ -18,6 +18,7 @@ import * as txActions from 'modules/transactions/actions'
 
 import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'libs/units'
 
+import toJS from 'components/toJS'
 import Apply from 'containers/Transactions/Apply'
 import Transfer from 'containers/Transactions/Transfer'
 import NoBalance from 'containers/Transactions/NoBalance'
@@ -86,16 +87,16 @@ class Transactions extends Component {
       registry,
     } = this.props
 
-    const needToApproveRegistry = BN(balances.get('registryAllowance')).lt(
-      BN(baseToConvertedUnit(parameters.get('minDeposit'), tcr.get('tokenDecimals')))
+    const needToApproveRegistry = BN(balances.registryAllowance).lt(
+      BN(baseToConvertedUnit(parameters.minDeposit, tcr.tokenDecimals))
     )
-    const needToApproveVoting = balances.get('votingAllowance') === '0.0'
+    const needToApproveVoting = balances.votingAllowance === '0.0'
 
     return (
       <TransactionsWrapper>
         {children}
 
-        {balances.get('token') === '0.0' ? (
+        {balances.token === '0.0' ? (
           <NoBalance
             opened={sidePanelMethod !== ''}
             closeSidePanel={this.closeSidePanel}
@@ -207,12 +208,9 @@ class Transactions extends Component {
     const { parameters, tcr } = this.props
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(
-        parameters.get('minDeposit'),
-        tcr.get('tokenDecimals')
-      )
+      numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
     } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
     }
     const args = [this.props[contract].address, numTokens]
     this.props.onSendTransaction({ methodName: 'approve', args })
@@ -221,12 +219,9 @@ class Transactions extends Component {
     const { parameters, tcr } = this.props
     let numTokens
     if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(
-        parameters.get('minDeposit'),
-        tcr.get('tokenDecimals')
-      )
+      numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
     } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
     }
 
     const args = [this.state.transferTo, numTokens]
@@ -234,20 +229,17 @@ class Transactions extends Component {
   }
   handleApply = () => {
     const { parameters, tcr } = this.props
-    const numTokens = convertedToBaseUnit(
-      parameters.get('minDeposit'),
-      tcr.get('tokenDecimals')
-    )
+    const numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
     // if (this.state.numTokens === '') {
     // } else {
-    //   numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+    //   numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
     // }
 
     const args = [this.state.listingID, numTokens, this.state.data]
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
   handleChallenge = () => {
-    const args = [this.props.sidePanelListing.get('listingHash'), this.state.data]
+    const args = [this.props.sidePanelListing.listingHash, this.state.data]
     this.props.onSendTransaction({ methodName: 'challenge', args })
   }
   handleRequestVotingRights = () => {
@@ -256,7 +248,7 @@ class Transactions extends Component {
   }
   handleCommitVote = (voteOption, salt) => {
     const args = [
-      this.props.sidePanelListing.get('challengeID'),
+      this.props.sidePanelListing.challengeID,
       voteOption,
       this.state.numTokens,
       salt,
@@ -268,7 +260,7 @@ class Transactions extends Component {
   }
   handleRevealVote = () => {
     const args = [
-      this.props.sidePanelListing.get('challengeID'),
+      this.props.sidePanelListing.challengeID,
       this.state.fileInput.voteOption,
       this.state.fileInput.salt,
     ]
@@ -279,14 +271,11 @@ class Transactions extends Component {
     this.props.onSendTransaction({ methodName: 'updateStatus', args })
   }
   handleRescueTokens = listing => {
-    const args = [listing.get('challengeID')]
+    const args = [listing.challengeID]
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
   handleClaimReward = () => {
-    const args = [
-      this.props.sidePanelListing.get('challengeID'),
-      this.state.fileInput.salt,
-    ]
+    const args = [this.props.sidePanelListing.challengeID, this.state.fileInput.salt]
     this.props.onSendTransaction({ methodName: 'claimReward', args })
   }
 }
@@ -315,4 +304,4 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
-export default compose(withConnect)(Transactions)
+export default compose(withConnect)(toJS(Transactions))

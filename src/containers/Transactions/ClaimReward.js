@@ -18,24 +18,24 @@ class ClaimReward extends Component {
   }
 
   componentDidMount() {
-    if (this.props.selectedOne.get('challengeID') !== false) {
+    if (this.props.selectedOne.challengeID !== false) {
       this.getCommitHash()
     }
   }
 
   async getCommitHash() {
     const tokenClaims = (await this.props.registry.tokenClaims(
-      this.props.selectedOne.get('challengeID'),
+      this.props.selectedOne.challengeID,
       this.props.account
     ))['0']
 
     // const isPassed = (await this.props.voting.isPassed(
-    //   this.props.selectedOne.get('challengeID')
+    //   this.props.selectedOne.challengeID
     // ))['0']
 
     const didReveal = (await this.props.voting.didReveal(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
 
     this.setState({

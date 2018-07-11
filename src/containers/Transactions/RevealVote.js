@@ -27,20 +27,20 @@ export default class RevealVote extends Component {
     console.log('this.props:', this.props)
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
     const numTokens = baseToConvertedUnit(
       numTokensRaw.toString(),
-      this.props.tcr.get('tokenDecimals')
+      this.props.tcr.tokenDecimals
     )
 
     const didCommit = (await this.props.voting.didCommit(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
     const didReveal = (await this.props.voting.didReveal(
       this.props.account,
-      this.props.selectedOne.get('challengeID')
+      this.props.selectedOne.challengeID
     ))['0']
 
     this.setState({
@@ -64,26 +64,26 @@ export default class RevealVote extends Component {
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
         <SideSplit
           leftTitle={'Voting Rights'}
-          leftItem={balances.get('votingRights')}
+          leftItem={balances.votingRights}
           rightTitle={'Locked Tokens'}
-          rightItem={balances.get('lockedTokens')}
+          rightItem={balances.lockedTokens}
         />
         <SideSplit
           leftTitle={'Votes For'}
-          leftItem={selectedOne.get('votesFor')}
+          leftItem={selectedOne.votesFor}
           rightTitle={'Votes Against'}
-          rightItem={selectedOne.get('votesAgainst')}
+          rightItem={selectedOne.votesAgainst}
         />
         <SideSplit
           leftTitle={'Tokens you committed'}
           leftItem={this.state.numTokens}
           rightTitle={'POLL ID'}
-          rightItem={selectedOne && selectedOne.get('challengeID')}
+          rightItem={selectedOne && selectedOne.challengeID}
         />
 
         <SideText
           small
-          text={`Reveal for vote: ${selectedOne && selectedOne.get('listingID')}`}
+          text={`Reveal for vote: ${selectedOne && selectedOne.listingID}`}
         />
 
         <SidePanelSeparator />

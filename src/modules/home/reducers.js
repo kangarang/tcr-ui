@@ -43,7 +43,7 @@ function homeReducer(state = initialState, action) {
         .set('network', fromJS(action.payload.network))
         .set('error', fromJS(false))
     case types.SET_ABIS:
-      return state.set('abis', action.abis) // mutable
+      return state.set('abis', action.payload) // mutable
     case types.SET_REGISTRY_CONTRACT:
       return state.setIn(['contracts', 'registry'], fromJS(action.payload))
     case types.SET_CONTRACTS:
