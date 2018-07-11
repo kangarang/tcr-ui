@@ -76,6 +76,14 @@ Warning: Do not use the mnemonic associated with this command on ethereum main n
 
 ---
 
+## Deployed TCRs
+
+The [Sunset Registry](https://sunset-registry.firebaseapp.com/) is deployed on the Rinkeby test network
+
+The [adChain Registry](https://publisher.adchain.com/) for publishers is deployed on Ethereum main network
+
+---
+
 ## Application Binary Interfaces
 
 tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis)
