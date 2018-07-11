@@ -121,15 +121,16 @@ export function* registryTxnSaga(action) {
     const { methodName, args } = action.payload
 
     if (methodName === 'apply') {
-      const fileHash = yield call(ipfsAddObject, {
-        id: args[0], // listing string (name)
-        data: args[2], // data (address)
-      })
+      // const fileHash = yield call(ipfsAddObject, {
+      //   id: args[0], // listing string (name)
+      //   data: args[2], // data (address)
+      // })
       // hash the string
       const listingHash = yield call(getListingHash, args[0])
       // use ipfs CID as the _data field in the application
-      const dataString = fileHash
-      const finalArgs = [listingHash, args[1], dataString]
+      // const dataString = fileHash
+      // const finalArgs = [listingHash, args[1], dataString]
+      const finalArgs = yield [listingHash, args[1], args[0], args[2]]
       yield call(sendTransactionSaga, registry, methodName, finalArgs)
     } else {
       yield call(sendTransactionSaga, registry, methodName, args)
@@ -148,7 +149,7 @@ export function* sendTransactionSaga(contract, method, args) {
     yield put(actions.txnMining(txHash))
 
     // pending tx notification
-    yield fork(pendingTxns, method, txHash, args)
+    // yield fork(pendingTxns, method, txHash, args)
 
     // ethers: waitForTransaction
     const ethersProvider = yield call(getEthersProvider)

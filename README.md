@@ -8,9 +8,25 @@
 
 [![Build Status](https://travis-ci.org/kangarang/tcr-ui.svg?branch=master)](https://travis-ci.org/kangarang/tcr-ui)
 
-"Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
+the ethereum blockchain is a decentralized database
 
-TCRs use an intrinsic token to incentivize a community to reach decentralized consensus and curate a registry of high-quality entries
+ethereum miners are decentralized servers
+
+token-curated registries are decentralized lists
+
+a tcr is powered by its users
+
+a user can participate in a tcr's application, challenge, and voting processes
+
+a tcr has 1 permission: its intrinsic token
+
+if a user controls a balance of a tcr's token, that user can participate in that tcr
+
+if Alice has adToken, she can participate in the adChain registry
+
+if a user controls multiple tokens from multiple tcrs, the user can participate in multiple tcrs 
+
+if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil registries
 
 ---
 

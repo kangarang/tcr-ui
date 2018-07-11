@@ -9,6 +9,7 @@ import Countdown from 'components/Countdown'
 
 import imgSrc from 'assets/icons/eth.png'
 import styled from 'styled-components'
+import { tsToMonthDate } from '../../utils/_datetime'
 
 const CardContent = styled.div`
   padding: 1em;
@@ -60,21 +61,11 @@ function ListingCard(props) {
 
         <CardContent>
           <Typography variant="title" component="h3">
-            {tokenData && tokenData.name
-              ? tokenData.name
-              : one.listingID && one.listingID}
+            {one.listingID}
           </Typography>
 
           <PadDiv className={classes.buttContainer}>
-            <Typography component="p">
-              <a
-                target="_blank"
-                href={`https://gateway.ipfs.io/ipfs/${one.data}`}
-              >{`More info`}</a>
-            </Typography>
-            <Typography component="p">
-              {`Block: ${one.blockNumber.toString()}`}
-            </Typography>
+            <Typography component="p">{tsToMonthDate(one.ts)}</Typography>
           </PadDiv>
         </CardContent>
 

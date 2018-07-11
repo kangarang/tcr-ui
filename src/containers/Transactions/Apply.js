@@ -109,9 +109,9 @@ export default ({
               <Text
                 size="xlarge"
                 color="red"
-                children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${balances.get(
-                  'registryAllowance'
-                )}. The minimum deposit for application in the Registry is ${
+                children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${
+                  balances.registryAllowance
+                }. The minimum deposit for application in the Registry is ${
                   parameters.minDeposit
                 } ${tcr.tokenSymbol}`}
               />

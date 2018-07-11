@@ -279,37 +279,84 @@ class CommitVote extends Component {
     const { activeStep } = this.state
     return (
       <div className={classes.root}>
-        <SidePanel title="Commit Your Vote" opened={opened} onClose={closeSidePanel}>
+        <SidePanel title="Commit Vote" opened={opened} onClose={closeSidePanel}>
           <SidePanelSeparator />
+
           <FlexContainer>
             {selectedOne.tokenData.imgSrc && (
               <IconWrapper>
-                <Img src={selectedOne.tokenData.imgSrc} alt="" />
+                <Img
+                  src={
+                    selectedOne &&
+                    selectedOne.tokenData.imgSrc &&
+                    selectedOne.tokenData.imgSrc
+                  }
+                  alt=""
+                />
               </IconWrapper>
             )}
-            <SideText size="large" text={selectedOne.listingID} />
+            <SideText
+              size="medium"
+              text={
+                selectedOne &&
+                `${selectedOne.tokenData.name || selectedOne.listingID} ${
+                  this.state.choice
+                }`
+              }
+            />
           </FlexContainer>
 
-          <RadioWrapper>
-            <Radio
-              checked={this.state.selectedValue === '1'}
-              onClick={this.handleChange}
-              value="1"
-              name="radio-button-demo"
-              aria-label="FOR"
-            />
-            <Text size="large">{'Support'}</Text>
-          </RadioWrapper>
-          <RadioWrapper>
-            <Radio
-              checked={this.state.selectedValue === '0'}
-              onClick={this.handleChange}
-              value="0"
-              name="radio-button-demo"
-              aria-label="AGAINST"
-            />
-            <Text size="large">{'Oppose'}</Text>
-          </RadioWrapper>
+          <Stepper
+            className={classes.stepper}
+            activeStep={activeStep}
+            orientation="vertical"
+          >
+            {steps.map((label, index) => {
+              return (
+                <Step key={label}>
+                  <StepLabel
+                    onClick={e => this.handleClickStepLabel(e, index)}
+                    classes={{
+                      iconContainer: classes.iconContainer,
+                      label: classes.label,
+                    }}
+                  >
+                    {label}
+                  </StepLabel>
+                  <StepContent>
+                    <Typography>{getStepContent(index)}</Typography>
+
+                    <div className={classes.actionsContainer}>
+                      {stepps[index]}
+                      {activeStep !== 0 && (
+                        <Button
+                          disabled={activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}
+                          methodName="back"
+                        >
+                          {'Back'}
+                        </Button>
+                      )}
+                      {activeStep !== 0 &&
+                        activeStep !== 3 &&
+                        activeStep !== 4 && (
+                          <Button
+                            variant="raised"
+                            color="primary"
+                            onClick={this.handleNext}
+                            className={classes.button}
+                            methodName="next"
+                          >
+                            {'Next'}
+                          </Button>
+                        )}
+                    </div>
+                  </StepContent>
+                </Step>
+              )
+            })}
+          </Stepper>
         </SidePanel>
       </div>
     )
@@ -318,15 +365,10 @@ class CommitVote extends Component {
 const FlexContainer = styled.div`
   display: flex;
 `
-const RadioWrapper = styled.div`
-  display: flex;
-  align-self: center;
-  padding: 0.2em;
-`
 const IconWrapper = styled.div`
   display: flex;
-  height: 100px;
-  width: 120px;
+  height: 80px;
+  width: 80px;
   margin: 10px;
 `
 

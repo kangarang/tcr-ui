@@ -127,7 +127,7 @@ class SidePanel extends Component {
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
                   <h1>
-                    <Text size="xlarge">{title}</Text>
+                    <Text size="xxlarge">{title}</Text>
                   </h1>
                 </StyledPanelHeader>
                 <StyledPanelScrollView>

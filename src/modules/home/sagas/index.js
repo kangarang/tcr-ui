@@ -1,9 +1,8 @@
-import axios from 'axios'
-import { call, fork, select, put, takeLatest } from 'redux-saga/effects'
+import { call, fork, put, takeLatest } from 'redux-saga/effects'
+import { txPanelRootSaga } from 'eth-tx-panel'
 
-import * as types from '../types'
 import * as actions from '../actions'
-import { selectRegistry, selectNetwork } from '../selectors'
+import * as types from '../types'
 
 import balancesSaga from './balances'
 import contractsSagas from './contracts'
@@ -14,6 +13,8 @@ import transactionsSagas from 'modules/transactions/sagas'
 import { setEthjs, setEthersProvider } from 'libs/provider'
 
 export default function* rootSaga() {
+  yield fork(txPanelRootSaga)
+
   // init other root sagas
   yield fork(balancesSaga)
   yield fork(contractsSagas)
@@ -46,23 +47,5 @@ export function* genesis() {
     }
   } catch (error) {
     yield put(actions.setupEthereumFailed({ error }))
-  }
-}
-
-export function* governXNotifications() {
-  try {
-    const registry = yield select(selectRegistry)
-    const network = yield select(selectNetwork)
-    // get a user notified via email on your TCR
-    yield axios.get('https://api.governx.org/notify', {
-      params: {
-        network,
-        organization: registry.address,
-        email: 'isaac.kang@consensys.net',
-        url: 'https://isaackang.net',
-      },
-    })
-  } catch (error) {
-    console.log('fetchGovernXSaga error:', error)
   }
 }

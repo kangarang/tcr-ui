@@ -36,11 +36,11 @@ export default ({ leftTitle, leftItem, rightTitle, rightItem }) => (
     children={[
       <Section>
         <Text weight="bold">{leftTitle}</Text>
-        <h2>{leftItem}</h2>
+        <h2>{leftItem && leftItem.toString()}</h2>
       </Section>,
       <Section>
         <Text weight="bold">{rightTitle}</Text>
-        <h2>{rightItem}</h2>
+        <h2>{rightItem && rightItem.toString()}</h2>
       </Section>,
     ]}
   />

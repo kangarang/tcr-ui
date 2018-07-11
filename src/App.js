@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+// import { txPanelStore } from 'eth-tx-panel'
 
 import { theme } from './global-styles'
 import configureStore from './store'
@@ -56,8 +57,13 @@ const muiTheme = createMuiTheme({
   },
 })
 
+// const initialState = txPanelStore.getState().toJS()
 const initialState = {}
 const store = configureStore(initialState)
+
+console.log('initialState:', initialState)
+console.log('store:', store.getState().toJS())
+// console.log('txPanelStore:', txPanelStore.getState().toJS())
 
 const AppWrapper = styled.div`
   display: flex;

@@ -21,12 +21,17 @@ export const difference = (date1, date2) => {
 }
 export const formatHtmlDatetime = date => format(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
 export function getEndDateString(integer) {
-  return moment.unix(integer).format('MM/DD/YY__HH:mm:ss')
+  return moment.unix(integer).format('MM/DD/YY_HH:mm:ss')
 }
 export function dateHasPassed(unixTimestamp) {
   const date = moment().utc() // moment.utc("2018-03-13T01:24:07.827+00:00")
   // 1520904108 >= unixTimestamp
   return date.unix() >= unixTimestamp
+}
+export function tsToMonthDate(integer) {
+  const date = moment.unix(integer).toDate()
+  const ret = `${months[date.getMonth() - 1]} ${date.getDate()}`
+  return ret
 }
 export function timestampToExpiry(integer) {
   if (!isNumber(integer)) {

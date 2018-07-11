@@ -6,7 +6,7 @@ import tokenList from 'config/tokens/eth.json'
 import { getListingHash, isAddress } from 'libs/values'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from 'libs/ipfs'
-// import { saveLocal } from 'utils/_localStorage'
+import { saveLocal } from 'utils/_localStorage'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -48,22 +48,27 @@ export async function handleMultihash(listingHash, data) {
 // I - decoded log, block/tx info, msgSender
 // O - listing object
 export async function createListing(log, blockTxn, owner) {
-  let { listingHash, deposit, appEndDate, data, _eventName } = log
+  let { listingHash, deposit, appEndDate, listingID, listingData, _eventName } = log
   if (_eventName !== '_Application') {
     throw new Error('not an application')
   }
-  let listingID
+  // let listingID
   let tokenData = {}
+  let data = listingData
 
   // IPFS multihash validation (RUT)
-  if (data.length === 46 && data.startsWith('Qm')) {
-    const res = await handleMultihash(listingHash, data)
+  if (listingData.length === 46 && listingData.startsWith('Qm')) {
+    const res = await handleMultihash(listingHash, listingData)
     listingID = res.listingID
     tokenData = res.tokenData
-  } else {
+  } else if (isAddress(listingData.toLowerCase())) {
     // TODO: keccak256 validation (ADT)
-    listingID = data
-    tokenData.imgSrc = `https://www.google.com/s2/favicons?domain=${data}`
+    // listingID = data
+    // tokenData.imgSrc = `https://www.google.com/s2/favicons?domain=${data}`
+  } else if (listingData) {
+    tokenData.imgSrc = listingData
+  } else {
+    tokenData.imgSrc = ''
   }
   // TODO: validate for neither case
 
@@ -90,7 +95,7 @@ export async function createListing(log, blockTxn, owner) {
   }
 
   // save to local storage
-  // await saveLocal(listingHash, listing)
+  await saveLocal(listingHash, listing)
   return listing
 }
 

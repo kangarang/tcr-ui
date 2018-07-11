@@ -4,8 +4,8 @@ import { randomBytes } from 'crypto'
 
 export function randomSalt() {
   const salt = BN(`0x${randomBytes(32).toString('hex')}`)
-  console.log('salt.toString(10):', salt.toString(10))
-  return salt.toString(10)
+  console.log('salt:', salt.toString())
+  return salt.toString()
 }
 
 export function getVoteSaltHash(vote, salt) {

@@ -55,7 +55,9 @@ export function* registrySaga(action) {
 
     // if action.payload.address, use that address (CHOOSE_TCR)
     // otherwise, use the default address (factory tcr)
-    let { address } = action.payload || abis.registry.networks[networkID]
+    let address = action.payload.address
+      ? action.payload.address
+      : abis.registry.networks[networkID].address
 
     if (hardcodedRegistryAddress !== '') {
       address = hardcodedRegistryAddress

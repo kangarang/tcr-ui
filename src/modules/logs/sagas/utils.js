@@ -22,7 +22,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
     case '_Application':
       title = `Application: ${listing.tokenData.name ||
         logData.listingHash.slice(0, 8)} ${listing.tokenData.symbol || ''}`
-      message = logData.data || false
+      message = logData.listingID || false
       break
     case '_Challenge':
       title = `Challenge: ${listing.tokenData.name || 'unknown'}`

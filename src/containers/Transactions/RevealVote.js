@@ -9,6 +9,7 @@ import { MarginDiv, FileInput } from 'components/StyledHome'
 
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
+import { getLocal } from '../../utils/_localStorage'
 
 export default class RevealVote extends Component {
   state = {
@@ -17,10 +18,29 @@ export default class RevealVote extends Component {
     numTokens: '',
     votesFor: '',
     votesAgainst: '',
+    file: {},
   }
 
   componentDidMount() {
     this.getCommitHash()
+    this.handleGetLocal()
+  }
+  handleGetLocal = async () => {
+    const key = `${this.props.selectedOne.challengeID}-${
+      this.props.selectedOne.listingID
+    }`
+    // const file = e.target.files[0]
+    const file = await getLocal(key)
+    console.log('file:', file)
+    this.setState({
+      file,
+    })
+  }
+
+  handleRevealVote = async () => {
+    console.log(this.state)
+    const { file } = this.state
+    this.props.handleRevealVote(file.pollID, file.voteOption, file.salt)
   }
 
   getCommitHash = async () => {
@@ -51,14 +71,7 @@ export default class RevealVote extends Component {
   }
 
   render() {
-    const {
-      opened,
-      closeSidePanel,
-      balances,
-      handleFileInput,
-      handleRevealVote,
-      selectedOne,
-    } = this.props
+    const { opened, closeSidePanel, balances, handleFileInput, selectedOne } = this.props
 
     return (
       <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
@@ -106,7 +119,7 @@ export default class RevealVote extends Component {
             <MarginDiv>
               <Button
                 methodName="revealVote"
-                onClick={handleRevealVote}
+                onClick={this.handleRevealVote}
                 mode="strong"
                 wide
               >

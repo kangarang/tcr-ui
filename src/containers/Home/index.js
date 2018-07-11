@@ -4,7 +4,7 @@ import { compose } from 'redux'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import { createStructuredSelector } from 'reselect'
 import Notifications from 'react-notification-system-redux'
-import EthTxPanel from 'eth-tx-panel'
+// import EthTxPanel from 'eth-tx-panel'
 
 import {
   selectError,
@@ -23,7 +23,6 @@ import Header from 'components/Header'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
 import Listings from '../Listings/Loadable'
-import Activities from '../Activities/Loadable'
 
 const notificationStyles = {
   NotificationItem: {
@@ -59,7 +58,6 @@ class Home extends Component {
 
     return (
       <div>
-        <EthTxPanel />
         <Header
           error={error}
           openSidePanel={this.openSidePanel}
@@ -81,9 +79,10 @@ class Home extends Component {
 
         <Switch>
           <Route exact path="/" component={Listings} />
-          <Route exact path="/activities" component={Activities} />
+          {/* <Route exact path="/activities" component={Activities} /> */}
         </Switch>
 
+        {/* <EthTxPanel /> */}
         <Notifications style={notificationStyles} notifications={notifications} />
       </div>
     )

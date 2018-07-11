@@ -109,26 +109,6 @@ class SimpleTabs extends Component {
   //   return false
   // }
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value })
-  }
-
-  handleRequestSort = (event, property) => {
-    const orderBy = property
-    let order = 'desc'
-
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc'
-    }
-
-    const data =
-      order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1))
-
-    this.setState({ data, order, orderBy })
-  }
-
   openSidePanel = (one, openThis) => {
     this.props.onOpenSidePanel(one, openThis)
   }

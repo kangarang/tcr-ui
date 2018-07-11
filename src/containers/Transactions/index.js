@@ -230,11 +230,6 @@ class Transactions extends Component {
   handleApply = () => {
     const { parameters, tcr } = this.props
     const numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
-    // if (this.state.numTokens === '') {
-    // } else {
-    //   numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
-    // }
-
     const args = [this.state.listingID, numTokens, this.state.data]
     this.props.onSendTransaction({ methodName: 'apply', args })
   }
@@ -258,12 +253,8 @@ class Transactions extends Component {
       args,
     })
   }
-  handleRevealVote = () => {
-    const args = [
-      this.props.sidePanelListing.challengeID,
-      this.state.fileInput.voteOption,
-      this.state.fileInput.salt,
-    ]
+  handleRevealVote = (pollID, voteOption, salt) => {
+    const args = [pollID, voteOption, salt]
     this.props.onSendTransaction({ methodName: 'revealVote', args })
   }
   handleUpdateStatus = listingHash => {
