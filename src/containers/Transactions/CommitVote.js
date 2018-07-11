@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import Stepper, { Step, StepLabel, StepContent } from 'material-ui/Stepper'
-import { withStyles } from 'material-ui'
-import Typography from 'material-ui/Typography'
-import Radio from 'material-ui/Radio'
-import green from 'material-ui/colors/green'
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step'
+import StepLabel from '@material-ui/core/StepLabel'
+import StepContent from '@material-ui/core/StepContent'
+import { withStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Radio from '@material-ui/core/Radio'
+import green from '@material-ui/core/colors/green'
 
 import { baseToConvertedUnit } from 'libs/units'
 import { getVoteSaltHash, randomSalt } from 'libs/values'
@@ -73,6 +76,7 @@ class CommitVote extends Component {
   }
 
   getCommitHash = async () => {
+    console.log('this.props:', this.props)
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
       this.props.selectedOne.get('challengeID')
@@ -98,7 +102,7 @@ class CommitVote extends Component {
   getSteps = () => {
     return [
       'Choose your side',
-      'Approve Voting contract / Request voting rights',
+      'Approve Voting contract',
       'Commit tokens',
       'Download secret vote file',
       'Send transaction',
@@ -193,7 +197,6 @@ class CommitVote extends Component {
       handleInputChange,
       handleCommitVote,
       handleApprove,
-      handleRequestVotingRights,
       needToApprove,
       classes,
     } = this.props
@@ -228,7 +231,7 @@ class CommitVote extends Component {
           type="number"
           handleInputChange={e => handleInputChange(e, 'numTokens')}
         />
-        {needToApprove ? (
+        {needToApprove && (
           <div>
             <Button
               methodName="approve"
@@ -239,18 +242,10 @@ class CommitVote extends Component {
               {'Approve Voting contract'}
             </Button>
           </div>
-        ) : (
-          <Button
-            methodName="requestVotingRights"
-            onClick={handleRequestVotingRights}
-            mode="strong"
-            wide
-          >
-            {'Request Voting Rights'}
-          </Button>
         )}
       </div>,
       <div className={classes.actionsContainer}>
+        <div>{`Voting allowance: ${this.props.balances.get('votingAllowance')}`}</div>
         <div>{`Voting rights: ${this.props.balances.get('votingRights')}`}</div>
         <SideTextInput
           title="token amount"

@@ -2,7 +2,9 @@ import localforage from 'localforage'
 
 export async function saveLocal(key, value) {
   try {
-    return localforage.setItem(key, value)
+    console.log(key, value)
+    // return localforage.setItem(key, value)
+    return false
   } catch (err) {
     console.log('local storage save err:', err)
   }

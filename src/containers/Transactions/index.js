@@ -40,14 +40,13 @@ class Transactions extends Component {
     transferTo: '',
     fileInput: false,
     visibleApprove: true,
-    visibleRequestVotingRights: false,
     depositMore: false,
   }
   closeSidePanel = () => {
     this.props.onOpenSidePanel({}, '')
   }
   showApprove = () => {
-    this.setState({ visibleApprove: true, visibleRequestVotingRights: true })
+    this.setState({ visibleApprove: true })
   }
   handleFileInput = e => {
     const file = e.target.files[0]
@@ -140,18 +139,16 @@ class Transactions extends Component {
                 selectedOne={sidePanelListing}
                 opened={sidePanelMethod === 'commitVote'}
                 needToApprove={needToApproveVoting}
-                visibleRequestVotingRights={this.state.visibleRequestVotingRights}
                 closeSidePanel={this.closeSidePanel}
                 handleInputChange={this.handleInputChange}
                 handleApprove={this.handleApprove}
                 handleCommitVote={this.handleCommitVote}
-                handleRequestVotingRights={this.handleRequestVotingRights}
                 showApprove={this.showApprove}
-                balances={balances}
-                voting={voting}
-                tcr={tcr}
-                account={account}
                 numTokens={this.state.numTokens}
+                balances={balances}
+                account={account}
+                tcr={tcr}
+                voting={voting}
                 registry={registry}
               />
             )}
@@ -159,13 +156,13 @@ class Transactions extends Component {
               <RevealVote
                 selectedOne={sidePanelListing}
                 opened={sidePanelMethod === 'revealVote'}
-                balances={balances}
                 closeSidePanel={this.closeSidePanel}
                 handleFileInput={this.handleFileInput}
                 handleRevealVote={this.handleRevealVote}
-                voting={voting}
-                tcr={tcr}
+                balances={balances}
                 account={account}
+                tcr={tcr}
+                voting={voting}
                 registry={registry}
               />
             )}
@@ -176,9 +173,10 @@ class Transactions extends Component {
                 closeSidePanel={this.closeSidePanel}
                 handleFileInput={this.handleFileInput}
                 handleClaimReward={this.handleClaimReward}
-                voting={voting}
-                tcr={tcr}
+                balances={balances}
                 account={account}
+                tcr={tcr}
+                voting={voting}
                 registry={registry}
               />
             )}
@@ -190,6 +188,11 @@ class Transactions extends Component {
           closeSidePanel={this.closeSidePanel}
           handleFileInput={this.handleFileInput}
           handleUpdateStatus={this.handleUpdateStatus}
+          balances={balances}
+          account={account}
+          tcr={tcr}
+          voting={voting}
+          registry={registry}
         />
       </TransactionsWrapper>
     )
@@ -231,15 +234,14 @@ class Transactions extends Component {
   }
   handleApply = () => {
     const { parameters, tcr } = this.props
-    let numTokens
-    if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(
-        parameters.get('minDeposit'),
-        tcr.get('tokenDecimals')
-      )
-    } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
-    }
+    const numTokens = convertedToBaseUnit(
+      parameters.get('minDeposit'),
+      tcr.get('tokenDecimals')
+    )
+    // if (this.state.numTokens === '') {
+    // } else {
+    //   numTokens = convertedToBaseUnit(this.state.numTokens, tcr.get('tokenDecimals'))
+    // }
 
     const args = [this.state.listingID, numTokens, this.state.data]
     this.props.onSendTransaction({ methodName: 'apply', args })

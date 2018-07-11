@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
 import styled from 'styled-components'
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 import { theme } from './global-styles'
 import configureStore from './store'

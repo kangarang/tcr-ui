@@ -6,7 +6,7 @@ import tokenList from 'config/tokens/eth.json'
 import { getListingHash, isAddress } from 'libs/values'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from 'libs/ipfs'
-import { saveLocal } from '../../utils/_localStorage'
+// import { saveLocal } from 'utils/_localStorage'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -90,7 +90,7 @@ export async function createListing(log, blockTxn, owner) {
   }
 
   // save to local storage
-  await saveLocal(listingHash, listing)
+  // await saveLocal(listingHash, listing)
   return listing
 }
 
@@ -118,8 +118,9 @@ export function changeListing(golem, log, txData, eventName) {
       return golem.set('status', fromJS('4'))
     case '_VoteRevealed':
       return golem
-        .set('votesFor', fromJS(log.votesFor.toString()))
-        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
+        .set('votesFor', fromJS(log.votesFor))
+        .set('votesAgainst', fromJS(log.votesAgainst))
+        .set('pollID', fromJS(log.pollID.toString()))
     default:
       return golem
   }

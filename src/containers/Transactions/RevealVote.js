@@ -19,27 +19,12 @@ export default class RevealVote extends Component {
     votesAgainst: '',
   }
 
-  constructor(props) {
-    super(props)
-    this.getCommitHash = this.getCommitHash.bind(this)
-  }
-
   componentDidMount() {
-    if (this.props.selectedOne.get('challengeID') !== false) {
-      this.getCommitHash()
-    }
+    this.getCommitHash()
   }
 
-  async getCommitHash() {
-    const votesFor = baseToConvertedUnit(
-      this.props.selectedOne.get('votesFor'),
-      this.props.tcr.get('tokenDecimals')
-    )
-    const votesAgainst = baseToConvertedUnit(
-      this.props.selectedOne.get('votesAgainst'),
-      this.props.tcr.get('tokenDecimals')
-    )
-
+  getCommitHash = async () => {
+    console.log('this.props:', this.props)
     const numTokensRaw = (await this.props.voting.getNumTokens(
       this.props.account,
       this.props.selectedOne.get('challengeID')
@@ -62,8 +47,6 @@ export default class RevealVote extends Component {
       didCommit,
       didReveal,
       numTokens,
-      votesFor,
-      votesAgainst,
     })
   }
 
@@ -87,9 +70,9 @@ export default class RevealVote extends Component {
         />
         <SideSplit
           leftTitle={'Votes For'}
-          leftItem={this.state.votesFor}
+          leftItem={selectedOne.get('votesFor')}
           rightTitle={'Votes Against'}
-          rightItem={this.state.votesAgainst}
+          rightItem={selectedOne.get('votesAgainst')}
         />
         <SideSplit
           leftTitle={'Tokens you committed'}

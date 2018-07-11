@@ -1,7 +1,7 @@
 import React from 'react'
-import { withStyles } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
-import Card from 'material-ui/Card'
+import { withStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Card from '@material-ui/core/Card'
 
 import Button from 'components/Button'
 import Img from 'components/Img'

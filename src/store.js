@@ -5,7 +5,7 @@ import { fromJS, Iterable } from 'immutable'
 
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
-import { DECODE_LOGS_START } from './modules/logs/types'
+import { DECODE_LOGS_START } from 'modules/logs/types'
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -14,7 +14,6 @@ const stateTransformer = state => {
   if (Iterable.isIterable(state)) return state.toJS()
   return state
 }
-
 const logger = createLogger({
   predicate: (getState, action) => action.type !== DECODE_LOGS_START,
   collapsed: (getState, action, logEntry) => !action.error,
@@ -22,7 +21,13 @@ const logger = createLogger({
 })
 
 export default function configureStore(initialState = {}) {
-  const middlewares = [sagaMiddleware, logger]
+  let middlewares
+  if (process.env.NODE_ENV !== 'production') {
+    middlewares = [sagaMiddleware, logger]
+  } else {
+    middlewares = [sagaMiddleware]
+  }
+
   const enhancers = [applyMiddleware(...middlewares)]
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose

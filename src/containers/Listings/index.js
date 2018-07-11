@@ -3,16 +3,18 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
-import AppBar from 'material-ui/AppBar'
-import { withStyles } from 'material-ui/styles'
-import Tabs, { Tab } from 'material-ui/Tabs'
-import { TablePagination, TableRow } from 'material-ui/Table'
-import Paper from 'material-ui/Paper'
+
+import AppBar from '@material-ui/core/AppBar'
+import { withStyles } from '@material-ui/core/styles'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
 
 import ListingCard from './ListingCard'
 import { colors } from '../../global-styles'
 
-import { baseToConvertedUnit } from 'libs/units'
 import {
   selectAllListings,
   selectFaceoffs,
@@ -28,7 +30,9 @@ import {
   selectAccount,
   selectRegistry,
   selectTCR,
+  selectBalances,
 } from 'modules/home/selectors'
+import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
 import * as actions from 'modules/listings/actions'
 
 import Transactions from 'containers/Transactions/Loadable'
@@ -85,24 +89,24 @@ class SimpleTabs extends Component {
     this.setState({ page })
   }
 
-  handleCheckReward = async id => {
-    console.log('id:', id)
-    if (id) {
-      const tc = (await this.props.registry.tokenClaims(id, this.props.account))['0']
-      const didReveal = (await this.props.voting.didReveal(this.props.account, id))['0']
-      const numTokens = baseToConvertedUnit(
-        (await this.props.voting.getNumTokens(this.props.account, id))['0'],
-        this.props.tcr.get('tokenDecimals')
-      )
-      console.log('tokenClaim:', tc)
-      console.log('didReveal:', didReveal)
-      console.log('numTokens:', numTokens)
-      if (didReveal && numTokens !== '0') {
-        return true
-      }
-    }
-    return false
-  }
+  // handleCheckReward = async id => {
+  //   console.log('id:', id)
+  //   if (id) {
+  //     const tc = (await this.props.registry.tokenClaims(id, this.props.account))['0']
+  //     const didReveal = (await this.props.voting.didReveal(this.props.account, id))['0']
+  //     const numTokens = baseToConvertedUnit(
+  //       (await this.props.voting.getNumTokens(this.props.account, id))['0'],
+  //       this.props.tcr.get('tokenDecimals')
+  //     )
+  //     console.log('tokenClaim:', tc)
+  //     console.log('didReveal:', didReveal)
+  //     console.log('numTokens:', numTokens)
+  //     if (didReveal && numTokens !== '0') {
+  //       return true
+  //     }
+  //   }
+  //   return false
+  // }
 
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value })
@@ -252,7 +256,7 @@ class SimpleTabs extends Component {
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={this.handleChangePage}
-                Actions={TablePaginationActionsWrapped}
+                ActionsComponent={TablePaginationActionsWrapped}
                 classes={{
                   toolbar: classes.toolbar,
                   caption: classes.caption,
@@ -286,6 +290,9 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   registry: selectRegistry,
   tcr: selectTCR,
+  balances: selectBalances,
+  sidePanelListing: selectSidePanelListing,
+  sidePanelMethod: selectSidePanelMethod,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
