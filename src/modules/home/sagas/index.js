@@ -1,5 +1,5 @@
 import { call, fork, put, takeLatest } from 'redux-saga/effects'
-import { txPanelRootSaga } from 'eth-tx-panel'
+// import { txPanelRootSaga } from 'eth-tx-panel'
 
 import * as actions from '../actions'
 import * as types from '../types'
@@ -13,7 +13,7 @@ import transactionsSagas from 'modules/transactions/sagas'
 import { setEthjs, setEthersProvider } from 'libs/provider'
 
 export default function* rootSaga() {
-  yield fork(txPanelRootSaga)
+  // yield fork(txPanelRootSaga)
 
   // init other root sagas
   yield fork(balancesSaga)

@@ -1,6 +1,7 @@
 import { select, put, call, fork, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 import ethUtil from 'ethereumjs-util'
+import EthAbi from 'ethjs-abi'
 
 import * as actions from '../actions'
 import * as types from '../types'
@@ -15,7 +16,8 @@ import { getListingHash } from 'libs/values'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 import { pendingTxns } from '../../notifications'
 import { delay } from 'redux-saga'
-import { selectAccount } from '../../home/selectors'
+import { selectAccount, selectABIs } from '../../home/selectors'
+import logUtils from 'modules/logs/sagas/utils'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
@@ -145,6 +147,22 @@ export function* sendTransactionSaga(contract, method, args) {
     console.log(method, 'args:', args)
 
     // ethjs: sendTransaction
+    const ethjs = yield call(getEthjs)
+    // const from = yield select(selectAccount)
+    // const nonce = yield call(ethjs.getTransactionCount, from)
+    // const abis = yield call(selectABIs)
+    // const abi = abis.filter(a => a.name === contract.name)
+    // const methodAbi = yield call(logUtils.getMethodAbi, contract.address, method, abi)
+    // const data = EthAbi.encodeMethod(methodAbi, args)
+    // const payload = {
+    //   to: contract.address,
+    //   from,
+    //   gas: 450000,
+    //   gasPrice: 25000000000,
+    //   nonce,
+    //   data,
+    // }
+    // const txHash = yield call(ethjs.sendTransaction, payload)
     const txHash = yield call(contract[method], ...args)
     yield put(actions.txnMining(txHash))
 
@@ -161,7 +179,7 @@ export function* sendTransactionSaga(contract, method, args) {
     yield call(delay, 2000)
 
     // get tx receipt
-    const ethjs = yield call(getEthjs)
+    // const ethjs = yield call(getEthjs)
     const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
     console.log('txReceipt:', txReceipt)
 

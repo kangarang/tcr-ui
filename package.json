@@ -19,7 +19,9 @@
     "start": "npm run dev",
     "test": "react-scripts test --env=jsdom",
     "update:tokens": "babel-node scripts/update-tokens",
-    "update:abis": "babel-node scripts/addABIs"
+    "update:abis": "babel-node scripts/addABIs",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "@material-ui/core": "^1.2.3",
@@ -82,7 +84,11 @@
     "lint-staged": "7.0.0",
     "prettier": "1.11.1",
     "react-test-renderer": "16.3.1",
-    "redux-logger": "3.0.6"
+    "redux-logger": "3.0.6",
+    "@storybook/react": "^3.4.8",
+    "@storybook/addon-actions": "^3.4.8",
+    "@storybook/addon-links": "^3.4.8",
+    "@storybook/addons": "^3.4.8"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,json,css}": [

@@ -79,13 +79,23 @@ export default class Header extends Component {
             open={Boolean(anchorEl)}
             onClose={this.handleClose}
           >
-            <MenuItem onClick={this.handleClose}>{`Registry: ${
-              contracts.registry.address
-            }`}</MenuItem>
-            <MenuItem onClick={this.handleClose}>{`Token: ${
-              contracts.token.address
-            }`}</MenuItem>
-            <MenuItem onClick={this.handleClose}>test</MenuItem>
+            <a
+              target="_blank"
+              href={`https://rinkeby.etherscan.io/address/${contracts.registry.address}`}
+            >
+              <MenuItem onClick={this.handleClose}>{`Registry: ${
+                contracts.registry.address
+              }`}</MenuItem>
+            </a>
+            <a
+              target="_blank"
+              href={`https://rinkeby.etherscan.io/address/${contracts.token.address}`}
+            >
+              <MenuItem onClick={this.handleClose}>{`Token: ${
+                contracts.token.address
+              }`}</MenuItem>
+            </a>
+            {/* <MenuItem onClick={this.handleClose}>test</MenuItem> */}
           </Menu>
 
           <GridItem gc={3}>

@@ -28,7 +28,8 @@ export default ({
       )}
       <SidePanelSeparator />
 
-      <SideText text={selectedOne && selectedOne.listingID} />
+      <SideText size="xlarge" text={selectedOne && selectedOne.listingID} />
+      <SideText text={selectedOne && selectedOne.data} />
 
       <MarginDiv>
         <Countdown

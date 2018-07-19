@@ -175,7 +175,7 @@ class SimpleTabs extends Component {
                           listingType={'whitelist'}
                           openSidePanel={this.openSidePanel}
                           chooseTCR={chooseTCR}
-                          tokenData={whitelist[id].tokenData}
+                          listingData={whitelist[id].listingData}
                           voting={voting}
                           account={account}
                           registry={registry}
@@ -195,7 +195,7 @@ class SimpleTabs extends Component {
                           listingType={'candidates'}
                           openSidePanel={this.openSidePanel}
                           updateTrigger={candidates[id].appExpiry.expired}
-                          tokenData={candidates[id].tokenData}
+                          listingData={candidates[id].listingData}
                           value={value}
                           claimRewardTrigger={false}
                         />
@@ -213,7 +213,7 @@ class SimpleTabs extends Component {
                           openSidePanel={this.openSidePanel}
                           updateTrigger={faceoffs[id].revealExpiry.expired}
                           revealTrigger={faceoffs[id].commitExpiry.expired}
-                          tokenData={faceoffs[id].tokenData}
+                          listingData={faceoffs[id].listingData}
                           voting={voting}
                           account={account}
                           registry={registry}

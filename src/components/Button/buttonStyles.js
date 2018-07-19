@@ -2,14 +2,14 @@ import { css } from 'styled-components'
 import { colors, font } from 'global-styles'
 
 const buttonStyles = css`
-  display: inline-block;
+  box-sizing: border-box;
   outline: 0;
   user-select: none;
   cursor: pointer;
-  padding: ${({ wide }) => (wide ? '0.5em 1.2em' : '0.5em 1em')};
-  width: ${({ wide }) => (wide ? '100%' : 'auto')};
+  padding: ${({ wide }) => (wide ? '0.6em 2.4em' : '0.6em 1.8em')};
+  margin: 0.8em;
 
-  font-size: 14px;
+  font-size: 1.2em;
   ${({ color }) => {
     return `color: ${color || colors.offBlack}`
   }};

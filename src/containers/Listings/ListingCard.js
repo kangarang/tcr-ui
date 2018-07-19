@@ -34,8 +34,11 @@ const styles = {
     position: 'relative',
   },
   media: {
-    height: 170,
+    height: 40,
     margin: 15,
+  },
+  content: {
+    height: 100,
   },
   buttContainer: {},
 }
@@ -44,7 +47,7 @@ function ListingCard(props) {
   const {
     one,
     classes,
-    tokenData,
+    listingData,
     listingType,
     updateTrigger,
     revealTrigger,
@@ -56,17 +59,15 @@ function ListingCard(props) {
     <div>
       <Card className={classes.card}>
         <div className={classes.media}>
-          <Img src={tokenData && tokenData.imgSrc ? tokenData.imgSrc : imgSrc} alt="" />
+          <h2>{one.listingID}</h2>
+          {/* <Img src={listingData && listingData.imgSrc ? listingData.imgSrc : imgSrc} alt="" /> */}
         </div>
 
-        <CardContent>
-          <Typography variant="title" component="h3">
-            {one.listingID}
-          </Typography>
-
-          <PadDiv className={classes.buttContainer}>
+        <CardContent className={classes.content}>
+          <div>{one.data}</div>
+          {/* <PadDiv className={classes.buttContainer}>
             <Typography component="p">{tsToMonthDate(one.ts)}</Typography>
-          </PadDiv>
+          </PadDiv> */}
         </CardContent>
 
         <ButtonContainer>
@@ -126,8 +127,9 @@ function ListingCard(props) {
               methodName="updateStatus"
               onClick={e => openSidePanel(one, 'updateStatus')}
               color="primary"
+              wide
             >
-              {'Update Status'}
+              {'Refresh'}
             </Button>
           )}
         </ButtonContainer>

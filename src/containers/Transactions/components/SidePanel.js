@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Motion, spring } from 'react-motion'
 
-import Text from 'components/Text'
+// import Text from 'components/Text'
 import { colors } from 'global-styles'
 
 const PANEL_WIDTH = 400
@@ -67,26 +67,31 @@ const StyledPanelContent = styled.div`
 class SidePanel extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleEscape, false)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleEscape = this.handleEscape.bind(this)
+    this.handleMotionRest = this.handleMotionRest.bind(this)
+    this.motionStyles = this.motionStyles.bind(this)
+    this.springConf = this.springConf.bind(this)
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleEscape, false)
   }
-  handleClose = () => {
+  handleClose() {
     if (!this.props.blocking) {
       this.props.onClose()
     }
   }
-  handleEscape = event => {
+  handleEscape(event) {
     if (event.keyCode === 27 && this.props.opened) {
       this.handleClose()
     }
   }
-  handleMotionRest = () => {
+  handleMotionRest() {
     // this.props.onTransitionEnd(this.props.opened)
   }
 
   // from: https://github.com/aragon/aragon-ui/blob/master/src/utils/math.js
-  motionStyles = progress => {
+  motionStyles(progress) {
     function lerp(progress, value1, value2) {
       return (value2 - value1) * progress + value1
     }
@@ -99,7 +104,7 @@ class SidePanel extends Component {
   }
 
   // from: https://github.com/aragon/aragon-ui/blob/master/src/utils/styles/spring.js
-  springConf = name => {
+  springConf(name) {
     const SPRINGS = {
       slow: { stiffness: 150, damping: 18, precision: 0.001 },
       normal: { stiffness: 190, damping: 22, precision: 0.001 },
@@ -127,7 +132,8 @@ class SidePanel extends Component {
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
                   <h1>
-                    <Text size="xxlarge">{title}</Text>
+                    {title}
+                    {/* <Text size="xxlarge">{title}</Text> */}
                   </h1>
                 </StyledPanelHeader>
                 <StyledPanelScrollView>

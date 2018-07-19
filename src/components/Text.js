@@ -20,13 +20,9 @@ const StyledText = styled.span`
 const Text = props => <StyledText {...props} />
 
 const createTextContainer = props => {
-  const Container = ({ children, color, size, smallcaps, weight, ...props }) => {
+  const Container = ({ children, color, size, smallcaps, weight }) => {
     const textProps = { color, size, smallcaps, weight }
-    return (
-      <div {...props}>
-        <Text {...textProps}>{children}</Text>
-      </div>
-    )
+    return <Text {...textProps}>{children}</Text>
   }
 
   return Container
