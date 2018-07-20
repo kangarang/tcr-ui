@@ -51,15 +51,3 @@ export const selectStats = createSelector(
     }
   }
 )
-
-// export const selectSortableData = createSelector(selectWhitelist, listings =>
-//   listings.map(wl => ({
-//     tokenIcon: wl.getIn(['tokenData', 'imgSrc']),
-//     tokenSymbol: wl.getIn(['tokenData', 'symbol']),
-//     tokenName: wl.getIn(['tokenData', 'name']),
-//     trackerUrl: `https://etherscan.io/token/${wl.get('listingID')}`,
-//     tokenSupply: wl.getIn(['tokenData', 'totalSupply']),
-//     fiatPrice: wl.getIn(['tokenData', 'fiatPrice']),
-//     marketCap: wl.getIn(['tokenData', 'marketCap']),
-//   }))
-// )

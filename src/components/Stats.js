@@ -85,7 +85,7 @@ const GridItem = styled.div`
   padding: 0 1.5em;
   background-color: white;
 `
-const GridItemPad = styled(GridItem)`
+const GridItemPad = GridItem.extend`
   padding-left: 180px;
 `
 const CapsDiv = styled.div`
@@ -102,24 +102,24 @@ const Error = styled.div`
   font-weight: bold;
   font-size: 1.2em;
 `
-const BoldDiv = styled(CapsDiv)`
+const BoldDiv = CapsDiv.extend`
   color: black;
   font-weight: bold;
   font-size: 1em;
 `
-const BoldDivGrey = styled(BoldDiv)`
+const BoldDivGrey = BoldDiv.extend`
   display: inline;
   color: grey;
   margin-left: 0.5em;
   font-size: 0.8em;
 `
-const BoldDivColored = styled(BoldDiv)`
+const BoldDivColored = BoldDiv.extend`
   color: ${props =>
     props.network === 'rinkeby'
       ? 'orange'
       : props.network === 'mainnet' ? '#2eab6f' : 'purple'};
 `
-const UserInfoGridItem = styled(GridItem)`
+const UserInfoGridItem = GridItem.extend`
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;

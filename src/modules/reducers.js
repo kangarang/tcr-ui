@@ -6,7 +6,6 @@ import { routerReducer } from 'react-router-redux'
 import homeReducer from './home'
 import transactionsReducer from './transactions'
 import listingsReducer from './listings'
-// import activities from './activities'
 
 export default function createReducer() {
   return combineReducers({
@@ -16,6 +15,5 @@ export default function createReducer() {
     transactions: transactionsReducer,
     listings: listingsReducer,
     // ...txPanelRootReducer,
-    // activities,
   })
 }

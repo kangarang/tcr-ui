@@ -17,6 +17,13 @@ export const colors = {
   prism: '#15afba',
   darkRed: '#9A4540',
   blue2: '#A4BEE7',
+  brightGreen: '#74FAB0',
+  darkRed: '#D0021B',
+  blue: '#3C8BFB',
+  spray: '#85D3D4',
+  aquamarine: '#74FAB0',
+  paleturquoise: '#A8EDEA',
+  pigpink: '#F9D7E3',
   gradient: {
     claimReward: {
       right: '#85D3D4',

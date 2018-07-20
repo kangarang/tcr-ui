@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { ipfsTokensHash, ipfsGetData } from 'libs/ipfs'
+import { ipfsGetData } from 'libs/ipfs'
+import { ipfsTokensHash } from 'config'
 
 // see: https://github.com/ethereum-lists/tokens
 // & -> https://github.com/MyCryptoHQ/MyCrypto/blob/develop/scripts/update-tokens.ts

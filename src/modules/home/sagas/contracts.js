@@ -6,11 +6,11 @@ import * as actions from '../actions'
 import * as types from '../types'
 
 import { getEthjs } from 'libs/provider'
-import { ipfsGetData, ipfsABIsHash } from 'libs/ipfs'
+import { ipfsGetData } from 'libs/ipfs'
 import { baseToConvertedUnit } from 'libs/units'
 import { setupRegistry, setupContract } from '../utils'
 
-import { hardcodedRegistryAddress } from 'config/registry.json'
+import { hardcodedRegistryAddress, ipfsABIsHash } from 'config'
 
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
@@ -55,9 +55,10 @@ export function* registrySaga(action) {
 
     // if action.payload.address, use that address (CHOOSE_TCR)
     // otherwise, use the default address (factory tcr)
-    let address = action.payload.address
-      ? action.payload.address
-      : abis.registry.networks[networkID].address
+    let address =
+      action.payload && action.payload.address
+        ? action.payload.address
+        : abis.registry.networks[networkID] && abis.registry.networks[networkID].address
 
     if (hardcodedRegistryAddress !== '') {
       address = hardcodedRegistryAddress
@@ -87,7 +88,7 @@ export function* registrySaga(action) {
         '2. Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed).'
       )
       console.log(
-        '3. Update the `ipfsABIsHash` variable in /src/redux/libs/ipfs.js to the IPFS multihash.'
+        '3. Update the `ipfsABIsHash` variable in /src/config/index.js to the IPFS multihash.'
       )
     }
 

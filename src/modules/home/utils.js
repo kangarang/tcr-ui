@@ -5,7 +5,7 @@ import { getEthjs } from 'libs/provider'
 const getDefaults = account => ({
   from: account,
   gas: 2000000,
-  gasPrice: 4000000000,
+  gasPrice: 8000000000,
 })
 
 export async function setupRegistry(abi, bytecode, account, address) {

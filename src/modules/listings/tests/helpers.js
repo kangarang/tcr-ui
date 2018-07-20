@@ -18,7 +18,7 @@ export default {
       blockHash: '0xf9e3dd9e37f601b78c0ce780e706517989b5e3fbc5bccd72177f834d81b90834',
       ts: BN(ts),
       data: 'QmVLmoaS3peX82wgFWBo1VFodTYuM1LzzdCBNzyHWkK97R',
-      tokenData: {
+      listingData: {
         address: '0xD0D6D6C5Fe4a677D343cC433536BB717bAe167dD',
         decimals: 9,
         imgSrc:

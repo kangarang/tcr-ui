@@ -6,40 +6,37 @@ import tokenList from 'config/tokens/eth.json'
 import { getListingHash, isAddress } from 'libs/values'
 import { timestampToExpiry } from 'utils/_datetime'
 import { ipfsGetData } from 'libs/ipfs'
-import { saveLocal } from 'utils/_localStorage'
+// import { saveLocal } from 'utils/_localStorage'
+import { ipfsCheckMultihash } from '../../libs/ipfs'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
+  console.log('ipfsContent:', ipfsContent)
   // validate (listingHash === keccak256(ipfsContent.id))
   if (listingHash === getListingHash(ipfsContent.id)) {
     const listingID = ipfsContent.id
-    let tokenData = {}
+    let listingData = {}
 
     // validate address
     if (isAddress(listingID.toLowerCase())) {
-      tokenData = find(
+      listingData = find(
         toke => toke.address.toLowerCase() === listingID.toLowerCase(),
         tokenList
       )
-      // console.log('tokenData:', tokenData)
+      // console.log('listingData:', listingData)
 
       // TODO: move to api module
       const baseUrl = `https://raw.githubusercontent.com/kangarang/token-icons/master/images/`
 
-      if (tokenData && tokenData.address) {
-        tokenData.imgSrc = `${baseUrl}${tokenData.address.toLowerCase()}.png`
+      if (listingData && listingData.address) {
+        listingData.imgSrc = `${baseUrl}${listingData.address.toLowerCase()}.png`
       } else {
-        tokenData = {
-          imgSrc: ``,
-          // symbol: 'DEFAULT',
-          // name: 'Default Token',
-          // totalSupply: 1245127,
-        }
+        listingData.imgSrc = ''
       }
     } else if (ipfsContent.data) {
-      tokenData.imgSrc = ipfsContent.data
+      listingData.imgSrc = ipfsContent.data
     }
-    return { listingID, tokenData }
+    return { listingID, listingData }
   }
   throw new Error('valid multihash, invalid id')
 }
@@ -48,27 +45,21 @@ export async function handleMultihash(listingHash, data) {
 // I - decoded log, block/tx info, msgSender
 // O - listing object
 export async function createListing(log, blockTxn, owner) {
-  let { listingHash, deposit, appEndDate, listingID, listingData, _eventName } = log
+  let { listingHash, deposit, appEndDate, listingID, data, _eventName } = log
   if (_eventName !== '_Application') {
     throw new Error('not an application')
   }
-  // let listingID
-  let tokenData = {}
-  let data = listingData
+  let listingData = {}
 
-  // IPFS multihash validation (RUT)
-  if (listingData.length === 46 && listingData.startsWith('Qm')) {
-    const res = await handleMultihash(listingHash, listingData)
-    listingID = res.listingID
-    tokenData = res.tokenData
-  } else if (isAddress(listingData.toLowerCase())) {
-    // TODO: keccak256 validation (ADT)
-    // listingID = data
-    // tokenData.imgSrc = `https://www.google.com/s2/favicons?domain=${data}`
-  } else if (listingData) {
-    tokenData.imgSrc = listingData
+  // IPFS multihash validation
+  if (ipfsCheckMultihash(data)) {
+    // const res = await handleMultihash(listingHash, data)
+    // listingID = res.listingID
+    // listingData = res.listingData
+  } else if (data) {
+    listingData.imgSrc = data
   } else {
-    tokenData.imgSrc = ''
+    listingData.imgSrc = ''
   }
   // TODO: validate for neither case
 
@@ -77,7 +68,7 @@ export async function createListing(log, blockTxn, owner) {
     listingHash,
     owner,
     data,
-    tokenData,
+    listingData,
     listingID,
     status: '1',
     unstakedDeposit: deposit.toString(10),
@@ -95,40 +86,8 @@ export async function createListing(log, blockTxn, owner) {
   }
 
   // save to local storage
-  await saveLocal(listingHash, listing)
+  // await saveLocal(listingHash, listing)
   return listing
-}
-
-// TODO: move into actual reducer and change the redux store directly for clarity
-export function changeListing(golem, log, txData, eventName) {
-  if (txData.get('ts').lt(golem.get('ts'))) {
-    console.log('old txn; returning listing')
-    return golem
-  }
-  switch (eventName) {
-    case '_Challenge':
-      return golem
-        .set('status', fromJS('2'))
-        .set('challenger', fromJS(log.challenger))
-        .set('challengeID', fromJS(log.challengeID.toString()))
-        .set('challengeData', fromJS(log.data.toString()))
-        .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
-        .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
-    case '_ApplicationWhitelisted':
-    case '_ChallengeFailed':
-      return golem.set('status', fromJS('3'))
-    case '_ApplicationRemoved':
-    case '_ListingRemoved':
-    case '_ChallengeSucceeded':
-      return golem.set('status', fromJS('4'))
-    case '_VoteRevealed':
-      return golem
-        .set('votesFor', fromJS(log.votesFor))
-        .set('votesAgainst', fromJS(log.votesAgainst))
-        .set('pollID', fromJS(log.pollID.toString()))
-    default:
-      return golem
-  }
 }
 
 // Finds the corresponding listing according the eventName
@@ -152,9 +111,46 @@ export function findListing(logData, listings) {
   }
 }
 
+// updates a listing's values
+// determines where it gets rendered
+export function changeListing(golem, log, txData, eventName) {
+  if (txData.get('ts').lt(golem.get('ts'))) {
+    console.log('old txn; returning listing')
+    return golem
+  }
+  switch (eventName) {
+    case '_Challenge':
+      return golem
+        .set('status', fromJS('2'))
+        .set('challenger', fromJS(log.challenger))
+        .set('challengeID', fromJS(log.challengeID.toString()))
+        .set('challengeData', fromJS(log.data.toString()))
+        .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
+        .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
+    case '_ApplicationWhitelisted':
+    case '_ChallengeFailed':
+      return golem.set('status', fromJS('3'))
+    case '_ApplicationRemoved':
+    case '_ListingRemoved':
+    case '_ChallengeSucceeded':
+      return golem.set('status', fromJS('4'))
+    case '_VoteRevealed':
+      return golem
+        .set('votesFor', fromJS(log.votesFor.toString()))
+        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
+        .set('pollID', fromJS(log.pollID.toString()))
+    default:
+      return golem
+  }
+}
+
+//
 export async function updateAssortedListings(newListings, listings = fromJS({})) {
+  // sift through the new array
   return fromJS(newListings).reduce((acc, val) => {
+    // find a matching listing in the accumulation array
     const match = findListing(val.get('logData'), acc)
+
     if (match && match.has('listingHash')) {
       const changed = changeListing(
         match,
@@ -162,17 +158,12 @@ export async function updateAssortedListings(newListings, listings = fromJS({}))
         val.get('txData'),
         val.get('eventName')
       )
-      // // get claimReward
-      // if ((changed.get('status') === '3') && changed.get('challengeID')) {
-
-      // }
       return acc.set(match.get('listingHash'), changed)
     }
     return acc
   }, fromJS(listings))
 }
 
-// only return _Application listings
 export async function updateListings(newListings, listings = fromJS({})) {
   return fromJS(newListings).reduce((acc, val) => {
     if (
@@ -185,12 +176,14 @@ export async function updateListings(newListings, listings = fromJS({})) {
       console.log('!not a listing!')
       return acc
     }
+
     const matchingListing = acc.get(val.get('listingHash'))
+    // duplicate listingHash, older block.timestamp
     if (matchingListing && val.get('ts').lt(matchingListing.get('ts'))) {
-      // duplicate listingHash, older block.timestamp
       return acc
     }
-    // new listingHash || newer block.timestamp
+
+    // either: new listingHash || newer block.timestamp
     return acc.set(val.get('listingHash'), fromJS(val))
   }, fromJS(listings))
 }

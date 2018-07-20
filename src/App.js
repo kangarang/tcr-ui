@@ -61,8 +61,8 @@ const muiTheme = createMuiTheme({
 const initialState = {}
 const store = configureStore(initialState)
 
-console.log('initialState:', initialState)
-console.log('store:', store.getState().toJS())
+// console.log('initialState:', initialState)
+// console.log('store:', store.getState().toJS())
 // console.log('txPanelStore:', txPanelStore.getState().toJS())
 
 const AppWrapper = styled.div`

@@ -56,13 +56,21 @@ export function* handleNewPollLogsSaga(action) {
     const allListings = yield select(selectAllListings)
     const logs = action.payload
 
-    const candidates = logs.filter(log => log.eventName === '_Application')
-    const assorted = logs.filter(log => log.eventName !== '_Application')
+    const applicantLogs = logs.filter(log => log.eventName === '_Application')
+    const assortedLogs = logs.filter(log => log.eventName !== '_Application')
 
-    if (candidates.length) {
-      console.log(candidates.length, '_Application logs:', candidates)
+    if (applicantLogs.length) {
+      console.log(applicantLogs.length, '_Application logs:', applicantLogs)
       // create listings
-      const listings = yield call(batchCreateListings, candidates, [])
+      const listings = yield all(
+        applicantLogs.map(appLog =>
+          createListing(appLog.logData, appLog.txData, appLog.msgSender)
+        )
+      )
+
+      // batch for ipfs
+      // const listings = yield call(batchCreateListings, applicantLogs, [])
+
       // update listings
       const applications = yield call(updateListings, listings, allListings)
       // check equality
@@ -74,9 +82,14 @@ export function* handleNewPollLogsSaga(action) {
     }
 
     // update listings
-    if (assorted.length) {
-      console.log(assorted.length, 'assorted logs:', assorted)
-      const updatedListings = yield call(updateAssortedListings, assorted, allListings)
+    if (assortedLogs.length) {
+      console.log(assortedLogs.length, 'assortedLogs logs:', assortedLogs)
+      const updatedListings = yield call(
+        updateAssortedListings,
+        assortedLogs,
+        allListings
+      )
+
       // check: equality
       if (updatedListings.equals(allListings)) {
         console.log('updatedListings === allListings')

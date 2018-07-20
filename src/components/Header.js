@@ -23,7 +23,7 @@ const GridContainer = styled.div`
 const GridItem = styled.div`
   font-weight: bold;
 `
-const GridItemF = styled(GridItem)`
+const GridItemF = GridItem.extend`
   display: flex;
 `
 
@@ -85,6 +85,14 @@ export default class Header extends Component {
             >
               <MenuItem onClick={this.handleClose}>{`Registry: ${
                 contracts.registry.address
+              }`}</MenuItem>
+            </a>
+            <a
+              target="_blank"
+              href={`https://rinkeby.etherscan.io/address/${contracts.voting.address}`}
+            >
+              <MenuItem onClick={this.handleClose}>{`Voting: ${
+                contracts.voting.address
               }`}</MenuItem>
             </a>
             <a
