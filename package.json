@@ -31,7 +31,6 @@
     "bn.js": "4.11.8",
     "date-fns": "1.29.0",
     "dayjs": "1.6.4",
-    "eth-tx-panel": "0.0.2",
     "ethereum-ens": "0.7.4",
     "ethereumjs-util": "5.2.0",
     "ethers": "^3.0.15",

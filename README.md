@@ -41,8 +41,8 @@ Clone & run app in dev mode in browser, rebuild on file changes - `localhost:300
 ```
   $ git clone https://github.com/kangarang/tcr-ui.git
   $ cd tcr-ui
-  $ npm install
-  $ npm run dev
+  $ yarn
+  $ yarn start
 ```
 
 **Tests**
@@ -50,7 +50,7 @@ Clone & run app in dev mode in browser, rebuild on file changes - `localhost:300
 Run unit tests with Jest
 
 ```
-  $ npm test
+  $ yarn test
 ```
 
 **Local blockchain/RPC (optional)**:
@@ -61,7 +61,7 @@ Warning: Do not use the mnemonic associated with this command on ethereum main n
 
 ```
   # start local blockchain and rpc server
-  $ npm run rpc
+  $ yarn run rpc
 ```
 
 **TCR (optional)**:
