@@ -6,6 +6,7 @@ import { action } from '@storybook/addon-actions'
 
 import Card from '@material-ui/core/Card'
 import Button from '../components/Button'
+import Registries from 'components/Registries'
 
 const TallListingCard = styled(Card)`
   display: flex;
@@ -18,9 +19,9 @@ const TallListingCard = styled(Card)`
   overflow: 'hidden';
 `
 const CardName = styled.div`
-  font-weight: bold;
-  font-size: 1.3em;
-  margin: 0 1.3em;
+  font-weight: 600;
+  font-size: 1.4em;
+  margin: 0 1.75em;
 `
 storiesOf('Cards', module).add('Challenge Listing', () => (
   <TallListingCard>
@@ -33,20 +34,22 @@ storiesOf('Cards', module).add('Challenge Listing', () => (
 
 const RegistryCard = styled(Card)`
   display: flex;
-  width: 360px;
+  width: 320px;
   height: 240px;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  font-family: Helvetica;
   overflow: 'hidden';
+  font-family: 'Avenir Next';
+  margin: 0.5em;
 `
 const SelectRegistryButton = styled(Button)`
-  border: 1.5px solid black;
+  border: 1.5px solid #333;
   border-radius: 0;
-  font-size: 1.1em;
-  padding: 0.6em 1em;
-  margin: 1.2em;
+  font-size: 0.9em;
+  font-weight: 500;
+  padding: 0.75em 1.25em;
+  margin: 1.5em 2.75em 2.75em;
 `
 storiesOf('Cards', module).add('Select Registry', () => (
   <RegistryCard>
@@ -56,3 +59,5 @@ storiesOf('Cards', module).add('Select Registry', () => (
     </SelectRegistryButton>
   </RegistryCard>
 ))
+
+storiesOf('Cards', module).add('Select Many Registries', () => <Registries />)

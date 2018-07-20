@@ -282,9 +282,9 @@ class CommitVote extends Component {
         <SidePanel title="Commit Your Vote" opened={opened} onClose={closeSidePanel}>
           <SidePanelSeparator />
           <FlexContainer>
-            {selectedOne.tokenData.imgSrc && (
+            {selectedOne.listingData.imgSrc && (
               <IconWrapper>
-                <Img src={selectedOne.tokenData.imgSrc} alt="" />
+                <Img src={selectedOne.listingData.imgSrc} alt="" />
               </IconWrapper>
             )}
             <SideText size="large" text={selectedOne.listingID} />

@@ -73,12 +73,12 @@ const StyledPanelContent = styled.div`
 
 class SidePanel extends Component {
   componentDidMount() {
-    document.addEventListener('keydown', this.handleEscape, false)
     this.handleClose = this.handleClose.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
     this.handleMotionRest = this.handleMotionRest.bind(this)
     this.motionStyles = this.motionStyles.bind(this)
     this.springConf = this.springConf.bind(this)
+    document.addEventListener('keydown', this.handleEscape, false)
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleEscape, false)

@@ -8,9 +8,14 @@ html {
   font-weight: 600;
   font-style: normal;
 }
+/* @font-face {
+  font-family: 'Avenir Next';
+  src: url('./assets/fonts/.woff2') format('woff2'),
+    url('./assets/fonts/.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+} */
 body {
-  line-height: 1.25em;
   color: black;
-  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-  margin: 0;
+  font-family: 'Roboto', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
 }

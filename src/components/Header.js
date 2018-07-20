@@ -2,87 +2,17 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 import Img from 'components/Img'
+import Identicon from 'components/Identicon'
 import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
 import avatarIconSrc from 'assets/icons/eth.png'
 
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
+// import Menu from '@material-ui/core/Menu'
+// import MenuItem from '@material-ui/core/MenuItem'
 
-import Text from 'components/Text'
-import Button from 'components/Button'
-import NavBar from 'components/NavBar'
-import Identicon from './Identicon'
-
-const Wrapper = styled.div`
-  flex-shrink: 0;
-`
-const GridContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  padding: 0.2em 1em;
-`
-
-const GridItem = styled.div`
-  font-weight: bold;
-`
-const GridItemF = GridItem.extend`
-  display: flex;
-`
-
-export default class Header extends Component {
-  state = {
-    anchorEl: null,
-  }
-
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget })
-  }
-
-  handleClose = () => {
-    this.setState({ anchorEl: null })
-  }
-
-  handleDropdown() {
-    console.log('clicked dropdown')
-  }
-
-  render() {
-    const { error, openSidePanel, network, tcr, contracts } = this.props
-    const { anchorEl } = this.state
-
-    return (
-      <HeaderWrapper>
-        <PageTitle>HEADER</PageTitle>
-
-        <NavWrapper>
-          <NavLinks>
-            <NavLink>Registries</NavLink>
-            <NavLink>Add an application</NavLink>
-            <NavLink>Vote</NavLink>
-            <NavLink>How does this work?</NavLink>
-          </NavLinks>
-
-          <UserInfo>
-            <Avatar>
-              <Img src={avatarIconSrc} />
-            </Avatar>
-
-            <Balances>
-              <TokenBalance>10,000 TK</TokenBalance>
-              <EtherBalance>456 USD 0.72 ETH</EtherBalance>
-            </Balances>
-
-            <DropdownCaratIcon onClick={this.handleDropdown}>
-              <Img src={dropDownCaratIconSrc} />
-            </DropdownCaratIcon>
-          </UserInfo>
-        </NavWrapper>
-      </HeaderWrapper>
-    )
-  }
-}
+// import Text from 'components/Text'
+// import Button from 'components/Button'
+// import NavBar from 'components/NavBar'
+// import Identicon from './Identicon'
 
 const HeaderWrapper = styled.div`
   display: flex;
@@ -142,6 +72,76 @@ const DropdownCaratIcon = styled.div`
   width: 12px;
   margin: 0 10px;
 `
+export default class Header extends Component {
+  // state = {
+  //   anchorEl: null,
+  // }
+
+  // handleClick = event => {
+  //   this.setState({ anchorEl: event.currentTarget })
+  // }
+
+  // handleClose = () => {
+  //   this.setState({ anchorEl: null })
+  // }
+
+  handleDropdown() {
+    console.log('clicked dropdown')
+  }
+
+  render() {
+    const { error, openSidePanel, network, tcr, contracts, account } = this.props
+    // const { anchorEl } = this.state
+
+    return (
+      <HeaderWrapper>
+        <PageTitle>{tcr.registryName}</PageTitle>
+
+        <NavWrapper>
+          <NavLinks>
+            <NavLink>Registries</NavLink>
+            <NavLink onClick={openSidePanel}>Add an application</NavLink>
+            <NavLink>Vote</NavLink>
+            <NavLink>How does this work?</NavLink>
+          </NavLinks>
+
+          <UserInfo>
+            <Avatar>
+              <Identicon address={account} diameter={30} />
+            </Avatar>
+
+            <Balances>
+              <TokenBalance>10,000 TK</TokenBalance>
+              <EtherBalance>456 USD 0.72 ETH</EtherBalance>
+            </Balances>
+
+            <DropdownCaratIcon onClick={this.handleDropdown}>
+              <Img alt="dropdown" src={dropDownCaratIconSrc} />
+            </DropdownCaratIcon>
+          </UserInfo>
+        </NavWrapper>
+      </HeaderWrapper>
+    )
+  }
+}
+
+// const Wrapper = styled.div`
+//   flex-shrink: 0;
+// `
+// const GridContainer = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   background-color: white;
+//   padding: 0.2em 1em;
+// `
+
+// const GridItem = styled.div`
+//   font-weight: bold;
+// `
+// const GridItemF = GridItem.extend`
+//   display: flex;
+// `
 
 // <Wrapper>
 //   <GridContainer>
