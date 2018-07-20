@@ -10,7 +10,7 @@ import { colors } from 'global-styles'
 const PANEL_WIDTH = 400
 const PANEL_OVERFLOW = PANEL_WIDTH * 0.2
 const PANEL_HIDE_RIGHT = -PANEL_WIDTH * 1.6
-const CONTENT_PADDING = 40
+const CONTENT_PADDING = 60
 const PANEL_INNER_WIDTH = PANEL_WIDTH - CONTENT_PADDING * 2
 
 const StyledSidePanel = styled.div`
@@ -52,6 +52,13 @@ const StyledPanelHeader = styled.header`
   padding-left: ${CONTENT_PADDING}px;
   padding-right: 20px;
   padding-bottom: 10px;
+`
+
+const StyledPanelTitle = styled.div`
+  font-family: 'Avenir Next';
+  font-size: 20pt;
+  padding-top: 35px;
+  padding-bottom: 20px;
 `
 
 const StyledPanelScrollView = styled.div`
@@ -131,10 +138,10 @@ class SidePanel extends Component {
               />
               <StyledPanel style={styles.panel}>
                 <StyledPanelHeader>
-                  <h1>
+                  <StyledPanelTitle>
                     {title}
                     {/* <Text size="xxlarge">{title}</Text> */}
-                  </h1>
+                  </StyledPanelTitle>
                 </StyledPanelHeader>
                 <StyledPanelScrollView>
                   <StyledPanelContent>{children}</StyledPanelContent>

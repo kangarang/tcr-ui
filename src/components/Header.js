@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
+import Img from 'components/Img'
+import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
+import avatarIconSrc from 'assets/icons/eth.png'
+
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -40,77 +44,161 @@ export default class Header extends Component {
     this.setState({ anchorEl: null })
   }
 
+  handleDropdown() {
+    console.log('clicked dropdown')
+  }
+
   render() {
     const { error, openSidePanel, network, tcr, contracts } = this.props
     const { anchorEl } = this.state
 
     return (
-      <Wrapper>
-        <GridContainer>
-          {error ? (
-            <GridItem gc={1}>
-              <div>{''}</div>
-            </GridItem>
-          ) : (
-            <GridItem gc={1}>
-              <Button methodName="apply" onClick={openSidePanel}>
-                {'Start an application'}
-              </Button>
-            </GridItem>
-          )}
+      <HeaderWrapper>
+        <PageTitle>HEADER</PageTitle>
 
-          <GridItemF gc={2} onClick={this.handleClick}>
-            <a
-              target="_blank"
-              href={`https://${
-                network !== 'mainnet' ? network + '.' : ''
-              }etherscan.io/address/${tcr.registryAddress}`}
-            >
-              <Identicon address={tcr.registryAddress} diameter={20} />
-            </a>
-            <Text size="xxlarge" weight="bold">
-              {tcr.registryName}
-            </Text>
-          </GridItemF>
+        <NavWrapper>
+          <NavLinks>
+            <NavLink>Registries</NavLink>
+            <NavLink>Add an application</NavLink>
+            <NavLink>Vote</NavLink>
+            <NavLink>How does this work?</NavLink>
+          </NavLinks>
 
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleClose}
-          >
-            <a
-              target="_blank"
-              href={`https://rinkeby.etherscan.io/address/${contracts.registry.address}`}
-            >
-              <MenuItem onClick={this.handleClose}>{`Registry: ${
-                contracts.registry.address
-              }`}</MenuItem>
-            </a>
-            <a
-              target="_blank"
-              href={`https://rinkeby.etherscan.io/address/${contracts.voting.address}`}
-            >
-              <MenuItem onClick={this.handleClose}>{`Voting: ${
-                contracts.voting.address
-              }`}</MenuItem>
-            </a>
-            <a
-              target="_blank"
-              href={`https://rinkeby.etherscan.io/address/${contracts.token.address}`}
-            >
-              <MenuItem onClick={this.handleClose}>{`Token: ${
-                contracts.token.address
-              }`}</MenuItem>
-            </a>
-            {/* <MenuItem onClick={this.handleClose}>test</MenuItem> */}
-          </Menu>
+          <UserInfo>
+            <Avatar>
+              <Img src={avatarIconSrc} />
+            </Avatar>
 
-          <GridItem gc={3}>
-            <NavBar />
-          </GridItem>
-        </GridContainer>
-      </Wrapper>
+            <Balances>
+              <TokenBalance>10,000 TK</TokenBalance>
+              <EtherBalance>456 USD 0.72 ETH</EtherBalance>
+            </Balances>
+
+            <DropdownCaratIcon onClick={this.handleDropdown}>
+              <Img src={dropDownCaratIconSrc} />
+            </DropdownCaratIcon>
+          </UserInfo>
+        </NavWrapper>
+      </HeaderWrapper>
     )
   }
 }
+
+const HeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4.5em;
+  background-color: white;
+  font-family: 'Avenir Next';
+`
+// left-sid
+const PageTitle = styled.div`
+  margin-left: 2em;
+  font-size: 1.25em;
+  font-weight: 900;
+`
+
+// links + user info
+const NavWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`
+const NavLinks = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin-right: 3em;
+`
+const NavLink = styled.div`
+  margin-left: 3em;
+`
+
+// right-most components
+const UserInfo = styled.div`
+  display: flex;
+  margin-right: 1em;
+`
+const Avatar = styled.div`
+  width: 40px;
+`
+const Balances = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+const TokenBalance = styled.div`
+  font-size: 1em;
+  font-weight: 700;
+`
+const EtherBalance = styled.div`
+  color: grey;
+  font-size: 0.7em;
+  font-weight: 600;
+`
+const DropdownCaratIcon = styled.div`
+  width: 12px;
+  margin: 0 10px;
+`
+
+// <Wrapper>
+//   <GridContainer>
+//     {error ? (
+//       <GridItem gc={1}>
+//         <div>{''}</div>
+//       </GridItem>
+//     ) : (
+//       <GridItem gc={1}>
+//         <Button methodName="apply" onClick={openSidePanel}>
+//           {'Start an application'}
+//         </Button>
+//       </GridItem>
+//     )}
+
+//     <GridItemF gc={2} onClick={this.handleClick}>
+//       <a
+//         target="_blank"
+//         href={`https://${
+//           network !== 'mainnet' ? network + '.' : ''
+//         }etherscan.io/address/${tcr.registryAddress}`}
+//       >
+//         <Identicon address={tcr.registryAddress} diameter={20} />
+//       </a>
+//       <Text size="xxlarge" weight="bold">
+//         {tcr.registryName}
+//       </Text>
+//     </GridItemF>
+
+//     <Menu
+//       id="simple-menu"
+//       anchorEl={anchorEl}
+//       open={Boolean(anchorEl)}
+//       onClose={this.handleClose}
+//     >
+//       <a
+//         target="_blank"
+//         href={`https://rinkeby.etherscan.io/address/${contracts.registry.address}`}
+//       >
+//         <MenuItem onClick={this.handleClose}>{`Registry: ${
+//           contracts.registry.address
+//         }`}</MenuItem>
+//       </a>
+//       <a
+//         target="_blank"
+//         href={`https://rinkeby.etherscan.io/address/${contracts.voting.address}`}
+//       >
+//         <MenuItem onClick={this.handleClose}>{`Voting: ${
+//           contracts.voting.address
+//         }`}</MenuItem>
+//       </a>
+//       <a
+//         target="_blank"
+//         href={`https://rinkeby.etherscan.io/address/${contracts.token.address}`}
+//       >
+//         <MenuItem onClick={this.handleClose}>{`Token: ${
+//           contracts.token.address
+//         }`}</MenuItem>
+//       </a>
+//     </Menu>
