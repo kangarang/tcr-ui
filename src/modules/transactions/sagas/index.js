@@ -9,9 +9,10 @@ import * as epActions from 'modules/home/actions'
 
 import { selectRegistry, selectVoting, selectToken } from 'modules/home/selectors'
 
-import { getEthjs, getEthersProvider } from 'libs/provider'
+import { getGasPrice } from 'api/gas'
 import { ipfsAddObject } from 'libs/ipfs'
 import { getListingHash } from 'libs/values'
+import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 import { pendingTxns } from '../../notifications'
@@ -127,12 +128,15 @@ export function* registryTxnSaga(action) {
       //   id: args[0], // listing string (name)
       //   data: args[2], // data (address)
       // })
+
       // hash the string
       const listingHash = yield call(getListingHash, args[0])
+
       // use ipfs CID as the _data field in the application
-      // const dataString = fileHash
       // const finalArgs = [listingHash, args[1], dataString]
+
       const finalArgs = yield [listingHash, args[1], args[0], args[2]]
+
       yield call(sendTransactionSaga, registry, methodName, finalArgs)
     } else {
       yield call(sendTransactionSaga, registry, methodName, args)
@@ -163,7 +167,8 @@ export function* sendTransactionSaga(contract, method, args) {
     //   data,
     // }
     // const txHash = yield call(ethjs.sendTransaction, payload)
-    const txHash = yield call(contract[method], ...args)
+    const gasPrice = yield call(getGasPrice)
+    const txHash = yield call(contract[method], ...args, { gasPrice })
     yield put(actions.txnMining(txHash))
 
     // pending tx notification
@@ -174,9 +179,8 @@ export function* sendTransactionSaga(contract, method, args) {
     const minedTxn = yield ethersProvider.waitForTransaction(txHash)
     console.log('minedTxn:', minedTxn)
 
-    // BUG: sometimes, ethjs doesn't pick up the transaction in time. racing?
-    // maybe try: const minedTxn = yield call(ethersProvider.waitForTransaction, txHash)
-    yield call(delay, 2000)
+    // sometimes ethjs doesnt catch it if it tries to quickly
+    yield call(delay, 1000)
 
     // get tx receipt
     // const ethjs = yield call(getEthjs)
@@ -185,6 +189,7 @@ export function* sendTransactionSaga(contract, method, args) {
 
     // dispatch on success
     if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {
+      // if (minedTxn.hash !== '0x0') {
       yield put(actions.sendTransactionSucceeded(txReceipt))
       yield put(epActions.updateBalancesStart())
       // if you decide to re-implement this, you need to control *which* txn
