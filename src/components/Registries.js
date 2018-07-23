@@ -39,8 +39,11 @@ const SelectRegistryButton = styled(Button)`
 `
 
 class Registries extends Component {
-  handleClickSelectRegistry(e) {
-    console.log('ID:', e.target.id)
+  // constructor(props) {
+  //   super(props)
+  // }
+  handleClickSelectRegistry = tcr => {
+    this.props.onSelectRegistry(tcr)
   }
 
   render() {
@@ -48,17 +51,20 @@ class Registries extends Component {
 
     return (
       <RegistriesContainer>
-        {registries.map(registry => (
-          <RegistryCard key={registry.address}>
-            <CardName>{registry.name}</CardName>
-            <SelectRegistryButton
-              id={registry.name}
-              onClick={this.handleClickSelectRegistry}
-            >
-              View the List
-            </SelectRegistryButton>
-          </RegistryCard>
-        ))}
+        {registries.map(
+          tcr =>
+            tcr.network_id === '420' && (
+              <RegistryCard key={tcr.registryAddress}>
+                <CardName>{tcr.name}</CardName>
+                <SelectRegistryButton
+                  id={tcr.registryAddress}
+                  onClick={() => this.handleClickSelectRegistry(tcr)}
+                >
+                  View the List
+                </SelectRegistryButton>
+              </RegistryCard>
+            )
+        )}
       </RegistriesContainer>
     )
   }

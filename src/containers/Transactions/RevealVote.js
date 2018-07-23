@@ -101,35 +101,35 @@ export default class RevealVote extends Component {
 
         <SidePanelSeparator />
 
-        {this.state.didReveal ? (
+        {/* {this.state.didReveal ? (
           <SideText
             text={`You have already revealed with ${
               this.state.numTokens
             } tokens for this poll`}
           />
-        ) : this.state.didCommit ? (
-          <div>
-            <SideText
-              text={
-                'In order to reveal your previously committed vote, upload the JSON commit file'
-              }
-            />
+        ) : this.state.didCommit ? ( */}
+        <div>
+          <SideText
+            text={
+              'In order to reveal your previously committed vote, upload the JSON commit file'
+            }
+          />
 
-            <FileInput type="file" name="file" onChange={handleFileInput} />
-            <MarginDiv>
-              <Button
-                methodName="revealVote"
-                onClick={this.handleRevealVote}
-                mode="strong"
-                wide
-              >
-                {'Reveal Vote'}
-              </Button>
-            </MarginDiv>
-          </div>
-        ) : (
+          <FileInput type="file" name="file" onChange={handleFileInput} />
+          <MarginDiv>
+            <Button
+              methodName="revealVote"
+              onClick={this.handleRevealVote}
+              mode="strong"
+              wide
+            >
+              {'Reveal Vote'}
+            </Button>
+          </MarginDiv>
+        </div>
+        {/* ) : (
           <SideText text={'You have not voted in this poll.'} />
-        )}
+        )} */}
       </SidePanel>
     )
   }

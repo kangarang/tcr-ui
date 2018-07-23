@@ -3,6 +3,9 @@ import IPFS from 'ipfs-mini'
 const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' })
 
 export function ipfsCheckMultihash(multihash) {
+  if (typeof multihash !== 'string') {
+    return false
+  }
   if (multihash.startsWith('Qm') && multihash.length === 46) {
     return true
   }

@@ -1,5 +1,25 @@
 import * as types from './types'
 
+export function selectRegistryStart(payload) {
+  return {
+    type: types.SELECT_REGISTRY_START,
+    payload,
+  }
+}
+
+export function selectRegistrySucceeded(payload) {
+  return {
+    type: types.SELECT_REGISTRY_SUCCEEDED,
+    payload,
+  }
+}
+
+export function selectRegistryFailed(payload) {
+  return {
+    type: types.SELECT_REGISTRY_FAILED,
+    payload,
+  }
+}
 export function setupEthereumStart(network) {
   return {
     type: types.SETUP_ETHEREUM_START,

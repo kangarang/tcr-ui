@@ -5,12 +5,15 @@ import { selectABIs, selectAccount } from '../selectors'
 import * as actions from '../actions'
 import * as types from '../types'
 
+import * as liActions from 'modules/listings/actions'
+
 import { getEthjs } from 'libs/provider'
 import { ipfsGetData } from 'libs/ipfs'
 import { baseToConvertedUnit } from 'libs/units'
+import { isAddress } from 'libs/values'
 import { setupRegistry, setupContract } from '../utils'
 
-import { hardcodedRegistryAddress, ipfsABIsHash } from 'config'
+import { hardcodedRegistryAddress, getIpfsABIsHash } from 'config'
 
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
@@ -19,11 +22,13 @@ export default function* contractsSagasRoot() {
 
   yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
   yield takeLatest(types.SETUP_ETHEREUM_FAILED, abisSaga)
+  yield takeLatest(types.SELECT_REGISTRY_START, registrySaga)
 }
 
-function* abisSaga() {
+function* abisSaga(action) {
   try {
     // get abis from ipfs
+    const ipfsABIsHash = yield call(getIpfsABIsHash, action.payload.network)
     const data = yield call(ipfsGetData, ipfsABIsHash)
     const { id, registry, token, voting, parameterizer } = data
     const abis = {
@@ -47,6 +52,7 @@ function* abisSaga() {
 
 export function* registrySaga(action) {
   try {
+    yield put(liActions.setListings({}))
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)
 
@@ -67,6 +73,13 @@ export function* registrySaga(action) {
         address
       )
     }
+
+    if (action.payload && action.payload.registryAddress) {
+      if (isAddress(action.payload.registryAddress.toLowerCase())) {
+        address = action.payload.registryAddress
+      }
+    }
+    console.log('address:', address)
 
     const codeAtAddress = yield call(ethjs.getCode, address)
 

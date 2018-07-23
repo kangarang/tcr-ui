@@ -62,14 +62,14 @@ export function* handleNewPollLogsSaga(action) {
     if (applicantLogs.length) {
       console.log(applicantLogs.length, '_Application logs:', applicantLogs)
       // create listings
-      const listings = yield all(
-        applicantLogs.map(appLog =>
-          createListing(appLog.logData, appLog.txData, appLog.msgSender)
-        )
-      )
+      // const listings = yield all(
+      //   applicantLogs.map(appLog =>
+      //     createListing(appLog.logData, appLog.txData, appLog.msgSender)
+      //   )
+      // )
 
       // batch for ipfs
-      // const listings = yield call(batchCreateListings, applicantLogs, [])
+      const listings = yield call(batchCreateListings, applicantLogs, [])
 
       // update listings
       const applications = yield call(updateListings, listings, allListings)

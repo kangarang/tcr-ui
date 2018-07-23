@@ -11,7 +11,6 @@ import { ipfsCheckMultihash } from '../../libs/ipfs'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
-  console.log('ipfsContent:', ipfsContent)
   // validate (listingHash === keccak256(ipfsContent.id))
   if (listingHash === getListingHash(ipfsContent.id)) {
     const listingID = ipfsContent.id
@@ -23,11 +22,9 @@ export async function handleMultihash(listingHash, data) {
         toke => toke.address.toLowerCase() === listingID.toLowerCase(),
         tokenList
       )
-      // console.log('listingData:', listingData)
 
       // TODO: move to api module
       const baseUrl = `https://raw.githubusercontent.com/kangarang/token-icons/master/images/`
-
       if (listingData && listingData.address) {
         listingData.imgSrc = `${baseUrl}${listingData.address.toLowerCase()}.png`
       } else {
@@ -53,9 +50,9 @@ export async function createListing(log, blockTxn, owner) {
 
   // IPFS multihash validation
   if (ipfsCheckMultihash(data)) {
-    // const res = await handleMultihash(listingHash, data)
-    // listingID = res.listingID
-    // listingData = res.listingData
+    const res = await handleMultihash(listingHash, data)
+    listingID = res.listingID
+    listingData = res.listingData
   } else if (data) {
     listingData.imgSrc = data
   } else {

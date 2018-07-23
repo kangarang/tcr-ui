@@ -26,6 +26,8 @@ import Stats from 'components/Stats'
 import toJS from 'components/toJS'
 import Listings from '../Listings/Loadable'
 
+import { registries } from 'config'
+
 const notificationStyles = {
   NotificationItem: {
     DefaultStyle: {
@@ -40,11 +42,25 @@ const notificationStyles = {
 }
 
 class Home extends Component {
+  state = {
+    showRegistries: false,
+  }
   componentDidMount() {
     this.props.onSetupEthereum()
   }
-  openSidePanel = () => {
+  applyListing = () => {
     this.props.onOpenSidePanel(null, 'apply')
+  }
+  transferTokens = () => {
+    this.props.onOpenSidePanel(null, 'transfer')
+  }
+  handleSelectRegistry = tcr => {
+    this.props.onSelectRegistry(tcr)
+  }
+  handleToggleRegistries = () => {
+    this.setState(prevState => ({
+      showRegistries: !prevState.showRegistries,
+    }))
   }
   render() {
     const {
@@ -58,34 +74,6 @@ class Home extends Component {
       contracts,
     } = this.props
 
-    const registries = [
-      {
-        name: 'The adChain Registry',
-        address: '0x1',
-        network_id: '1',
-      },
-      {
-        name: 'Test Chain Registry',
-        address: '0x2',
-        network_id: '1',
-      },
-      {
-        name: 'The Sunset Registry',
-        address: '0x3',
-        network_id: '1',
-      },
-      {
-        name: 'ethaireum',
-        address: '0x4',
-        network_id: '1',
-      },
-      {
-        name: 'urbancryptionary',
-        address: '0x5',
-        network_id: '1',
-      },
-    ]
-
     return (
       <div>
         <Header
@@ -94,10 +82,14 @@ class Home extends Component {
           account={account}
           network={network}
           tcr={tcr}
+          balances={balances}
           contracts={contracts}
+          onHandleToggleRegistries={this.handleToggleRegistries}
+          applyListing={this.applyListing}
+          transferTokens={this.transferTokens}
         />
 
-        <Banner />
+        <Banner tcr={tcr} />
 
         <Stats
           error={error}
@@ -106,18 +98,20 @@ class Home extends Component {
           balances={balances}
           stats={stats}
           tcr={tcr}
-          openSidePanel={e => this.props.onOpenSidePanel(null, 'transfer')}
         />
 
-        <Registries
-          error={error}
-          account={account}
-          network={network}
-          balances={balances}
-          stats={stats}
-          tcr={tcr}
-          registries={registries}
-        />
+        {this.state.showRegistries && (
+          <Registries
+            error={error}
+            account={account}
+            network={network}
+            balances={balances}
+            stats={stats}
+            tcr={tcr}
+            registries={registries}
+            onSelectRegistry={this.handleSelectRegistry}
+          />
+        )}
 
         <Switch>
           <Route exact path="/" component={Listings} />
@@ -134,6 +128,7 @@ class Home extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     onSetupEthereum: network => dispatch(actions.setupEthereumStart(network)),
+    onSelectRegistry: tcr => dispatch(actions.selectRegistryStart(tcr)),
     onOpenSidePanel: (selectedOne, methodName) =>
       dispatch(liActions.openSidePanel(selectedOne, methodName)),
   }

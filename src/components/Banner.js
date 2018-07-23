@@ -19,8 +19,9 @@ const Banner = styled.div`
   width: 500px;
 `
 
-export default () => (
+export default ({ tcr }) => (
   <BannerWrapper>
-    <Banner>Neque porro quisquam est qui dolorem ipsum quia</Banner>
+    <Banner>{'Neque porro quisquam est qui dolorem ipsum quia'}</Banner>
+    {/* <Banner>{`Address: ${tcr.registryAddress}`}</Banner> */}
   </BannerWrapper>
 )

@@ -237,7 +237,7 @@ class SimpleTabs extends Component {
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={this.handleChangePage}
-                ActionsComponent={TablePaginationActionsWrapped}
+                // ActionsComponent={TablePaginationActionsWrapped}
                 classes={{
                   toolbar: classes.toolbar,
                   caption: classes.caption,

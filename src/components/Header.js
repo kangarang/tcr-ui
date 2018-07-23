@@ -26,7 +26,7 @@ const HeaderWrapper = styled.div`
 const PageTitle = styled.div`
   margin-left: 2em;
   font-size: 1.25em;
-  font-weight: 900;
+  font-weight: 700;
 `
 
 // links + user info
@@ -90,7 +90,16 @@ export default class Header extends Component {
   }
 
   render() {
-    const { error, openSidePanel, network, tcr, contracts, account } = this.props
+    const {
+      error,
+      tcr,
+      network,
+      account,
+      balances,
+      contracts,
+      applyListing,
+      onHandleToggleRegistries,
+    } = this.props
     // const { anchorEl } = this.state
 
     return (
@@ -99,8 +108,8 @@ export default class Header extends Component {
 
         <NavWrapper>
           <NavLinks>
-            <NavLink>Registries</NavLink>
-            <NavLink onClick={openSidePanel}>Add an application</NavLink>
+            <NavLink onClick={onHandleToggleRegistries}>Registries</NavLink>
+            <NavLink onClick={applyListing}>Add an application</NavLink>
             <NavLink>Vote</NavLink>
             <NavLink>How does this work?</NavLink>
           </NavLinks>
@@ -111,7 +120,9 @@ export default class Header extends Component {
             </Avatar>
 
             <Balances>
-              <TokenBalance>10,000 TK</TokenBalance>
+              <TokenBalance>
+                {balances.token} {tcr.tokenSymbol}
+              </TokenBalance>
               <EtherBalance>456 USD 0.72 ETH</EtherBalance>
             </Balances>
 
