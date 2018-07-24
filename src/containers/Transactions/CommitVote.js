@@ -1,68 +1,116 @@
 import React, { Component } from 'react'
-import Stepper from '@material-ui/core/Stepper'
-import Step from '@material-ui/core/Step'
-import StepLabel from '@material-ui/core/StepLabel'
-import StepContent from '@material-ui/core/StepContent'
-import { withStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import Radio from '@material-ui/core/Radio'
-import green from '@material-ui/core/colors/green'
 
-import { baseToConvertedUnit } from 'libs/units'
-import { getVoteSaltHash, randomSalt } from 'libs/values'
-import { getEndDateString } from 'utils/_datetime'
-import saveFile from 'utils/_file'
-
-import { colors } from 'global-styles'
 import Button from 'components/Button'
-import Text from 'components/Text'
 import Img from 'components/Img'
-
-import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
 import styled from 'styled-components'
-import { saveLocal, getLocal } from '../../utils/_localStorage'
 
-const styles = theme => ({
-  root: {
-    color: green[600],
-    '&$checked': {
-      color: green[500],
-    },
-  },
-  checked: {},
-  actionsContainer: {
-    marginBottom: theme.spacing.unit,
-    marginTop: theme.spacing.unit * 2,
-    color: `${colors.darkGrey}`,
-  },
-  resetContainer: {
-    padding: theme.spacing.unit,
-  },
-  stepper: {
-    background: `${colors.lightBg}`,
-    padding: '1em',
-  },
-})
+import { getVoteSaltHash, randomSalt } from 'libs/values'
+import { getEndDateString } from 'utils/_datetime'
+import leftArrowIconSrc from 'assets/icons/left-arrow.svg'
+// import rightArrowIconSrc from 'assets/icons/right-arrow-thin.svg'
+// import thumbsUpIconSrc from 'assets/icons/thumbs-up.svg'
+import thumbsDownIconSrc from 'assets/icons/thumbs-down.svg'
+import likeIconSrc from 'assets/icons/like.svg'
+import { getLocal, saveLocal } from '../../utils/_localStorage'
+// import dislikeIconSrc from 'assets/icons/dislike.svg'
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return ''
-    case 1:
-      return 'Approve the transaction to allow the voting smart contract to transfer tokens from your account'
-    case 2:
-      return 'Please enter the amount of tokens you wish to commit to your vote'
-    case 3:
-      return 'Hold onto this file. You will need it to reveal your secret vote'
-    case 4:
-      return 'Please remember to reveal your vote'
-    default:
-      return 'Unknown step'
+const SidePanelWrapper = styled.div`
+  font-family: 'Avenir Next';
+`
+const DetailsSection = styled.div`
+  display: flex;
+  padding: 2em 0;
+`
+const ListingIconSquare = styled.div`
+  height: 90px;
+  width: 90px;
+  border: 1px solid black;
+`
+const ListingInfoColumn = styled.div`
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-size: 1.2em;
+`
+const ListingTitle = styled.div`
+  font-weight: 600;
+`
+const ListingCountdown = styled.div`
+  color: #fb8414;
+  font-weight: 500;
+`
+
+const ActionsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const ActionStepRow = styled.div`
+  margin-top: 2em;
+`
+const ActionTitle = styled.div`
+  margin-left: 1em;
+  font-weight: 550;
+`
+const ActionInstructions = styled.div`
+  padding: 1.2em 1.5em;
+  color: #788995;
+`
+const SupportCandidate = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  padding: 0.8em 2em;
+  margin: 10px 0;
+  border: 1px solid #dde3e8;
+  border-radius: 3px;
+  background-color: #ffffff;
+  font-size: 1.25em;
+`
+const OpposeCandidate = SupportCandidate.extend``
+const ThumbIcon = styled.div`
+  width: 20px;
+  margin-left: 8em;
+  & > div > img {
+    background-color: black;
   }
-}
-
+`
+const InputFormRow = styled.div`
+  display: flex;
+  box-sizing: border-box;
+  background-color: #ffffff;
+`
+const InputNumTokens = styled.input`
+  width: 80%;
+  padding: 0.8em 1.2em;
+  font-size: 1em;
+  border: 1px solid #71b6ef;
+  border-right: 1px solid #dde3e8;
+  border-radius: 3px 0 0 3px;
+`
+const SubmitButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  padding: 1.2em 2em;
+  color: #71b6ef;
+  border: 1px solid #71b6ef;
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+  font-size: 0.9em;
+  font-weight: 700;
+`
+const DownloadTicket = styled.div``
+const ReturnToRegistry = styled.div`
+  display: flex;
+  margin-top: 1em;
+`
+const ArrowIcon = styled.div`
+  width: 20px;
+  margin-right: 5px;
+`
 class CommitVote extends Component {
   state = {
     commitHash: '',
@@ -72,86 +120,86 @@ class CommitVote extends Component {
     salt: randomSalt(),
     choice: '',
   }
-  componentDidMount() {
-    this.getCommitHash()
-  }
+  // componentDidMount() {
+  //   this.getCommitHash()
+  // }
 
-  getCommitHash = async () => {
-    console.log('this.props:', this.props)
-    const numTokensRaw = (await this.props.voting.getNumTokens(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const commitHash = (await this.props.voting.getCommitHash(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
-    if (
-      commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
-    ) {
-      this.setState({
-        commitHash,
-        numTokens,
-      })
-    }
-  }
+  // getCommitHash = async () => {
+  //   console.log('this.props:', this.props)
+  //   const numTokensRaw = (await this.props.voting.getNumTokens(
+  //     this.props.account,
+  //     this.props.selectedOne.challengeID
+  //   ))['0']
+  //   const commitHash = (await this.props.voting.getCommitHash(
+  //     this.props.account,
+  //     this.props.selectedOne.challengeID
+  //   ))['0']
+  //   const numTokens = baseToConvertedUnit(numTokensRaw, this.props.tcr.tokenDecimals)
+  //   if (
+  //     commitHash !== '0x0000000000000000000000000000000000000000000000000000000000000000'
+  //   ) {
+  //     this.setState({
+  //       commitHash,
+  //       numTokens,
+  //     })
+  //   }
+  // }
 
-  getSteps = () => {
-    return [
-      'Choose your side',
-      'Approve Voting contract',
-      'Commit tokens',
-      'Download secret vote file',
-      'Send transaction',
-    ]
-  }
-  handleNext = num => {
-    if (
-      this.props.balances.votingRights === '0.0' ||
-      this.props.balances.votingAllowance === '0.0' ||
-      typeof num !== 'number'
-    ) {
-      this.setState({
-        activeStep: this.state.activeStep + 1,
-      })
-    } else {
-      this.setState({
-        activeStep: this.state.activeStep + num,
-      })
-    }
-  }
-  handleBack = () => {
-    this.setState({
-      activeStep: this.state.activeStep - 1,
-    })
-  }
-  handleClickStepLabel = (e, index) => {
-    e.preventDefault()
-    if (index < this.state.activeStep) {
-      this.setState({
-        activeStep: index,
-      })
-    }
-  }
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    })
-  }
-  handleChange = event => {
-    const choice =
-      event.target.value === '0'
-        ? '- Oppose'
-        : event.target.value === '1' ? '- Support' : ''
-    this.setState({ selectedValue: event.target.value, choice })
-    this.handleNext(2)
-  }
-  handleChangeSalt = event => {
-    this.setState({
-      salt: event.target.value,
-    })
-  }
+  // getSteps = () => {
+  //   return [
+  //     'Choose your side',
+  //     'Approve Voting contract',
+  //     'Commit tokens',
+  //     'Download secret vote file',
+  //     'Send transaction',
+  //   ]
+  // }
+  // handleNext = num => {
+  //   if (
+  //     this.props.balances.votingRights === '0.0' ||
+  //     this.props.balances.votingAllowance === '0.0' ||
+  //     typeof num !== 'number'
+  //   ) {
+  //     this.setState({
+  //       activeStep: this.state.activeStep + 1,
+  //     })
+  //   } else {
+  //     this.setState({
+  //       activeStep: this.state.activeStep + num,
+  //     })
+  //   }
+  // }
+  // handleBack = () => {
+  //   this.setState({
+  //     activeStep: this.state.activeStep - 1,
+  //   })
+  // }
+  // handleClickStepLabel = (e, index) => {
+  //   e.preventDefault()
+  //   if (index < this.state.activeStep) {
+  //     this.setState({
+  //       activeStep: index,
+  //     })
+  //   }
+  // }
+  // handleReset = () => {
+  //   this.setState({
+  //     activeStep: 0,
+  //   })
+  // }
+  // handleChange = event => {
+  //   const choice =
+  //     event.target.value === '0'
+  //       ? '- Oppose'
+  //       : event.target.value === '1' ? '- Support' : ''
+  //   this.setState({ selectedValue: event.target.value, choice })
+  //   this.handleNext(2)
+  // }
+  // handleChangeSalt = event => {
+  //   this.setState({
+  //     salt: event.target.value,
+  //   })
+  // }
   handleSaveFile = async () => {
     const commitEndDate = this.props.selectedOne.commitExpiry.timestamp
     const revealEndDate = this.props.selectedOne.revealExpiry.timestamp
@@ -160,7 +208,8 @@ class CommitVote extends Component {
     const commitEndDateString = getEndDateString(commitEndDate)
     const revealEndDateString = getEndDateString(revealEndDate)
     const salt = this.state.salt.toString(10)
-    const voteOption = this.state.selectedValue
+    // const voteOption = this.state.selectedValue
+    const voteOption = '1'
     const pollID = this.props.selectedOne.challengeID
     const listingID = this.props.selectedOne.listingID
 
@@ -185,9 +234,16 @@ class CommitVote extends Component {
     if (!local) {
       const file = await saveLocal(key, json)
       // const file = saveFile(json, filename)
-      this.handleNext()
+      // this.handleNext()
+      this.props.handleCommitVote('1', this.state.salt)
+    } else {
+      console.log('theres a file saved locally')
     }
   }
+
+  // handleSubmitCommitTokens = () => {
+  //   this.props.handleCommitVote(this.props.numTokens, this.state.salt)
+  // }
 
   render() {
     const {
@@ -200,134 +256,78 @@ class CommitVote extends Component {
       needToApprove,
       classes,
     } = this.props
-    const stepps = [
-      <div className={classes.actionsContainer}>
-        <div>
-          <Radio
-            checked={this.state.selectedValue === '1'}
-            onClick={this.handleChange}
-            value="1"
-            name="radio-button-demo"
-            aria-label="FOR"
-          />
-          <Text size="large">{'Support'}</Text>
-        </div>
-        <div>
-          <Radio
-            checked={this.state.selectedValue === '0'}
-            onClick={this.handleChange}
-            value="0"
-            name="radio-button-demo"
-            aria-label="AGAINST"
-          />
-          <Text size="large">{'Oppose'}</Text>
-        </div>
-      </div>,
-      <div className={classes.actionsContainer}>
-        <div>{`Voting allowance: ${this.props.balances.votingAllowance}`}</div>
-        <div>{`Voting rights: ${this.props.balances.votingRights}`}</div>
-        <SideTextInput
-          title="token amount"
-          type="number"
-          handleInputChange={e => handleInputChange(e, 'numTokens')}
-        />
-        {needToApprove && (
-          <div>
-            <Button
-              methodName="approve"
-              onClick={e => handleApprove('voting')}
-              mode="strong"
-              wide
-            >
-              {'Approve Voting contract'}
-            </Button>
-          </div>
-        )}
-      </div>,
-      <div className={classes.actionsContainer}>
-        <div>{`Voting allowance: ${this.props.balances.votingAllowance}`}</div>
-        <div>{`Voting rights: ${this.props.balances.votingRights}`}</div>
-        <SideTextInput
-          title="token amount"
-          type="number"
-          handleInputChange={e => handleInputChange(e, 'numTokens')}
-        />
-      </div>,
-      <div className={classes.actionsContainer}>
-        <SideTextInput
-          title="salt"
-          type="text"
-          handleInputChange={e => this.handleChangeSalt(e)}
-          value={this.state.salt}
-        />
-        <Button methodName="download" onClick={this.handleSaveFile} mode="strong" wide>
-          {'Download commit'}
-        </Button>
-      </div>,
-      <div className={classes.actionsContainer}>
-        <Button
-          onClick={e => handleCommitVote(this.state.selectedValue, this.state.salt)}
-          mode="strong"
-          wide
-          methodName="commitVote"
-        >
-          {'Send Transaction'}
-        </Button>
-      </div>,
-    ]
-    const steps = this.getSteps()
-    const { activeStep } = this.state
     return (
-      <div className={classes.root}>
-        <SidePanel title="Commit Your Vote" opened={opened} onClose={closeSidePanel}>
+      <SidePanelWrapper>
+        <SidePanel title="Commit Your Vote" opened={true} onClose={closeSidePanel}>
+          {/* <ArrowIcon>
+            <Img src={rightArrowIconSrc} />
+          </ArrowIcon> */}
           <SidePanelSeparator />
-          <FlexContainer>
-            {selectedOne.listingData.imgSrc && (
-              <IconWrapper>
-                <Img src={selectedOne.listingData.imgSrc} alt="" />
-              </IconWrapper>
-            )}
-            <SideText size="large" text={selectedOne.listingID} />
-          </FlexContainer>
 
-          <RadioWrapper>
-            <Radio
-              checked={this.state.selectedValue === '1'}
-              onClick={this.handleChange}
-              value="1"
-              name="radio-button-demo"
-              aria-label="FOR"
-            />
-            <Text size="large">{'Support'}</Text>
-          </RadioWrapper>
-          <RadioWrapper>
-            <Radio
-              checked={this.state.selectedValue === '0'}
-              onClick={this.handleChange}
-              value="0"
-              name="radio-button-demo"
-              aria-label="AGAINST"
-            />
-            <Text size="large">{'Oppose'}</Text>
-          </RadioWrapper>
+          <DetailsSection>
+            <ListingIconSquare>
+              {/* <IconWrapper>
+                <Img src={selectedOne.listingData.imgSrc} alt="" />
+              </IconWrapper> */}
+            </ListingIconSquare>
+
+            <ListingInfoColumn>
+              <ListingTitle>ABC.COM</ListingTitle>
+
+              <ListingCountdown>
+                <div>Vote Ends In</div>
+                <div>00 : 20 : 00</div>
+              </ListingCountdown>
+            </ListingInfoColumn>
+          </DetailsSection>
+          <SidePanelSeparator />
+
+          <ActionsSection>
+            <ActionStepRow>
+              <ActionTitle>CHOOSE YOUR SIDE</ActionTitle>
+              <SupportCandidate>
+                Support
+                <ThumbIcon>
+                  <Img alt="like" src={likeIconSrc} />
+                </ThumbIcon>
+              </SupportCandidate>
+              <OpposeCandidate>
+                Oppose
+                <ThumbIcon>
+                  <Img alt="dislike" src={thumbsDownIconSrc} />
+                </ThumbIcon>
+              </OpposeCandidate>
+            </ActionStepRow>
+
+            <ActionStepRow>
+              <ActionTitle>TOKENS TO COMMIT</ActionTitle>
+              <ActionInstructions>
+                Please enter the amount of tokens you wish to commit to your vote
+              </ActionInstructions>
+
+              <InputFormRow>
+                <InputNumTokens onChange={e => handleInputChange(e, 'numTokens')} />
+                <SubmitButton onClick={this.handleSaveFile}>SUBMIT</SubmitButton>
+              </InputFormRow>
+            </ActionStepRow>
+
+            <ActionStepRow>
+              <ActionTitle>GENERATE TICKET TO REVEAL</ActionTitle>
+              <DownloadTicket />
+              <Button>SUBMIT</Button>
+            </ActionStepRow>
+          </ActionsSection>
+
+          <ReturnToRegistry>
+            <ArrowIcon>
+              <Img alt="goback" src={leftArrowIconSrc} />
+            </ArrowIcon>
+            Go back to registry
+          </ReturnToRegistry>
         </SidePanel>
-      </div>
+      </SidePanelWrapper>
     )
   }
 }
-const FlexContainer = styled.div`
-  display: flex;
-`
-const RadioWrapper = styled.div`
-  display: flex;
-  align-self: center;
-  padding: 0.2em;
-`
-const IconWrapper = styled.div`
-  display: flex;
-  height: 100px;
-  width: 120px;
-  margin: 10px;
-`
 
-export default withStyles(styles)(CommitVote)
+export default CommitVote

@@ -9,4 +9,4 @@
 .firebaserc
 firebase.json
 notes.md
-src/config/index.js
+/src/config/index.js
