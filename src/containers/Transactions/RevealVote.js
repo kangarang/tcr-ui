@@ -10,6 +10,7 @@ import { MarginDiv, FileInput } from 'components/StyledHome'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
 import { getLocal } from '../../utils/_localStorage'
+import { TransactionsContext } from './index'
 
 export default class RevealVote extends Component {
   state = {
@@ -22,7 +23,7 @@ export default class RevealVote extends Component {
   }
 
   componentDidMount() {
-    this.getCommitHash()
+    // this.getCommitHash()
     this.handleGetLocal()
   }
   handleGetLocal = async () => {
@@ -35,12 +36,6 @@ export default class RevealVote extends Component {
     this.setState({
       file,
     })
-  }
-
-  handleRevealVote = async () => {
-    console.log(this.state)
-    const { file } = this.state
-    this.props.handleRevealVote(file.pollID, file.voteOption, file.salt)
   }
 
   getCommitHash = async () => {
@@ -71,66 +66,80 @@ export default class RevealVote extends Component {
   }
 
   render() {
-    const { opened, closeSidePanel, balances, handleFileInput, selectedOne } = this.props
+    const { file } = this.state
 
     return (
-      <SidePanel title="Reveal Vote" opened={opened} onClose={closeSidePanel}>
-        <SideSplit
-          leftTitle={'Voting Rights'}
-          leftItem={balances.votingRights}
-          rightTitle={'Locked Tokens'}
-          rightItem={balances.lockedTokens}
-        />
-        <SideSplit
-          leftTitle={'Votes For'}
-          leftItem={selectedOne.votesFor}
-          rightTitle={'Votes Against'}
-          rightItem={selectedOne.votesAgainst}
-        />
-        <SideSplit
-          leftTitle={'Tokens you committed'}
-          leftItem={this.state.numTokens}
-          rightTitle={'POLL ID'}
-          rightItem={selectedOne && selectedOne.challengeID}
-        />
+      <TransactionsContext.Consumer>
+        {({
+          closeSidePanel,
+          selectedOne,
+          opened,
+          balances,
+          handleRevealVote,
+          handleFileInput,
+        }) => (
+          <SidePanel
+            title="Reveal Vote"
+            opened={opened === 'revealVote'}
+            onClose={closeSidePanel}
+          >
+            <SideSplit
+              leftTitle={'Voting Rights'}
+              leftItem={balances.votingRights}
+              rightTitle={'Locked Tokens'}
+              rightItem={balances.lockedTokens}
+            />
+            <SideSplit
+              leftTitle={'Votes For'}
+              leftItem={selectedOne.votesFor}
+              rightTitle={'Votes Against'}
+              rightItem={selectedOne.votesAgainst}
+            />
+            <SideSplit
+              leftTitle={'Tokens you committed'}
+              leftItem={this.state.numTokens}
+              rightTitle={'POLL ID'}
+              rightItem={selectedOne && selectedOne.challengeID}
+            />
 
-        <SideText
-          small
-          text={`Reveal for vote: ${selectedOne && selectedOne.listingID}`}
-        />
+            <SideText
+              small
+              text={`Reveal for vote: ${selectedOne && selectedOne.listingID}`}
+            />
 
-        <SidePanelSeparator />
+            <SidePanelSeparator />
 
-        {/* {this.state.didReveal ? (
+            {/* {this.state.didReveal ? (
           <SideText
             text={`You have already revealed with ${
               this.state.numTokens
             } tokens for this poll`}
           />
         ) : this.state.didCommit ? ( */}
-        <div>
-          <SideText
-            text={
-              'In order to reveal your previously committed vote, upload the JSON commit file'
-            }
-          />
+            <div>
+              <SideText
+                text={
+                  'In order to reveal your previously committed vote, upload the JSON commit file'
+                }
+              />
 
-          {/* <FileInput type="file" name="file" onChange={handleFileInput} /> */}
-          <MarginDiv>
-            <Button
-              methodName="revealVote"
-              onClick={this.handleRevealVote}
-              mode="strong"
-              wide
-            >
-              {'Reveal Vote'}
-            </Button>
-          </MarginDiv>
-        </div>
-        {/* ) : (
-          <SideText text={'You have not voted in this poll.'} />
-        )} */}
-      </SidePanel>
+              {/* <FileInput type="file" name="file" onChange={handleFileInput} /> */}
+              <MarginDiv>
+                <Button
+                  methodName="revealVote"
+                  onClick={() =>
+                    handleRevealVote(file.pollID, file.voteOption, file.salt)
+                  }
+                  mode="strong"
+                  wide
+                >
+                  {'Reveal Vote'}
+                </Button>
+              </MarginDiv>
+            </div>
+          </SidePanel>
+        )}
+      </TransactionsContext.Consumer>
     )
   }
 }

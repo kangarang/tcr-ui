@@ -23,7 +23,7 @@ const StatLabel = styled.div`
   font-weight: 500;
 `
 
-export default ({ stats, account, balances, network, tcr }) => (
+export default ({ stats, balances, tcr }) => (
   <StatsWrapper>
     <StatContainer>
       <Stat>{stats.sizes.candidates}</Stat>
@@ -39,33 +39,3 @@ export default ({ stats, account, balances, network, tcr }) => (
     </StatContainer>
   </StatsWrapper>
 )
-
-//   {error ? (
-//     <UserInfoGridItem>
-//       <UserItem>
-//         <Error>{'Enable MetaMask to send transactions'}</Error>
-//       </UserItem>
-//     </UserInfoGridItem>
-//   ) : (
-//     <UserInfoGridItem>
-//       <UserItem>
-//         <BoldDivColored network={network}>{network}</BoldDivColored>
-//       </UserItem>
-//       <UserItem>
-//         <BoldDiv>
-//           {balances.token}
-//           <BoldDivGrey onClick={openSidePanel}>{tcr.tokenSymbol}</BoldDivGrey>
-//         </BoldDiv>
-//       </UserItem>
-//       <UserItem>
-//         <a
-//           target="_blank"
-//           href={`https://${
-//             network !== 'mainnet' ? network + '.' : ''
-//           }etherscan.io/address/${account}`}
-//         >
-//           <Identicon address={account} diameter={30} />
-//         </a>
-//       </UserItem>
-//     </UserInfoGridItem>
-//   )}

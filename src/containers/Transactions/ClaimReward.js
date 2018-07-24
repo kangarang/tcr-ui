@@ -4,6 +4,7 @@ import { MarginDiv, FileInput } from 'components/StyledHome'
 import Button from 'components/Button'
 
 import SidePanel from './components/SidePanel'
+import { TransactionsContext } from './index'
 
 class ClaimReward extends Component {
   state = {
@@ -18,7 +19,7 @@ class ClaimReward extends Component {
   }
 
   componentDidMount() {
-    if (this.props.selectedOne.challengeID !== false) {
+    if (this.props.selectedOne.challengeID) {
       this.getCommitHash()
     }
   }
@@ -45,21 +46,27 @@ class ClaimReward extends Component {
   }
 
   render() {
-    const { opened, closeSidePanel, handleFileInput, handleClaimReward } = this.props
-
     return (
       <div>
-        <SidePanel title="Claim Reward" opened={opened} onClose={closeSidePanel}>
-          <MarginDiv>
-            <FileInput type="file" name="file" onChange={handleFileInput} />
-          </MarginDiv>
+        <TransactionsContext.Consumer>
+          {({ opened, closeSidePanel, handleFileInput, handleClaimReward }) => (
+            <SidePanel
+              title="Claim Reward"
+              opened={opened === 'claimReward'}
+              onClose={closeSidePanel}
+            >
+              <MarginDiv>
+                <FileInput type="file" name="file" onChange={handleFileInput} />
+              </MarginDiv>
 
-          <MarginDiv>
-            <Button onClick={handleClaimReward} mode="strong" wide>
-              {'Claim Reward'}
-            </Button>
-          </MarginDiv>
-        </SidePanel>
+              <MarginDiv>
+                <Button onClick={handleClaimReward} mode="strong" wide>
+                  {'Claim Reward'}
+                </Button>
+              </MarginDiv>
+            </SidePanel>
+          )}
+        </TransactionsContext.Consumer>
       </div>
     )
   }

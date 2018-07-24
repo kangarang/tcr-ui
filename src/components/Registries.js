@@ -4,8 +4,7 @@ import styled from 'styled-components'
 import Card from '@material-ui/core/Card'
 
 import Button from 'components/Button'
-
-// import { colors } from 'global-styles'
+import { registries } from 'config'
 
 const CardName = styled.div`
   font-weight: 600;
@@ -38,27 +37,20 @@ const SelectRegistryButton = styled(Button)`
   margin: 1.5em 2.75em 2.75em;
 `
 
-class Registries extends Component {
-  // constructor(props) {
-  //   super(props)
-  // }
-  handleClickSelectRegistry = tcr => {
-    this.props.onSelectRegistry(tcr)
-  }
-
+export default class Registries extends Component {
   render() {
-    const { network, registries } = this.props
+    const { network, onSelectRegistry } = this.props
 
     return (
       <RegistriesContainer>
-        {registries.map(
-          tcr =>
+        {registries[network].map(
+          registry =>
             network !== 'unknown' && (
-              <RegistryCard key={tcr.registryAddress}>
-                <CardName>{tcr.name}</CardName>
+              <RegistryCard key={registry.registryAddress}>
+                <CardName>{registry.name}</CardName>
                 <SelectRegistryButton
-                  id={tcr.registryAddress}
-                  onClick={() => this.handleClickSelectRegistry(tcr)}
+                  id={registry.registryAddress}
+                  onClick={() => onSelectRegistry(registry)}
                 >
                   View the List
                 </SelectRegistryButton>
@@ -69,5 +61,3 @@ class Registries extends Component {
     )
   }
 }
-
-export default Registries

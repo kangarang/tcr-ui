@@ -36,7 +36,6 @@ import {
 import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
 import * as actions from 'modules/listings/actions'
 
-import Transactions from 'containers/Transactions/Loadable'
 // import TablePaginationActionsWrapped from './Pagination'
 
 const ListingsWrapper = styled.div`
@@ -141,112 +140,110 @@ class SimpleTabs extends Component {
       rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
     return (
-      <Transactions>
-        <ListingsWrapper>
-          <Paper className={classes.root}>
-            <AppBar className={classes.appBar} position="static" color="inherit">
-              <Tabs
-                centered={false}
-                value={value}
-                onChange={this.handleChange}
-                indicatorColor="primary"
-              >
-                <Tab
-                  className={classes.tab}
-                  label={`registry (${stats.sizes.whitelist})`}
-                />
-                <Tab
-                  className={classes.tab}
-                  label={`applications (${stats.sizes.candidates})`}
-                />
-                <Tab className={classes.tab} label={`voting (${stats.sizes.faceoffs})`} />
-              </Tabs>
-            </AppBar>
-            <div className={classes.tableWrapper}>
-              <FlexContainer>
-                {value === 0 &&
-                  data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(id => {
-                      return (
-                        <ListingCard
-                          key={id}
-                          one={whitelist[id]}
-                          listingType={'whitelist'}
-                          openSidePanel={this.openSidePanel}
-                          chooseTCR={chooseTCR}
-                          listingData={whitelist[id].listingData}
-                          voting={voting}
-                          account={account}
-                          registry={registry}
-                          value={value}
-                          claimRewardTrigger={false}
-                        />
-                      )
-                    })}
-                {value === 1 &&
-                  data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(id => {
-                      return (
-                        <ListingCard
-                          key={id}
-                          one={candidates[id]}
-                          listingType={'candidates'}
-                          openSidePanel={this.openSidePanel}
-                          updateTrigger={candidates[id].appExpiry.expired}
-                          listingData={candidates[id].listingData}
-                          value={value}
-                          claimRewardTrigger={false}
-                        />
-                      )
-                    })}
-                {value === 2 &&
-                  data
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(id => {
-                      return (
-                        <ListingCard
-                          key={id}
-                          one={faceoffs[id]}
-                          listingType={'faceoffs'}
-                          openSidePanel={this.openSidePanel}
-                          updateTrigger={faceoffs[id].revealExpiry.expired}
-                          revealTrigger={faceoffs[id].commitExpiry.expired}
-                          listingData={faceoffs[id].listingData}
-                          voting={voting}
-                          account={account}
-                          registry={registry}
-                          value={value}
-                          // claimRewardTrigger={await this.handleCheckReward(candidates.getIn[id, 'challengeID'])}
-                          claimRewardTrigger={false}
-                        />
-                      )
-                    })}
-              </FlexContainer>
-              {emptyRows === 5 && (
-                <TableRow component="div" style={{ height: 80 * emptyRows }}>
-                  <div />
-                </TableRow>
-              )}
-
-              <TablePagination
-                component="span"
-                colSpan={3}
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={this.handleChangePage}
-                // ActionsComponent={TablePaginationActionsWrapped}
-                classes={{
-                  toolbar: classes.toolbar,
-                  caption: classes.caption,
-                }}
+      <ListingsWrapper>
+        <Paper className={classes.root}>
+          <AppBar className={classes.appBar} position="static" color="inherit">
+            <Tabs
+              centered={false}
+              value={value}
+              onChange={this.handleChange}
+              indicatorColor="primary"
+            >
+              <Tab
+                className={classes.tab}
+                label={`registry (${stats.sizes.whitelist})`}
               />
-            </div>
-          </Paper>
-        </ListingsWrapper>
-      </Transactions>
+              <Tab
+                className={classes.tab}
+                label={`applications (${stats.sizes.candidates})`}
+              />
+              <Tab className={classes.tab} label={`voting (${stats.sizes.faceoffs})`} />
+            </Tabs>
+          </AppBar>
+          <div className={classes.tableWrapper}>
+            <FlexContainer>
+              {value === 0 &&
+                data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(id => {
+                    return (
+                      <ListingCard
+                        key={id}
+                        one={whitelist[id]}
+                        listingType={'whitelist'}
+                        openSidePanel={this.openSidePanel}
+                        chooseTCR={chooseTCR}
+                        listingData={whitelist[id].listingData}
+                        voting={voting}
+                        account={account}
+                        registry={registry}
+                        value={value}
+                        claimRewardTrigger={false}
+                      />
+                    )
+                  })}
+              {value === 1 &&
+                data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(id => {
+                    return (
+                      <ListingCard
+                        key={id}
+                        one={candidates[id]}
+                        listingType={'candidates'}
+                        openSidePanel={this.openSidePanel}
+                        updateTrigger={candidates[id].appExpiry.expired}
+                        listingData={candidates[id].listingData}
+                        value={value}
+                        claimRewardTrigger={false}
+                      />
+                    )
+                  })}
+              {value === 2 &&
+                data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(id => {
+                    return (
+                      <ListingCard
+                        key={id}
+                        one={faceoffs[id]}
+                        listingType={'faceoffs'}
+                        openSidePanel={this.openSidePanel}
+                        updateTrigger={faceoffs[id].revealExpiry.expired}
+                        revealTrigger={faceoffs[id].commitExpiry.expired}
+                        listingData={faceoffs[id].listingData}
+                        voting={voting}
+                        account={account}
+                        registry={registry}
+                        value={value}
+                        // claimRewardTrigger={await this.handleCheckReward(candidates.getIn[id, 'challengeID'])}
+                        claimRewardTrigger={false}
+                      />
+                    )
+                  })}
+            </FlexContainer>
+            {emptyRows === 5 && (
+              <TableRow component="div" style={{ height: 80 * emptyRows }}>
+                <div />
+              </TableRow>
+            )}
+
+            <TablePagination
+              component="span"
+              colSpan={3}
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={this.handleChangePage}
+              // ActionsComponent={TablePaginationActionsWrapped}
+              classes={{
+                toolbar: classes.toolbar,
+                caption: classes.caption,
+              }}
+            />
+          </div>
+        </Paper>
+      </ListingsWrapper>
     )
   }
 }

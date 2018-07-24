@@ -11,114 +11,121 @@ import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import TotalAmount from './components/TotalAmount'
 import SidePanel from './components/SidePanel'
+import { TransactionsContext } from './index'
 
-export default ({
-  opened,
-  depositMore,
-  closeSidePanel,
-  tcr,
-  parameters,
-  balances,
-  handleInputChange,
-  handleApprove,
-  handleApply,
-  showApprove,
-  needToApprove,
-  visibleApprove,
-}) => (
+export default ({ visibleApprove }) => (
   <div>
-    <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
-      <SidePanelSeparator />
+    <TransactionsContext.Consumer>
+      {({
+        handleInputChange,
+        closeSidePanel,
+        handleApprove,
+        needToApproveRegistry,
+        handleApply,
+        showApprove,
+        parameters,
+        balances,
+        opened,
+        tcr,
+      }) => (
+        <SidePanel
+          title="Start an Application"
+          opened={opened === 'apply'}
+          onClose={closeSidePanel}
+        >
+          <SidePanelSeparator />
 
-      {needToApprove ? (
-        <SideText small color="grey" text={translate('ins_approve_registry')} />
-      ) : (
-        <div>
-          <SideTextInput
-            title="Listing Name"
-            type="text"
-            handleInputChange={e => handleInputChange(e, 'listingID')}
-          />
+          {needToApproveRegistry ? (
+            <SideText small color="grey" text={translate('ins_approve_registry')} />
+          ) : (
+            <div>
+              <SideTextInput
+                title="Listing Name"
+                type="text"
+                handleInputChange={e => handleInputChange(e, 'listingID')}
+              />
 
-          <SideText small color="grey" text={translate('ins_apply')} />
+              <SideText small color="grey" text={translate('ins_apply')} />
 
-          <TotalAmount
-            copy={'Minimum Deposit'}
-            minDeposit={parameters.minDeposit}
-            tokenSymbol={tcr.tokenSymbol}
-          />
-        </div>
-      )}
+              <TotalAmount
+                copy={'Minimum Deposit'}
+                minDeposit={parameters.minDeposit}
+                tokenSymbol={tcr.tokenSymbol}
+              />
+            </div>
+          )}
 
-      {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
-      {/* <SideTextInput
+          {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
+          {/* <SideTextInput
         title="token amount"
         type="number"
         handleInputChange={e => handleInputChange(e, 'numTokens')}
       /> */}
 
-      {!needToApprove && (
-        <SideTextInput
-          title="img url"
-          type="text"
-          handleInputChange={e => handleInputChange(e, 'data')}
-        />
-      )}
-
-      <SidePanelSeparator />
-
-      <SideText color="grey" text={translate('mm_apply')} />
-
-      <MarginDiv>
-        {needToApprove ? (
-          <div>
+          {!needToApproveRegistry && (
             <SideTextInput
-              title="token amount"
-              type="number"
-              handleInputChange={e => handleInputChange(e, 'numTokens')}
+              title="img url"
+              type="text"
+              handleInputChange={e => handleInputChange(e, 'data')}
             />
-            <Button
-              methodName="approve"
-              onClick={e => handleApprove('registry')}
-              mode="strong"
-            >
-              {'Approve tokens for Registry'}
-            </Button>
-          </div>
-        ) : (
-          <Button
-            methodName="apply"
-            bgColor={colors.brightBlue}
-            wide
-            color={'white'}
-            onClick={handleApply}
-          >
-            {'SUBMIT APPLICATION'}
-          </Button>
-        )}
-      </MarginDiv>
+          )}
 
-      <MarginDiv>
-        {!visibleApprove ? (
-          <Button onClick={showApprove} mode="">
-            {'Show approve'}
-          </Button>
-        ) : (
-          <div>
-            {needToApprove && (
-              <Text
-                size="xlarge"
-                color="red"
-                children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${
-                  balances.registryAllowance
-                }. The minimum deposit for application in the Registry is ${
-                  parameters.minDeposit
-                } ${tcr.tokenSymbol}`}
-              />
+          <SidePanelSeparator />
+
+          <SideText color="grey" text={translate('mm_apply')} />
+
+          <MarginDiv>
+            {needToApproveRegistry ? (
+              <div>
+                <SideTextInput
+                  title="token amount"
+                  type="number"
+                  handleInputChange={e => handleInputChange(e, 'numTokens')}
+                />
+                <Button
+                  methodName="approve"
+                  onClick={e => handleApprove('registry')}
+                  mode="strong"
+                >
+                  {'Approve tokens for Registry'}
+                </Button>
+              </div>
+            ) : (
+              <Button
+                methodName="apply"
+                bgColor={colors.brightBlue}
+                wide
+                color={'white'}
+                onClick={handleApply}
+              >
+                {'SUBMIT APPLICATION'}
+              </Button>
             )}
-          </div>
-        )}
-      </MarginDiv>
-    </SidePanel>
+          </MarginDiv>
+
+          <MarginDiv>
+            {!visibleApprove ? (
+              <Button onClick={showApprove} mode="">
+                {'Show approve'}
+              </Button>
+            ) : (
+              <div>
+                {needToApproveRegistry && (
+                  <Text
+                    size="xlarge"
+                    color="red"
+                    children={`You must approve the Registry contract before you can submit an application. Your current allowance for the Registry is ${
+                      balances.registryAllowance
+                    }. The minimum deposit for application in the Registry is ${
+                      parameters.minDeposit
+                    } ${tcr.tokenSymbol}`}
+                  />
+                )}
+              </div>
+            )}
+          </MarginDiv>
+        </SidePanel>
+      )}
+    </TransactionsContext.Consumer>
   </div>
 )

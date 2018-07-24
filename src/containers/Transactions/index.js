@@ -27,12 +27,8 @@ import CommitVote from 'containers/Transactions/CommitVote'
 import RevealVote from 'containers/Transactions/RevealVote'
 import UpdateStatus from 'containers/Transactions/UpdateStatus'
 import ClaimReward from 'containers/Transactions/ClaimReward'
+export const TransactionsContext = React.createContext()
 
-import styled from 'styled-components'
-
-const TransactionsWrapper = styled.div`
-  width: 100vw;
-`
 class Transactions extends Component {
   state = {
     listingID: '',
@@ -76,15 +72,14 @@ class Transactions extends Component {
 
   render() {
     const {
-      balances,
-      account,
       tcr,
+      account,
+      voting,
+      registry,
+      balances,
       parameters,
       sidePanelListing,
       sidePanelMethod,
-      children,
-      voting,
-      registry,
     } = this.props
 
     const needToApproveRegistry = BN(balances.registryAllowance).lt(
@@ -93,109 +88,44 @@ class Transactions extends Component {
     const needToApproveVoting = balances.votingAllowance === '0.0'
 
     return (
-      <TransactionsWrapper>
-        {children}
-
-        {balances.token === '0.0' ? (
-          <NoBalance
-            opened={sidePanelMethod !== ''}
-            closeSidePanel={this.closeSidePanel}
-            handleInputChange={this.handleInputChange}
-            {...this.props}
-          />
-        ) : (
-          <div>
-            <Transfer
-              opened={sidePanelMethod === 'transfer'}
-              closeSidePanel={this.closeSidePanel}
-              handleInputChange={this.handleInputChange}
-              handleTransfer={this.handleTransfer}
-              {...this.props}
-            />
-            <Apply
-              opened={sidePanelMethod === 'apply'}
-              needToApprove={needToApproveRegistry}
-              depositMore={this.state.depositMore}
-              visibleApprove={this.state.visibleApprove}
-              closeSidePanel={this.closeSidePanel}
-              handleInputChange={this.handleInputChange}
-              handleApprove={this.handleApprove}
-              handleApply={this.handleApply}
-              showApprove={this.showApprove}
-              {...this.props}
-            />
-            <Challenge
-              opened={sidePanelMethod === 'challenge'}
-              closeSidePanel={this.closeSidePanel}
-              tcr={tcr}
-              parameters={parameters}
-              selectedOne={sidePanelListing}
-              needToApprove={needToApproveRegistry}
-              handleInputChange={this.handleInputChange}
-              handleApprove={this.handleApprove}
-              handleChallenge={this.handleChallenge}
-            />
-            {sidePanelMethod === 'commitVote' && (
-              <CommitVote
-                selectedOne={sidePanelListing}
-                opened={sidePanelMethod === 'commitVote'}
-                needToApprove={needToApproveVoting}
-                closeSidePanel={this.closeSidePanel}
-                handleInputChange={this.handleInputChange}
-                handleApprove={this.handleApprove}
-                handleCommitVote={this.handleCommitVote}
-                showApprove={this.showApprove}
-                numTokens={this.state.numTokens}
-                balances={balances}
-                account={account}
-                tcr={tcr}
-                voting={voting}
-                registry={registry}
-              />
-            )}
-            {sidePanelMethod === 'revealVote' && (
-              <RevealVote
-                selectedOne={sidePanelListing}
-                opened={sidePanelMethod === 'revealVote'}
-                closeSidePanel={this.closeSidePanel}
-                handleFileInput={this.handleFileInput}
-                handleRevealVote={this.handleRevealVote}
-                balances={balances}
-                account={account}
-                tcr={tcr}
-                voting={voting}
-                registry={registry}
-              />
-            )}
-            {sidePanelMethod === 'claimReward' && (
-              <ClaimReward
-                selectedOne={sidePanelListing}
-                opened={sidePanelMethod === 'claimReward'}
-                closeSidePanel={this.closeSidePanel}
-                handleFileInput={this.handleFileInput}
-                handleClaimReward={this.handleClaimReward}
-                balances={balances}
-                account={account}
-                tcr={tcr}
-                voting={voting}
-                registry={registry}
-              />
-            )}
-          </div>
+      <TransactionsContext.Provider
+        value={{
+          handleApply: this.handleApply,
+          handleApprove: this.handleApprove,
+          handleTransfer: this.handleTransfer,
+          handleChallenge: this.handleChallenge,
+          handleCommitVote: this.handleCommitVote,
+          handleRevealVote: this.handleRevealVote,
+          handleClaimReward: this.handleClaimReward,
+          handleUpdateStatus: this.handleUpdateStatus,
+          showApprove: this.showApprove,
+          closeSidePanel: this.closeSidePanel,
+          handleFileInput: this.handleFileInput,
+          handleInputChange: this.handleInputChange,
+          opened: sidePanelMethod,
+          selectedOne: sidePanelListing,
+          needToApproveRegistry,
+          needToApproveVoting,
+          ...this.props,
+        }}
+      >
+        <Transfer />
+        <Apply visibleApprove={this.state.visibleApprove} />
+        <Challenge />
+        {sidePanelMethod === 'commitVote' && (
+          <CommitVote numTokens={this.state.numTokens} />
         )}
-        <UpdateStatus
-          selectedOne={sidePanelListing}
-          opened={sidePanelMethod === 'updateStatus'}
-          closeSidePanel={this.closeSidePanel}
-          handleFileInput={this.handleFileInput}
-          handleUpdateStatus={this.handleUpdateStatus}
-          balances={balances}
-          account={account}
-          tcr={tcr}
-          voting={voting}
-          registry={registry}
-        />
-      </TransactionsWrapper>
+        {sidePanelMethod === 'revealVote' && <RevealVote />}
+        {sidePanelMethod === 'claimReward' && (
+          <ClaimReward
+            selectedOne={this.props.sidePanelListing}
+            account={account}
+            voting={voting}
+            registry={registry}
+          />
+        )}
+        <UpdateStatus />
+      </TransactionsContext.Provider>
     )
   }
 
@@ -296,3 +226,10 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
 export default compose(withConnect)(toJS(Transactions))
+
+// <NoBalance
+//   opened={sidePanelMethod !== ''}
+//   closeSidePanel={this.closeSidePanel}
+//   handleInputChange={this.handleInputChange}
+//   {...this.props}
+// />

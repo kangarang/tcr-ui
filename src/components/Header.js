@@ -1,12 +1,26 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createStructuredSelector } from 'reselect'
 
+import toJS from 'components/toJS'
 import Img from 'components/Img'
 import Identicon from 'components/Identicon'
-import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
-// import avatarIconSrc from 'assets/icons/eth.png'
+
+import {
+  selectError,
+  selectAccount,
+  selectNetwork,
+  selectBalances,
+  selectTCR,
+} from 'modules/home/selectors'
+import { selectRegistryStart } from 'modules/home/actions'
+import { openSidePanel } from 'modules/listings/actions'
 
 import { trimDecimalsThree } from 'libs/units'
+import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
+// import avatarIconSrc from 'assets/icons/eth.png'
 // import Menu from '@material-ui/core/Menu'
 // import MenuItem from '@material-ui/core/MenuItem'
 
@@ -73,35 +87,19 @@ const DropdownCaratIcon = styled.div`
   width: 12px;
   margin: 0 10px;
 `
-export default class Header extends Component {
-  // state = {
-  //   anchorEl: null,
-  // }
-
-  // handleClick = event => {
-  //   this.setState({ anchorEl: event.currentTarget })
-  // }
-
-  // handleClose = () => {
-  //   this.setState({ anchorEl: null })
-  // }
-
+class Header extends Component {
   handleDropdown() {
     console.log('clicked dropdown')
   }
 
   render() {
     const {
-      // error,
       tcr,
-      // network,
       account,
       balances,
-      // contracts,
-      applyListing,
       onHandleToggleRegistries,
+      onOpenSidePanel,
     } = this.props
-    // const { anchorEl } = this.state
 
     return (
       <HeaderWrapper>
@@ -110,7 +108,9 @@ export default class Header extends Component {
         <NavWrapper>
           <NavLinks>
             <NavLink onClick={onHandleToggleRegistries}>Registries</NavLink>
-            <NavLink onClick={applyListing}>Add an application</NavLink>
+            <NavLink onClick={e => onOpenSidePanel(null, 'apply')}>
+              Add an application
+            </NavLink>
             <NavLink>Vote</NavLink>
             <NavLink>How does this work?</NavLink>
           </NavLinks>
@@ -121,7 +121,7 @@ export default class Header extends Component {
             </Avatar>
 
             <Balances>
-              <TokenBalance>
+              <TokenBalance onClick={() => onOpenSidePanel(null, 'transfer')}>
                 {balances.token} {tcr.tokenSymbol}
               </TokenBalance>
               <EtherBalance>0.00 USD {trimDecimalsThree(balances.ETH)} ETH</EtherBalance>
@@ -136,81 +136,22 @@ export default class Header extends Component {
     )
   }
 }
+const mapStateToProps = createStructuredSelector({
+  error: selectError,
+  network: selectNetwork,
+  tcr: selectTCR,
+  account: selectAccount,
+  balances: selectBalances,
+})
 
-// const Wrapper = styled.div`
-//   flex-shrink: 0;
-// `
-// const GridContainer = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   background-color: white;
-//   padding: 0.2em 1em;
-// `
+function mapDispatchToProps(dispatch) {
+  return {
+    onSelectRegistry: tcr => dispatch(selectRegistryStart(tcr)),
+    onOpenSidePanel: (selectedOne, methodName) =>
+      dispatch(openSidePanel(selectedOne, methodName)),
+  }
+}
 
-// const GridItem = styled.div`
-//   font-weight: bold;
-// `
-// const GridItemF = GridItem.extend`
-//   display: flex;
-// `
+const withConnect = connect(mapStateToProps, mapDispatchToProps)
 
-// <Wrapper>
-//   <GridContainer>
-//     {error ? (
-//       <GridItem gc={1}>
-//         <div>{''}</div>
-//       </GridItem>
-//     ) : (
-//       <GridItem gc={1}>
-//         <Button methodName="apply" onClick={openSidePanel}>
-//           {'Start an application'}
-//         </Button>
-//       </GridItem>
-//     )}
-
-//     <GridItemF gc={2} onClick={this.handleClick}>
-//       <a
-//         target="_blank"
-//         href={`https://${
-//           network !== 'mainnet' ? network + '.' : ''
-//         }etherscan.io/address/${tcr.registryAddress}`}
-//       >
-//         <Identicon address={tcr.registryAddress} diameter={20} />
-//       </a>
-//       <Text size="xxlarge" weight="bold">
-//         {tcr.registryName}
-//       </Text>
-//     </GridItemF>
-
-//     <Menu
-//       id="simple-menu"
-//       anchorEl={anchorEl}
-//       open={Boolean(anchorEl)}
-//       onClose={this.handleClose}
-//     >
-//       <a
-//         target="_blank"
-//         href={`https://rinkeby.etherscan.io/address/${contracts.registry.address}`}
-//       >
-//         <MenuItem onClick={this.handleClose}>{`Registry: ${
-//           contracts.registry.address
-//         }`}</MenuItem>
-//       </a>
-//       <a
-//         target="_blank"
-//         href={`https://rinkeby.etherscan.io/address/${contracts.voting.address}`}
-//       >
-//         <MenuItem onClick={this.handleClose}>{`Voting: ${
-//           contracts.voting.address
-//         }`}</MenuItem>
-//       </a>
-//       <a
-//         target="_blank"
-//         href={`https://rinkeby.etherscan.io/address/${contracts.token.address}`}
-//       >
-//         <MenuItem onClick={this.handleClose}>{`Token: ${
-//           contracts.token.address
-//         }`}</MenuItem>
-//       </a>
-//     </Menu>
+export default compose(withConnect)(toJS(Header))
