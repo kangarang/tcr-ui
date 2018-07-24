@@ -3,6 +3,7 @@ import { select, takeLatest, take, fork, put } from 'redux-saga/effects'
 import { homeTypes, homeSelectors } from 'modules/home'
 import { liTypes } from 'modules/listings'
 import * as actions from '../actions'
+import * as types from '../types'
 
 import rootPollLogsSaga, { initPolling } from './poll'
 
@@ -49,6 +50,8 @@ function* getFreshLogs() {
     }
     yield put(actions.decodeLogsStart(fullPayload))
 
+    yield take(types.DECODE_LOGS_SUCCEEDED)
+
     // voting logs
     const votingPayload = {
       abi: voting.abi,
@@ -57,6 +60,8 @@ function* getFreshLogs() {
       blockRange,
     }
     yield put(actions.decodeLogsStart(votingPayload))
+
+    yield take(types.DECODE_LOGS_SUCCEEDED)
 
     // start polling
     yield fork(initPolling)
