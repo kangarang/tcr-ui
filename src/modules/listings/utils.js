@@ -93,6 +93,7 @@ export function findListing(logData, listings) {
     case '_Application':
     case '_Challenge':
     case '_ApplicationWhitelisted':
+    case '_ApplicationRemoved':
     case '_ChallengeFailed':
     case '_ChallengeSucceeded':
     case '_ListingRemoved':
@@ -121,6 +122,7 @@ export function changeListing(golem, log, txData, eventName) {
         .set('status', fromJS('2'))
         .set('challenger', fromJS(log.challenger))
         .set('challengeID', fromJS(log.challengeID.toString()))
+        .set('pollID', fromJS(log.challengeID.toString()))
         .set('challengeData', fromJS(log.data.toString()))
         .set('commitExpiry', fromJS(timestampToExpiry(log.commitEndDate.toNumber())))
         .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
@@ -131,6 +133,10 @@ export function changeListing(golem, log, txData, eventName) {
     case '_ListingRemoved':
     case '_ChallengeSucceeded':
       return golem.set('status', fromJS('4'))
+    case '_PollCreated':
+      return golem
+        .set('challengeID', fromJS(log.pollID.toString()))
+        .set('pollID', fromJS(log.pollID.toString()))
     case '_VoteRevealed':
       return golem
         .set('votesFor', fromJS(log.votesFor.toString()))
