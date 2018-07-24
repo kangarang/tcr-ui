@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card'
 
 import Button from 'components/Button'
 
-import { colors } from 'global-styles'
+// import { colors } from 'global-styles'
 
 const CardName = styled.div`
   font-weight: 600;
@@ -47,13 +47,13 @@ class Registries extends Component {
   }
 
   render() {
-    const { stats, account, balances, network, tcr, registries } = this.props
+    const { network, registries } = this.props
 
     return (
       <RegistriesContainer>
         {registries.map(
           tcr =>
-            tcr.network_id === '420' && (
+            network !== 'unknown' && (
               <RegistryCard key={tcr.registryAddress}>
                 <CardName>{tcr.name}</CardName>
                 <SelectRegistryButton

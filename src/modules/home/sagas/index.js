@@ -27,7 +27,7 @@ export default function* rootSaga() {
   yield takeLatest(types.SETUP_ETHEREUM_START, genesis)
 }
 
-async function ensStuff(ethjs, account) {
+export async function ensStuff(ethjs, account) {
   const ens = new ENS(ethjs.currentProvider)
 
   console.log('ens:', ens)

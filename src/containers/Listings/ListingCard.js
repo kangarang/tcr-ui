@@ -7,7 +7,6 @@ import Button from 'components/Button'
 import Img from 'components/Img'
 import Countdown from 'components/Countdown'
 
-import imgSrc from 'assets/icons/eth.png'
 import styled from 'styled-components'
 import { tsToMonthDate } from '../../utils/_datetime'
 
@@ -47,7 +46,7 @@ function ListingCard(props) {
   const {
     one,
     classes,
-    listingData,
+    // listingData,
     listingType,
     updateTrigger,
     revealTrigger,
@@ -60,14 +59,17 @@ function ListingCard(props) {
       <Card className={classes.card}>
         <div className={classes.media}>
           <h2>{one.listingID}</h2>
-          {/* <Img src={listingData && listingData.imgSrc ? listingData.imgSrc : imgSrc} alt="" /> */}
         </div>
 
         <CardContent className={classes.content}>
-          <div>{one.data}</div>
-          {/* <PadDiv className={classes.buttContainer}>
+          {one.data.startsWith('http') ? (
+            <Img alt="listing data" src={one.data} />
+          ) : (
+            <div>{one.data}</div>
+          )}
+          <PadDiv className={classes.buttContainer}>
             <Typography component="p">{tsToMonthDate(one.ts)}</Typography>
-          </PadDiv> */}
+          </PadDiv>
         </CardContent>
 
         <ButtonContainer>

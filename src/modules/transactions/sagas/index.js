@@ -1,4 +1,4 @@
-import { select, put, call, fork, takeEvery } from 'redux-saga/effects'
+import { select, put, call, takeEvery } from 'redux-saga/effects'
 import _ from 'lodash/fp'
 import ethUtil from 'ethereumjs-util'
 import EthAbi from 'ethjs-abi'
@@ -10,14 +10,14 @@ import * as epActions from 'modules/home/actions'
 import { selectRegistry, selectVoting, selectToken } from 'modules/home/selectors'
 
 import { getGasPrice } from 'api/gas'
-import { ipfsAddObject } from 'libs/ipfs'
+// import { ipfsAddObject } from 'libs/ipfs'
 import { getListingHash } from 'libs/values'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
-import { pendingTxns } from '../../notifications'
+// import { pendingTxns } from '../../notifications'
 import { delay } from 'redux-saga'
-import { selectAccount, selectABIs } from '../../home/selectors'
+import { selectAccount } from '../../home/selectors'
 import logUtils from 'modules/logs/sagas/utils'
 
 export default function* transactionSaga() {
@@ -152,30 +152,29 @@ export function* sendTransactionSaga(contract, method, args) {
 
     // ethjs: sendTransaction
     const ethjs = yield call(getEthjs)
-    // const from = yield select(selectAccount)
-    // const nonce = yield call(ethjs.getTransactionCount, from)
-    // const abis = yield call(selectABIs)
-    // const abi = abis.filter(a => a.name === contract.name)
-    // const methodAbi = yield call(logUtils.getMethodAbi, contract.address, method, abi)
-    // const data = EthAbi.encodeMethod(methodAbi, args)
-    // const payload = {
-    //   to: contract.address,
-    //   from,
-    //   gas: 450000,
-    //   gasPrice: 25000000000,
-    //   nonce,
-    //   data,
-    // }
-    // const txHash = yield call(ethjs.sendTransaction, payload)
     const gasPrice = yield call(getGasPrice)
-    const txHash = yield call(contract[method], ...args, { gasPrice })
+    const ethersProvider = yield call(getEthersProvider)
+
+    const from = yield select(selectAccount)
+    const nonce = yield call(ethjs.getTransactionCount, from)
+    const methodAbi = yield call(logUtils.getMethodAbi, method, contract.abi)
+    const data = EthAbi.encodeMethod(methodAbi, args)
+    const payload = {
+      to: contract.address,
+      from,
+      gasPrice,
+      nonce,
+      data,
+    }
+    const txHash = yield call(ethjs.sendTransaction, payload)
+
+    // const txHash = yield call(contract[method], ...args, { gasPrice })
     yield put(actions.txnMining(txHash))
 
     // pending tx notification
     // yield fork(pendingTxns, method, txHash, args)
 
     // ethers: waitForTransaction
-    const ethersProvider = yield call(getEthersProvider)
     const minedTxn = yield ethersProvider.waitForTransaction(txHash)
     console.log('minedTxn:', minedTxn)
 

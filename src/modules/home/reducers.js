@@ -13,7 +13,7 @@ const initialState = fromJS({
     votingAllowance: '0',
     votingRights: '0',
     lockedTokens: '0',
-    totalRegistryStake: '0',
+    totalStake: '0',
   },
   tcr: {
     tokenName: 'TOKE',

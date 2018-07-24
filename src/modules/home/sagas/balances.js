@@ -13,6 +13,7 @@ import {
   selectToken,
   selectVoting,
 } from 'modules/home/selectors'
+import { baseToConvertedUnit } from 'libs/units'
 
 export default function* balancesSaga() {
   yield takeLatest(types.UPDATE_BALANCES_START, updateBalancesSaga)
@@ -48,14 +49,12 @@ function* updateBalancesSaga() {
     const decimals = tcr.get('tokenDecimals')
     const [
       ETH,
-      tokenBalance,
       registryAllowance,
       votingAllowance,
       votingRights,
       lockedTokens,
     ] = yield all([
       utils.formatEther(ethBalance.toString(), { commify: true }),
-      utils.formatUnits(tokenBalanceRaw['0'], decimals, { commify: true }),
       utils.formatUnits(registryAllowanceRaw['0'], decimals, { commify: true }),
       utils.formatUnits(votingAllowanceRaw['0'], decimals, { commify: true }),
       utils.formatUnits(votingRightsRaw['0'], decimals, { commify: true }),
@@ -63,9 +62,16 @@ function* updateBalancesSaga() {
     ])
 
     const totalRegistryStakeRaw = yield token.balanceOf(registry.address)
-    const totalRegistryStake = utils.formatUnits(totalRegistryStakeRaw['0'], decimals, {
-      commify: true,
-    })
+    const totalVotingStakeRaw = yield token.balanceOf(registry.address)
+    const totalStake = utils.formatUnits(
+      totalRegistryStakeRaw['0'].add(totalVotingStakeRaw['0']),
+      decimals,
+      {
+        commify: true,
+      }
+    )
+
+    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw['0'], decimals)
 
     // dispatch formatted
     const balances = {
@@ -75,7 +81,7 @@ function* updateBalancesSaga() {
       votingAllowance,
       votingRights,
       lockedTokens,
-      totalRegistryStake,
+      totalStake,
     }
     yield put(actions.updateBalancesSucceeded({ balances }))
   } catch (error) {

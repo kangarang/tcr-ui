@@ -3,7 +3,8 @@ import { BN } from './units'
 import { randomBytes } from 'crypto'
 
 export function randomSalt() {
-  const salt = BN(`0x${randomBytes(32).toString('hex')}`)
+  const buf = randomBytes(32)
+  const salt = BN(`0x${buf.toString('hex')}`)
   console.log('salt:', salt.toString())
   return salt.toString()
 }

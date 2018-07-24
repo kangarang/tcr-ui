@@ -108,7 +108,7 @@ class Home extends Component {
             balances={balances}
             stats={stats}
             tcr={tcr}
-            registries={registries}
+            registries={registries[network]}
             onSelectRegistry={this.handleSelectRegistry}
           />
         )}

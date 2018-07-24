@@ -82,7 +82,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
 // adapted from:
 // https://github.com/0xProject/0x.js/blob/development/packages/0x.js/src/utils/filter_utils.ts#L15
 const _utils = {
-  getMethodAbi: async (address, methodName, abi) => {
+  getMethodAbi: async (methodName, abi) => {
     // prettier-ignore
     const methodAbi = find({ 'name': methodName }, abi)
     return methodAbi

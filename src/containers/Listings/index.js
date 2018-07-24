@@ -37,7 +37,7 @@ import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/
 import * as actions from 'modules/listings/actions'
 
 import Transactions from 'containers/Transactions/Loadable'
-import TablePaginationActionsWrapped from './Pagination'
+// import TablePaginationActionsWrapped from './Pagination'
 
 const ListingsWrapper = styled.div`
   width: 80vw;

@@ -3,7 +3,7 @@ import { ipfsAddObject } from 'libs/ipfs'
 
 async function addABIs() {
   const data = {
-    id: 'Prospect Park',
+    id: 'Prospekt Park',
     registry: abis.registry,
     token: abis.token,
     voting: abis.voting,

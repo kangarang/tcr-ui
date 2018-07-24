@@ -83,12 +83,12 @@ class SidePanel extends Component {
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleEscape, false)
   }
-  handleClose() {
+  handleClose = () => {
     if (!this.props.blocking) {
       this.props.onClose()
     }
   }
-  handleEscape(event) {
+  handleEscape = event => {
     if (event.keyCode === 27 && this.props.opened) {
       this.handleClose()
     }

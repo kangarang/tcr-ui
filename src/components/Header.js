@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import Img from 'components/Img'
 import Identicon from 'components/Identicon'
 import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
-import avatarIconSrc from 'assets/icons/eth.png'
+// import avatarIconSrc from 'assets/icons/eth.png'
 
+import { trimDecimalsThree } from 'libs/units'
 // import Menu from '@material-ui/core/Menu'
 // import MenuItem from '@material-ui/core/MenuItem'
 
@@ -91,12 +92,12 @@ export default class Header extends Component {
 
   render() {
     const {
-      error,
+      // error,
       tcr,
-      network,
+      // network,
       account,
       balances,
-      contracts,
+      // contracts,
       applyListing,
       onHandleToggleRegistries,
     } = this.props
@@ -123,7 +124,7 @@ export default class Header extends Component {
               <TokenBalance>
                 {balances.token} {tcr.tokenSymbol}
               </TokenBalance>
-              <EtherBalance>456 USD 0.72 ETH</EtherBalance>
+              <EtherBalance>0.00 USD {trimDecimalsThree(balances.ETH)} ETH</EtherBalance>
             </Balances>
 
             <DropdownCaratIcon onClick={this.handleDropdown}>

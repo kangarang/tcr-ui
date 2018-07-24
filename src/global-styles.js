@@ -15,7 +15,6 @@ export const colors = {
   orange: '#ffaf36',
   turquoise: '#4be5ce',
   prism: '#15afba',
-  darkRed: '#9A4540',
   blue2: '#A4BEE7',
   brightGreen: '#74FAB0',
   darkRed: '#D0021B',

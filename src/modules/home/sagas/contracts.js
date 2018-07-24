@@ -13,7 +13,7 @@ import { baseToConvertedUnit } from 'libs/units'
 import { isAddress } from 'libs/values'
 import { setupRegistry, setupContract } from '../utils'
 
-import { hardcodedRegistryAddress, getIpfsABIsHash } from 'config'
+import { hardcodedRegistryAddress, getIpfsABIsHash, defaultRegistryAddress } from 'config'
 
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SET_ABIS, registrySaga)
@@ -41,6 +41,7 @@ function* abisSaga(action) {
       token: { abi: token.abi, bytecode: token.bytecode },
       voting: { abi: voting.abi, bytecode: voting.bytecode },
       parameterizer: { abi: parameterizer.abi, bytecode: parameterizer.bytecode },
+      address: defaultRegistryAddress,
     }
 
     // dispatch abis -> invokes contractSagas
@@ -62,7 +63,7 @@ export function* registrySaga(action) {
     // if action.payload.address, use that address (CHOOSE_TCR)
     // otherwise, use the default address (factory tcr)
     let address =
-      action.payload && action.payload.address
+      action.payload && action.payload.address !== ''
         ? action.payload.address
         : abis.registry.networks[networkID] && abis.registry.networks[networkID].address
 
