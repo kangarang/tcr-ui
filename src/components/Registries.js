@@ -43,20 +43,21 @@ export default class Registries extends Component {
 
     return (
       <RegistriesContainer>
-        {registries[network].map(
-          registry =>
-            network !== 'unknown' && (
-              <RegistryCard key={registry.registryAddress}>
-                <CardName>{registry.name}</CardName>
-                <SelectRegistryButton
-                  id={registry.registryAddress}
-                  onClick={() => onSelectRegistry(registry)}
-                >
-                  View the List
-                </SelectRegistryButton>
-              </RegistryCard>
-            )
-        )}
+        {network &&
+          registries[network].map(
+            registry =>
+              network !== 'unknown' && (
+                <RegistryCard key={registry.registryAddress}>
+                  <CardName>{registry.name}</CardName>
+                  <SelectRegistryButton
+                    id={registry.registryAddress}
+                    onClick={() => onSelectRegistry(registry)}
+                  >
+                    View the List
+                  </SelectRegistryButton>
+                </RegistryCard>
+              )
+          )}
       </RegistriesContainer>
     )
   }
