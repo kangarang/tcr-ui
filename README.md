@@ -124,38 +124,38 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 
 ```
 |
+├── design - Wireframes
 ├── docs - Documentation
 ├── public - Files that don't get compiled, just moved to build
 |  └── index.html - Html template file
 ├── scripts
 |  └── abis - TCR contract JSON ABIs
 ├── src
+|  ├── api - Fetch data
+|  ├── assets - Images, fonts, etc.
+|  ├── components - Stateless, dumb components
 |  ├── config - Config data
-|  ├── redux - Redux-related
-|  |  ├── libs - Framework-agnostic libraries
-|  |  ├── modules - Redux modules
-|  |  |  ├── [module] - Single Redux module
-|  |  |  |  ├── sagas - Asynchronous side-effects
-|  |  |  |  ├── tests - Jest unit tests
-|  |  |  |  ├── actions.js - Action creators / plain objects
-|  |  |  |  ├── index.js - Duck root import / export
-|  |  |  |  ├── reducers.js - Pure functions / immutable.js
-|  |  |  |  ├── selectors.js - State selectors / reselect.js
-|  |  |  |  ├── types.js - Action types / string constants
-|  |  |  |  └── utils.js - Module-specific helpers
-|  |  |  ├── index.js - Ducks root
-|  |  |  └── reducers - Reducer combiner
-|  |  ├── utils - Common utility helper functions
-|  |  ├── store.js - Redux reducer and middleware injector
-|  ├── views - React
-|  |  ├── assets - Images, fonts, etc.
-|  |  ├── components - Stateless, dumb components
-|  |  ├── containers - Stateful, smart containers
-|  |  ├── translations - Language JSON dictionaries
-|  |  ├── App.js - Root React component
-|  |  └── global-styles.js - Theme / colors
-|  └── index.js - Entry point for app
-└── server.js - Express.js app
+|  ├── containers - Stateful, smart containers
+|  ├── libs - Framework-agnostic libraries
+|  ├── modules - Redux modules
+|  |  ├── [module] - Single Redux module
+|  |  |  ├── sagas - Asynchronous side-effects
+|  |  |  ├── tests - Jest unit tests
+|  |  |  ├── actions.js - Action creators / plain objects
+|  |  |  ├── index.js - Module root import / export
+|  |  |  ├── reducers.js - Pure functions / immutable.js
+|  |  |  ├── selectors.js - State selectors / reselect.js
+|  |  |  ├── types.js - Action types / string constants
+|  |  |  └── utils.js - Module-specific helpers
+|  |  └── reducers - Reducer combiner
+|  ├── stories - Storybook
+|  ├── translations - Language JSON dictionaries
+|  ├── utils - Common utility helper functions
+|  ├── App.js - Root React component
+|  ├── global-styles.js - Theme / colors
+|  ├── index.js - Entry point for app
+|  └── store.js - Redux reducer and middleware injector
+|
 ```
 
 ---
@@ -165,6 +165,8 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 * [Events](./docs/Events.md)
 * [Transactions](./docs/Transactions.md)
 * [IPFS](./docs/IPFS.md)
+
+[Wireframes](./design)
 
 ---
 
