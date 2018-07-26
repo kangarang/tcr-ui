@@ -5,6 +5,7 @@ import { MarginDiv } from 'components/StyledHome'
 
 import { SideSplit, SideText } from 'containers/Transactions/components'
 
+import { baseToConvertedUnit } from 'libs/units'
 import { getLocal } from 'utils/_localStorage'
 
 import { TransactionsContext } from './index'
@@ -13,14 +14,12 @@ import SidePanel from './components/SidePanel'
 
 export default class RevealVote extends Component {
   state = {
-    numTokens: '',
     ticket: {},
   }
-
   componentDidMount() {
-    // this.getCommitHash()
     this.handleGetLocal()
   }
+
   handleGetLocal = async () => {
     const listing = this.props.selectedOne
     const key = `${listing.challengeID}-${listing.listingID}`
@@ -33,8 +32,6 @@ export default class RevealVote extends Component {
   }
 
   render() {
-    const { ticket } = this.state
-
     return (
       <TransactionsContext.Consumer>
         {({
@@ -42,8 +39,9 @@ export default class RevealVote extends Component {
           selectedOne,
           opened,
           balances,
-          handleRevealVote,
           handleFileInput,
+          onSendTx,
+          tcr,
         }) => (
           <SidePanel
             title="Reveal Vote"
@@ -58,13 +56,13 @@ export default class RevealVote extends Component {
             />
             <SideSplit
               leftTitle={'Votes For'}
-              leftItem={selectedOne.votesFor}
+              leftItem={baseToConvertedUnit(selectedOne.votesFor, tcr.tokenDecimals)}
               rightTitle={'Votes Against'}
-              rightItem={selectedOne.votesAgainst}
+              rightItem={baseToConvertedUnit(selectedOne.votesAgainst, tcr.tokenDecimals)}
             />
             <SideSplit
-              leftTitle={'Tokens you committed'}
-              leftItem={this.props.numTokens}
+              leftTitle={''}
+              leftItem={''}
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />
@@ -78,9 +76,7 @@ export default class RevealVote extends Component {
 
             {selectedOne.didReveal ? (
               <SideText
-                text={`You have already revealed with ${
-                  this.props.numTokens
-                } tokens for this poll`}
+                text={`You have already revealed with ${''} tokens for this poll`}
               />
             ) : (
               selectedOne.didCommit && <div />
@@ -96,9 +92,7 @@ export default class RevealVote extends Component {
               <MarginDiv>
                 <Button
                   methodName="revealVote"
-                  onClick={() =>
-                    handleRevealVote(ticket.pollID, ticket.voteOption, ticket.salt)
-                  }
+                  onClick={() => onSendTx('revealVote', this.state.ticket)}
                   mode="strong"
                   wide
                 >

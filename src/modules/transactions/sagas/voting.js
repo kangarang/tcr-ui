@@ -31,19 +31,11 @@ export function* requestVotingRightsSaga(action) {
   }
 }
 
-export function* commitVoteSaga(action) {
+export function* commitVoteSaga(pollID, voteOption, salt, numTokens, listing) {
   try {
     const account = yield select(selectAccount)
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
-
-    const { args } = action.payload
-    const pollID = args[0]
-    // const voteOption = args[1]
-    const voteOption = '1'
-    const salt = args[2]
-    const numTokens = yield call(convertedToBaseUnit, args[3], tcr.get('tokenDecimals'))
-    const listing = args[4]
 
     // format args
     const secretHash = yield call(getVoteSaltHash, voteOption, salt.toString(10))
@@ -96,17 +88,6 @@ export function* commitVoteSaga(action) {
     yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
   } catch (error) {
     console.log('commit vote saga error', error)
-    yield put(actions.sendTransactionFailed({ error }))
-  }
-}
-
-export function* revealVoteSaga(action) {
-  try {
-    const voting = yield select(selectVoting)
-    const { args, methodName } = action.payload
-    yield call(sendTransactionSaga, voting, methodName, args)
-  } catch (error) {
-    console.log('reveal vote saga error', error)
     yield put(actions.sendTransactionFailed({ error }))
   }
 }

@@ -1,148 +1,122 @@
 import { select, put, call, takeEvery } from 'redux-saga/effects'
-import _ from 'lodash/fp'
-import ethUtil from 'ethereumjs-util'
 import EthAbi from 'ethjs-abi'
 
 import * as actions from '../actions'
 import * as types from '../types'
 import * as epActions from 'modules/home/actions'
 
-import { selectRegistry, selectVoting, selectToken } from 'modules/home/selectors'
+import {
+  selectAccount,
+  selectNetwork,
+  selectRegistry,
+  selectVoting,
+  selectToken,
+  selectTCR,
+  selectParameters,
+} from 'modules/home/selectors'
+import { selectSidePanelListing } from 'modules/listings/selectors'
 
 import { getGasPrice } from 'api/gas'
 // import { ipfsAddObject } from 'libs/ipfs'
+import { convertedToBaseUnit } from 'libs/units'
 import { getListingHash } from 'libs/values'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
-import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
+import { commitVoteSaga } from './voting'
 // import { pendingTxns } from '../../notifications'
 import { delay } from 'redux-saga'
-import { selectAccount, selectNetwork } from '../../home/selectors'
 import logUtils from 'modules/logs/sagas/utils'
 
 export default function* transactionSaga() {
-  yield takeEvery(types.SEND_TRANSACTION_START, handleSendTransaction)
+  yield takeEvery(types.SEND_TRANSACTION_START, sendTxStartSaga)
 }
 
-export function* handleSendTransaction(action) {
+function* sendTxStartSaga(action) {
   try {
-    const { methodName, args } = action.payload
+    const tcr = yield select(selectTCR)
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
     const registry = yield select(selectRegistry)
+    const parameters = yield select(selectParameters)
+    const listing = yield select(selectSidePanelListing)
 
-    // convert Objects (BNs) -> String
-    const newArgs = args.map(rg => {
-      if (_.isObject(rg)) {
-        // console.log('is object')
-        return rg.toString(10)
-      } else if (_.isString(rg)) {
-        // console.log('is string')
-        return rg
-      }
-      // TODO: more typechecking
-      return rg
-    })
+    let {
+      methodName,
+      txInput: { numTokens, data, listingID, pollID, transferTo, voteOption, salt },
+    } = action.payload
+
+    let args = []
+    let convertedNumTokens
+    if (numTokens === '') {
+      convertedNumTokens = yield call(
+        convertedToBaseUnit,
+        parameters.get('minDeposit'),
+        tcr.get('tokenDecimals')
+      )
+    } else if (numTokens) {
+      convertedNumTokens = yield call(
+        convertedToBaseUnit,
+        numTokens,
+        tcr.get('tokenDecimals')
+      )
+    }
 
     switch (methodName) {
-      case 'apply':
-      case 'challenge':
-      case 'updateStatus':
-        yield call(registryTxnSaga, action)
+      case 'approveRegistry':
+        args = [registry.address, convertedNumTokens]
+        yield call(sendTransactionSaga, token, 'approve', args)
         break
-      case 'requestVotingRights':
-        yield call(requestVotingRightsSaga, action)
-        break
-      case 'commitVote':
-        yield call(commitVoteSaga, action)
-        break
-      case 'revealVote':
-        yield call(revealVoteSaga, action)
-        break
-      case 'approve':
-        yield call(sendTransactionSaga, token, methodName, newArgs)
-        break
-      case 'rescueTokens':
-        yield call(sendTransactionSaga, voting, methodName, newArgs)
+      case 'approveVoting':
+        args = [voting.address, convertedNumTokens]
+        yield call(sendTransactionSaga, token, 'approve', args)
         break
       case 'transfer':
-        yield call(sendTransactionSaga, token, methodName, newArgs)
+        args = [transferTo, convertedNumTokens]
+        yield call(sendTransactionSaga, token, methodName, args)
         break
-      case 'personalSign':
-        yield call(personalMessageSignatureRecovery)
+      case 'apply':
+        // hash the string listingID
+        const listingHash = yield call(getListingHash, listingID)
+        args = [listingHash, convertedNumTokens, listingID, data]
+        yield call(sendTransactionSaga, registry, methodName, args)
+        break
+      case 'challenge':
+        args = [listing.get('listingHash'), data]
+        yield call(sendTransactionSaga, registry, methodName, args)
+        break
+      case 'updateStatus':
+        args = [listing.get('listingHash')]
+        yield call(sendTransactionSaga, registry, methodName, args)
+        break
+      case 'commitVote':
+        yield call(
+          commitVoteSaga,
+          listing.get('pollID'),
+          voteOption,
+          salt,
+          convertedNumTokens,
+          listing.toJS()
+        )
+        break
+      case 'revealVote':
+        args = [pollID, voteOption, salt]
+        yield call(sendTransactionSaga, voting, methodName, args)
         break
       case 'claimReward':
-        yield call(sendTransactionSaga, registry, methodName, newArgs)
+        yield call(sendTransactionSaga, registry, methodName, args)
         break
+      // case 'rescueTokens':
+      //   yield call(sendTransactionSaga, voting, methodName, newArgs)
+      //   break
+      // case 'personalSign':
+      //   yield call(personalMessageSignatureRecovery)
+      //   break
       default:
         console.log('unknown methodname')
+        break
     }
   } catch (error) {
     console.log('send transaction error:', error)
-  }
-}
-
-async function ethPersonalSign(ethjs, account) {
-  const data = 'Sign personal message'
-  const message = ethUtil.toBuffer(data)
-  const msg = ethUtil.bufferToHex(message)
-  return ethjs.personal_sign(msg, account)
-}
-async function ethPersonalRecovery(ethjs, serialized) {
-  // same data
-  const data = 'Sign personal message'
-  const message = ethUtil.toBuffer(data)
-  const msg = ethUtil.bufferToHex(message)
-  return ethjs.personal_ecRecover(msg, serialized)
-}
-
-function* personalMessageSignatureRecovery() {
-  const ethjs = yield call(getEthjs)
-  const account = yield select(selectAccount)
-
-  console.log('CLICKED, SENDING PERSONAL SIGN REQ')
-  // this triggers metamask popup and waits for user to press 'sign'
-  // account must be the one signing the msg
-  const signedAndSerialized = yield call(ethPersonalSign, ethjs, account)
-  console.log('Signed and serialized!  Result is: ', signedAndSerialized)
-
-  console.log('Recovering...')
-  // under the hood, this unpacks the message and gets the address
-  const recovered = yield call(ethPersonalRecovery, ethjs, signedAndSerialized)
-
-  if (recovered === account) {
-    console.log('Ethjs recovered the message signer!', recovered)
-  } else {
-    console.log('Ethjs failed to recover the message signer!')
-    console.dir({ recovered })
-  }
-}
-
-export function* registryTxnSaga(action) {
-  try {
-    const registry = yield select(selectRegistry)
-    const { methodName, args } = action.payload
-
-    if (methodName === 'apply') {
-      // const fileHash = yield call(ipfsAddObject, {
-      //   id: args[0], // listing string (name)
-      //   data: args[2], // data (address)
-      // })
-
-      // hash the string
-      const listingHash = yield call(getListingHash, args[0])
-
-      // use ipfs CID as the _data field in the application
-      // const finalArgs = [listingHash, args[1], dataString]
-
-      const finalArgs = yield [listingHash, args[1], args[0], args[2]]
-
-      yield call(sendTransactionSaga, registry, methodName, finalArgs)
-    } else {
-      yield call(sendTransactionSaga, registry, methodName, args)
-    }
-  } catch (error) {
-    console.log('registryTxn error', error)
   }
 }
 

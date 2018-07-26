@@ -3,25 +3,18 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
-import {
-  selectAccount,
-  selectBalances,
-  selectTCR,
-  selectRegistry,
-  selectVoting,
-  selectParameters,
-} from 'modules/home/selectors'
+import { selectBalances, selectTCR, selectParameters } from 'modules/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'modules/transactions/selectors'
 import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
 import * as liActions from 'modules/listings/actions'
 import * as txActions from 'modules/transactions/actions'
 
-import { convertedToBaseUnit, BN, baseToConvertedUnit } from 'libs/units'
+import { BN, baseToConvertedUnit } from 'libs/units'
 
 import toJS from 'components/toJS'
 import Apply from 'containers/Transactions/Apply'
 import Transfer from 'containers/Transactions/Transfer'
-import NoBalance from 'containers/Transactions/NoBalance'
+// import NoBalance from 'containers/Transactions/NoBalance'
 import Challenge from 'containers/Transactions/Challenge'
 import CommitVote from 'containers/Transactions/CommitVote'
 import RevealVote from 'containers/Transactions/RevealVote'
@@ -32,13 +25,8 @@ export const TransactionsContext = React.createContext()
 
 class TransactionsProvider extends Component {
   state = {
-    listingID: '',
-    data: '',
-    numTokens: '',
-    transferTo: '',
     fileInput: false,
     visibleApprove: true,
-    depositMore: false,
   }
   closeSidePanel = () => {
     this.props.onOpenSidePanel({}, '')
@@ -65,10 +53,9 @@ class TransactionsProvider extends Component {
     }
     fr.readAsText(file)
   }
-  handleInputChange = (e, t) => {
-    this.setState({
-      [t]: e.target.value,
-    })
+
+  handleSendTx = (methodName, txInput) => {
+    this.props.onSendTransaction({ methodName, txInput })
   }
 
   render() {
@@ -89,25 +76,18 @@ class TransactionsProvider extends Component {
     return (
       <TransactionsContext.Provider
         value={{
-          handleApply: this.handleApply,
-          handleApprove: this.handleApprove,
-          handleTransfer: this.handleTransfer,
-          handleChallenge: this.handleChallenge,
-          handleCommitVote: this.handleCommitVote,
-          handleRevealVote: this.handleRevealVote,
-          handleClaimReward: this.handleClaimReward,
-          handleUpdateStatus: this.handleUpdateStatus,
-          showApprove: this.showApprove,
-          closeSidePanel: this.closeSidePanel,
+          visibleApprove: this.state.visibleApprove,
           handleFileInput: this.handleFileInput,
-          handleInputChange: this.handleInputChange,
-          opened: sidePanelMethod,
+          closeSidePanel: this.closeSidePanel,
+          showApprove: this.showApprove,
           selectedOne: sidePanelListing,
+          onSendTx: this.handleSendTx,
+          opened: sidePanelMethod,
           needToApproveRegistry,
           needToApproveVoting,
-          numTokens: this.state.numTokens,
-          visibleApprove: this.state.visibleApprove,
-          ...this.props,
+          parameters,
+          balances,
+          tcr,
         }}
       >
         {/* {children} */}
@@ -118,81 +98,17 @@ class TransactionsProvider extends Component {
 
         {/* conditional */}
         <Challenge />
-        <UpdateStatus />
+        {sidePanelMethod === 'updateStatus' && <UpdateStatus />}
         {sidePanelMethod === 'commitVote' && <CommitVote />}
         {sidePanelMethod === 'revealVote' && (
-          <RevealVote selectedOne={sidePanelListing} {...this.props} />
+          <RevealVote selectedOne={sidePanelListing} />
         )}
         {sidePanelMethod === 'claimReward' && <ClaimReward />}
       </TransactionsContext.Provider>
     )
   }
-
-  // personal message signature recovery
-  handlePersonalSign = () => {
-    this.props.onSendTransaction({ methodName: 'personalSign', args: [] })
-  }
-  // TRANSACTIONS
-  handleApprove = contract => {
-    const { parameters, tcr } = this.props
-    let numTokens
-    if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
-    } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
-    }
-    const args = [this.props[contract].address, numTokens]
-    this.props.onSendTransaction({ methodName: 'approve', args })
-  }
-  handleTransfer = () => {
-    const { parameters, tcr } = this.props
-    let numTokens
-    if (this.state.numTokens === '') {
-      numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
-    } else {
-      numTokens = convertedToBaseUnit(this.state.numTokens, tcr.tokenDecimals)
-    }
-
-    const args = [this.state.transferTo, numTokens]
-    this.props.onSendTransaction({ methodName: 'transfer', args })
-  }
-  handleApply = () => {
-    const { parameters, tcr } = this.props
-    const numTokens = convertedToBaseUnit(parameters.minDeposit, tcr.tokenDecimals)
-    const args = [this.state.listingID, numTokens, this.state.data]
-    this.props.onSendTransaction({ methodName: 'apply', args })
-  }
-  handleChallenge = () => {
-    const args = [this.props.sidePanelListing.listingHash, this.state.data]
-    this.props.onSendTransaction({ methodName: 'challenge', args })
-  }
-  handleRequestVotingRights = () => {
-    const args = [this.state.numTokens]
-    this.props.onSendTransaction({ methodName: 'requestVotingRights', args })
-  }
-  handleCommitVote = (voteOption, salt) => {
-    const args = [
-      this.props.sidePanelListing.challengeID,
-      voteOption,
-      salt,
-      this.state.numTokens,
-      this.props.sidePanelListing,
-    ]
-    this.props.onSendTransaction({
-      methodName: 'commitVote',
-      args,
-    })
-  }
-  handleRevealVote = (pollID, voteOption, salt) => {
-    const args = [pollID, voteOption, salt]
-    this.props.onSendTransaction({ methodName: 'revealVote', args })
-  }
-  handleUpdateStatus = listingHash => {
-    const args = [listingHash]
-    this.props.onSendTransaction({ methodName: 'updateStatus', args })
-  }
-  handleRescueTokens = listing => {
-    const args = [listing.challengeID]
+  handleRescueTokens = () => {
+    const args = [this.props.sidePanelListing.challengeID]
     this.props.onSendTransaction({ methodName: 'rescueTokens', args })
   }
   handleClaimReward = () => {
@@ -210,11 +126,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  account: selectAccount,
   balances: selectBalances,
   tcr: selectTCR,
-  registry: selectRegistry,
-  voting: selectVoting,
   parameters: selectParameters,
 
   miningStatus: selectMiningStatus,

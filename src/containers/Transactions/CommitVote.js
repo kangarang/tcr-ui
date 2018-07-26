@@ -21,6 +21,7 @@ import { getLocal, saveLocal } from 'utils/_localStorage'
 
 const SidePanelWrapper = styled.div`
   font-family: 'Avenir Next';
+  /* font-family: ${theme => theme.fontFamily}; */
 `
 const DetailsSection = styled.div`
   display: flex;
@@ -119,7 +120,8 @@ class CommitVote extends Component {
     super(props)
     this.state = {
       activeStep: 0,
-      voteOption: '',
+      voteOption: '0',
+      numTokens: '',
       salt: randomSalt(),
     }
   }
@@ -135,9 +137,9 @@ class CommitVote extends Component {
     }))
   }
 
-  handleChangeVoteOption = event => {
-    this.setState({ voteOption: event.target.value })
-  }
+  handleChangeVoteOption = e => this.setState({ voteOption: e.target.value })
+  handleChangeNumTokens = e => this.setState({ numTokens: e.target.value })
+  handleChangeSalt = e => this.setState({ salt: e.target.value })
 
   // const key = `${pollID}-${listingID}`
   checkLocal = async key => {
@@ -153,15 +155,7 @@ class CommitVote extends Component {
     return (
       <SidePanelWrapper>
         <TransactionsContext.Consumer>
-          {({
-            needToApproveVoting,
-            selectedOne,
-            closeSidePanel,
-            handleApprove,
-            handleCommitVote,
-            handleInputChange,
-            opened,
-          }) => (
+          {({ needToApproveVoting, selectedOne, closeSidePanel, onSendTx, opened }) => (
             <SidePanel
               title="Commit Your Vote"
               opened={opened === 'commitVote'}
@@ -222,7 +216,7 @@ class CommitVote extends Component {
                   </ActionInstructions>
 
                   <InputFormRow>
-                    <InputNumTokens onChange={e => handleInputChange(e, 'numTokens')} />
+                    <InputNumTokens onChange={this.handleChangeNumTokens} />
                     <NumTokensButton>NEXT</NumTokensButton>
                   </InputFormRow>
                 </ActionStepRow>
@@ -230,15 +224,7 @@ class CommitVote extends Component {
                 <ActionStepRow>
                   <ActionTitle>GENERATE TICKET TO REVEAL</ActionTitle>
                   <DownloadTicket />
-                  <Button
-                    onClick={() =>
-                      handleCommitVote(
-                        this.state.voteOption,
-                        this.state.salt,
-                        selectedOne
-                      )
-                    }
-                  >
+                  <Button onClick={() => onSendTx('commitVote', this.state)}>
                     SUBMIT
                   </Button>
                 </ActionStepRow>

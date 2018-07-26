@@ -14,111 +14,60 @@ export default class UpdateStatus extends Component {
   state = {
     didCommit: false,
     didReveal: false,
-    numTokens: '0',
+    numTokens: '',
     votesFor: '',
     votesAgainst: '',
   }
 
-  constructor(props) {
-    super(props)
-    this.getCommitHash = this.getCommitHash.bind(this)
-  }
-
-  componentDidMount() {
-    if (
-      this.props.selectedOne &&
-      this.props.selectedOne.challengeID !== false &&
-      this.props.selectedOne.challengeID !== undefined
-    ) {
-      this.getCommitHash()
-    }
-  }
-
-  async getCommitHash() {
-    const votesFor = baseToConvertedUnit(
-      this.props.selectedOne.votesFor,
-      this.props.tcr.tokenDecimals
-    )
-    const votesAgainst = baseToConvertedUnit(
-      this.props.selectedOne.votesAgainst,
-      this.props.tcr.tokenDecimals
-    )
-
-    const numTokensRaw = (await this.props.voting.getNumTokens(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const numTokens = baseToConvertedUnit(
-      numTokensRaw.toString(),
-      this.props.tcr.tokenDecimals
-    )
-
-    const didCommit = (await this.props.voting.didCommit(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const didReveal = (await this.props.voting.didReveal(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-
-    this.setState({
-      didCommit,
-      didReveal,
-      numTokens,
-      votesFor,
-      votesAgainst,
-    })
-  }
-
   render() {
     return (
-      <div>
-        <TransactionsContext.Consumer>
-          {({ selectedOne, closeSidePanel, handleUpdateStatus, opened }) => (
-            <SidePanel
-              title="Update a listing's status"
-              opened={opened === 'updateStatus'}
-              onClose={closeSidePanel}
-            >
+      <TransactionsContext.Consumer>
+        {({ selectedOne, closeSidePanel, onSendTx, opened, tcr }) => (
+          <SidePanel
+            title="Update a listing's status"
+            opened={opened === 'updateStatus'}
+            onClose={closeSidePanel}
+          >
+            {selectedOne && (
+              <div>
+                <SideSplit
+                  leftTitle={'Votes For'}
+                  leftItem={baseToConvertedUnit(selectedOne.votesFor, tcr.tokenDecimals)}
+                  rightTitle={'Votes Against'}
+                  rightItem={baseToConvertedUnit(
+                    selectedOne.votesAgainst,
+                    tcr.tokenDecimals
+                  )}
+                />
+                <SideSplit
+                  leftTitle={'Tokens you committed'}
+                  leftItem={this.state.numTokens}
+                  rightTitle={'POLL ID'}
+                  rightItem={selectedOne && selectedOne.challengeID}
+                />
+                <SideText text={selectedOne && selectedOne.listingID} />
+              </div>
+            )}
+
+            <SidePanelSeparator />
+
+            <SideText small color="grey" text={translate('ins_updateStatus')} />
+
+            <MarginDiv>
               {selectedOne && (
-                <div>
-                  <SideSplit
-                    leftTitle={'Votes For'}
-                    leftItem={selectedOne.votesFor}
-                    rightTitle={'Votes Against'}
-                    rightItem={selectedOne.votesAgainst}
-                  />
-                  <SideSplit
-                    leftTitle={'Tokens you committed'}
-                    leftItem={this.state.numTokens}
-                    rightTitle={'POLL ID'}
-                    rightItem={selectedOne && selectedOne.challengeID}
-                  />
-                  <SideText text={selectedOne && selectedOne.listingID} />
-                </div>
+                <Button
+                  onClick={e => onSendTx('updateStatus', {})}
+                  mode="strong"
+                  wide
+                  methodName="updateStatus"
+                >
+                  {'UPDATE STATUS'}
+                </Button>
               )}
-
-              <SidePanelSeparator />
-
-              <SideText small color="grey" text={translate('ins_updateStatus')} />
-
-              <MarginDiv>
-                {selectedOne && (
-                  <Button
-                    onClick={e => handleUpdateStatus(selectedOne.listingHash)}
-                    mode="strong"
-                    wide
-                    methodName="updateStatus"
-                  >
-                    {'UPDATE STATUS'}
-                  </Button>
-                )}
-              </MarginDiv>
-            </SidePanel>
-          )}
-        </TransactionsContext.Consumer>
-      </div>
+            </MarginDiv>
+          </SidePanel>
+        )}
+      </TransactionsContext.Consumer>
     )
   }
 }
