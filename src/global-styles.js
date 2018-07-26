@@ -6,23 +6,44 @@ export const theme = {
   textSecondary: '#707070',
   gradientRight: '#8FD3F4',
   gradientLeft: '#84FAB0',
+  fontFamily: 'Avenir Next',
+}
+
+export const notUsed = {
+  aquamarine: '#74FAB0',
+  blue: '#3C8BFB',
+  brightGreen: '#74FAB0',
+  cyan: '#37BEA9',
+  darkRed: '#D0021B',
+  mutedBlue: '#ADC8D9',
+  orange: '#ffaf36',
+  paleturquoise: '#A8EDEA',
+  pigpink: '#F9D7E3',
+  spray: '#85D3D4',
+  turquoise: '#4be5ce',
+}
+
+export const grays = {
+  base: '#000',
+  darker: '#1c1c1c',
+  dark: '#333',
+  gray: '#737373',
+  light: '#9a9a9a',
+  lighter: '#ececec',
+  lightest: '#fafafa',
 }
 
 export const colors = {
-  offBlack: '#333',
-  darkBlue: '#203260',
-  magenta: '#ff387a',
-  orange: '#ffaf36',
-  turquoise: '#4be5ce',
-  prism: '#15afba',
   blue2: '#A4BEE7',
-  brightGreen: '#74FAB0',
-  darkRed: '#D0021B',
-  blue: '#3C8BFB',
-  spray: '#85D3D4',
-  aquamarine: '#74FAB0',
-  paleturquoise: '#A8EDEA',
-  pigpink: '#F9D7E3',
+  brightBlue: '#00AFF3',
+  darkBlue: '#203260',
+  darkGrey: '#788995',
+  paleGrey: '#B9C7CF',
+  magenta: '#ff387a',
+  lightBg: '#F8FAFB',
+  offBlack: '#333',
+  prism: '#15afba',
+
   gradient: {
     claimReward: {
       right: '#85D3D4',
@@ -85,11 +106,6 @@ export const colors = {
       shadow: '#F9D7E3',
     },
   },
-  lightBg: '#F8FAFB',
-  brightBlue: '#00AFF3',
-  mutedBlue: '#ADC8D9',
-  paleGrey: '#B9C7CF',
-  darkGrey: '#788995',
 }
 
 const FONT_SIZES = {
