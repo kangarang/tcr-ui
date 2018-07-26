@@ -17,7 +17,7 @@ import { getEthjs, getEthersProvider } from 'libs/provider'
 import { commitVoteSaga, revealVoteSaga, requestVotingRightsSaga } from './voting'
 // import { pendingTxns } from '../../notifications'
 import { delay } from 'redux-saga'
-import { selectAccount } from '../../home/selectors'
+import { selectAccount, selectNetwork } from '../../home/selectors'
 import logUtils from 'modules/logs/sagas/utils'
 
 export default function* transactionSaga() {
@@ -149,12 +149,12 @@ export function* registryTxnSaga(action) {
 export function* sendTransactionSaga(contract, method, args) {
   try {
     console.log(method, 'args:', args)
-
-    // ethjs: sendTransaction
+    const network = yield select(selectNetwork)
     const ethjs = yield call(getEthjs)
-    const gasPrice = yield call(getGasPrice)
+    const gasPrice = yield call(getGasPrice, network)
     const ethersProvider = yield call(getEthersProvider)
 
+    // ethjs: sendTransaction
     const from = yield select(selectAccount)
     const nonce = yield call(ethjs.getTransactionCount, from)
     const methodAbi = yield call(logUtils.getMethodAbi, method, contract.abi)
@@ -167,12 +167,19 @@ export function* sendTransactionSaga(contract, method, args) {
       data,
     }
     const txHash = yield call(ethjs.sendTransaction, payload)
-
-    // const txHash = yield call(contract[method], ...args, { gasPrice })
     yield put(actions.txnMining(txHash))
+
+    // ethers: sendTransaction
+    // const txHash = yield call(contract[method], ...args, { gasPrice })
 
     // pending tx notification
     // yield fork(pendingTxns, method, txHash, args)
+
+    // TODO: pending tx saga handler -- instead of relying on ethersProvider, await the transaction via log polling
+    // yield put(actions.sendTransactionPending(txHash))
+    // const logAction = yield take(logTypes.POLL_LOGS_SUCCEEDED)
+    // filter logs for the correct txHash
+    // yield put(actions.sendTransactionSucceeded(log))
 
     // ethers: waitForTransaction
     const minedTxn = yield ethersProvider.waitForTransaction(txHash)

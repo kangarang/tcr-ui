@@ -21,7 +21,7 @@ import Registries from 'components/Registries'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
 import Listings from '../Listings/Loadable'
-import Transactions from '../Transactions'
+import TransactionsProvider from '../Transactions'
 
 export const StepperContext = React.createContext()
 
@@ -69,12 +69,26 @@ class Home extends Component {
           {/* <Route exact path="/activities" component={Activities} /> */}
         </Switch>
 
-        <Transactions />
+        <TransactionsProvider />
         <Notifications style={notificationStyles} notifications={notifications} />
       </div>
     )
   }
 }
+
+// TODO
+// 1. in Transactions/index, create the Provider + this.handleTransactions w/ this.props.children
+// <TransactionsContext.Provider value={{
+//   ...values
+// }}>
+//   {this.props.children}
+// </TransactionsContext.Provider>
+// 2. in Listings/index, depending on the listings being rendered, expose Provider + Children. that way we dont have to worry about {methodName === 'commitVote' && (...)}
+// <TransactionsProvider>
+//   <Apply />
+//   <Challenge />
+// </TransactionsProvider>
+// 3. in Transactions/[transaction], render the Consumer + context options for execution
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -87,8 +101,8 @@ const mapStateToProps = createStructuredSelector({
   account: selectAccount,
   network: selectNetwork,
   balances: selectBalances,
-  tcr: selectTCR,
   stats: selectStats,
+  tcr: selectTCR,
 
   notifications: selectNotifications,
 })

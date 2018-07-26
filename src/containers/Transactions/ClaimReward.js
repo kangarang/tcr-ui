@@ -7,49 +7,52 @@ import SidePanel from './components/SidePanel'
 import { TransactionsContext } from './index'
 
 class ClaimReward extends Component {
-  state = {
-    numTokens: '',
-    votesFor: '',
-    votesAgainst: '',
-  }
-
   constructor(props) {
     super(props)
-    this.getCommitHash = this.getCommitHash.bind(this)
+    // this.getCommitHash = this.getCommitHash.bind(this)
   }
 
-  componentDidMount() {
-    if (this.props.selectedOne.challengeID) {
-      this.getCommitHash()
-    }
-  }
+  // componentDidMount() {
+  //   if (this.props.selectedOne.challengeID) {
+  //     this.getCommitHash()
+  //   }
+  // }
 
-  async getCommitHash() {
-    const tokenClaims = (await this.props.registry.tokenClaims(
-      this.props.selectedOne.challengeID,
-      this.props.account
-    ))['0']
+  // async getCommitHash() {
+  //   const tokenClaims = (await this.props.registry.tokenClaims(
+  //     this.props.selectedOne.challengeID,
+  //     this.props.account
+  //   ))['0']
 
-    // const isPassed = (await this.props.voting.isPassed(
-    //   this.props.selectedOne.challengeID
-    // ))['0']
+  //   // const isPassed = (await this.props.voting.isPassed(
+  //   //   this.props.selectedOne.challengeID
+  //   // ))['0']
 
-    const didReveal = (await this.props.voting.didReveal(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
+  //   const didReveal = (await this.props.voting.didReveal(
+  //     this.props.account,
+  //     this.props.selectedOne.challengeID
+  //   ))['0']
 
-    this.setState({
-      didReveal,
-      tokenClaims,
-    })
-  }
+  //   this.setState({
+  //     didReveal,
+  //     tokenClaims,
+  //   })
+  // }
 
   render() {
     return (
       <div>
         <TransactionsContext.Consumer>
-          {({ opened, closeSidePanel, handleFileInput, handleClaimReward }) => (
+          {({
+            selectedOne,
+            opened,
+            closeSidePanel,
+            handleFileInput,
+            handleClaimReward,
+            account,
+            voting,
+            registry,
+          }) => (
             <SidePanel
               title="Claim Reward"
               opened={opened === 'claimReward'}

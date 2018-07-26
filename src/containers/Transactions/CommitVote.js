@@ -8,15 +8,15 @@ import SidePanel from './components/SidePanel'
 import Radio from 'components/Radio'
 import { TransactionsContext } from './index'
 
-import leftArrowIconSrc from 'assets/icons/left-arrow.svg'
-// import rightArrowIconSrc from 'assets/icons/right-arrow-thin.svg'
-// import thumbsUpIconSrc from 'assets/icons/thumbs-up.svg'
-import thumbsDownIconSrc from 'assets/icons/thumbs-down.svg'
-import likeIconSrc from 'assets/icons/like.svg'
-// import dislikeIconSrc from 'assets/icons/dislike.svg'
+import leftArrowIcon from 'assets/icons/left-arrow.svg'
+// import rightArrowIcon from 'assets/icons/right-arrow-thin.svg'
 
-import { getVoteSaltHash, randomSalt } from 'libs/values'
-import { getEndDateString } from 'utils/_datetime'
+// import thumbsUpIcon from 'assets/icons/thumbs-up.svg'
+import thumbsDownIcon from 'assets/icons/thumbs-down.svg'
+import likeIcon from 'assets/icons/like.svg'
+// import dislikeIcon from 'assets/icons/dislike.svg'
+
+import { randomSalt } from 'libs/values'
 import { getLocal, saveLocal } from 'utils/_localStorage'
 
 const SidePanelWrapper = styled.div`
@@ -92,7 +92,7 @@ const InputNumTokens = styled.input`
   border-right: 1px solid #dde3e8;
   border-radius: 3px 0 0 3px;
 `
-const SubmitButton = styled.div`
+const NumTokensButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,26 +118,40 @@ class CommitVote extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      commitHash: '',
-      numTokens: '',
       activeStep: 0,
-      selectedValue: '',
+      voteOption: '',
       salt: randomSalt(),
-      choice: '',
     }
   }
 
-  handleChange = event => {
-    const choice =
-      event.target.value === '0'
-        ? '- Oppose'
-        : event.target.value === '1' ? '- Support' : ''
-    this.setState({ selectedValue: event.target.value, choice })
+  previousStep() {
+    this.setState(prevState => ({
+      activeStep: prevState.activeStep - 1,
+    }))
+  }
+  nextStep() {
+    this.setState(prevState => ({
+      activeStep: prevState.activeStep + 1,
+    }))
+  }
+
+  handleChangeVoteOption = event => {
+    this.setState({ voteOption: event.target.value })
+  }
+
+  // const key = `${pollID}-${listingID}`
+  checkLocal = async key => {
+    const local = await getLocal(key)
+    if (!local) {
+      console.log('nothing in local storage for key:', key)
+    } else {
+      this.nextStep()
+    }
   }
 
   render() {
     return (
-      <div>
+      <SidePanelWrapper>
         <TransactionsContext.Consumer>
           {({
             needToApproveVoting,
@@ -154,7 +168,7 @@ class CommitVote extends Component {
               onClose={closeSidePanel}
             >
               {/* <ArrowIcon>
-            <Img src={rightArrowIconSrc} />
+            <Img src={rightArrowIcon} />
           </ArrowIcon> */}
               <SidePanelSeparator />
 
@@ -182,21 +196,21 @@ class CommitVote extends Component {
                   <SupportCandidate>
                     <Radio
                       on={true}
-                      // checked={this.state.selectedValue === '1'}
-                      // onChange={this.handleChange}
+                      // checked={this.state.voteOption === '1'}
+                      // onChange={this.handleChangeVoteOption}
                       value="1"
                       color="primary"
-                      handleCheckRadio={this.handleChange}
+                      handleCheckRadio={this.handleChangeVoteOption}
                     />
                     {'Support'}
                     <ThumbIcon>
-                      <Img alt="like" src={likeIconSrc} />
+                      <Img alt="like" src={likeIcon} />
                     </ThumbIcon>
                   </SupportCandidate>
                   <OpposeCandidate>
                     Oppose
                     <ThumbIcon>
-                      <Img alt="dislike" src={thumbsDownIconSrc} />
+                      <Img alt="dislike" src={thumbsDownIcon} />
                     </ThumbIcon>
                   </OpposeCandidate>
                 </ActionStepRow>
@@ -209,74 +223,39 @@ class CommitVote extends Component {
 
                   <InputFormRow>
                     <InputNumTokens onChange={e => handleInputChange(e, 'numTokens')} />
-                    <SubmitButton onClick={this.handleSaveFile}>SUBMIT</SubmitButton>
+                    <NumTokensButton>NEXT</NumTokensButton>
                   </InputFormRow>
                 </ActionStepRow>
 
                 <ActionStepRow>
                   <ActionTitle>GENERATE TICKET TO REVEAL</ActionTitle>
                   <DownloadTicket />
-                  <Button onClick={handleCommitVote}>SUBMIT</Button>
+                  <Button
+                    onClick={() =>
+                      handleCommitVote(
+                        this.state.voteOption,
+                        this.state.salt,
+                        selectedOne
+                      )
+                    }
+                  >
+                    SUBMIT
+                  </Button>
                 </ActionStepRow>
               </ActionsSection>
 
               <ReturnToRegistry>
                 <ArrowIcon>
-                  <Img alt="goback" src={leftArrowIconSrc} />
+                  <Img alt="goback" src={leftArrowIcon} />
                 </ArrowIcon>
                 Go back to registry
               </ReturnToRegistry>
             </SidePanel>
           )}
         </TransactionsContext.Consumer>
-      </div>
+      </SidePanelWrapper>
     )
   }
 }
 
 export default CommitVote
-
-// handleSaveFile = async () => {
-//   const commitEndDate = this.props.selectedOne.commitExpiry.timestamp
-//   const revealEndDate = this.props.selectedOne.revealExpiry.timestamp
-
-//   // record expiry dates
-//   const commitEndDateString = getEndDateString(commitEndDate)
-//   const revealEndDateString = getEndDateString(revealEndDate)
-//   const salt = this.state.salt.toString(10)
-//   // const voteOption = this.state.selectedValue
-//   const voteOption = '1'
-//   const pollID = this.props.selectedOne.challengeID
-//   const listingID = this.props.selectedOne.listingID
-
-//   const secretHash = getVoteSaltHash(voteOption, salt)
-//   const json = {
-//     voteOption,
-//     numTokens: this.props.numTokens,
-//     commitEnd: commitEndDateString,
-//     revealEnd: revealEndDateString,
-//     listingID,
-//     salt,
-//     pollID,
-//     secretHash,
-//     account: this.props.account,
-//   }
-//   // const yon = voteOption === '1' ? 'for' : 'against'
-//   // const listingDashed = data.replace(' ', '-')
-//   // const filename = `${pollID}-${yon}-${listingID}.json`
-
-//   const key = `${pollID}-${listingID}`
-//   const local = await getLocal(key)
-//   if (!local) {
-//     const file = await saveLocal(key, json)
-//     // const file = saveFile(json, filename)
-//     // this.handleNext()
-//     this.props.handleCommitVote('1', this.state.salt)
-//   } else {
-//     console.log('theres a file saved locally')
-//   }
-// }
-
-// handleSubmitCommitTokens = () => {
-//   this.props.handleCommitVote(this.props.numTokens, this.state.salt)
-// }

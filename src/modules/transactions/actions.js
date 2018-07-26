@@ -4,6 +4,10 @@ const sendTransactionStart = payload => ({
   type: types.SEND_TRANSACTION_START,
   payload,
 })
+const sendTransactionPending = payload => ({
+  type: types.SEND_TRANSACTION_PENDING,
+  payload,
+})
 const sendTransactionSucceeded = payload => ({
   type: types.SEND_TRANSACTION_SUCCEEDED,
   payload,
@@ -23,6 +27,7 @@ const clearTxn = payload => ({
 
 export {
   sendTransactionStart,
+  sendTransactionPending,
   sendTransactionSucceeded,
   sendTransactionFailed,
   txnMining,

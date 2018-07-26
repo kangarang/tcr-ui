@@ -67,7 +67,10 @@ const UserInfo = styled.div`
   margin-right: 1em;
 `
 const Avatar = styled.div`
+  display: flex;
+  align-items: center;
   width: 40px;
+  margin-right: 0.4em;
 `
 const Balances = styled.div`
   display: flex;

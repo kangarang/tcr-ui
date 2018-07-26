@@ -35,6 +35,7 @@ import {
 } from 'modules/home/selectors'
 import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
 import * as actions from 'modules/listings/actions'
+import { TransactionsContext } from '../Transactions'
 
 // import TablePaginationActionsWrapped from './Pagination'
 
@@ -243,6 +244,17 @@ class SimpleTabs extends Component {
             />
           </div>
         </Paper>
+
+        {/* always available */}
+        {/* <Transfer />
+        <Apply /> */}
+
+        {/* conditional */}
+        {/* <Challenge />
+        <UpdateStatus />
+        {sidePanelMethod === 'commitVote' && <CommitVote />}
+        {sidePanelMethod === 'revealVote' && <RevealVote />}
+        {sidePanelMethod === 'claimReward' && <ClaimReward />} */}
       </ListingsWrapper>
     )
   }

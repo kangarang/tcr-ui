@@ -27,9 +27,10 @@ import CommitVote from 'containers/Transactions/CommitVote'
 import RevealVote from 'containers/Transactions/RevealVote'
 import UpdateStatus from 'containers/Transactions/UpdateStatus'
 import ClaimReward from 'containers/Transactions/ClaimReward'
+
 export const TransactionsContext = React.createContext()
 
-class Transactions extends Component {
+class TransactionsProvider extends Component {
   state = {
     listingID: '',
     data: '',
@@ -73,9 +74,7 @@ class Transactions extends Component {
   render() {
     const {
       tcr,
-      account,
-      voting,
-      registry,
+      children,
       balances,
       parameters,
       sidePanelListing,
@@ -106,25 +105,25 @@ class Transactions extends Component {
           selectedOne: sidePanelListing,
           needToApproveRegistry,
           needToApproveVoting,
+          numTokens: this.state.numTokens,
+          visibleApprove: this.state.visibleApprove,
           ...this.props,
         }}
       >
+        {/* {children} */}
+
+        {/* always available */}
         <Transfer />
-        <Apply visibleApprove={this.state.visibleApprove} />
+        <Apply />
+
+        {/* conditional */}
         <Challenge />
-        {sidePanelMethod === 'commitVote' && (
-          <CommitVote numTokens={this.state.numTokens} />
-        )}
-        {sidePanelMethod === 'revealVote' && <RevealVote />}
-        {sidePanelMethod === 'claimReward' && (
-          <ClaimReward
-            selectedOne={this.props.sidePanelListing}
-            account={account}
-            voting={voting}
-            registry={registry}
-          />
-        )}
         <UpdateStatus />
+        {sidePanelMethod === 'commitVote' && <CommitVote />}
+        {sidePanelMethod === 'revealVote' && (
+          <RevealVote selectedOne={sidePanelListing} {...this.props} />
+        )}
+        {sidePanelMethod === 'claimReward' && <ClaimReward />}
       </TransactionsContext.Provider>
     )
   }
@@ -175,8 +174,9 @@ class Transactions extends Component {
     const args = [
       this.props.sidePanelListing.challengeID,
       voteOption,
-      this.state.numTokens,
       salt,
+      this.state.numTokens,
+      this.props.sidePanelListing,
     ]
     this.props.onSendTransaction({
       methodName: 'commitVote',
@@ -225,7 +225,7 @@ const mapStateToProps = createStructuredSelector({
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)
-export default compose(withConnect)(toJS(Transactions))
+export default compose(withConnect)(toJS(TransactionsProvider))
 
 // <NoBalance
 //   opened={sidePanelMethod !== ''}

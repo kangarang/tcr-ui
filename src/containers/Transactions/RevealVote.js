@@ -1,25 +1,20 @@
 import React, { Component } from 'react'
-// import translate from 'translations'
-
-import { baseToConvertedUnit } from 'libs/units'
 
 import Button from 'components/Button'
-import { SideSplit, SideText } from 'containers/Transactions/components'
-import { MarginDiv, FileInput } from 'components/StyledHome'
+import { MarginDiv } from 'components/StyledHome'
 
+import { SideSplit, SideText } from 'containers/Transactions/components'
+
+import { getLocal } from 'utils/_localStorage'
+
+import { TransactionsContext } from './index'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
-import { getLocal } from '../../utils/_localStorage'
-import { TransactionsContext } from './index'
 
 export default class RevealVote extends Component {
   state = {
-    didCommit: false,
-    didReveal: false,
     numTokens: '',
-    votesFor: '',
-    votesAgainst: '',
-    file: {},
+    ticket: {},
   }
 
   componentDidMount() {
@@ -27,46 +22,18 @@ export default class RevealVote extends Component {
     this.handleGetLocal()
   }
   handleGetLocal = async () => {
-    const key = `${this.props.selectedOne.challengeID}-${
-      this.props.selectedOne.listingID
-    }`
-    // const file = e.target.files[0]
-    const file = await getLocal(key)
-    console.log('file:', file)
-    this.setState({
-      file,
-    })
-  }
-
-  getCommitHash = async () => {
-    console.log('this.props:', this.props)
-    const numTokensRaw = (await this.props.voting.getNumTokens(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const numTokens = baseToConvertedUnit(
-      numTokensRaw.toString(),
-      this.props.tcr.tokenDecimals
-    )
-
-    const didCommit = (await this.props.voting.didCommit(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
-    const didReveal = (await this.props.voting.didReveal(
-      this.props.account,
-      this.props.selectedOne.challengeID
-    ))['0']
+    const listing = this.props.selectedOne
+    const key = `${listing.challengeID}-${listing.listingID}`
+    const localFile = await getLocal(key)
+    console.log('localFile:', localFile)
 
     this.setState({
-      didCommit,
-      didReveal,
-      numTokens,
+      ticket: localFile.ticket,
     })
   }
 
   render() {
-    const { file } = this.state
+    const { ticket } = this.state
 
     return (
       <TransactionsContext.Consumer>
@@ -97,7 +64,7 @@ export default class RevealVote extends Component {
             />
             <SideSplit
               leftTitle={'Tokens you committed'}
-              leftItem={this.state.numTokens}
+              leftItem={this.props.numTokens}
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />
@@ -109,13 +76,15 @@ export default class RevealVote extends Component {
 
             <SidePanelSeparator />
 
-            {/* {this.state.didReveal ? (
-          <SideText
-            text={`You have already revealed with ${
-              this.state.numTokens
-            } tokens for this poll`}
-          />
-        ) : this.state.didCommit ? ( */}
+            {selectedOne.didReveal ? (
+              <SideText
+                text={`You have already revealed with ${
+                  this.props.numTokens
+                } tokens for this poll`}
+              />
+            ) : (
+              selectedOne.didCommit && <div />
+            )}
             <div>
               <SideText
                 text={
@@ -128,7 +97,7 @@ export default class RevealVote extends Component {
                 <Button
                   methodName="revealVote"
                   onClick={() =>
-                    handleRevealVote(file.pollID, file.voteOption, file.salt)
+                    handleRevealVote(ticket.pollID, ticket.voteOption, ticket.salt)
                   }
                   mode="strong"
                   wide

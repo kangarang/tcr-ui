@@ -13,14 +13,15 @@ import TotalAmount from './components/TotalAmount'
 import SidePanel from './components/SidePanel'
 import { TransactionsContext } from './index'
 
-export default ({ visibleApprove }) => (
+export default () => (
   <div>
     <TransactionsContext.Consumer>
       {({
         handleInputChange,
         closeSidePanel,
-        handleApprove,
         needToApproveRegistry,
+        visibleApprove,
+        handleApprove,
         handleApply,
         showApprove,
         parameters,

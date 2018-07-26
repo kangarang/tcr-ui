@@ -4,10 +4,9 @@ import find from 'lodash/fp/find'
 import tokenList from 'config/tokens/eth.json'
 
 import { getListingHash, isAddress } from 'libs/values'
+import { ipfsCheckMultihash, ipfsGetData } from 'libs/ipfs'
 import { timestampToExpiry } from 'utils/_datetime'
-import { ipfsGetData } from 'libs/ipfs'
 // import { saveLocal } from 'utils/_localStorage'
-import { ipfsCheckMultihash } from '../../libs/ipfs'
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -147,7 +146,6 @@ export function changeListing(golem, log, txData, eventName) {
   }
 }
 
-//
 export async function updateAssortedListings(newListings, listings = fromJS({})) {
   // sift through the new array
   return fromJS(newListings).reduce((acc, val) => {

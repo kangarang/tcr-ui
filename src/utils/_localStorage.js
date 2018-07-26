@@ -16,3 +16,11 @@ export async function getLocal(key) {
     console.log('local storage get err:', err)
   }
 }
+
+export async function removeLocal(key) {
+  try {
+    return localforage.removeItem(key)
+  } catch (err) {
+    console.log('local storage remove err:', err)
+  }
+}

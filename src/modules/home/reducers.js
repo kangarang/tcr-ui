@@ -16,10 +16,13 @@ const initialState = fromJS({
     totalStake: '0',
   },
   tcr: {
-    tokenName: 'TOKE',
     registryName: 'Token-Curated Registry',
-    tokenSymbol: 'TOKENS',
+    tokenName: 'Token',
+    tokenSymbol: 'TOKEN',
     tokenDecimals: '18',
+    tokenAddress: '0x0000000000000000000000000000000000000000',
+    votingAddress: '0x0000000000000000000000000000000000000000',
+    registryAddress: '0x0000000000000000000000000000000000000000',
   },
   contracts: {
     registry: {},
