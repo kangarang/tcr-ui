@@ -126,15 +126,15 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  balances: selectBalances,
   tcr: selectTCR,
+  balances: selectBalances,
   parameters: selectParameters,
 
-  miningStatus: selectMiningStatus,
   latestTxn: selectLatestTxn,
+  miningStatus: selectMiningStatus,
 
-  sidePanelListing: selectSidePanelListing,
   sidePanelMethod: selectSidePanelMethod,
+  sidePanelListing: selectSidePanelListing,
 })
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps)

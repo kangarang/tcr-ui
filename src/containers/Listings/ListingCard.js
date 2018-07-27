@@ -46,7 +46,6 @@ function ListingCard(props) {
   const {
     one,
     classes,
-    // listingData,
     listingType,
     updateTrigger,
     revealTrigger,

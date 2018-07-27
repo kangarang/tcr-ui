@@ -50,6 +50,10 @@ class Home extends Component {
       showRegistries: !prevState.showRegistries,
     }))
   }
+  handleSelectRegistry = tcr => {
+    this.props.onSelectRegistry(tcr)
+    this.setState({ showRegistries: false })
+  }
 
   render() {
     const { stats, network, balances, tcr, notifications } = this.props
@@ -61,7 +65,7 @@ class Home extends Component {
         <Stats balances={balances} stats={stats} tcr={tcr} />
 
         {this.state.showRegistries && (
-          <Registries network={network} onSelectRegistry={this.props.onSelectRegistry} />
+          <Registries network={network} onSelectRegistry={this.handleSelectRegistry} />
         )}
 
         <Switch>

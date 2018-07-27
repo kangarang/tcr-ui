@@ -4,17 +4,17 @@ import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 import styled from 'styled-components'
 
-import AppBar from '@material-ui/core/AppBar'
-import { withStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 import Paper from '@material-ui/core/Paper'
+import AppBar from '@material-ui/core/AppBar'
+import { withStyles } from '@material-ui/core/styles'
 
-import ListingCard from './ListingCard'
+import { colors } from 'global-styles'
 import toJS from 'components/toJS'
-import { colors } from '../../global-styles'
+import ListingCard from './ListingCard'
 
 import {
   selectAllListings,
@@ -24,20 +24,11 @@ import {
   onlyCandidateIDs,
   onlyFaceoffIDs,
   onlyWhitelistIDs,
+  selectSidePanelListing,
+  selectSidePanelMethod,
 } from 'modules/listings/selectors'
-import {
-  selectStats,
-  selectVoting,
-  selectAccount,
-  selectRegistry,
-  selectTCR,
-  selectBalances,
-} from 'modules/home/selectors'
-import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
+import { selectStats, selectTCR, selectBalances } from 'modules/home/selectors'
 import * as actions from 'modules/listings/actions'
-import { TransactionsContext } from '../Transactions'
-
-// import TablePaginationActionsWrapped from './Pagination'
 
 const ListingsWrapper = styled.div`
   width: 80vw;
@@ -81,51 +72,27 @@ class SimpleTabs extends Component {
     page: 0,
     rowsPerPage: 5,
   }
-
   handleChange = (event, value) => {
     this.setState({ value })
   }
-
   handleChangePage = (event, page) => {
     this.setState({ page })
   }
-
-  // handleCheckReward = async id => {
-  //   console.log('id:', id)
-  //   if (id) {
-  //     const tc = (await this.props.registry.tokenClaims(id, this.props.account))['0']
-  //     const didReveal = (await this.props.voting.didReveal(this.props.account, id))['0']
-  //     const numTokens = baseToConvertedUnit(
-  //       (await this.props.voting.getNumTokens(this.props.account, id))['0'],
-  //       this.props.tcr.get('tokenDecimals')
-  //     )
-  //     console.log('tokenClaim:', tc)
-  //     console.log('didReveal:', didReveal)
-  //     console.log('numTokens:', numTokens)
-  //     if (didReveal && numTokens !== '0') {
-  //       return true
-  //     }
-  //   }
-  //   return false
-  // }
-
   openSidePanel = (one, openThis) => {
     this.props.onOpenSidePanel(one, openThis)
   }
+
   render() {
     const {
       candidates,
-      faceoffs,
-      whitelist,
-      stats,
       candidateIDs,
+      faceoffs,
       faceoffIDs,
+      whitelist,
       whitelistIDs,
       chooseTCR,
       classes,
-      voting,
-      account,
-      registry,
+      stats,
     } = this.props
     const { rowsPerPage, page, value } = this.state
 
@@ -174,11 +141,6 @@ class SimpleTabs extends Component {
                         listingType={'whitelist'}
                         openSidePanel={this.openSidePanel}
                         chooseTCR={chooseTCR}
-                        listingData={whitelist[id].listingData}
-                        voting={voting}
-                        account={account}
-                        registry={registry}
-                        value={value}
                         claimRewardTrigger={false}
                       />
                     )
@@ -188,16 +150,19 @@ class SimpleTabs extends Component {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(id => {
                     return (
-                      <ListingCard
-                        key={id}
-                        one={candidates[id]}
-                        listingType={'candidates'}
-                        openSidePanel={this.openSidePanel}
-                        updateTrigger={candidates[id].appExpiry.expired}
-                        listingData={candidates[id].listingData}
-                        value={value}
-                        claimRewardTrigger={false}
-                      />
+                      <div key={id}>
+                        {/* <TransactionsProvider> */}
+                        <ListingCard
+                          one={candidates[id]}
+                          listingType={'candidates'}
+                          openSidePanel={this.openSidePanel}
+                          updateTrigger={candidates[id].appExpiry.expired}
+                          claimRewardTrigger={false}
+                        />
+                        {/* <Apply /> */}
+                        {/* <Challenge /> */}
+                        {/* </TransactionsProvider> */}
+                      </div>
                     )
                   })}
               {value === 2 &&
@@ -212,11 +177,6 @@ class SimpleTabs extends Component {
                         openSidePanel={this.openSidePanel}
                         updateTrigger={faceoffs[id].revealExpiry.expired}
                         revealTrigger={faceoffs[id].commitExpiry.expired}
-                        listingData={faceoffs[id].listingData}
-                        voting={voting}
-                        account={account}
-                        registry={registry}
-                        value={value}
                         // claimRewardTrigger={await this.handleCheckReward(candidates.getIn[id, 'challengeID'])}
                         claimRewardTrigger={false}
                       />
@@ -244,17 +204,6 @@ class SimpleTabs extends Component {
             />
           </div>
         </Paper>
-
-        {/* always available */}
-        {/* <Transfer />
-        <Apply /> */}
-
-        {/* conditional */}
-        {/* <Challenge />
-        <UpdateStatus />
-        {sidePanelMethod === 'commitVote' && <CommitVote />}
-        {sidePanelMethod === 'revealVote' && <RevealVote />}
-        {sidePanelMethod === 'claimReward' && <ClaimReward />} */}
       </ListingsWrapper>
     )
   }
@@ -276,9 +225,6 @@ const mapStateToProps = createStructuredSelector({
   whitelist: selectWhitelist,
   whitelistIDs: onlyWhitelistIDs,
   stats: selectStats,
-  voting: selectVoting,
-  account: selectAccount,
-  registry: selectRegistry,
   tcr: selectTCR,
   balances: selectBalances,
   sidePanelListing: selectSidePanelListing,
