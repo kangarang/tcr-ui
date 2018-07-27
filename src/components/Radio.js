@@ -2,10 +2,10 @@ import React from 'react'
 
 class Radio extends React.Component {
   render() {
-    const { on, handleCheckRadio, ...props } = this.props
+    const { checked, handleCheckRadio, ...props } = this.props
     return (
       <div>
-        <input type="radio" checked={on} onChange={handleCheckRadio} {...props} />
+        <input type="radio" checked={checked} onChange={handleCheckRadio} {...props} />
       </div>
     )
   }

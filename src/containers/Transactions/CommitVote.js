@@ -120,7 +120,7 @@ class CommitVote extends Component {
     super(props)
     this.state = {
       activeStep: 0,
-      voteOption: '0',
+      voteOption: '',
       numTokens: '',
       salt: randomSalt(),
     }
@@ -189,9 +189,7 @@ class CommitVote extends Component {
                   <ActionTitle>{'CHOOSE YOUR SIDE'}</ActionTitle>
                   <SupportCandidate>
                     <Radio
-                      on={true}
-                      // checked={this.state.voteOption === '1'}
-                      // onChange={this.handleChangeVoteOption}
+                      checked={this.state.voteOption === '1'}
                       value="1"
                       color="primary"
                       handleCheckRadio={this.handleChangeVoteOption}
@@ -202,7 +200,13 @@ class CommitVote extends Component {
                     </ThumbIcon>
                   </SupportCandidate>
                   <OpposeCandidate>
-                    Oppose
+                    <Radio
+                      checked={this.state.voteOption === '0'}
+                      value="0"
+                      color="secondary"
+                      handleCheckRadio={this.handleChangeVoteOption}
+                    />
+                    {'Oppose'}
                     <ThumbIcon>
                       <Img alt="dislike" src={thumbsDownIcon} />
                     </ThumbIcon>
