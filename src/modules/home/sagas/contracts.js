@@ -1,4 +1,5 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
+import { removeAll } from 'react-notification-system-redux'
 
 import { selectABIs, selectAccount } from '../selectors'
 
@@ -54,6 +55,7 @@ function* abisSaga(action) {
 export function* registrySaga(action) {
   try {
     yield put(liActions.setListings({}))
+    yield put(removeAll())
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)
 

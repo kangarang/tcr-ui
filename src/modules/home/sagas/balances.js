@@ -61,8 +61,8 @@ function* updateBalancesSaga() {
       utils.formatUnits(lockedTokensRaw['0'], decimals, { commify: true }),
     ])
 
-    const totalRegistryStakeRaw = yield token.balanceOf(registry.address)
-    const totalVotingStakeRaw = yield token.balanceOf(registry.address)
+    const totalRegistryStakeRaw = yield call(token.balanceOf, registry.address)
+    const totalVotingStakeRaw = yield call(token.balanceOf, voting.address)
     const totalStake = utils.formatUnits(
       totalRegistryStakeRaw['0'].add(totalVotingStakeRaw['0']),
       decimals,
