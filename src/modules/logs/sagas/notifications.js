@@ -50,7 +50,7 @@ export function* notificationsSaga(log) {
         uid: txData.txHash,
         title,
         message,
-        position: 'bl',
+        position: 'tl',
         autoDismiss: 10,
         // action: {
         //   label: 'cb',

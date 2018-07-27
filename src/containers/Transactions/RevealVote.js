@@ -14,7 +14,9 @@ import SidePanel from './components/SidePanel'
 
 export default class RevealVote extends Component {
   state = {
-    ticket: {},
+    ticket: {
+      numTokens: '',
+    },
   }
   componentDidMount() {
     this.handleGetLocal()
@@ -26,9 +28,11 @@ export default class RevealVote extends Component {
     const localFile = await getLocal(key)
     console.log('localFile:', localFile)
 
-    this.setState({
-      ticket: localFile.ticket,
-    })
+    if (localFile) {
+      this.setState({
+        ticket: localFile.ticket,
+      })
+    }
   }
 
   render() {
@@ -61,35 +65,29 @@ export default class RevealVote extends Component {
               rightItem={baseToConvertedUnit(selectedOne.votesAgainst, tcr.tokenDecimals)}
             />
             <SideSplit
-              leftTitle={''}
-              leftItem={''}
+              leftTitle={'Tokens You Committed'}
+              leftItem={baseToConvertedUnit(
+                this.state.ticket.numTokens,
+                tcr.tokenDecimals
+              )}
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />
 
-            <SideText
-              small
-              text={`Reveal for vote: ${selectedOne && selectedOne.listingID}`}
-            />
-
             <SidePanelSeparator />
 
-            {selectedOne.didReveal ? (
-              <SideText
-                text={`You have already revealed with ${''} tokens for this poll`}
-              />
-            ) : (
-              selectedOne.didCommit && <div />
-            )}
-            <div>
-              <SideText
-                text={
-                  'In order to reveal your previously committed vote, upload the JSON commit file'
-                }
-              />
-
-              {/* <FileInput type="file" name="file" onChange={handleFileInput} /> */}
+            {/* <FileInput type="file" name="file" onChange={handleFileInput} /> */}
+            {this.state.ticket.voteOption ? (
               <MarginDiv>
+                <SideText
+                  small
+                  text={`Reveal for vote: ${selectedOne && selectedOne.listingID}`}
+                />
+                <SideText
+                  text={`Your vote: ${
+                    this.state.ticket.voteOption === '0' ? 'Oppose' : 'Support'
+                  }`}
+                />
                 <Button
                   methodName="revealVote"
                   onClick={() => onSendTx('revealVote', this.state.ticket)}
@@ -99,7 +97,9 @@ export default class RevealVote extends Component {
                   {'Reveal Vote'}
                 </Button>
               </MarginDiv>
-            </div>
+            ) : (
+              <SideText text={'You have not committed to this poll'} />
+            )}
           </SidePanel>
         )}
       </TransactionsContext.Consumer>

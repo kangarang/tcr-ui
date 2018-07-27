@@ -105,11 +105,16 @@ const NumTokensButton = styled.div`
   border-radius: 0 3px 3px 0;
   font-size: 0.9em;
   font-weight: 700;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    color: magenta;
+  }
 `
 const DownloadTicket = styled.div``
 const ReturnToRegistry = styled.div`
   display: flex;
-  margin-top: 1em;
+  margin-top: 3em;
 `
 const ArrowIcon = styled.div`
   width: 20px;
@@ -166,6 +171,7 @@ class CommitVote extends Component {
           </ArrowIcon> */}
               <SidePanelSeparator />
 
+              {/* TODO: convert to stateless function */}
               <DetailsSection>
                 <ListingIconSquare>
                   {selectedOne.listingData && (
@@ -222,17 +228,19 @@ class CommitVote extends Component {
 
                   <InputFormRow>
                     <InputNumTokens onChange={this.handleChangeNumTokens} />
-                    <NumTokensButton>NEXT</NumTokensButton>
+                    <NumTokensButton onClick={() => onSendTx('commitVote', this.state)}>
+                      SUBMIT
+                    </NumTokensButton>
                   </InputFormRow>
                 </ActionStepRow>
 
-                <ActionStepRow>
+                {/* <ActionStepRow>
                   <ActionTitle>GENERATE TICKET TO REVEAL</ActionTitle>
                   <DownloadTicket />
                   <Button onClick={() => onSendTx('commitVote', this.state)}>
                     SUBMIT
                   </Button>
-                </ActionStepRow>
+                </ActionStepRow> */}
               </ActionsSection>
 
               <ReturnToRegistry>

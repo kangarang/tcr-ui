@@ -68,7 +68,7 @@ const StyledPanelScrollView = styled.div`
 const StyledPanelContent = styled.div`
   padding-right: ${CONTENT_PADDING}px;
   padding-left: ${CONTENT_PADDING}px;
-  padding-bottom: ${CONTENT_PADDING}px;
+  padding-bottom: ${CONTENT_PADDING - 30}px;
 `
 
 class SidePanel extends Component {

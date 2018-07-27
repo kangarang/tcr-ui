@@ -1,4 +1,4 @@
-import { select, put, call, takeEvery } from 'redux-saga/effects'
+import { fork, select, put, call, takeEvery } from 'redux-saga/effects'
 import EthAbi from 'ethjs-abi'
 
 import * as actions from '../actions'
@@ -23,7 +23,7 @@ import { getListingHash } from 'libs/values'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga } from './voting'
-// import { pendingTxns } from '../../notifications'
+import { pendingTxns } from '../../notifications'
 import { delay } from 'redux-saga'
 import logUtils from 'modules/logs/sagas/utils'
 
@@ -147,7 +147,7 @@ export function* sendTransactionSaga(contract, method, args) {
     // const txHash = yield call(contract[method], ...args, { gasPrice })
 
     // pending tx notification
-    // yield fork(pendingTxns, method, txHash, args)
+    yield fork(pendingTxns, method, txHash, args)
 
     // TODO: pending tx saga handler -- instead of relying on ethersProvider, await the transaction via log polling
     // yield put(actions.sendTransactionPending(txHash))
