@@ -184,6 +184,7 @@ class CommitVote extends Component {
               </DetailsSection>
               <SidePanelSeparator />
 
+              {/* TODO: convert to Provider/Consumer */}
               <ActionsSection>
                 <ActionStepRow>
                   <ActionTitle>{'CHOOSE YOUR SIDE'}</ActionTitle>
