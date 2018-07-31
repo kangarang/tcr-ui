@@ -1,9 +1,9 @@
 import { select, call, put } from 'redux-saga/effects'
-import { info } from 'react-notification-system-redux'
+import { info, success, error, warning } from 'react-notification-system-redux'
 
 import * as actions from '../actions'
 
-import { getNotificationTitleAndMessage } from './utils'
+import { getNotificationTitleAndMessage, generateNoti, eventTypes } from './utils'
 import { findListing, handleMultihash } from 'modules/listings/utils'
 
 import { selectAllListings } from 'modules/listings/selectors'
@@ -36,21 +36,32 @@ export function* notificationsSaga(log) {
       listing
     )
 
-    if (title) {
-      const noti = {
-        uid: txData.txHash,
-        title,
-        message,
-        position: 'tl',
-        autoDismiss: 10,
-        // action: {
-        //   label: 'cb',
-        //   callback: () => console.log('click!'),
-        // },
-      }
-      yield put(info(noti))
-    }
+    const noti = yield call(generateNoti, txData.txHash, title, message, {
+      label: 'action',
+      callback: () => console.log('ACTION'),
+    })
+    yield call(notify, noti, eventTypes[eventName])
   } catch (err) {
     yield put(actions.showNotificationFailed(err))
   }
+}
+
+function* notify(noti, type, callback = function() {}) {
+  switch (type) {
+    case 'success':
+      yield put(success(noti))
+      break
+    case 'info':
+      yield put(info(noti))
+      break
+    case 'warning':
+      yield put(warning(noti))
+      break
+    case 'error':
+      yield put(error(noti))
+      break
+    default:
+      console.log('ERROR IN CALLING this.notify()')
+  }
+  callback()
 }

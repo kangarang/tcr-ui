@@ -18,7 +18,7 @@ import _utils, { getBlockAndTxnFromLog } from './utils'
 
 import { notificationsSaga } from './notifications'
 
-let lastReadBlockNumber = 0
+let lastReadBlockNumber = 'latest'
 
 function* pollLogsSaga(action) {
   try {
@@ -120,7 +120,10 @@ export function* decodeLogsSaga(action) {
       console.log(decodedLogs.length, eventNames, 'logs:', decodedLogs)
       yield put(actions.decodeLogsSucceeded(lawgs))
     }
+    const currentBlock = yield call(ethjs.blockNumber)
+
     // notifications
+    // if (lawgs.length === 1 && lawgs[0].txData.blockNumber.lt(currentBlock)) {
     if (lawgs.length < 3) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
@@ -132,20 +135,26 @@ export function* decodeLogsSaga(action) {
 export function* initPolling() {
   while (true) {
     try {
+      const ethjs = yield call(getEthjs)
       const network = yield select(selectNetwork)
       let pollInterval = 5000
 
       if (network === 'rinkeby') {
         pollInterval = 3000
       }
+      const latest = yield call(ethjs.blockNumber)
+
       // wait, then dispatch another poll request
       yield call(delay, pollInterval)
-      yield put(
-        actions.pollLogsStart({
-          startBlock: lastReadBlockNumber,
-          endBlock: 'latest',
-        })
-      )
+      if (lastReadBlockNumber === 'latest' || lastReadBlockNumber !== latest.toString()) {
+        lastReadBlockNumber = latest.toString()
+        yield put(
+          actions.pollLogsStart({
+            startBlock: lastReadBlockNumber,
+            endBlock: 'latest',
+          })
+        )
+      }
     } catch (err) {
       yield put(actions.pollLogsFailed(err))
     }

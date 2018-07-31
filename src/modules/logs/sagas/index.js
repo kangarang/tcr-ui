@@ -61,7 +61,7 @@ function* getFreshLogs() {
     }
     yield put(actions.decodeLogsStart(votingPayload))
 
-    yield take(types.DECODE_LOGS_SUCCEEDED)
+    // yield take(types.DECODE_LOGS_SUCCEEDED)
 
     // start polling
     yield fork(initPolling)
