@@ -40,12 +40,11 @@ function* sendTxStartSaga(action) {
     const parameters = yield select(selectParameters)
     const listing = yield select(selectSidePanelListing)
 
-    let {
+    const {
       methodName,
       txInput: { numTokens, data, listingID, pollID, transferTo, voteOption, salt },
     } = action.payload
 
-    let args = []
     let convertedNumTokens
     if (numTokens === '') {
       convertedNumTokens = yield call(
@@ -62,33 +61,39 @@ function* sendTxStartSaga(action) {
     }
 
     switch (methodName) {
-      case 'approveRegistry':
-        args = [registry.address, convertedNumTokens]
+      case 'approveRegistry': {
+        const args = [registry.address, convertedNumTokens]
         yield call(sendTransactionSaga, token, 'approve', args)
         break
-      case 'approveVoting':
-        args = [voting.address, convertedNumTokens]
+      }
+      case 'approveVoting': {
+        const args = [voting.address, convertedNumTokens]
         yield call(sendTransactionSaga, token, 'approve', args)
         break
-      case 'transfer':
-        args = [transferTo, convertedNumTokens]
+      }
+      case 'transfer': {
+        const args = [transferTo, convertedNumTokens]
         yield call(sendTransactionSaga, token, methodName, args)
         break
-      case 'apply':
+      }
+      case 'apply': {
         // hash the string listingID
         const listingHash = yield call(getListingHash, listingID)
-        args = [listingHash, convertedNumTokens, listingID, data]
+        const args = [listingHash, convertedNumTokens, listingID, data]
         yield call(sendTransactionSaga, registry, methodName, args)
         break
-      case 'challenge':
-        args = [listing.get('listingHash'), data]
+      }
+      case 'challenge': {
+        const args = [listing.get('listingHash'), data]
         yield call(sendTransactionSaga, registry, methodName, args)
         break
-      case 'updateStatus':
-        args = [listing.get('listingHash')]
+      }
+      case 'updateStatus': {
+        const args = [listing.get('listingHash')]
         yield call(sendTransactionSaga, registry, methodName, args)
         break
-      case 'commitVote':
+      }
+      case 'commitVote': {
         yield call(
           commitVoteSaga,
           listing.get('pollID'),
@@ -98,22 +103,28 @@ function* sendTxStartSaga(action) {
           listing.toJS()
         )
         break
-      case 'revealVote':
-        args = [pollID, voteOption, salt]
+      }
+      case 'revealVote': {
+        const args = [pollID, voteOption, salt]
         yield call(sendTransactionSaga, voting, methodName, args)
         break
-      case 'claimReward':
-        yield call(sendTransactionSaga, registry, methodName, args)
-        break
-      // case 'rescueTokens':
+      }
+      // case 'claimReward': {
+      //   yield call(sendTransactionSaga, registry, methodName, args)
+      //   break
+      // }
+      // case 'rescueTokens': {
       //   yield call(sendTransactionSaga, voting, methodName, newArgs)
       //   break
-      // case 'personalSign':
+      // }
+      // case 'personalSign': {
       //   yield call(personalMessageSignatureRecovery)
       //   break
-      default:
-        console.log('unknown methodname')
+      // }
+      default: {
+        console.log('unknown methodName:', methodName)
         break
+      }
     }
   } catch (error) {
     console.log('send transaction error:', error)

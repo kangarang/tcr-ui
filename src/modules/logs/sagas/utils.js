@@ -1,12 +1,13 @@
 import utils from 'ethers/utils'
-import find from 'lodash/fp/find'
+
 import map from 'lodash/fp/map'
-import zipWith from 'lodash/fp/zipWith'
+import find from 'lodash/fp/find'
 import every from 'lodash/fp/every'
-import isUndefined from 'lodash/fp/isUndefined'
-import isString from 'lodash/fp/isString'
+import zipWith from 'lodash/fp/zipWith'
 import isArray from 'lodash/fp/isArray'
 import includes from 'lodash/fp/includes'
+import isString from 'lodash/fp/isString'
+import isUndefined from 'lodash/fp/isUndefined'
 
 import { baseToConvertedUnit } from 'libs/units'
 

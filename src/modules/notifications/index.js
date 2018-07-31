@@ -1,14 +1,6 @@
 import React from 'react'
 import { select, take, fork, put } from 'redux-saga/effects'
-import {
-  success,
-  info,
-  hide,
-  // show,
-  // error,
-  // warning,
-  // removeAll,
-} from 'react-notification-system-redux'
+import { success, info, hide } from 'react-notification-system-redux'
 import { selectNetwork } from '../home/selectors'
 import Identicon from 'components/Identicon'
 
