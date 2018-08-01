@@ -5,6 +5,7 @@ import Button from 'components/Button'
 import Img from 'components/Img'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
+import DetailsSection from './components/DetailsSection'
 import Radio from 'components/Radio'
 import { TransactionsContext } from './index'
 
@@ -22,29 +23,6 @@ import { getLocal, saveLocal } from 'utils/_localStorage'
 const SidePanelWrapper = styled.div`
   font-family: 'Avenir Next';
   /* font-family: ${theme => theme.fontFamily}; */
-`
-const DetailsSection = styled.div`
-  display: flex;
-  padding: 2em 0;
-`
-const ListingIconSquare = styled.div`
-  height: 90px;
-  width: 90px;
-  border: 1px solid black;
-`
-const ListingInfoColumn = styled.div`
-  margin-left: 1em;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  font-size: 1.2em;
-`
-const ListingTitle = styled.div`
-  font-weight: 600;
-`
-const ListingCountdown = styled.div`
-  color: #fb8414;
-  font-weight: 500;
 `
 
 const ActionsSection = styled.div`
@@ -172,22 +150,7 @@ class CommitVote extends Component {
               <SidePanelSeparator />
 
               {/* TODO: convert to stateless function */}
-              <DetailsSection>
-                <ListingIconSquare>
-                  {selectedOne.listingData && (
-                    <Img src={selectedOne.listingData} alt="" />
-                  )}
-                </ListingIconSquare>
-
-                <ListingInfoColumn>
-                  <ListingTitle>{selectedOne.listingID}</ListingTitle>
-
-                  <ListingCountdown>
-                    <div>Vote Ends In</div>
-                    <div>00 : 20 : 00</div>
-                  </ListingCountdown>
-                </ListingInfoColumn>
-              </DetailsSection>
+              <DetailsSection listing={selectedOne} />
               <SidePanelSeparator />
 
               {/* TODO: convert to Provider/Consumer */}

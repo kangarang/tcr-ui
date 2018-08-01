@@ -11,6 +11,7 @@ import { getLocal } from 'utils/_localStorage'
 import { TransactionsContext } from './index'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
+import DetailsSection from './components/DetailsSection'
 
 export default class RevealVote extends Component {
   state = {
@@ -73,6 +74,8 @@ export default class RevealVote extends Component {
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />
+
+            <DetailsSection listing={selectedOne} />
 
             <SidePanelSeparator />
 
