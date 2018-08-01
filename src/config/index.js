@@ -3,7 +3,7 @@ export const ipfsABIsHash = 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT'
 export const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
 // hardcoded FORCED registry address
 export const hardcodedRegistryAddress = ''
-export const defaultRegistryAddress = ''
+export const defaultRegistryAddress = '0x39cfbe27e99bafa761dac4566b4af3b4c9cc8fbe'
 
 export function getIpfsABIsHash(network) {
   if (network === 'mainnet') {
@@ -35,23 +35,13 @@ export const registries = {
       tokenName: 'SunToken',
       multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
     },
-  ],
-  ganache: [
-    // ordered chronologically by proxy deployment
     {
-      name: 'The Test Chain Registry',
-      registryAddress: '0x10fc2b8685003c86d74192980d846edf2755520f',
-      tokenAddress: '0xa9248f9941a5a7ff8cbba3ff78347f9c13c74cfc',
-      tokenSymbol: 'TEST',
-      tokenName: 'TestToken',
-      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
-    },
-    {
-      name: 'The Sunset Registry',
-      registryAddress: '0x0747bf92a886ab521ee7d95f6285420acc8b89ac',
-      tokenAddress: '0xc4d09e6814037f08ec28ea4d450a6cdc0d0f7817',
-      tokenSymbol: 'SUN',
-      tokenName: 'SunToken',
+      name: 'ethaireum',
+      registryAddress: '0x39cfbe27e99bafa761dac4566b4af3b4c9cc8fbe',
+      votingAddress: '0x946184cde118286d46825b866521d0236800c613',
+      tokenAddress: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
+      tokenSymbol: 'HAIR',
+      tokenName: 'ethair',
       multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
     },
   ],
