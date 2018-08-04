@@ -8,7 +8,7 @@ export const selectAllListings = createSelector(selectListings, listingsState =>
 )
 
 // Maps
-export const selectCandidates = createSelector(selectAllListings, listings =>
+export const selectApplications = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('status') === '1')
 )
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
@@ -26,8 +26,8 @@ export const selectExpired = createSelector(selectAllListings, listings =>
 // )
 
 // IDs
-export const onlyCandidateIDs = createSelector(selectCandidates, candidates => {
-  const [...keys] = candidates.keys()
+export const onlyApplicationIDs = createSelector(selectApplications, applications => {
+  const [...keys] = applications.keys()
   return keys
 })
 export const onlyFaceoffIDs = createSelector(selectFaceoffs, faceoffs => {

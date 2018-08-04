@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect'
-import { selectCandidates, selectWhitelist, selectFaceoffs } from '../listings/selectors'
+import {
+  selectApplications,
+  selectWhitelist,
+  selectFaceoffs,
+} from '../listings/selectors'
 
 export const selectNotifications = state => state.get('notifications')
 
@@ -40,11 +44,11 @@ export const selectParameterizer = createSelector(selectAllContracts, contracts 
 )
 
 export const selectStats = createSelector(
-  [selectCandidates, selectWhitelist, selectFaceoffs],
-  (candidates, whitelist, faceoffs) => {
+  [selectApplications, selectWhitelist, selectFaceoffs],
+  (applications, whitelist, faceoffs) => {
     return {
       sizes: {
-        candidates: candidates.size,
+        applications: applications.size,
         whitelist: whitelist.size,
         faceoffs: faceoffs.size,
       },

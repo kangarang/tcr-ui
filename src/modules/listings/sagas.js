@@ -32,24 +32,24 @@ export function* listenForApplications() {
 }
 
 // ipfs.infura rate limit: > 6 requests at a time
-// workaround: batch the candidates and concat results
-function* batchCreateListings(candidates, listings) {
-  const chunkCandidates = candidates.slice(0, 4)
-  console.log('chunkCandidates:', chunkCandidates)
+// workaround: batch the applications and concat results
+function* batchCreateListings(applications, listings) {
+  const chunkApplications = applications.slice(0, 4)
+  console.log('chunkApplications:', chunkApplications)
   console.log('listings:', listings)
 
-  if (chunkCandidates.length > 0) {
+  if (chunkApplications.length > 0) {
     const chunkListings = yield all(
-      chunkCandidates.map(candidate =>
-        createListing(candidate.logData, candidate.txData, candidate.msgSender)
+      chunkApplications.map(application =>
+        createListing(application.logData, application.txData, application.msgSender)
       )
     )
-    if (candidates.length > 4) {
+    if (applications.length > 4) {
       yield call(delay, 400)
     }
     return yield call(
       batchCreateListings,
-      candidates.slice(4),
+      applications.slice(4),
       listings.concat(chunkListings)
     )
   }

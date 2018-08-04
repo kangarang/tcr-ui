@@ -20,8 +20,8 @@ import {
   selectAllListings,
   selectFaceoffs,
   selectWhitelist,
-  selectCandidates,
-  onlyCandidateIDs,
+  selectApplications,
+  onlyApplicationIDs,
   onlyFaceoffIDs,
   onlyWhitelistIDs,
   selectSidePanelListing,
@@ -84,8 +84,8 @@ class SimpleTabs extends Component {
 
   render() {
     const {
-      candidates,
-      candidateIDs,
+      applications,
+      applicationIDs,
       faceoffs,
       faceoffIDs,
       whitelist,
@@ -100,7 +100,7 @@ class SimpleTabs extends Component {
     if (value === 0) {
       data = whitelistIDs
     } else if (value === 1) {
-      data = candidateIDs
+      data = applicationIDs
     } else if (value === 2) {
       data = faceoffIDs
     }
@@ -123,7 +123,7 @@ class SimpleTabs extends Component {
               />
               <Tab
                 className={classes.tab}
-                label={`applications (${stats.sizes.candidates})`}
+                label={`applications (${stats.sizes.applications})`}
               />
               <Tab className={classes.tab} label={`voting (${stats.sizes.faceoffs})`} />
             </Tabs>
@@ -153,10 +153,10 @@ class SimpleTabs extends Component {
                       <div key={id}>
                         {/* <TransactionsProvider> */}
                         <ListingCard
-                          one={candidates[id]}
-                          listingType={'candidates'}
+                          one={applications[id]}
+                          listingType={'applications'}
                           openSidePanel={this.openSidePanel}
-                          updateTrigger={candidates[id].appExpiry.expired}
+                          updateTrigger={applications[id].appExpiry.expired}
                           claimRewardTrigger={false}
                         />
                         {/* <Apply /> */}
@@ -177,7 +177,7 @@ class SimpleTabs extends Component {
                         openSidePanel={this.openSidePanel}
                         updateTrigger={faceoffs[id].revealExpiry.expired}
                         revealTrigger={faceoffs[id].commitExpiry.expired}
-                        // claimRewardTrigger={await this.handleCheckReward(candidates.getIn[id, 'challengeID'])}
+                        // claimRewardTrigger={await this.handleCheckReward(applications.getIn[id, 'challengeID'])}
                         claimRewardTrigger={false}
                       />
                     )
@@ -221,10 +221,10 @@ const mapStateToProps = createStructuredSelector({
   tcr: selectTCR,
   balances: selectBalances,
   allListings: selectAllListings,
-  candidates: selectCandidates,
+  applications: selectApplications,
   faceoffs: selectFaceoffs,
   whitelist: selectWhitelist,
-  candidateIDs: onlyCandidateIDs,
+  applicationIDs: onlyApplicationIDs,
   faceoffIDs: onlyFaceoffIDs,
   whitelistIDs: onlyWhitelistIDs,
   sidePanelListing: selectSidePanelListing,

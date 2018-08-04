@@ -40,7 +40,7 @@ const ActionInstructions = styled.div`
   padding: 1.2em 1.5em;
   color: #788995;
 `
-const SupportCandidate = styled.div`
+const SupportApplication = styled.div`
   display: flex;
   box-sizing: border-box;
   padding: 0.8em 2em;
@@ -50,7 +50,7 @@ const SupportCandidate = styled.div`
   background-color: #ffffff;
   font-size: 1.25em;
 `
-const OpposeCandidate = SupportCandidate.extend``
+const OpposeApplication = SupportApplication.extend``
 const ThumbIcon = styled.div`
   width: 20px;
   margin-left: 8em;
@@ -157,7 +157,7 @@ class CommitVote extends Component {
               <ActionsSection>
                 <ActionStepRow>
                   <ActionTitle>{'CHOOSE YOUR SIDE'}</ActionTitle>
-                  <SupportCandidate>
+                  <SupportApplication>
                     <Radio
                       checked={this.state.voteOption === '1'}
                       value="1"
@@ -168,8 +168,8 @@ class CommitVote extends Component {
                     <ThumbIcon>
                       <Img alt="like" src={likeIcon} />
                     </ThumbIcon>
-                  </SupportCandidate>
-                  <OpposeCandidate>
+                  </SupportApplication>
+                  <OpposeApplication>
                     <Radio
                       checked={this.state.voteOption === '0'}
                       value="0"
@@ -180,7 +180,7 @@ class CommitVote extends Component {
                     <ThumbIcon>
                       <Img alt="dislike" src={thumbsDownIcon} />
                     </ThumbIcon>
-                  </OpposeCandidate>
+                  </OpposeApplication>
                 </ActionStepRow>
 
                 <ActionStepRow>

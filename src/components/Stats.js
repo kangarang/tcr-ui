@@ -26,7 +26,7 @@ const StatLabel = styled.div`
 export default ({ stats, balances, tcr }) => (
   <StatsWrapper>
     <StatContainer>
-      <Stat>{stats.sizes.candidates}</Stat>
+      <Stat>{stats.sizes.applications}</Stat>
       <StatLabel>TOTAL APPLICATIONS</StatLabel>
     </StatContainer>
     <StatContainer>
