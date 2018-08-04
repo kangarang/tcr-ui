@@ -18,14 +18,8 @@ import _utils, { getBlockAndTxnFromLog } from './utils'
 
 import { notificationsSaga } from './notifications'
 
-let lastReadBlockNumber = 'latest'
-
 function* pollLogsSaga(action) {
   try {
-    const ethjs = yield call(getEthjs)
-    // change it here so that when it polls again, it'll have a different value
-    lastReadBlockNumber = (yield call(ethjs.blockNumber)).toNumber(10)
-
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
     const token = yield select(selectToken)
@@ -36,13 +30,24 @@ function* pollLogsSaga(action) {
     const registryPayload = {
       abi: registry.abi,
       contractAddress: registry.address,
-      eventNames: [],
+      eventNames: [
+        '_Application',
+        '_Challenge',
+        '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
+        '_ListingRemoved',
+        '_ChallengeFailed',
+        '_ChallengeSucceeded',
+        '_RewardClaimed',
+        // '_TouchAndRemoved',
+        // '_ListingWithdrawn',
+      ],
       blockRange,
     }
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
+      eventNames: ['_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
     const tokenPayload = {
@@ -132,22 +137,30 @@ export function* decodeLogsSaga(action) {
   }
 }
 
+let lastReadBlockNumber = 'latest'
+
 export function* initPolling() {
   while (true) {
     try {
       const ethjs = yield call(getEthjs)
       const network = yield select(selectNetwork)
-      let pollInterval = 5000
+      let pollInterval = 3000
 
       if (network === 'rinkeby') {
-        pollInterval = 3000
+        pollInterval = 2000
       }
-      const latest = yield call(ethjs.blockNumber)
-
       // wait, then dispatch another poll request
       yield call(delay, pollInterval)
-      if (lastReadBlockNumber === 'latest' || lastReadBlockNumber !== latest.toString()) {
-        lastReadBlockNumber = latest.toString()
+
+      // get the current block number
+      const currentBlockNumber = yield call(ethjs.blockNumber)
+      if (
+        lastReadBlockNumber !== currentBlockNumber.toString() ||
+        lastReadBlockNumber === 'latest'
+      ) {
+        // set the new last-read startBlock number
+        // change it here so that when it polls again, it'll have a different value
+        lastReadBlockNumber = currentBlockNumber.toString()
         yield put(
           actions.pollLogsStart({
             startBlock: lastReadBlockNumber,

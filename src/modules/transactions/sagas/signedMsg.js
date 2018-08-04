@@ -18,9 +18,33 @@ async function ethPersonalRecovery(ethjs, serialized) {
   return ethjs.personal_ecRecover(msg, serialized)
 }
 
+async function ethSignTypedData(ethjs, from) {
+  const msgParams = [
+    {
+      type: 'string',
+      name: 'Message',
+      value: 'Hi, Alice!',
+    },
+    {
+      type: 'uint32',
+      name: 'A number',
+      value: '1337',
+    },
+  ]
+  const signed = await ethjs.signTypedData(msgParams, from)
+  console.log('signed:', signed)
+  // const recovered = sigUtil.recoverTypedSignature({ data: msgParams, sig: signed })
+  // if (recovered === from) {
+  //   console.log('Successfully ecRecovered signer as ' + from)
+  // } else {
+  //   console.log('Failed to verify signer when comparing ' + signed + ' to ' + from)
+  // }
+}
 export function* personalMessageSignatureRecovery() {
   const ethjs = yield call(getEthjs)
   const account = yield select(selectAccount)
+
+  yield call(ethSignTypedData, ethjs, account)
 
   console.log('CLICKED, SENDING PERSONAL SIGN REQ')
   // this triggers metamask popup and waits for user to press 'sign'

@@ -1,6 +1,5 @@
 import EthContract from 'ethjs-contract'
 import { getEthjs } from 'libs/provider'
-// import { getGasPrice } from 'libs/gas'
 
 export async function setupRegistry(abi, bytecode, from, address) {
   const ethjs = getEthjs()

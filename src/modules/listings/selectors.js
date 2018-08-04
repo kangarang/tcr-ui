@@ -20,6 +20,9 @@ export const selectWhitelist = createSelector(selectAllListings, listings =>
 export const selectExpired = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('status') === '4')
 )
+export const selectTokensToClaim = createSelector(selectAllListings, listings =>
+  listings.filter(li => li.get('tokensToClaim') === true)
+)
 
 // export const selectRewardable = createSelector(selectExpired, listings =>
 //   listings.filter(li => li.get())

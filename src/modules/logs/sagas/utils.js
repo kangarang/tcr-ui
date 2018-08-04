@@ -9,8 +9,6 @@ import includes from 'lodash/fp/includes'
 import isString from 'lodash/fp/isString'
 import isUndefined from 'lodash/fp/isUndefined'
 
-import { baseToConvertedUnit } from 'libs/units'
-
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)
   const tx = await ethjs.getTransactionByHash(log.transactionHash)
@@ -74,18 +72,18 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       message = 'View on Etherscan'
       break
     case '_VoteCommitted':
-      title = 'Vote successfully committed'
-      message = 'Go to voting for `title`'
+      title = `${logData.numTokens} tokens successfully committed`
+      message = `Go to voting for ${listing.listingID}`
       break
     case '_VoteRevealed':
       title = 'Vote revealed'
-      message = 'Go to voting for `title`'
+      message = `Go to voting for ${listing.listingID}`
       break
     case '_TokensRescued':
       title = 'Tokens successfully rescued'
       message = 'View token transaction'
     case '_ChallengeSucceeded':
-      title = 'Challenge against `title` succeeded'
+      title = `Challenge against ${listing.listingID} succeeded`
       message = 'View challenge'
       break
     case '_ChallengeFailed':
@@ -123,63 +121,9 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       message = 'View parameter proposal'
       break
     default:
-      console.log('CANT READ', eventName)
-    // case '_Application':
-    //   title = `Application: ${listing.listingData.name ||
-    //     logData.listingHash.slice(0, 8)} ${listing.listingData.symbol || ''}`
-    //   message = logData.listingID || false
-    //   break
-    // case '_Challenge':
-    //   title = `Challenge: ${listing.listingData.name || 'unknown'}`
-    //   message = logData.data || false
-    //   break
-    // case '_VoteCommitted':
-    //   title = `${baseToConvertedUnit(
-    //     logData.numTokens,
-    //     tcr.get('tokenDecimals')
-    //   )} ${tcr.get('tokenSymbol')} committed in poll: ${logData.pollID}`
-    //   message = `Voter: ${logData.voter}`
-    //   break
-    // case '_VoteRevealed':
-    //   title = `${baseToConvertedUnit(
-    //     logData.numTokens,
-    //     tcr.get('tokenDecimals')
-    //   )} ${tcr.get('tokenSymbol')} revealed`
-    //   message = `Current votesFor: ${baseToConvertedUnit(
-    //     logData.votesFor,
-    //     tcr.get('tokenDecimals')
-    //   )} votesAgainst: ${baseToConvertedUnit(
-    //     logData.votesAgainst,
-    //     tcr.get('tokenDecimals')
-    //   )}. Voter: ${logData.voter}`
-    //   break
-    // case '_ApplicationWhitelisted':
-    //   title = `Application added to the registry`
-    //   message = `Token: ${listing.listingData.name} (${listing.listingData.symbol})`
-    //   break
-    // case '_ChallengeFailed':
-    //   title = `Listing: ${listing.listingData.name} remains whitelisted after challenge`
-    //   message = `votesFor: ${listing.votesFor}, votesAgainst: ${
-    //     listing.votesAgainst
-    //   }, voterReward: ${listing.voterReward}, challengeReward: ${listing.challengeReward}`
-    //   break
-    // case '_ChallengeSucceeded':
-    //   title = `${listing.listingID} removed after challenge`
-    //   message = `votesFor: ${listing.votesFor}, votesAgainst: ${
-    //     listing.votesAgainst
-    //   }, challengeReward: ${listing.challengeReward}`
-    //   break
-    // case '_ListingRemoved':
-    //   title = 'Listing removed after challenge'
-    //   message = `Token: ${listing.listingData.name} (${listing.listingData.symbol})`
-    //   break
-    // case '_PollCreated':
-    //   title = false
-    //   message = false
-    //   break
-    // default:
-    //   title = 'default title'
-    //   message = `event: ${logData._eventName}`
+      title = `Event: ${eventName}`
+      message = ''
+      break
   }
   return { title, message }
 }

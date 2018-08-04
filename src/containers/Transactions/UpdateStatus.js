@@ -40,10 +40,16 @@ export default class UpdateStatus extends Component {
                   )}
                 />
                 <SideSplit
-                  leftTitle={'Tokens you committed'}
-                  leftItem={this.state.numTokens}
-                  rightTitle={'POLL ID'}
-                  rightItem={selectedOne && selectedOne.challengeID}
+                  leftTitle={'Tokens you voted with'}
+                  leftItem={
+                    selectedOne &&
+                    baseToConvertedUnit(selectedOne.userVotes, tcr.tokenDecimals)
+                  }
+                  rightTitle={'Total Votes'}
+                  rightItem={
+                    selectedOne &&
+                    baseToConvertedUnit(selectedOne.totalVotes, tcr.tokenDecimals)
+                  }
                 />
                 <SideText text={selectedOne && selectedOne.listingID} />
               </div>

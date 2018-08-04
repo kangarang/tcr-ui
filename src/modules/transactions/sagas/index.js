@@ -1,4 +1,5 @@
-import { fork, select, put, call, takeEvery } from 'redux-saga/effects'
+import { select, put, call, takeEvery } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import EthAbi from 'ethjs-abi'
 
 import * as actions from '../actions'
@@ -15,17 +16,15 @@ import {
   selectParameters,
 } from 'modules/home/selectors'
 import { selectSidePanelListing } from 'modules/listings/selectors'
+import logUtils from 'modules/logs/sagas/utils'
 
 import { getGasPrice } from 'api/gas'
-// import { ipfsAddObject } from 'libs/ipfs'
 import { convertedToBaseUnit } from 'libs/units'
 import { getListingHash } from 'libs/values'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga } from './voting'
-import { pendingTxns } from '../../notifications'
-import { delay } from 'redux-saga'
-import logUtils from 'modules/logs/sagas/utils'
+import { personalMessageSignatureRecovery } from './signedMsg'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, sendTxStartSaga)
@@ -109,18 +108,20 @@ function* sendTxStartSaga(action) {
         yield call(sendTransactionSaga, voting, methodName, args)
         break
       }
-      // case 'claimReward': {
-      //   yield call(sendTransactionSaga, registry, methodName, args)
-      //   break
-      // }
-      // case 'rescueTokens': {
-      //   yield call(sendTransactionSaga, voting, methodName, newArgs)
-      //   break
-      // }
-      // case 'personalSign': {
-      //   yield call(personalMessageSignatureRecovery)
-      //   break
-      // }
+      case 'claimReward': {
+        const args = [pollID, voteOption, salt]
+        yield call(sendTransactionSaga, registry, methodName, args)
+        break
+      }
+      case 'rescueTokens': {
+        const args = [pollID]
+        yield call(sendTransactionSaga, voting, methodName, args)
+        break
+      }
+      case 'personalSign': {
+        yield call(personalMessageSignatureRecovery)
+        break
+      }
       default: {
         console.log('unknown methodName:', methodName)
         break
@@ -152,13 +153,14 @@ export function* sendTransactionSaga(contract, method, args) {
       data,
     }
     const txHash = yield call(ethjs.sendTransaction, payload)
-    yield put(actions.txnMining(txHash))
-
-    // ethers: sendTransaction
-    // const txHash = yield call(contract[method], ...args, { gasPrice })
 
     // pending tx notification
-    yield fork(pendingTxns, method, txHash, args)
+    // yield put(actions.txnMining(txHash))
+    // yield fork(pendingTxns, method, txHash, args)
+
+    // wait for tx to get mined
+    const minedTxn = yield ethersProvider.waitForTransaction(txHash)
+    console.log('minedTxn:', minedTxn)
 
     // TODO: pending tx saga handler -- instead of relying on ethersProvider, await the transaction via log polling
     // yield put(actions.sendTransactionPending(txHash))
@@ -166,23 +168,18 @@ export function* sendTransactionSaga(contract, method, args) {
     // filter logs for the correct txHash
     // yield put(actions.sendTransactionSucceeded(log))
 
-    // ethers: waitForTransaction
-    const minedTxn = yield ethersProvider.waitForTransaction(txHash)
-    console.log('minedTxn:', minedTxn)
-
     // sometimes ethjs doesnt catch it if it tries to quickly
     yield call(delay, 1000)
 
     // get tx receipt
-    // const ethjs = yield call(getEthjs)
     const txReceipt = yield call(ethjs.getTransactionReceipt, minedTxn.hash)
     console.log('txReceipt:', txReceipt)
 
     // dispatch on success
     if (txReceipt.status === '0x01' || txReceipt.status === '0x1') {
-      // if (minedTxn.hash !== '0x0') {
       yield put(actions.sendTransactionSucceeded(txReceipt))
       yield put(epActions.updateBalancesStart())
+
       // if you decide to re-implement this, you need to control *which* txn
       // you are attempting to clear (in reducer)
       // yield call(delay, 5000)

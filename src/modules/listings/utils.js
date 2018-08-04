@@ -4,9 +4,32 @@ import find from 'lodash/fp/find'
 import tokenList from 'config/tokens/eth.json'
 
 import { getListingHash, isAddress } from 'libs/values'
+import { BN } from 'libs/units'
 import { ipfsCheckMultihash, ipfsGetData } from 'libs/ipfs'
 import { timestampToExpiry } from 'utils/_datetime'
 // import { saveLocal } from 'utils/_localStorage'
+
+// Finds the corresponding listing according the eventName
+export function findListing(logData, listings) {
+  switch (logData._eventName) {
+    case '_Application':
+    case '_Challenge':
+    case '_ApplicationWhitelisted':
+    case '_ApplicationRemoved':
+    case '_ChallengeFailed':
+    case '_ChallengeSucceeded':
+    case '_ListingRemoved':
+      return listings.get(logData.listingHash)
+    case '_PollCreated':
+    case '_VoteCommitted':
+    case '_VoteRevealed':
+      return listings.find((v, k) => {
+        return v.get('challengeID') === logData.pollID.toString()
+      })
+    default:
+      return false
+  }
+}
 
 export async function handleMultihash(listingHash, data) {
   const ipfsContent = await ipfsGetData(data)
@@ -79,6 +102,10 @@ export async function createListing(log, blockTxn, owner) {
     votesFor: '0',
     votesAgainst: '0',
     challengeReward: '0',
+    userVotes: '0',
+    totalVotes: '0',
+    tokensToClaim: false,
+    userVoteChoice: '',
   }
 
   // save to local storage
@@ -86,31 +113,9 @@ export async function createListing(log, blockTxn, owner) {
   return listing
 }
 
-// Finds the corresponding listing according the eventName
-export function findListing(logData, listings) {
-  switch (logData._eventName) {
-    case '_Application':
-    case '_Challenge':
-    case '_ApplicationWhitelisted':
-    case '_ApplicationRemoved':
-    case '_ChallengeFailed':
-    case '_ChallengeSucceeded':
-    case '_ListingRemoved':
-      return listings.get(logData.listingHash)
-    case '_PollCreated':
-    case '_VoteCommitted':
-    case '_VoteRevealed':
-      return listings.find((v, k) => {
-        return v.get('challengeID') === logData.pollID.toString()
-      })
-    default:
-      return false
-  }
-}
-
 // updates a listing's values
 // determines where it gets rendered
-export function changeListing(golem, log, txData, eventName) {
+export function changeListing(golem, log, txData, eventName, account) {
   if (txData.get('ts').lt(golem.get('ts'))) {
     console.log('old txn; returning listing')
     return golem
@@ -127,26 +132,53 @@ export function changeListing(golem, log, txData, eventName) {
         .set('revealExpiry', fromJS(timestampToExpiry(log.revealEndDate.toNumber())))
     case '_ApplicationWhitelisted':
     case '_ChallengeFailed':
-      return golem.set('status', fromJS('3'))
+      if (golem.get('userVoteChoice') === '1') {
+        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('3'))
+      } else {
+        return golem.set('status', fromJS('3'))
+      }
     case '_ApplicationRemoved':
     case '_ListingRemoved':
     case '_ChallengeSucceeded':
-      return golem.set('status', fromJS('4'))
-    case '_PollCreated':
-      return golem
-        .set('challengeID', fromJS(log.pollID.toString()))
-        .set('pollID', fromJS(log.pollID.toString()))
+      if (golem.get('userVoteChoice') === '0') {
+        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('4'))
+      } else {
+        return golem.set('status', fromJS('4'))
+      }
+    case '_VoteCommitted':
+      return golem.set(
+        'totalVotes',
+        fromJS(
+          BN(golem.get('totalVotes'))
+            .add(log.numTokens)
+            .toString()
+        )
+      )
     case '_VoteRevealed':
+      if (log.voter === account) {
+        return golem
+          .set('votesFor', fromJS(log.votesFor.toString()))
+          .set('votesAgainst', fromJS(log.votesAgainst.toString()))
+          .set('userVotes', fromJS(log.numTokens.toString()))
+          .set('userVoteChoice', fromJS(log.choice.toString()))
+      }
       return golem
         .set('votesFor', fromJS(log.votesFor.toString()))
         .set('votesAgainst', fromJS(log.votesAgainst.toString()))
-        .set('pollID', fromJS(log.pollID.toString()))
+    case '_RewardClaimed':
+      if (log.voter === account) {
+        return golem.set('tokensToClaim', fromJS(false))
+      }
     default:
       return golem
   }
 }
 
-export async function updateAssortedListings(newListings, listings = fromJS({})) {
+export async function updateAssortedListings(
+  newListings,
+  listings = fromJS({}),
+  account
+) {
   // sift through the new array
   return fromJS(newListings).reduce((acc, val) => {
     // find a matching listing in the accumulation array
@@ -157,7 +189,8 @@ export async function updateAssortedListings(newListings, listings = fromJS({}))
         match,
         val.get('logData'),
         val.get('txData'),
-        val.get('eventName')
+        val.get('eventName'),
+        account
       )
       return acc.set(match.get('listingHash'), changed)
     }

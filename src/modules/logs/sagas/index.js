@@ -1,7 +1,6 @@
 import { select, takeLatest, take, fork, put } from 'redux-saga/effects'
 
 import { homeTypes, homeSelectors } from 'modules/home'
-import { liTypes } from 'modules/listings'
 import * as actions from '../actions'
 import * as types from '../types'
 
@@ -22,36 +21,18 @@ function* getFreshLogs() {
     }
 
     // application logs
-    const payload = {
+    const applicationsPayload = {
       abi: registry.abi,
+      blockRange,
       contractAddress: registry.address,
       eventNames: ['_Application'],
+    }
+    const challengePayload = {
+      abi: registry.abi,
       blockRange,
+      contractAddress: registry.address,
+      eventNames: ['_Challenge'],
     }
-    yield put(actions.decodeLogsStart(payload))
-
-    // wait for success
-    yield take(liTypes.SET_LISTINGS)
-
-    // registry logs
-    const fullPayload = {
-      ...payload,
-      eventNames: [
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ListingRemoved',
-        '_ListingWithdrawn',
-        '_Challenge',
-        '_ChallengeFailed',
-        '_ChallengeSucceeded',
-        '_TouchAndRemoved',
-        '_RewardClaimed',
-      ],
-    }
-    yield put(actions.decodeLogsStart(fullPayload))
-
-    yield take(types.DECODE_LOGS_SUCCEEDED)
-
     // voting logs
     const votingPayload = {
       abi: voting.abi,
@@ -59,9 +40,30 @@ function* getFreshLogs() {
       eventNames: ['_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
-    yield put(actions.decodeLogsStart(votingPayload))
+    const finalPayload = {
+      abi: registry.abi,
+      blockRange,
+      contractAddress: registry.address,
+      eventNames: [
+        '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
+        '_ListingRemoved',
+        '_ChallengeFailed',
+        '_ChallengeSucceeded',
+        '_RewardClaimed',
+        '_ListingWithdrawn',
+        '_TouchAndRemoved',
+      ],
+    }
+    yield put(actions.decodeLogsStart(applicationsPayload))
+    // wait for success
+    yield take(types.DECODE_LOGS_SUCCEEDED)
 
-    // yield take(types.DECODE_LOGS_SUCCEEDED)
+    yield put(actions.decodeLogsStart(challengePayload))
+    yield take(types.DECODE_LOGS_SUCCEEDED)
+    yield put(actions.decodeLogsStart(votingPayload))
+    yield take(types.DECODE_LOGS_SUCCEEDED)
+    yield put(actions.decodeLogsStart(finalPayload))
 
     // start polling
     yield fork(initPolling)

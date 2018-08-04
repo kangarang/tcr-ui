@@ -72,18 +72,21 @@ export function* commitVoteSaga(pollID, voteOption, salt, numTokens, listing) {
     let key = `${pollID}-${listing.listingID}`
     const local = yield call(getLocal, key)
 
-    // at this point, the user is committed to committing
-    if (local && local.votingAddress === voting.address && local.account === account) {
-      yield call(removeLocal, key)
-      // key = `${key}(1)` // amend ticket
-    }
-
-    // TODO: handle errors
-
     if (!local) {
       const savedFile = yield call(saveLocal, key, json)
       console.log('savedFile:', savedFile)
     }
+
+    // at this point, the user is committed to committing
+    if (local && local.votingAddress === voting.address && local.account === account) {
+      console.log('removeLocal:', key, local.ticket)
+      yield call(removeLocal, key)
+      // key = `${key}(1)` // amend ticket
+      const savedFile = yield call(saveLocal, key, json)
+      console.log('savedFile:', savedFile)
+    }
+
+    // TODO: handle errors
 
     yield call(sendTransactionSaga, voting, 'commitVote', finalArgs)
   } catch (error) {

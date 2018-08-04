@@ -2,7 +2,7 @@ import { all, take, takeEvery, fork, call, put, select } from 'redux-saga/effect
 
 import * as logsTypes from '../logs/types'
 import { selectAllListings } from './selectors'
-import { selectTCR, selectNetwork } from '../home/selectors'
+import { selectTCR, selectNetwork, selectAccount } from '../home/selectors'
 
 import * as actions from './actions'
 import { baseToConvertedUnit } from 'libs/units'
@@ -63,6 +63,7 @@ export function* handleNewPollLogsSaga(action) {
     const allListings = yield select(selectAllListings)
     const tcr = yield select(selectTCR)
     const network = yield select(selectNetwork)
+    const account = yield select(selectAccount)
     const logs = action.payload
 
     const applicantLogs = logs.filter(log => log.eventName === '_Application')
@@ -96,7 +97,10 @@ export function* handleNewPollLogsSaga(action) {
 
     // update listings
     if (assortedLogs.length) {
-      console.log(assortedLogs.length, 'assortedLogs logs:', assortedLogs)
+      console.log(assortedLogs.length, 'assorted logs:', assortedLogs)
+
+      // print: address | numTokens listingID
+      // 0xd09cc3bc  |  2345 yeehaw
       assortedLogs.forEach(event => {
         const match = findListing(event.logData, allListings)
         if (event.logData.numTokens && match) {
@@ -111,10 +115,12 @@ export function* handleNewPollLogsSaga(action) {
           )
         }
       })
+
       const updatedListings = yield call(
         updateAssortedListings,
         assortedLogs,
-        allListings
+        allListings,
+        account
       )
 
       // check: equality

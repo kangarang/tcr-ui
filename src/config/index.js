@@ -45,4 +45,24 @@ export const registries = {
       multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
     },
   ],
+  ganache: [
+    {
+      name: 'The Test Chain Registry',
+      registryAddress: '0x10fc2b8685003c86d74192980d846edf2755520f',
+      votingAddress: '0x7235d99de42272160b90370e6a9e67c044d31ea5',
+      tokenAddress: '0xec717dbf0f1ec373c46197f88df796f118295bdd',
+      tokenSymbol: 'SUN',
+      tokenName: 'SunToken',
+      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+    },
+    {
+      name: 'ethaireum',
+      registryAddress: '0x0747bf92a886ab521ee7d95f6285420acc8b89ac',
+      votingAddress: '0x946184cde118286d46825b866521d0236800c613',
+      tokenAddress: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
+      tokenSymbol: 'HAIR',
+      tokenName: 'ethair',
+      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+    },
+  ],
 }
