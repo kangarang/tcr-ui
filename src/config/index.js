@@ -3,7 +3,7 @@ export const ipfsABIsHash = 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT'
 export const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
 // hardcoded FORCED registry address
 export const hardcodedRegistryAddress = ''
-export const defaultRegistryAddress = '0x39cfbe27e99bafa761dac4566b4af3b4c9cc8fbe'
+export const defaultRegistryAddress = ''
 
 export function getIpfsABIsHash(network) {
   if (network === 'mainnet') {

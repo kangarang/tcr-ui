@@ -2,9 +2,16 @@ import { all, take, takeEvery, fork, call, put, select } from 'redux-saga/effect
 
 import * as logsTypes from '../logs/types'
 import { selectAllListings } from './selectors'
+import { selectTCR, selectNetwork } from '../home/selectors'
 
 import * as actions from './actions'
-import { updateListings, createListing, updateAssortedListings } from './utils'
+import { baseToConvertedUnit } from 'libs/units'
+import {
+  updateListings,
+  createListing,
+  updateAssortedListings,
+  findListing,
+} from './utils'
 import { delay } from 'redux-saga'
 
 export default function* rootListingsSaga() {
@@ -54,6 +61,8 @@ function* batchCreateListings(candidates, listings) {
 export function* handleNewPollLogsSaga(action) {
   try {
     const allListings = yield select(selectAllListings)
+    const tcr = yield select(selectTCR)
+    const network = yield select(selectNetwork)
     const logs = action.payload
 
     const applicantLogs = logs.filter(log => log.eventName === '_Application')
@@ -62,14 +71,18 @@ export function* handleNewPollLogsSaga(action) {
     if (applicantLogs.length) {
       console.log(applicantLogs.length, '_Application logs:', applicantLogs)
       // create listings
-      const listings = yield all(
-        applicantLogs.map(appLog =>
-          createListing(appLog.logData, appLog.txData, appLog.msgSender)
-        )
-      )
+      let listings
 
-      // batch for ipfs
-      // const listings = yield call(batchCreateListings, applicantLogs, [])
+      if (network === 'mainnet') {
+        // batch for ipfs
+        listings = yield call(batchCreateListings, applicantLogs, [])
+      } else {
+        listings = yield all(
+          applicantLogs.map(appLog =>
+            createListing(appLog.logData, appLog.txData, appLog.msgSender)
+          )
+        )
+      }
 
       // update listings
       const applications = yield call(updateListings, listings, allListings)
@@ -84,6 +97,20 @@ export function* handleNewPollLogsSaga(action) {
     // update listings
     if (assortedLogs.length) {
       console.log(assortedLogs.length, 'assortedLogs logs:', assortedLogs)
+      assortedLogs.forEach(event => {
+        const match = findListing(event.logData, allListings)
+        if (event.logData.numTokens && match) {
+          console.log(
+            event.msgSender.slice(0, 10),
+            ' | ',
+            baseToConvertedUnit(
+              event.logData.numTokens,
+              tcr.get('tokenDecimals')
+            ).toString(),
+            match.get('listingID')
+          )
+        }
+      })
       const updatedListings = yield call(
         updateAssortedListings,
         assortedLogs,

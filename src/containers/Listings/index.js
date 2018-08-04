@@ -217,16 +217,16 @@ function mapDispatchToProps(dispatch) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  allListings: selectAllListings,
-  candidates: selectCandidates,
-  candidateIDs: onlyCandidateIDs,
-  faceoffs: selectFaceoffs,
-  faceoffIDs: onlyFaceoffIDs,
-  whitelist: selectWhitelist,
-  whitelistIDs: onlyWhitelistIDs,
   stats: selectStats,
   tcr: selectTCR,
   balances: selectBalances,
+  allListings: selectAllListings,
+  candidates: selectCandidates,
+  faceoffs: selectFaceoffs,
+  whitelist: selectWhitelist,
+  candidateIDs: onlyCandidateIDs,
+  faceoffIDs: onlyFaceoffIDs,
+  whitelistIDs: onlyWhitelistIDs,
   sidePanelListing: selectSidePanelListing,
   sidePanelMethod: selectSidePanelMethod,
 })
