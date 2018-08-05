@@ -7,7 +7,7 @@ import { selectBalances, selectTCR, selectParameters } from 'modules/home/select
 import { selectMiningStatus, selectLatestTxn } from 'modules/transactions/selectors'
 import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
 import * as liActions from 'modules/listings/actions'
-import * as txActions from 'modules/transactions/actions'
+import * as actions from 'modules/transactions/actions'
 
 import { BN, baseToConvertedUnit } from 'libs/units'
 
@@ -117,27 +117,25 @@ class TransactionsProvider extends Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    onSendTransaction: payload => dispatch(txActions.sendTransactionStart(payload)),
-    onOpenSidePanel: (selectedOne, methodName) =>
-      dispatch(liActions.openSidePanel(selectedOne, methodName)),
-  }
-}
-
 const mapStateToProps = createStructuredSelector({
   tcr: selectTCR,
   balances: selectBalances,
   parameters: selectParameters,
-
   latestTxn: selectLatestTxn,
   miningStatus: selectMiningStatus,
-
   sidePanelMethod: selectSidePanelMethod,
   sidePanelListing: selectSidePanelListing,
 })
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
+// if the action creator arguments match the callback prop arguments,
+// you can use an object that maps the prop function to its dispatch callback
+const withConnect = connect(
+  mapStateToProps,
+  {
+    onSendTransaction: actions.sendTransactionStart,
+    onOpenSidePanel: liActions.openSidePanel,
+  }
+)
 export default compose(withConnect)(toJS(TransactionsProvider))
 
 // <NoBalance
