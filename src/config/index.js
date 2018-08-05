@@ -14,25 +14,14 @@ export function getIpfsABIsHash(network) {
 }
 
 export const registries = {
-  mainnet: [
-    {
-      name: 'The adChain Registry',
-      registryAddress: '0x5e2eb68a31229b469e34999c467b017222677183',
-      votingAddress: '0xb4b26709ffed2cd165b9b49eea1ac38d133d7975',
-      tokenAddress: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
-      tokenSymbol: 'ADT',
-      tokenName: 'adToken',
-      multihash: 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu',
-    },
-  ],
   rinkeby: [
     {
-      name: 'The Sunset Registry',
-      registryAddress: '0x3a1f892ab191e06a5769aa8bb9f1a95d06e30194',
-      votingAddress: '0x7235d99de42272160b90370e6a9e67c044d31ea5',
-      tokenAddress: '0xec717dbf0f1ec373c46197f88df796f118295bdd',
-      tokenSymbol: 'SUN',
-      tokenName: 'SunToken',
+      name: 'humans',
+      registryAddress: '0xaf3534DeddA9905FCff9862DAf77ED6477e3E731',
+      votingAddress: '0x212Ee8D31349Bedb23A7931A0f9D9Ef864e0795E',
+      tokenAddress: '0xD0d667d5dd42574ecACd8bdDe3d6A4F6b583E794',
+      tokenSymbol: 'HMN',
+      tokenName: 'Humans',
       multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
     },
     {

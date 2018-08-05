@@ -17,6 +17,7 @@ import * as actions from 'modules/home/actions'
 
 import Header from 'components/Header'
 import Banner from 'components/Banner'
+import Landing from 'components/Landing'
 import Registries from 'components/Registries'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
@@ -60,6 +61,7 @@ class Home extends Component {
 
     return (
       <div>
+        <Route exact path="/" component={Landing} />
         <Header onHandleToggleRegistries={this.handleToggleRegistries} />
         <Banner tcr={tcr} />
         <Stats balances={balances} stats={stats} tcr={tcr} />
@@ -69,7 +71,7 @@ class Home extends Component {
         )}
 
         <Switch>
-          <Route exact path="/" component={Listings} />
+          <Route exact path="/registries" component={Listings} />
           {/* <Route exact path="/activities" component={Activities} /> */}
         </Switch>
 

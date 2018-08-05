@@ -1,6 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 // import { txPanelStore } from 'eth-tx-panel'
@@ -9,6 +10,7 @@ import { theme } from './global-styles'
 import configureStore from './store'
 
 import Home from 'containers/Home/Loadable'
+import Landing from 'components/Landing'
 
 import './App.css'
 
@@ -77,7 +79,10 @@ const App = () => (
     <Provider store={store}>
       <MuiThemeProvider theme={muiTheme}>
         <Router>
-          <Home />
+          <Switch>
+            <Route exact path="/registries" component={Home} />
+            <Route exact path="/" component={Landing} />
+          </Switch>
         </Router>
       </MuiThemeProvider>
     </Provider>
