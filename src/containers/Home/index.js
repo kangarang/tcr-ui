@@ -61,7 +61,6 @@ class Home extends Component {
 
     return (
       <div>
-        <Route exact path="/" component={Landing} />
         <Header onHandleToggleRegistries={this.handleToggleRegistries} />
         <Banner tcr={tcr} />
         <Stats balances={balances} stats={stats} tcr={tcr} />

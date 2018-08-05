@@ -20,16 +20,14 @@ class Landing extends Component {
       width: '600px',
       height: '100px',
       backgroundColor: 'salmon',
-      verticalAlign: 'middle',
-      textAlign: 'left',
+      textAlign: 'center',
       color: '#FFFFFF',
       display: 'inline-flex',
       alignItems: 'center',
-      textDecoration: 'wavy',
     }
 
     const pStyle = {
-      margin: '10px 5px 20px 10px',
+      margin: '10px 5px 20px 12px',
       fontSize: '10px',
       position: 'absolute',
       bottom: '5px',
