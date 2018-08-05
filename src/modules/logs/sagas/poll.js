@@ -47,7 +47,7 @@ function* pollLogsSaga(action) {
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames: ['_VoteCommitted', '_VoteRevealed'],
+      eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
     const tokenPayload = {
@@ -125,7 +125,7 @@ export function* decodeLogsSaga(action) {
       console.log(decodedLogs.length, eventNames, 'logs:', decodedLogs)
       yield put(actions.decodeLogsSucceeded(lawgs))
     }
-    const currentBlock = yield call(ethjs.blockNumber)
+    // const currentBlock = yield call(ethjs.blockNumber)
 
     // notifications
     // if (lawgs.length === 1 && lawgs[0].txData.blockNumber.lt(currentBlock)) {
@@ -158,6 +158,8 @@ export function* initPolling() {
         lastReadBlockNumber !== currentBlockNumber.toString() ||
         lastReadBlockNumber === 'latest'
       ) {
+        console.log('currentBlockNumber.toString():', currentBlockNumber.toString())
+        console.log('lastReadBlockNumber:', lastReadBlockNumber)
         // set the new last-read startBlock number
         // change it here so that when it polls again, it'll have a different value
         lastReadBlockNumber = currentBlockNumber.toString()
@@ -175,6 +177,6 @@ export function* initPolling() {
 }
 
 export default function* rootLogsSaga() {
-  yield takeLatest(types.POLL_LOGS_START, pollLogsSaga)
+  yield takeEvery(types.POLL_LOGS_START, pollLogsSaga)
   yield takeEvery(types.DECODE_LOGS_START, decodeLogsSaga)
 }

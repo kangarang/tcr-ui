@@ -31,13 +31,21 @@ function* getFreshLogs() {
       abi: registry.abi,
       blockRange,
       contractAddress: registry.address,
-      eventNames: ['_Challenge'],
+      eventNames: [
+        '_Challenge',
+        '_ApplicationWhitelisted',
+        '_ApplicationRemoved',
+        '_ListingRemoved',
+        '_ChallengeFailed',
+        '_ChallengeSucceeded',
+        '_RewardClaimed',
+      ],
     }
     // voting logs
     const votingPayload = {
       abi: voting.abi,
       contractAddress: voting.address,
-      eventNames: ['_VoteCommitted', '_VoteRevealed'],
+      eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
     const finalPayload = {
@@ -51,8 +59,8 @@ function* getFreshLogs() {
         '_ChallengeFailed',
         '_ChallengeSucceeded',
         '_RewardClaimed',
-        '_ListingWithdrawn',
-        '_TouchAndRemoved',
+        // '_ListingWithdrawn',
+        // '_TouchAndRemoved',
       ],
     }
     yield put(actions.decodeLogsStart(applicationsPayload))
@@ -62,7 +70,6 @@ function* getFreshLogs() {
     yield put(actions.decodeLogsStart(challengePayload))
     yield take(types.DECODE_LOGS_SUCCEEDED)
     yield put(actions.decodeLogsStart(votingPayload))
-    yield take(types.DECODE_LOGS_SUCCEEDED)
     yield put(actions.decodeLogsStart(finalPayload))
 
     // start polling

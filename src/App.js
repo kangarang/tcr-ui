@@ -10,8 +10,7 @@ import './App.css'
 
 import Home from 'containers/Home/Loadable'
 
-const initialState = {}
-const store = configureStore(initialState)
+const store = configureStore()
 
 const AppWrapper = styled.div`
   display: flex;

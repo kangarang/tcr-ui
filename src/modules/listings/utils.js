@@ -145,6 +145,8 @@ export function changeListing(golem, log, txData, eventName, account) {
       } else {
         return golem.set('status', fromJS('4'))
       }
+    case '_PollCreated':
+      return golem.set('status', fromJS('2'))
     case '_VoteCommitted':
       return golem.set(
         'totalVotes',

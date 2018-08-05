@@ -54,7 +54,7 @@ function* abisSaga(action) {
 
 export function* registrySaga(action) {
   try {
-    yield put(liActions.setListings({}))
+    // yield put(liActions.setListings({}))
     yield put(removeAll())
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)

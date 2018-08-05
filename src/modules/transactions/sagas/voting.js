@@ -35,7 +35,6 @@ export function* commitVoteSaga(pollID, voteOption, salt, numTokens, listing) {
   try {
     const account = yield select(selectAccount)
     const voting = yield select(selectVoting)
-    const tcr = yield select(selectTCR)
 
     // format args
     const secretHash = yield call(getVoteSaltHash, voteOption, salt.toString(10))

@@ -2,6 +2,8 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 import { fromJS, Iterable } from 'immutable'
+import throttle from 'lodash/fp/throttle'
+import { loadState, saveState } from 'libs/localStorage'
 
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
@@ -20,7 +22,7 @@ const logger = createLogger({
   stateTransformer,
 })
 
-export default function configureStore(initialState = {}) {
+export default function configureStore() {
   let middlewares
   if (process.env.NODE_ENV !== 'production') {
     middlewares = [sagaMiddleware, logger]
@@ -40,12 +42,20 @@ export default function configureStore(initialState = {}) {
       : compose
   /* eslint-enable */
 
+  const persistedState = loadState()
   const store = createStore(
     createReducer(),
-    fromJS(initialState),
+    fromJS(persistedState),
     composeEnhancers(...enhancers)
   )
 
+  store.subscribe(
+    throttle(1000, () => {
+      saveState({
+        listings: store.getState().get('listings'),
+      })
+    })
+  )
   // init operations/sagas
   sagaMiddleware.run(rootSaga)
 
