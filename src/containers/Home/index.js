@@ -17,7 +17,6 @@ import * as actions from 'modules/home/actions'
 
 import Header from 'components/Header'
 import Banner from 'components/Banner'
-import Landing from 'components/Landing'
 import Registries from 'components/Registries'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
