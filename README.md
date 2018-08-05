@@ -28,7 +28,7 @@ if a user controls a balance of a tcr's token, that user can participate in that
 
 if Alice has adToken, she can participate in the adChain registry
 
-if a user controls multiple tokens from multiple tcrs, the user can participate in multiple tcrs 
+if a user controls multiple tokens from multiple tcrs, the user can participate in multiple tcrs
 
 if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil registries -->
 
@@ -36,7 +36,11 @@ if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil
 
 ## Getting started
 
-### _NOTICE_: commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
+### _NOTICE_:
+
+1. This repo currently defaults to supporting the contracts compiled from [this forked repo](https://github.com/kangarang/tcr). The differences include: 1 additional string argument to both: the `apply` function and the `_Application` event emission. This means the event signature of an `_Application` event will ultimately be different, as the tightly-packed types are different. [more details](https://github.com/kangarang/tcr-ui/issues/107#issuecomment-410531118)
+
+1. Commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
 
 **TCR-UI**:
 
@@ -108,13 +112,13 @@ The [adChain Registry](https://publisher.adchain.com/) for publishers is deploye
 
 tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis)
 
-The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config/registry.json](../src/config/registry.json)
+The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config](./src/config/index.js)
 
 If you do not want to rely on hardcoding the address, you can add a custom set of ABIs to IPFS:
 
-1.  Edit the `"address"` of the appropriate `"networks"` section of [/scripts/abis/Registry.json](../scripts/abis/Registry.json)
+1.  Edit the `"address"` of the appropriate `"networks"` section of [/scripts/abis/Registry.json](./scripts/abis/Registry.json)
 1.  Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed)
-1.  Update the `ipfsABIsHash` variable in [/src/redux/libs/ipfs.js](../src/redux/libs/ipfs.js) to the IPFS multihash
+1.  Update the `ipfsABIsHash` variable in [/src/config](./src/config/index.js) to the IPFS multihash
 
 [more info](./docs/IPFS.md)
 
@@ -162,9 +166,9 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 
 ## Docs
 
-* [Events](./docs/Events.md)
-* [Transactions](./docs/Transactions.md)
-* [IPFS](./docs/IPFS.md)
+- [Events](./docs/Events.md)
+- [Transactions](./docs/Transactions.md)
+- [IPFS](./docs/IPFS.md)
 
 [Wireframes](./design)
 
@@ -174,23 +178,23 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 
 **Articles**
 
-* [Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
-* [Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
-* [Continuous Token-Curated Registries: The Infinity of Lists](https://medium.com/@simondlr/continuous-token-curated-registries-the-infinity-of-lists-69024c9eb70d)
-* [City Walls & Bo-Taoshi: Exploring the Power of Token-Curated Registries](https://medium.com/@simondlr/city-walls-bo-taoshi-exploring-the-power-of-token-curated-registries-588f208c17d5)
+- [Token-Curated Registries 1.0](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7)
+- [Token-Curated Registry 1.1, 2.0](https://medium.com/@ilovebagels/token-curated-registries-1-1-2-0-tcrs-new-theory-and-dev-updates-34c9f079f33d)
+- [Continuous Token-Curated Registries: The Infinity of Lists](https://medium.com/@simondlr/continuous-token-curated-registries-the-infinity-of-lists-69024c9eb70d)
+- [City Walls & Bo-Taoshi: Exploring the Power of Token-Curated Registries](https://medium.com/@simondlr/city-walls-bo-taoshi-exploring-the-power-of-token-curated-registries-588f208c17d5)
 
 **Code**
 
-* [TCR](https://github.com/skmgoldin/tcr)
-* [PLCR Voting](https://github.com/ConsenSys/PLCRVoting)
-* [AdChain Registry](https://github.com/AdChain/AdChainRegistry)
-* [AdChain Registry Dapp](https://github.com/AdChain/AdChainRegistryDapp)
-* [DAppDev/EasyTCR](https://github.com/DAppDevConsulting/EasyTCR)
+- [TCR](https://github.com/skmgoldin/tcr)
+- [PLCR Voting](https://github.com/ConsenSys/PLCRVoting)
+- [AdChain Registry](https://github.com/AdChain/AdChainRegistry)
+- [AdChain Registry Dapp](https://github.com/AdChain/AdChainRegistryDapp)
+- [DAppDev/EasyTCR](https://github.com/DAppDevConsulting/EasyTCR)
 
 **Community**
 
-* [Gitter channel](https://gitter.im/Curation-Markets/Lobby)
-* [tokencuratedregistry.com](https://medium.com/@tokencuratedregistry)
+- [Gitter channel](https://gitter.im/Curation-Markets/Lobby)
+- [tokencuratedregistry.com](https://medium.com/@tokencuratedregistry)
 
 ---
 
