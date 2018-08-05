@@ -69,7 +69,7 @@ class Home extends Component {
         )}
 
         <Switch>
-          <Route exact path="/" component={Listings} />
+          <Route exact path="/registries" component={Listings} />
           {/* <Route exact path="/activities" component={Activities} /> */}
         </Switch>
 
