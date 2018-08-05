@@ -16,7 +16,7 @@ import {
   selectTCR,
 } from 'modules/home/selectors'
 import { selectRegistryStart } from 'modules/home/actions'
-import { openSidePanel } from 'modules/listings/actions'
+import { openSidePanel } from 'modules/transactions/actions'
 
 import { trimDecimalsThree } from 'libs/units'
 import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
@@ -155,6 +155,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 
 export default compose(withConnect)(toJS(Header))

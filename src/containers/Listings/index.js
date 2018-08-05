@@ -28,7 +28,7 @@ import {
   selectSidePanelMethod,
 } from 'modules/listings/selectors'
 import { selectStats, selectTCR, selectBalances } from 'modules/home/selectors'
-import * as actions from 'modules/listings/actions'
+import * as actions from 'modules/transactions/actions'
 
 const ListingsWrapper = styled.div`
   width: 80vw;

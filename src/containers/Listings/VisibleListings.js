@@ -21,9 +21,7 @@ const mapStateToProps = createStructuredSelector({
   visibleListings: makeSelectVisibleListings(),
 })
 
-const withConnect = connect(mapStateToProps)
-
 export default compose(
   withRouter,
-  withConnect
+  connect(mapStateToProps)
 )(toJS(VisibleListings))

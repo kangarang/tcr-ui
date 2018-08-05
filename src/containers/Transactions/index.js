@@ -6,7 +6,6 @@ import { createStructuredSelector } from 'reselect'
 import { selectBalances, selectTCR, selectParameters } from 'modules/home/selectors'
 import { selectMiningStatus, selectLatestTxn } from 'modules/transactions/selectors'
 import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
-import * as liActions from 'modules/listings/actions'
 import * as actions from 'modules/transactions/actions'
 
 import { BN, baseToConvertedUnit } from 'libs/units'
@@ -49,7 +48,6 @@ class TransactionsProvider extends Component {
       } catch (error) {
         throw new Error('Invalid Commit JSON file')
       }
-      // this.getVoterReward(json.pollID, json.salt)
     }
     fr.readAsText(file)
   }
@@ -92,12 +90,10 @@ class TransactionsProvider extends Component {
       >
         {/* {children} */}
 
-        {/* always available */}
         <Transfer />
         <Apply />
-
-        {/* conditional */}
         <Challenge />
+
         {sidePanelMethod === 'updateStatus' && <UpdateStatus />}
         {sidePanelMethod === 'commitVote' && <CommitVote />}
         {sidePanelMethod === 'revealVote' && (
@@ -106,14 +102,6 @@ class TransactionsProvider extends Component {
         {sidePanelMethod === 'claimReward' && <ClaimReward />}
       </TransactionsContext.Provider>
     )
-  }
-  handleRescueTokens = () => {
-    const args = [this.props.sidePanelListing.challengeID]
-    this.props.onSendTransaction({ methodName: 'rescueTokens', args })
-  }
-  handleClaimReward = () => {
-    const args = [this.props.sidePanelListing.challengeID, this.state.fileInput.salt]
-    this.props.onSendTransaction({ methodName: 'claimReward', args })
   }
 }
 
@@ -127,20 +115,11 @@ const mapStateToProps = createStructuredSelector({
   sidePanelListing: selectSidePanelListing,
 })
 
-// if the action creator arguments match the callback prop arguments,
-// you can use an object that maps the prop function to its dispatch callback
 const withConnect = connect(
   mapStateToProps,
   {
     onSendTransaction: actions.sendTransactionStart,
-    onOpenSidePanel: liActions.openSidePanel,
+    onOpenSidePanel: actions.openSidePanel,
   }
 )
 export default compose(withConnect)(toJS(TransactionsProvider))
-
-// <NoBalance
-//   opened={sidePanelMethod !== ''}
-//   closeSidePanel={this.closeSidePanel}
-//   handleInputChange={this.handleInputChange}
-//   {...this.props}
-// />

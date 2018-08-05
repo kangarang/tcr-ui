@@ -1,13 +1,13 @@
 import * as types from './types'
 
-const updateListing = payload => ({
-  type: types.UPDATE_LISTING,
-  payload,
+const updateOneListing = listing => ({
+  type: types.UPDATE_ONE_LISTING,
+  listing,
 })
 
-const setListings = payload => ({
+const setListings = listings => ({
   type: types.SET_LISTINGS,
-  payload,
+  listings,
 })
 
 const deleteKey = key => ({
@@ -15,10 +15,4 @@ const deleteKey = key => ({
   key,
 })
 
-const openSidePanel = (listing, methodName) => ({
-  type: types.OPEN_SIDE_PANEL,
-  listing,
-  methodName,
-})
-
-export { updateListing, setListings, deleteKey, openSidePanel }
+export { updateOneListing, setListings, deleteKey }
