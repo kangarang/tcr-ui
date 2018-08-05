@@ -1,5 +1,4 @@
 import utils from 'ethers/utils'
-
 import map from 'lodash/fp/map'
 import find from 'lodash/fp/find'
 import every from 'lodash/fp/every'
@@ -8,6 +7,7 @@ import isArray from 'lodash/fp/isArray'
 import includes from 'lodash/fp/includes'
 import isString from 'lodash/fp/isString'
 import isUndefined from 'lodash/fp/isUndefined'
+import { v4 } from 'node-uuid'
 
 export async function getBlockAndTxnFromLog(log, ethjs) {
   const block = await ethjs.getBlockByHash(log.blockHash, false)
@@ -38,7 +38,7 @@ export const eventTypes = {
 // Create a general notification from an event
 export function generateNoti(uid, title, message, action) {
   return {
-    uid,
+    uid: v4(),
     title,
     message,
     position: 'tl',

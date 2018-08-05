@@ -44,6 +44,7 @@
     "localforage": "1.7.2",
     "lodash": "4.17.10",
     "moment": "2.22.0",
+    "node-uuid": "1.4.8",
     "path": "0.12.7",
     "react": "16.4.2",
     "react-copy-to-clipboard": "5.0.1",

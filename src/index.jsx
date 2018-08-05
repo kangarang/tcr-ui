@@ -2,10 +2,12 @@ import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom'
 
-import App from './App'
-
+import Root from './Root'
+import configureStore from './store'
 import registerServiceWorker from './registerServiceWorker'
 
-render(<App />, document.getElementById('root'))
+const store = configureStore()
+
+render(<Root store={store} />, document.getElementById('root'))
 
 registerServiceWorker()

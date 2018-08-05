@@ -89,7 +89,7 @@ export async function createListing(log, blockTxn, owner) {
     data,
     listingData,
     listingID,
-    status: '1',
+    status: 'applications',
     unstakedDeposit: deposit.toString(10),
     appExpiry: timestampToExpiry(appEndDate.toNumber()),
     ...blockTxn,
@@ -123,7 +123,7 @@ export function changeListing(golem, log, txData, eventName, account) {
   switch (eventName) {
     case '_Challenge':
       return golem
-        .set('status', fromJS('2'))
+        .set('status', fromJS('faceoffs'))
         .set('challenger', fromJS(log.challenger))
         .set('challengeID', fromJS(log.challengeID.toString()))
         .set('pollID', fromJS(log.challengeID.toString()))
@@ -133,20 +133,20 @@ export function changeListing(golem, log, txData, eventName, account) {
     case '_ApplicationWhitelisted':
     case '_ChallengeFailed':
       if (golem.get('userVoteChoice') === '1') {
-        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('3'))
+        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('whitelist'))
       } else {
-        return golem.set('status', fromJS('3'))
+        return golem.set('status', fromJS('whitelist'))
       }
     case '_ApplicationRemoved':
     case '_ListingRemoved':
     case '_ChallengeSucceeded':
       if (golem.get('userVoteChoice') === '0') {
-        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('4'))
+        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('removed'))
       } else {
-        return golem.set('status', fromJS('4'))
+        return golem.set('status', fromJS('removed'))
       }
     case '_PollCreated':
-      return golem.set('status', fromJS('2'))
+      return golem.set('status', fromJS('faceoffs'))
     case '_VoteCommitted':
       return golem.set(
         'totalVotes',

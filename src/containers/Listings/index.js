@@ -220,7 +220,6 @@ const mapStateToProps = createStructuredSelector({
   stats: selectStats,
   tcr: selectTCR,
   balances: selectBalances,
-  allListings: selectAllListings,
   applications: selectApplications,
   faceoffs: selectFaceoffs,
   whitelist: selectWhitelist,
@@ -231,6 +230,9 @@ const mapStateToProps = createStructuredSelector({
   sidePanelMethod: selectSidePanelMethod,
 })
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 
 export default compose(withStyles(styles)(withConnect(toJS(SimpleTabs))))

@@ -117,7 +117,7 @@ The [adChain Registry](https://publisher.adchain.com/) for publishers is deploye
 
 ## Application Binary Interfaces
 
-tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](https://github.com/kangarang/tcr-ui/tree/master/scripts/abis)
+tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](./scripts/abis/)
 
 The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config](./src/config/index.js)
 
@@ -177,7 +177,7 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 - [Transactions](./docs/Transactions.md)
 - [IPFS](./docs/IPFS.md)
 
-[Wireframes](./design)
+[Wireframes](./design/)
 
 ---
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { createStructuredSelector } from 'reselect'
 import Notifications from 'react-notification-system-redux'
 
@@ -13,15 +13,19 @@ import {
   selectStats,
   selectNotifications,
 } from 'modules/home/selectors'
+import { makeSelectVisibleListings } from 'modules/listings/selectors'
 import * as actions from 'modules/home/actions'
 
+import VisibleListings from 'containers/Listings/VisibleListings'
+import Listings from 'containers/Listings/Loadable'
+import TransactionsProvider from 'containers/Transactions'
+
+import FilterLinks from 'components/FilterLinks'
 import Header from 'components/Header'
 import Banner from 'components/Banner'
 import Registries from 'components/Registries'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
-import Listings from '../Listings/Loadable'
-import TransactionsProvider from '../Transactions'
 
 export const StepperContext = React.createContext()
 
@@ -44,6 +48,7 @@ class Home extends Component {
   }
   componentDidMount() {
     this.props.onSetupEthereum()
+    console.log('this.props:', this.props)
   }
   handleToggleRegistries = () => {
     this.setState(prevState => ({
@@ -56,7 +61,15 @@ class Home extends Component {
   }
 
   render() {
-    const { stats, network, balances, tcr, notifications } = this.props
+    const {
+      stats,
+      network,
+      balances,
+      tcr,
+      notifications,
+      filter,
+      visibleListings,
+    } = this.props
 
     return (
       <div>
@@ -64,14 +77,17 @@ class Home extends Component {
         <Banner tcr={tcr} />
         <Stats balances={balances} stats={stats} tcr={tcr} />
 
+        {/* router navlinks change the value of props.filter */}
+        {/* what matters in practice is that there is only 1 single source of truth for any independent piece of data */}
+        {/* redux: listings, react-router: anything that can be computed by the URL (visibility filter) */}
+        <FilterLinks />
+        <VisibleListings visibleListings={visibleListings} />
+
         {this.state.showRegistries && (
           <Registries network={network} onSelectRegistry={this.handleSelectRegistry} />
         )}
 
-        <Switch>
-          <Route exact path="/" component={Listings} />
-          {/* <Route exact path="/activities" component={Activities} /> */}
-        </Switch>
+        <Listings />
 
         <TransactionsProvider />
         <Notifications style={notificationStyles} notifications={notifications} />
@@ -109,7 +125,14 @@ const mapStateToProps = createStructuredSelector({
   tcr: selectTCR,
 
   notifications: selectNotifications,
+  visibleListings: makeSelectVisibleListings(),
 })
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps)
-export default compose(withRouter, withConnect)(toJS(Home))
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+export default compose(
+  withRouter,
+  withConnect
+)(toJS(Home))

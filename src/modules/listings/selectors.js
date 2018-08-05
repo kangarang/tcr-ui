@@ -9,24 +9,31 @@ export const selectAllListings = createSelector(selectListings, listingsState =>
 
 // Maps
 export const selectApplications = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '1')
+  listings.filter(li => li.get('status') === 'applications')
 )
 export const selectFaceoffs = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '2')
+  listings.filter(li => li.get('status') === 'faceoffs')
 )
 export const selectWhitelist = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '3')
+  listings.filter(li => li.get('status') === 'whitelist')
+)
+export const selectRemoved = createSelector(selectAllListings, listings =>
+  listings.filter(li => li.get('status') === 'removed')
 )
 export const selectExpired = createSelector(selectAllListings, listings =>
-  listings.filter(li => li.get('status') === '4')
+  listings.filter(li => li.get('status') === 'expired')
 )
 export const selectTokensToClaim = createSelector(selectAllListings, listings =>
   listings.filter(li => li.get('tokensToClaim') === true)
 )
-
-// export const selectRewardable = createSelector(selectExpired, listings =>
-//   listings.filter(li => li.get())
-// )
+// component reads filter value through props, not from state
+// selector will recompute when the filter changes
+export const makeSelectVisibleListings = () =>
+  createSelector(
+    selectAllListings,
+    (state, ownProps) => ownProps.filter,
+    (listings, filter) => listings.filter(li => li.get('status') === filter)
+  )
 
 // IDs
 export const onlyApplicationIDs = createSelector(selectApplications, applications => {

@@ -33,12 +33,12 @@ function* getFreshLogs() {
       contractAddress: registry.address,
       eventNames: [
         '_Challenge',
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ListingRemoved',
-        '_ChallengeFailed',
-        '_ChallengeSucceeded',
-        '_RewardClaimed',
+        // '_ApplicationWhitelisted',
+        // '_ApplicationRemoved',
+        // '_ListingRemoved',
+        // '_ChallengeFailed',
+        // '_ChallengeSucceeded',
+        // '_RewardClaimed',
       ],
     }
     // voting logs
@@ -70,6 +70,7 @@ function* getFreshLogs() {
     yield put(actions.decodeLogsStart(challengePayload))
     yield take(types.DECODE_LOGS_SUCCEEDED)
     yield put(actions.decodeLogsStart(votingPayload))
+    yield take(types.DECODE_LOGS_SUCCEEDED)
     yield put(actions.decodeLogsStart(finalPayload))
 
     // start polling

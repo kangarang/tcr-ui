@@ -1,16 +1,10 @@
 import React from 'react'
-import { Provider } from 'react-redux'
 import styled from 'styled-components'
-import { BrowserRouter as Router } from 'react-router-dom'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 
+import Home from './containers/Home/Loadable'
 import { muiTheme } from './global-styles'
-import configureStore from './store'
 import './App.css'
-
-import Home from 'containers/Home/Loadable'
-
-const store = configureStore()
 
 const AppWrapper = styled.div`
   display: flex;
@@ -19,15 +13,11 @@ const AppWrapper = styled.div`
   width: 100vw;
   margin: 0;
 `
-const App = () => (
+const App = ({ match }) => (
   <AppWrapper>
-    <Provider store={store}>
-      <MuiThemeProvider theme={muiTheme}>
-        <Router>
-          <Home />
-        </Router>
-      </MuiThemeProvider>
-    </Provider>
+    <MuiThemeProvider theme={muiTheme}>
+      <Home filter={match.params.filter || ''} />
+    </MuiThemeProvider>
   </AppWrapper>
 )
 

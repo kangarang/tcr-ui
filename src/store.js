@@ -3,8 +3,8 @@ import createSagaMiddleware from 'redux-saga'
 import { createLogger } from 'redux-logger'
 import { fromJS, Iterable } from 'immutable'
 import throttle from 'lodash/fp/throttle'
-import { loadState, saveState } from 'libs/localStorage'
 
+import { loadState, saveState } from 'libs/localStorage'
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
 import { DECODE_LOGS_START } from 'modules/logs/types'
@@ -42,18 +42,26 @@ export default function configureStore() {
       : compose
   /* eslint-enable */
 
+  // retrieve persisted redux state from local storage
+  // create store for hydrating persistent data into the store
   const persistedState = loadState()
+
   const store = createStore(
     createReducer(),
     fromJS(persistedState),
     composeEnhancers(...enhancers)
   )
 
+  // persist redux state in local storage
+  // no more than once per second
+  // By wrapping our callback in a throttle call,
+  // we insure that the inner function we pass is not going to be called more often than our specified number of milliseconds
   store.subscribe(
     throttle(1000, () => {
-      saveState({
-        listings: store.getState().get('listings'),
-      })
+      // saveState({
+      //   listings: store.getState().get('listings'),
+      // })
+      saveState(store.getState())
     })
   )
   // init operations/sagas
