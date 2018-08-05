@@ -13,10 +13,10 @@ const AppWrapper = styled.div`
   width: 100vw;
   margin: 0;
 `
-const App = ({ match }) => (
+const App = () => (
   <AppWrapper>
     <MuiThemeProvider theme={muiTheme}>
-      <Home filter={match.params.filter || ''} />
+      <Home />
     </MuiThemeProvider>
   </AppWrapper>
 )

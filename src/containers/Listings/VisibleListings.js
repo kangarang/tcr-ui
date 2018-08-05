@@ -1,6 +1,12 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { withRouter } from 'react-router-dom'
+import { createStructuredSelector } from 'reselect'
+import toJS from 'components/toJS'
+import { makeSelectVisibleListings } from 'modules/listings/selectors'
 
-function VisibileListings({ visibleListings }) {
+function VisibleListings({ visibleListings }) {
   return (
     <div>
       {JSON.stringify(visibleListings)}
@@ -11,4 +17,13 @@ function VisibileListings({ visibleListings }) {
   )
 }
 
-export default VisibileListings
+const mapStateToProps = createStructuredSelector({
+  visibleListings: makeSelectVisibleListings(),
+})
+
+const withConnect = connect(mapStateToProps)
+
+export default compose(
+  withRouter,
+  withConnect
+)(toJS(VisibleListings))

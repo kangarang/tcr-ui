@@ -31,7 +31,7 @@ export const selectTokensToClaim = createSelector(selectAllListings, listings =>
 export const makeSelectVisibleListings = () =>
   createSelector(
     selectAllListings,
-    (state, ownProps) => ownProps.filter,
+    (state, { match }) => match.params.filter,
     (listings, filter) => listings.filter(li => li.get('status') === filter)
   )
 
