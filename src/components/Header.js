@@ -101,12 +101,13 @@ class Header extends Component {
       account,
       balances,
       onHandleToggleRegistries,
+      onHandleGoHome,
       onOpenSidePanel,
     } = this.props
 
     return (
       <HeaderWrapper>
-        <PageTitle>{tcr.registryName}</PageTitle>
+        <PageTitle onClick={onHandleGoHome}>{tcr.registryName}</PageTitle>
 
         <NavWrapper>
           <NavLinks>

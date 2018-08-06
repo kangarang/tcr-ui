@@ -4,8 +4,8 @@ import { NavLink } from 'react-router-dom'
 const FilterLink = ({ filter, children }) => (
   <NavLink
     exact
-    to={'/' + (filter === 'applications' ? 'applications' : filter)}
-    activeStyle={{
+    to={'/' + (filter === 'all' ? '' : filter)}
+    style={{
       textDecoration: 'none',
       color: 'black',
     }}

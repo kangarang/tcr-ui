@@ -140,7 +140,7 @@ export const muiTheme = createMuiTheme({
   palette: {
     primary: {
       light: '#757ce8',
-      main: '#0095F8',
+      main: '#74FAB0',
       dark: '#002884',
       contrastText: '#fff',
     },
@@ -151,32 +151,9 @@ export const muiTheme = createMuiTheme({
       contrastText: '#000',
     },
   },
-  overrides: {
-    MuiTabIndicator: {
-      root: {
-        background: `linear-gradient(to right, ${theme.gradientLeft} 0%, ${
-          theme.gradientRight
-        } 100%)`,
-        border: 0,
-        height: 3,
-        width: '100%',
-      },
-    },
-    MuiPaper: {
-      root: {},
-    },
-    MuiTab: {
-      wrapper: {
-        alignItems: 'flex-start',
-      },
-    },
-    MuiInput: {
-      root: {
-        display: 'none',
-      },
-    },
-    MuiToolbar: {
-      gutters: {},
-    },
+  typography: {
+    fontWeightRegular: FONT_WEIGHTS.normal,
+    fontWeightBold: FONT_WEIGHTS.bold,
+    fontWeightBolder: FONT_WEIGHTS.bolder,
   },
 })

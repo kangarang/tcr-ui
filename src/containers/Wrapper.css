@@ -1,0 +1,27 @@
+html {
+  margin: 0;
+}
+
+@font-face {
+  font-family: 'Fira Code';
+  src: url('../assets/fonts/FiraCode-Regular.woff2') format('woff2'),
+    url('../assets/fonts/FiraCode-Regular.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Avenir Next';
+  src: url('../assets/fonts/avenir-next-regular.ttf') format('ttf');
+  font-weight: 600;
+  font-style: normal;
+}
+
+body {
+  color: black;
+  font-family: 'Avenir Next', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* url('../assets/fonts/avenir-next-bold.ttf') format('ttf'),
+url('../assets/fonts/avenir-next-italic.ttf') format('ttf'),
+url('../assets/fonts/avenir-next-thin.ttf') format('ttf'); */

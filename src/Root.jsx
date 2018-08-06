@@ -1,16 +1,32 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import App from './App'
+import Home from './containers/Home/Loadable'
+import Registry from './containers/Registry/Loadable'
 
-const Root = ({ store }) => (
-  <Provider store={store}>
-    <Router>
-      {/* filter: gets passed down to the App component via react-router, as a special `match` prop */}
-      <Route exact path="/:filter?" component={App} />
-    </Router>
-  </Provider>
-)
+class RootClass extends Component {
+  render() {
+    const { store } = this.props
 
-export default Root
+    const routes = (
+      <Switch>
+        {/* :[variables] are accessible via `props.match.params` */}
+        <Route exact path="/:filter?" component={Home} />
+        <Route path="/:registryAddress/:filter?" component={Registry} />
+        {/* <Route path="/registry/:registryAddress" component={Registry} /> */}
+        {/* <Route path="/activities" component={Activities} /> */}
+      </Switch>
+    )
+
+    return (
+      <Provider store={store}>
+        <Router>
+          <React.Fragment>{routes}</React.Fragment>
+        </Router>
+      </Provider>
+    )
+  }
+}
+
+export default RootClass

@@ -44,7 +44,8 @@ export default function configureStore() {
 
   // retrieve persisted redux state from local storage
   // create store for hydrating persistent data into the store
-  const persistedState = loadState()
+  // const persistedState = loadState()
+  const persistedState = {}
 
   const store = createStore(
     createReducer(),
