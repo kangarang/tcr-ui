@@ -18,3 +18,15 @@ export const saveState = state => {
     // Ignore write errors.
   }
 }
+
+export const loadSettings = () => {
+  try {
+    const serializedState = localStorage.getItem('tcruiSettings')
+    if (serializedState === null) {
+      return undefined
+    }
+    return JSON.parse(serializedState)
+  } catch (err) {
+    return undefined
+  }
+}
