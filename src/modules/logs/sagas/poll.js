@@ -86,7 +86,7 @@ export function* decodeLogsSaga(action) {
     const decoder = yield call(EthAbi.logDecoder, abi)
     const decodedLogs = yield call(decoder, rawLogs)
 
-    // consolidate: logData, txData, eventName, msgSender
+    // consolidate: logData, txData, eventName
     const lawgs = yield all(
       rawLogs.map(async (log, index) => {
         const { block, tx } = await _utils.getBlockAndTxnFromLog(log, ethjs)
@@ -102,7 +102,6 @@ export function* decodeLogsSaga(action) {
           logData,
           txData,
           eventName: logData._eventName,
-          msgSender: tx.from,
         }
       })
     )

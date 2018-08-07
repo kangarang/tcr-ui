@@ -30,6 +30,7 @@ let ethjs = undefined
 // return local rpc otherwise
 function setProvider() {
   if (
+    typeof window !== 'undefined' &&
     typeof window.web3 !== 'undefined' &&
     typeof window.web3.currentProvider !== 'undefined'
   ) {
@@ -42,6 +43,7 @@ function setProvider() {
     // rinkeby infura
     return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
   }
+  return new Ethjs.HttpProvider(`https://mainnet.infura.io`)
 }
 
 // set ethjs and return it

@@ -20,6 +20,7 @@
     "test": "react-scripts test --env=jsdom",
     "update:tokens": "babel-node scripts/update-tokens",
     "update:abis": "babel-node scripts/addABIs",
+    "getLogs": "babel-node scripts/getLogs",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },

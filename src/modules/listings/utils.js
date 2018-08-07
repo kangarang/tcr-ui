@@ -60,10 +60,18 @@ export async function handleMultihash(listingHash, data) {
 }
 
 // creates a listing entity from _Application log
-// I - decoded log, block/tx info, msgSender
+// I - decoded log, block/tx info
 // O - listing object
-export async function createListing(log, blockTxn, owner) {
-  let { listingHash, deposit, appEndDate, listingID, data, _eventName } = log
+export async function createListing(logData, blockTxn) {
+  let {
+    listingHash,
+    deposit,
+    appEndDate,
+    listingID,
+    data,
+    _eventName,
+    applicant,
+  } = logData
   if (_eventName !== '_Application') {
     throw new Error('not an application')
   }
@@ -88,7 +96,7 @@ export async function createListing(log, blockTxn, owner) {
   // starting structure for every listing entity
   const listing = {
     listingHash,
-    owner,
+    owner: applicant,
     data,
     listingData,
     listingID,
