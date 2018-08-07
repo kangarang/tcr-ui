@@ -1,12 +1,9 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
-import { removeAll } from 'react-notification-system-redux'
 
 import { selectABIs, selectAccount } from '../selectors'
 
 import * as actions from '../actions'
 import * as types from '../types'
-
-import * as liActions from 'modules/listings/actions'
 
 import { getEthjs } from 'libs/provider'
 import { ipfsGetData } from 'libs/ipfs'
@@ -17,13 +14,10 @@ import { setupRegistry, setupContract } from '../utils'
 import { hardcodedRegistryAddress, getIpfsABIsHash, defaultRegistryAddress } from 'config'
 
 export default function* contractsSagasRoot() {
-  yield takeLatest(types.SET_ABIS, registrySaga)
-  yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
-  yield takeLatest(types.CHOOSE_TCR, registrySaga)
-
   yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
   yield takeLatest(types.SETUP_ETHEREUM_FAILED, abisSaga)
   yield takeLatest(types.SELECT_REGISTRY_START, registrySaga)
+  yield takeLatest(types.SET_REGISTRY_CONTRACT, contractsSaga)
 }
 
 function* abisSaga(action) {
@@ -45,25 +39,24 @@ function* abisSaga(action) {
       address: defaultRegistryAddress,
     }
 
-    // dispatch abis -> invokes contractSagas
+    // dispatch abis, select registry
     yield put(actions.setABIs(abis))
+    yield put(actions.selectRegistryStart(abis))
   } catch (error) {
     console.log('set abis error:', error)
   }
 }
 
-export function* registrySaga(action) {
+function* registrySaga(action) {
   try {
-    // yield put(liActions.setListings({}))
-    yield put(removeAll())
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)
 
     const ethjs = yield call(getEthjs)
     const networkID = yield call(ethjs.net_version)
 
-    // if action.payload.address, use that address (CHOOSE_TCR)
-    // otherwise, use the default address (factory tcr)
+    // if action.payload.address, use that address (SELECT_REGISTRY_START)
+    // otherwise, use the default address from the abi
     let address =
       action.payload && action.payload.address !== ''
         ? action.payload.address

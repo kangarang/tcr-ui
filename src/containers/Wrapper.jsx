@@ -44,16 +44,16 @@ class ContainerWrapper extends Component {
     showRegistries: false,
   }
   handleToggleRegistries = () => {
-    this.props.history.push('/')
     this.setState(prevState => ({
       showRegistries: !prevState.showRegistries,
     }))
   }
   handleSelectRegistry = tcr => {
-    this.props.onSelectRegistry(tcr)
+    const { onSelectRegistry, history, match } = this.props
+    onSelectRegistry(tcr)
     this.setState({ showRegistries: false })
-    this.props.history.push(
-      `/${tcr.registryAddress.slice(0, 8)}/${this.props.match.params.filter}`
+    history.push(
+      `/${tcr.registryAddress.slice(0, 8)}/${match.params.filter || 'whitelist'}`
     )
   }
   handleGoHome = () => {

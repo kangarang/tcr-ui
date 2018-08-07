@@ -28,6 +28,7 @@ export default class RevealVote extends Component {
     const key = `${listing.challengeID}-${listing.listingID}`
     const localFile = await getLocal(key)
     console.log('localFile:', localFile)
+    console.log('listing:', listing)
 
     if (localFile) {
       this.setState({
@@ -66,11 +67,8 @@ export default class RevealVote extends Component {
               rightItem={baseToConvertedUnit(selectedOne.votesAgainst, tcr.tokenDecimals)}
             />
             <SideSplit
-              leftTitle={'Tokens You Committed'}
-              leftItem={baseToConvertedUnit(
-                this.state.ticket.numTokens,
-                tcr.tokenDecimals
-              )}
+              leftTitle={'Tokens You Revealed'}
+              leftItem={baseToConvertedUnit(selectedOne.userVotes, tcr.tokenDecimals)}
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />

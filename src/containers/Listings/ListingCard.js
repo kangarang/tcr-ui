@@ -67,7 +67,13 @@ function ListingCard(props) {
             <div>{one.data}</div>
           )}
           <PadDiv className={classes.buttContainer}>
-            <Typography component="p">{tsToMonthDate(one.ts)}</Typography>
+            <Typography component="p">
+              {tsToMonthDate(
+                one.whitelistBlockTimestamp
+                  ? one.whitelistBlockTimestamp
+                  : one.latestBlockTxn.blockTimestamp
+              )}
+            </Typography>
           </PadDiv>
         </CardContent>
 

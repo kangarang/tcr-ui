@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import Button from 'components/Button'
 import Img from 'components/Img'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
@@ -18,7 +17,7 @@ import likeIcon from 'assets/icons/like.svg'
 // import dislikeIcon from 'assets/icons/dislike.svg'
 
 import { randomSalt } from 'libs/values'
-import { getLocal, saveLocal } from 'utils/_localStorage'
+import { getLocal } from 'utils/_localStorage'
 
 const SidePanelWrapper = styled.div`
   font-family: 'Avenir Next';
@@ -89,7 +88,6 @@ const NumTokensButton = styled.div`
     color: magenta;
   }
 `
-const DownloadTicket = styled.div``
 const ReturnToRegistry = styled.div`
   display: flex;
   margin-top: 3em;

@@ -51,8 +51,6 @@ class Listings extends Component {
   render() {
     const { listingType, visibleListings, onOpenSidePanel } = this.props
 
-    console.log('this.props:', this.props)
-
     return (
       <ListingsContainer>
         {Object.keys(visibleListings).map(li => (
@@ -64,7 +62,7 @@ class Listings extends Component {
               updateTrigger={
                 listingType === 'faceoffs'
                   ? visibleListings[li].revealExpiry.expired
-                  : visibleListings[li].listingType === 'applications'
+                  : listingType === 'applications'
                     ? visibleListings[li].appExpiry.expired
                     : false
               }

@@ -30,3 +30,12 @@ export const loadSettings = () => {
     return undefined
   }
 }
+
+export const saveSettings = settings => {
+  try {
+    const serializedSettings = JSON.stringify(settings)
+    localStorage.setItem('tcruiSettings', serializedSettings)
+  } catch (err) {
+    // Ignore write errors.
+  }
+}

@@ -41,13 +41,8 @@ export default function configureStore() {
       : compose
   /* eslint-enable */
 
-  // If settings dictate, retrieve persisted redux state from local storage, hydrate persistent data into the store
-  const settings = loadSettings()
-  const initialState = settings && settings.persistState ? loadState() : {}
-
-  // Save settings: persist state
-  // const serializedSettings = JSON.stringify({ persistState: true })
-  // localStorage.setItem('tcruiSettings', serializedSettings)
+  const persistedState = loadState()
+  const initialState = persistedState ? persistedState : {}
 
   const store = createStore(
     createReducer(),
@@ -55,17 +50,18 @@ export default function configureStore() {
     composeEnhancers(...enhancers)
   )
 
-  if (settings && settings.persistState) {
-    // persist redux state in local storage
-    store.subscribe(
-      // no more than once per 5 seconds
-      throttle(5000, () => {
+  // persist redux state in local storage
+  store.subscribe(
+    // no more than once per 1 second
+    throttle(1000, () => {
+      const persistedState = loadState()
+      if (persistedState) {
         saveState({
           listings: store.getState().get('listings'),
         })
-      })
-    )
-  }
+      }
+    })
+  )
   // init sagas
   sagaMiddleware.run(rootSaga)
   return store
