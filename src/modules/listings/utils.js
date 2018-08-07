@@ -7,7 +7,6 @@ import { getListingHash, isAddress } from 'libs/values'
 import { BN } from 'libs/units'
 import { ipfsCheckMultihash, ipfsGetData } from 'libs/ipfs'
 import { timestampToExpiry } from 'utils/_datetime'
-// import { saveLocal } from 'utils/_localStorage'
 
 // Finds the corresponding listing according the eventName
 export function findListing(logData, listings) {
@@ -72,9 +71,13 @@ export async function createListing(log, blockTxn, owner) {
 
   // IPFS multihash validation
   if (ipfsCheckMultihash(data)) {
-    const res = await handleMultihash(listingHash, data)
-    listingID = res.listingID
-    listingData = res.listingData
+    // const res = await handleMultihash(listingHash, data)
+    // listingID = res.listingID
+    // listingData = res.listingData
+    listingID = data
+  } else if (data && !listingID) {
+    listingID = data
+    data = ''
   } else if (data) {
     listingData.imgSrc = data
   } else {
@@ -92,34 +95,37 @@ export async function createListing(log, blockTxn, owner) {
     status: 'applications',
     unstakedDeposit: deposit.toString(10),
     appExpiry: timestampToExpiry(appEndDate.toNumber()),
-    ...blockTxn,
     pollID: false,
     challenger: false,
     challengeID: false,
     challengeData: false,
     commitExpiry: {},
     revealExpiry: {},
-    votesFor: '0',
-    votesAgainst: '0',
-    challengeReward: '0',
-    userVotes: '0',
+    votesFor: '',
+    votesAgainst: '',
+    challengeReward: '',
+    userVotes: '',
     totalVotes: '0',
     tokensToClaim: false,
     userVoteChoice: '',
+    latestBlockTxn: blockTxn,
+    whitelistBlockTimestamp: '',
   }
-
-  // save to local storage
-  // await saveLocal(listingHash, listing)
   return listing
 }
 
 // updates a listing's values
 // determines where it gets rendered
-export function changeListing(golem, log, txData, eventName, account) {
-  if (txData.get('ts').lt(golem.get('ts'))) {
-    console.log('old txn; returning listing')
-    return golem
+export function changeListing(oldGolem, log, txData, eventName, account) {
+  if (
+    txData.get('blockTimestamp') < oldGolem.getIn(['latestBlockTxn', 'blockTimestamp'])
+  ) {
+    // console.log('old txn; returning listing')
+    console.log('old txn; returning listing', eventName, log, oldGolem.toJS())
+    return oldGolem
   }
+  // set the new timestamp
+  const golem = oldGolem.set('latestBlockTxn', fromJS(txData))
   switch (eventName) {
     case '_Challenge':
       return golem
@@ -133,20 +139,33 @@ export function changeListing(golem, log, txData, eventName, account) {
     case '_ApplicationWhitelisted':
     case '_ChallengeFailed':
       if (golem.get('userVoteChoice') === '1') {
-        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('whitelist'))
+        return golem
+          .set('tokensToClaim', fromJS(true))
+          .set('status', fromJS('whitelist'))
+          .set('whitelistBlockTimestamp', fromJS(txData.get('blockTimestamp')))
       } else {
-        return golem.set('status', fromJS('whitelist'))
+        return golem
+          .set('status', fromJS('whitelist'))
+          .set('whitelistBlockTimestamp', fromJS(txData.get('blockTimestamp')))
       }
     case '_ApplicationRemoved':
     case '_ListingRemoved':
     case '_ChallengeSucceeded':
       if (golem.get('userVoteChoice') === '0') {
-        return golem.set('tokensToClaim', fromJS(true)).set('status', fromJS('removed'))
+        return golem
+          .set('tokensToClaim', fromJS(true))
+          .set('status', fromJS('removed'))
+          .set('whitelistBlockTimestamp', fromJS(''))
       } else {
-        return golem.set('status', fromJS('removed'))
+        return golem
+          .set('status', fromJS('removed'))
+          .set('whitelistBlockTimestamp', fromJS(''))
       }
     case '_PollCreated':
-      return golem.set('status', fromJS('faceoffs'))
+      return golem
+        .set('status', fromJS('faceoffs'))
+        .set('challengeID', fromJS(log.pollID.toString()))
+        .set('pollID', fromJS(log.pollID.toString()))
     case '_VoteCommitted':
       return golem.set(
         'totalVotes',
@@ -163,15 +182,19 @@ export function changeListing(golem, log, txData, eventName, account) {
           .set('votesAgainst', fromJS(log.votesAgainst.toString()))
           .set('userVotes', fromJS(log.numTokens.toString()))
           .set('userVoteChoice', fromJS(log.choice.toString()))
+      } else {
+        return golem
+          .set('votesFor', fromJS(log.votesFor.toString()))
+          .set('votesAgainst', fromJS(log.votesAgainst.toString()))
       }
-      return golem
-        .set('votesFor', fromJS(log.votesFor.toString()))
-        .set('votesAgainst', fromJS(log.votesAgainst.toString()))
     case '_RewardClaimed':
       if (log.voter === account) {
         return golem.set('tokensToClaim', fromJS(false))
+      } else {
+        return golem
       }
     default:
+      console.log('unhandled event:', eventName)
       return golem
   }
 }
@@ -215,11 +238,14 @@ export async function updateListings(newListings, listings = fromJS({})) {
 
     const matchingListing = acc.get(val.get('listingHash'))
     // duplicate listingHash, older block.timestamp
-    if (matchingListing && val.get('ts').lt(matchingListing.get('ts'))) {
+    if (
+      matchingListing &&
+      val.getIn(['latestBlockTxn', 'blockTimestamp']) <
+        matchingListing.getIn(['latestBlockTxn', 'blockTimestamp'])
+    ) {
       return acc
     }
 
-    // either: new listingHash || newer block.timestamp
     return acc.set(val.get('listingHash'), fromJS(val))
   }, fromJS(listings))
 }

@@ -16,11 +16,13 @@ import {
   selectParameters,
 } from 'modules/home/selectors'
 import { selectSidePanelListing } from 'modules/listings/selectors'
-import logUtils from 'modules/logs/sagas/utils'
 
+import { getIpfsABIsHash } from 'config'
 import { getGasPrice } from 'api/gas'
-import { convertedToBaseUnit } from 'libs/units'
+import { getMethodAbi } from 'libs/abi'
+import { ipfsAddObject } from 'libs/ipfs'
 import { getListingHash } from 'libs/values'
+import { convertedToBaseUnit } from 'libs/units'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga } from './voting'
@@ -35,6 +37,7 @@ function* sendTxStartSaga(action) {
     const tcr = yield select(selectTCR)
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
+    const network = yield select(selectNetwork)
     const registry = yield select(selectRegistry)
     const parameters = yield select(selectParameters)
     const listing = yield select(selectSidePanelListing)
@@ -78,7 +81,17 @@ function* sendTxStartSaga(action) {
       case 'apply': {
         // hash the string listingID
         const listingHash = yield call(getListingHash, listingID)
-        const args = [listingHash, convertedNumTokens, listingID, data]
+        const ipfsAbiMultihash = yield call(getIpfsABIsHash, network)
+        let args = [listingHash, convertedNumTokens, listingID, data]
+        if (ipfsAbiMultihash === 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu') {
+          const ipfsObject = {
+            id: listingID,
+            data,
+          }
+          const listingMultihash = yield call(ipfsAddObject, ipfsObject)
+          console.log('listingMultihash:', listingMultihash)
+          args = [listingHash, convertedNumTokens, listingMultihash]
+        }
         yield call(sendTransactionSaga, registry, methodName, args)
         break
       }
@@ -143,7 +156,7 @@ export function* sendTransactionSaga(contract, method, args) {
     // ethjs: sendTransaction
     const from = yield select(selectAccount)
     const nonce = yield call(ethjs.getTransactionCount, from)
-    const methodAbi = yield call(logUtils.getMethodAbi, method, contract.abi)
+    const methodAbi = yield call(getMethodAbi, method, contract.abi)
     const data = EthAbi.encodeMethod(methodAbi, args)
     const payload = {
       to: contract.address,

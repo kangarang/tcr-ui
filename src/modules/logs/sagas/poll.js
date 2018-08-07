@@ -1,10 +1,6 @@
-import { select, all, takeEvery, takeLatest, call, put } from 'redux-saga/effects'
+import { select, all, take, takeEvery, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
-
 import EthAbi from 'ethjs-abi'
-
-import * as actions from '../actions'
-import * as types from '../types'
 
 import {
   selectNetwork,
@@ -14,7 +10,10 @@ import {
   selectAccount,
 } from 'modules/home/selectors'
 import { getEthjs } from 'libs/provider'
-import _utils, { getBlockAndTxnFromLog } from './utils'
+
+import * as actions from '../actions'
+import * as types from '../types'
+import _utils from '../utils'
 
 import { notificationsSaga } from './notifications'
 
@@ -22,8 +21,6 @@ function* pollLogsSaga(action) {
   try {
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
-    const token = yield select(selectToken)
-    const account = yield select(selectAccount)
 
     const blockRange = action.payload
 
@@ -39,8 +36,8 @@ function* pollLogsSaga(action) {
         '_ChallengeFailed',
         '_ChallengeSucceeded',
         '_RewardClaimed',
-        // '_TouchAndRemoved',
-        // '_ListingWithdrawn',
+        '_TouchAndRemoved',
+        '_ListingWithdrawn',
       ],
       blockRange,
     }
@@ -50,20 +47,8 @@ function* pollLogsSaga(action) {
       eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
       blockRange,
     }
-    const tokenPayload = {
-      abi: token.abi,
-      contractAddress: token.address,
-      eventNames: ['Transfer'],
-      blockRange,
-      indexedFilterValues: {
-        // here, we can specify values of indexed event emissions
-        _to: account,
-        _from: registry.address,
-      },
-    }
     yield put(actions.decodeLogsStart(registryPayload))
     yield put(actions.decodeLogsStart(votingPayload))
-    yield put(actions.decodeLogsStart(tokenPayload))
   } catch (err) {
     yield put(actions.pollLogsFailed(err))
   }
@@ -92,7 +77,10 @@ export function* decodeLogsSaga(action) {
 
     // get raw encoded logs
     const rawLogs = yield call(ethjs.getLogs, filter)
-    if (rawLogs.length === 0) return []
+    if (rawLogs.length === 0) {
+      yield put(actions.decodeLogsSucceeded([]))
+      return
+    }
 
     // decode logs
     const decoder = yield call(EthAbi.logDecoder, abi)
@@ -101,12 +89,11 @@ export function* decodeLogsSaga(action) {
     // consolidate: logData, txData, eventName, msgSender
     const lawgs = yield all(
       rawLogs.map(async (log, index) => {
-        const { block, tx } = await getBlockAndTxnFromLog(log, ethjs)
+        const { block, tx } = await _utils.getBlockAndTxnFromLog(log, ethjs)
         const txData = {
           txHash: tx.hash,
-          blockHash: block.hash,
-          blockNumber: block.number,
-          ts: block.timestamp,
+          blockNumber: block.number.toString(),
+          blockTimestamp: block.timestamp.toNumber(),
           txIndex: tx.transactionIndex.toString(),
           logIndex: rawLogs[index].logIndex.toString(),
         }
@@ -125,10 +112,8 @@ export function* decodeLogsSaga(action) {
       console.log(decodedLogs.length, eventNames, 'logs:', decodedLogs)
       yield put(actions.decodeLogsSucceeded(lawgs))
     }
-    // const currentBlock = yield call(ethjs.blockNumber)
 
     // notifications
-    // if (lawgs.length === 1 && lawgs[0].txData.blockNumber.lt(currentBlock)) {
     if (lawgs.length < 3) {
       yield all(lawgs.map(lawg => notificationsSaga(lawg)))
     }
@@ -137,7 +122,7 @@ export function* decodeLogsSaga(action) {
   }
 }
 
-let lastReadBlockNumber = 'latest'
+let lastReadBlockNumber = '0'
 
 export function* initPolling() {
   while (true) {
@@ -156,10 +141,8 @@ export function* initPolling() {
       const currentBlockNumber = yield call(ethjs.blockNumber)
       if (
         lastReadBlockNumber !== currentBlockNumber.toString() ||
-        lastReadBlockNumber === 'latest'
+        lastReadBlockNumber === '0'
       ) {
-        console.log('currentBlockNumber.toString():', currentBlockNumber.toString())
-        console.log('lastReadBlockNumber:', lastReadBlockNumber)
         // set the new last-read startBlock number
         // change it here so that when it polls again, it'll have a different value
         lastReadBlockNumber = currentBlockNumber.toString()
