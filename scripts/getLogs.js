@@ -12,7 +12,7 @@ import { tsToMonthDate } from 'utils/_datetime'
 // to the PLCRVoting contract that were above 5000000 ADT
 async function getLogs() {
   // setup Ethjs
-  const ethjs = await setEthjs()
+  const ethjs = await setEthjs('mainnet')
 
   // range to search blockchain history
   const blockRange = {
@@ -45,7 +45,7 @@ async function getLogs() {
 
   // decode those logs
   console.log('decoding..')
-  const decoder = await EthAbi.logDecoder(abi)
+  const decoder = await EthAbi.logDecoder(contract.abi)
   const decodedLogs = await decoder(rawLogs)
 
   // package the logs into an array of normalized objects
