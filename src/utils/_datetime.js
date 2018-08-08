@@ -30,7 +30,7 @@ export function dateHasPassed(unixTimestamp) {
 }
 export function tsToMonthDate(integer) {
   const date = moment.unix(integer).toDate()
-  const ret = `${months[date.getMonth() - 1]} ${date.getDate()}`
+  const ret = `${months[date.getMonth()]} ${date.getDate()}`
   return ret
 }
 export function timestampToExpiry(integer) {

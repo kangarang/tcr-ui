@@ -9,7 +9,7 @@ import { tsToMonthDate } from 'utils/_datetime'
 
 // in this snippet, we are grabbing logs from blocks 4000000 - now,
 // filtering for all adToken `Transfer` transactions that were sent
-// to the PLCRVoting contract that were above 5000000 ADT
+// to the PLCRVoting contract that were above 10000000 ADT
 async function getLogs() {
   // setup Ethjs
   const ethjs = await setEthjs('mainnet')
@@ -64,7 +64,7 @@ async function getLogs() {
   )
 
   // filter the logs by Transfer value
-  const filterValue = 5000000
+  const filterValue = 10000000
   // whale-watching
   const filteredLogs = lawgs.filter(lawg => lawg.value > filterValue)
   // prettier-ignore
