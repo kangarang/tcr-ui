@@ -76,6 +76,23 @@ async function getLogs() {
     console.log('date:', date)
     console.log('')
   })
+
+  // print: address | numTokens listingID
+  // 0xd09cc3bc  |  2345 yeehaw
+  // logs.forEach(event => {
+  //   const match = findListing(event.logData, allListings)
+  //   if (event.logData.numTokens && match) {
+  //     console.log(
+  //       event.txOrigin.slice(0, 10),
+  //       ' | ',
+  //       baseToConvertedUnit(
+  //         event.logData.numTokens,
+  //         tcr.get('tokenDecimals')
+  //       ).toString(),
+  //       match.get('listingID')
+  //     )
+  //   }
+  // })
 }
 
 getLogs()

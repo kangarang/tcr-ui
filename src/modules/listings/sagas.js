@@ -15,26 +15,14 @@ import {
 
 import * as logActions from 'modules/logs/actions'
 import { baseToConvertedUnit } from 'libs/units'
+import { ipfsCheckMultihash } from 'libs/ipfs'
 import { saveSettings } from 'libs/localStorage'
 
 export default function* rootListingsSaga() {
   yield takeEvery(logsTypes.DECODE_LOGS_SUCCEEDED, handleNewPollLogsSaga)
-  yield fork(listenForApplications)
 }
 
-// _Application log listener
-export function* listenForApplications() {
-  try {
-    while (true) {
-      const action = yield take(logsTypes.FRESH_APPLICATIONS)
-      yield call(handleNewPollLogsSaga, action)
-    }
-  } catch (error) {
-    console.log('listenForApplications error:', error)
-  }
-}
-
-// ipfs.infura rate limit: > 6 requests at a time
+// ipfs.infura rate limit: > 4 requests at a time
 // workaround: batch the applications and concat results
 function* batchCreateListings(applications, listings) {
   try {
@@ -63,25 +51,24 @@ function* batchCreateListings(applications, listings) {
   }
 }
 
-// TODO: check for involved listings (Activities)
-// TODO: discard stale listings
+// Receives decoded logs, sorts them by block.timestamp, then delegates where to go next
 export function* handleNewPollLogsSaga(action) {
   try {
     const logs = action.payload
-
-    // filter for application events
+    // Filter for application events
     const applicantLogs = logs.filter(log => log.eventName === '_Application')
 
+    // Sort based on the block.timestamp of the tx
     if (applicantLogs.length) {
       const sortedApplicantLogs = sortBy([l => l.txData.blockTimestamp], applicantLogs)
       yield call(handleApplicationLogsSaga, sortedApplicantLogs)
     }
 
-    // filter for all other types of events
+    // Filter for all other events
     const assortedLogs = logs.filter(log => log.eventName !== '_Application')
 
+    // Sort base on the block.timestamp of the tx
     if (assortedLogs.length) {
-      // update listings
       const sortedAssortedLogs = sortBy([l => l.txData.blockTimestamp], assortedLogs)
       yield call(handleAssortedLogsSaga, sortedAssortedLogs)
     }
@@ -93,22 +80,25 @@ export function* handleNewPollLogsSaga(action) {
 function* handleApplicationLogsSaga(appLogs) {
   try {
     const allListings = yield select(selectAllListings)
-    // console.log(logs.length, '_Application logs:', logs)
     const network = yield select(selectNetwork)
 
-    // create listings
+    // Create listings from _Application event logs
     let listings
-    if (network === 'mainnet' && !appLogs[0].logData.listingID) {
-      // batch for ipfs
+    // Check if the logs include ipfs multihashes and therefore need to be batched
+    // TODO: one check is probably not enough?
+    // -- should we batch regardless then? :(
+    if (ipfsCheckMultihash(appLogs[0].logData.data)) {
+      // Batch requests to ipfs
       listings = yield call(batchCreateListings, appLogs, [])
-      // console.log('listings:', listings)
     } else {
+      // If we don't have to pull listing metadata from ipfs,
+      // map through the logs and build listing entities for each application
       listings = yield all(
         appLogs.map(appLog => createListing(appLog.logData, appLog.txData))
       )
     }
 
-    // update listings
+    // Update listings
     const applications = yield call(updateListings, listings, allListings)
     // check equality to current redux state
     if (applications.equals(allListings)) {
@@ -130,26 +120,7 @@ function* handleApplicationLogsSaga(appLogs) {
 function* handleAssortedLogsSaga(logs) {
   try {
     const allListings = yield select(selectAllListings)
-    const tcr = yield select(selectTCR)
     const account = yield select(selectAccount)
-    // console.log(logs.length, 'assorted logs:', logs)
-
-    // print: address | numTokens listingID
-    // 0xd09cc3bc  |  2345 yeehaw
-    // logs.forEach(event => {
-    //   const match = findListing(event.logData, allListings)
-    //   if (event.logData.numTokens && match) {
-    //     console.log(
-    //       event.txOrigin.slice(0, 10),
-    //       ' | ',
-    //       baseToConvertedUnit(
-    //         event.logData.numTokens,
-    //         tcr.get('tokenDecimals')
-    //       ).toString(),
-    //       match.get('listingID')
-    //     )
-    //   }
-    // })
 
     const updatedListings = yield call(updateAssortedListings, logs, allListings, account)
 
