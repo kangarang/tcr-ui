@@ -17,12 +17,14 @@ const _utils = {
     return { block, tx }
   },
 
-  getFilter: async (address, eventNames, indexFilterValues = {}, abi, blockRange) => {
+  getFilter: async (blockRange, contract, eventNames, indexFilterValues = {}) => {
+    const { abi, address } = contract
+    const { fromBlock, toBlock } = blockRange
     if (eventNames.length === 0) {
       return {
-        fromBlock: blockRange.fromBlock,
-        toBlock: blockRange.toBlock,
-        address: address,
+        fromBlock,
+        toBlock,
+        address,
         topics: [],
       }
     }
@@ -36,28 +38,17 @@ const _utils = {
       return eventSignatureTopic
     })
 
-    // note: indexed args reserved for first eventName in array
     // prettier-ignore
+    // note: indexed args reserved for first eventName in array
     const eventAbi = find({ 'name': eventNames[0] }, abi)
-    const topicsForIndexedArgs = _utils.getTopicsForIndexedArgs(
-      eventAbi,
-      indexFilterValues
-    )
+    // prettier-ignore
+    const topicsForIndexedArgs = _utils.getTopicsForIndexedArgs(eventAbi, indexFilterValues)
     const topics = [evSigTopics, ...topicsForIndexedArgs]
-    let filter = {
-      address,
-      topics,
-    }
+
     if (!isUndefined(blockRange)) {
-      filter = {
-        fromBlock: blockRange.fromBlock,
-        toBlock: blockRange.toBlock,
-        address: filter.address,
-        topics: filter.topics,
-      }
+      return { fromBlock, toBlock, address, topics }
     }
-    // console.log('filter:', filter)
-    return filter
+    return { address, topics }
   },
 
   getEventStringFromAbiName: (eventAbi, eventName) => {
