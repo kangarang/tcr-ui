@@ -13,9 +13,6 @@ import toJS from 'components/toJS'
 import Wrapper from '../Wrapper'
 
 class Home extends Component {
-  state = {
-    showRegistries: false,
-  }
   componentDidMount() {
     this.props.onSetupEthereum()
   }
@@ -31,20 +28,6 @@ class Home extends Component {
     )
   }
 }
-
-// TODO
-// 1. in Transactions/index, create the Provider + this.handleTransactions w/ this.props.children
-// <TransactionsContext.Provider value={{
-//   ...values
-// }}>
-//   {this.props.children}
-// </TransactionsContext.Provider>
-// 2. in Listings/index, depending on the listings being rendered, expose Provider + Children. that way we dont have to worry about {methodName === 'commitVote' && (...)}
-// <TransactionsProvider>
-//   <Apply />
-//   <Challenge />
-// </TransactionsProvider>
-// 3. in Transactions/[transaction], render the Consumer + context options for execution
 
 const mapStateToProps = createStructuredSelector({
   balances: selectBalances,

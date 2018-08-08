@@ -41,7 +41,7 @@ export default class RevealVote extends Component {
     return (
       <TransactionsContext.Consumer>
         {({
-          closeSidePanel,
+          closeTxPanel,
           selectedOne,
           opened,
           balances,
@@ -52,7 +52,7 @@ export default class RevealVote extends Component {
           <SidePanel
             title="Reveal Vote"
             opened={opened === 'revealVote'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             <SideSplit
               leftTitle={'Voting Rights'}

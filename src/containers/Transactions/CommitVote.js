@@ -136,11 +136,11 @@ class CommitVote extends Component {
     return (
       <SidePanelWrapper>
         <TransactionsContext.Consumer>
-          {({ needToApproveVoting, selectedOne, closeSidePanel, onSendTx, opened }) => (
+          {({ needToApproveVoting, selectedOne, closeTxPanel, onSendTx, opened }) => (
             <SidePanel
               title="Commit Your Vote"
               opened={opened === 'commitVote'}
-              onClose={closeSidePanel}
+              onClose={closeTxPanel}
             >
               {/* <ArrowIcon>
             <Img src={rightArrowIcon} />

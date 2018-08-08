@@ -21,7 +21,7 @@ export default class Challenge extends React.Component {
       <TransactionsContext.Consumer>
         {({
           needToApproveRegistry,
-          closeSidePanel,
+          closeTxPanel,
           handleApprove,
           onSendTx,
           selectedOne,
@@ -32,7 +32,7 @@ export default class Challenge extends React.Component {
           <SidePanel
             title="Challenge a Listing"
             opened={opened === 'challenge'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             {needToApproveRegistry && (
               <SideText small color="grey" text={translate('ins_approve_registry')} />

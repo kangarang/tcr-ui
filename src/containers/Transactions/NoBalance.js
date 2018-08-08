@@ -6,9 +6,9 @@ import { SideText } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
 import SidePanel from './components/SidePanel'
 
-export default ({ opened, closeSidePanel, tcr, handleInputChange }) => (
+export default ({ opened, closeTxPanel, tcr, handleInputChange }) => (
   <div>
-    <SidePanel title="Start an Application" opened={opened} onClose={closeSidePanel}>
+    <SidePanel title="Start an Application" opened={opened} onClose={closeTxPanel}>
       <SidePanelSeparator />
 
       <MarginDiv>

@@ -22,11 +22,11 @@ export default class UpdateStatus extends Component {
   render() {
     return (
       <TransactionsContext.Consumer>
-        {({ selectedOne, closeSidePanel, onSendTx, opened, tcr }) => (
+        {({ selectedOne, closeTxPanel, onSendTx, opened, tcr }) => (
           <SidePanel
             title="Update a listing's status"
             opened={opened === 'updateStatus'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             {selectedOne && (
               <div>

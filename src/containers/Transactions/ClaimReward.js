@@ -13,7 +13,7 @@ class ClaimReward extends Component {
         {({
           selectedOne,
           opened,
-          closeSidePanel,
+          closeTxPanel,
           handleFileInput,
           handleClaimReward,
           account,
@@ -23,7 +23,7 @@ class ClaimReward extends Component {
           <SidePanel
             title="Claim Reward"
             opened={opened === 'claimReward'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             <MarginDiv>
               <FileInput type="file" name="file" onChange={handleFileInput} />

@@ -14,8 +14,8 @@ import { selectNetwork, selectNotifications } from 'modules/home/selectors'
 import * as actions from 'modules/home/actions'
 
 import TransactionsProvider from 'containers/Transactions'
-import Header from 'components/Header'
 import Registries from 'components/Registries'
+import Header from 'components/Header'
 import toJS from 'components/toJS'
 
 const notificationStyles = {
@@ -24,10 +24,7 @@ const notificationStyles = {
       margin: '10px 5px 2px 5px',
       width: '400px',
     },
-    info: {
-      // color: 'black',
-      // backgroundColor: 'white',
-    },
+    info: {},
   },
 }
 
@@ -39,23 +36,26 @@ const Wrapper = styled.div`
   margin: 0;
 `
 
-class ContainerWrapper extends Component {
+class WrapperClass extends Component {
   state = {
-    showRegistries: false,
+    visibleRegistries: false,
   }
+  // Toggles visibility of Registry picker
   handleToggleRegistries = () => {
     this.setState(prevState => ({
-      showRegistries: !prevState.showRegistries,
+      visibleRegistries: !prevState.visibleRegistries,
     }))
   }
+  // Dispatches SELECT_REGISTRY_CONTRACT action
   handleSelectRegistry = tcr => {
     const { onSelectRegistry, history, match } = this.props
-    onSelectRegistry(tcr)
-    this.setState({ showRegistries: false })
+    this.setState({ visibleRegistries: false })
     history.push(
       `/${tcr.registryAddress.slice(0, 8)}/${match.params.filter || 'whitelist'}`
     )
+    onSelectRegistry(tcr)
   }
+  // Directs to root route
   handleGoHome = () => {
     this.props.history.push('/')
   }
@@ -71,7 +71,7 @@ class ContainerWrapper extends Component {
             onHandleGoHome={this.handleGoHome}
           />
 
-          {this.state.showRegistries && (
+          {this.state.visibleRegistries && (
             <Registries network={network} onSelectRegistry={this.handleSelectRegistry} />
           )}
 
@@ -99,4 +99,4 @@ const withConnect = connect(
 export default compose(
   withRouter,
   withConnect
-)(toJS(ContainerWrapper))
+)(toJS(WrapperClass))

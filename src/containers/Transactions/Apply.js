@@ -26,7 +26,7 @@ export default class Apply extends React.Component {
     return (
       <TransactionsContext.Consumer>
         {({
-          closeSidePanel,
+          closeTxPanel,
           needToApproveRegistry,
           visibleApprove,
           showApprove,
@@ -39,7 +39,7 @@ export default class Apply extends React.Component {
           <SidePanel
             title="Start an Application"
             opened={opened === 'apply'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             <SidePanelSeparator />
 

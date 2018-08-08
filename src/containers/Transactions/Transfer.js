@@ -21,11 +21,11 @@ export default class Transfer extends React.Component {
   render() {
     return (
       <TransactionsContext.Consumer>
-        {({ closeSidePanel, opened, onSendTx }) => (
+        {({ closeTxPanel, opened, onSendTx }) => (
           <SidePanel
             title="Transfer Tokens"
             opened={opened === 'transfer'}
-            onClose={closeSidePanel}
+            onClose={closeTxPanel}
           >
             <SidePanelSeparator />
             <SideText small color="grey" text={'Number of tokens to transfer'} />

@@ -21,7 +21,7 @@ const GridItem = styled.div`
   font-weight: bold;
 `
 
-export default ({ error, openSidePanel, tcr }) => (
+export default ({ error, openTxPanel, tcr }) => (
   <Wrapper>
     <GridContainer>
       {error ? (
@@ -30,7 +30,7 @@ export default ({ error, openSidePanel, tcr }) => (
         </GridItem>
       ) : (
         <GridItem gc={1}>
-          <Button onClick={openSidePanel}>{'Start an application'}</Button>
+          <Button onClick={openTxPanel}>{'Start an application'}</Button>
         </GridItem>
       )}
 

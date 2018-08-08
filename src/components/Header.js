@@ -16,7 +16,7 @@ import {
   selectTCR,
 } from 'modules/home/selectors'
 import { selectRegistryStart } from 'modules/home/actions'
-import { openSidePanel } from 'modules/transactions/actions'
+import { openTxPanel } from 'modules/transactions/actions'
 
 import { trimDecimalsThree } from 'libs/units'
 import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
@@ -102,7 +102,7 @@ class Header extends Component {
       balances,
       onHandleToggleRegistries,
       onHandleGoHome,
-      onOpenSidePanel,
+      onOpenTxPanel,
     } = this.props
 
     return (
@@ -112,7 +112,7 @@ class Header extends Component {
         <NavWrapper>
           <NavLinks>
             <NavLink onClick={onHandleToggleRegistries}>Registries</NavLink>
-            <NavLink onClick={e => onOpenSidePanel(null, 'apply')}>
+            <NavLink onClick={e => onOpenTxPanel(null, 'apply')}>
               Add an application
             </NavLink>
             <NavLink>Vote</NavLink>
@@ -125,7 +125,7 @@ class Header extends Component {
             </Avatar>
 
             <Balances>
-              <TokenBalance onClick={() => onOpenSidePanel(null, 'transfer')}>
+              <TokenBalance onClick={() => onOpenTxPanel(null, 'transfer')}>
                 {balances.token} {tcr.tokenSymbol}
               </TokenBalance>
               <EtherBalance>0.00 USD {trimDecimalsThree(balances.ETH)} ETH</EtherBalance>
@@ -151,8 +151,8 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onSelectRegistry: tcr => dispatch(selectRegistryStart(tcr)),
-    onOpenSidePanel: (selectedOne, methodName) =>
-      dispatch(openSidePanel(selectedOne, methodName)),
+    onOpenTxPanel: (selectedOne, methodName) =>
+      dispatch(openTxPanel(selectedOne, methodName)),
   }
 }
 
