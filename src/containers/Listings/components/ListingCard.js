@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Card from '@material-ui/core/Card'
@@ -7,8 +8,7 @@ import Button from 'components/Button'
 import Img from 'components/Img'
 import Countdown from 'components/Countdown'
 
-import styled from 'styled-components'
-import { tsToMonthDate } from '../../utils/_datetime'
+import { tsToMonthDate } from 'utils/_datetime'
 
 const CardContent = styled.div`
   padding: 1em;
@@ -49,7 +49,7 @@ function ListingCard(props) {
     listingType,
     updateTrigger,
     revealTrigger,
-    openSidePanel,
+    openTxPanel,
     claimRewardTrigger,
   } = props
 
@@ -85,7 +85,7 @@ function ListingCard(props) {
                   <Countdown end={one.commitExpiry.date} />
                   <Button
                     methodName="commitVote"
-                    onClick={e => openSidePanel(one, 'commitVote')}
+                    onClick={e => openTxPanel(one, 'commitVote')}
                     color="primary"
                   >
                     {'Commit Vote'}
@@ -97,7 +97,7 @@ function ListingCard(props) {
                   <div>
                     <Countdown end={one.revealExpiry.date} />
                     <Button
-                      onClick={e => openSidePanel(one, 'revealVote')}
+                      onClick={e => openTxPanel(one, 'revealVote')}
                       color="primary"
                       methodName="revealVote"
                     >
@@ -112,7 +112,7 @@ function ListingCard(props) {
               <Countdown end={one.appExpiry.date} />
               <Button
                 wide
-                onClick={e => openSidePanel(one, 'challenge')}
+                onClick={e => openTxPanel(one, 'challenge')}
                 color="secondary"
                 methodName="challenge"
               >
@@ -123,7 +123,7 @@ function ListingCard(props) {
           {claimRewardTrigger && (
             <Button
               methodName="claimReward"
-              onClick={e => openSidePanel(one, 'claimReward')}
+              onClick={e => openTxPanel(one, 'claimReward')}
               color="primary"
             >
               {'Claim Reward'}
@@ -132,7 +132,7 @@ function ListingCard(props) {
           {updateTrigger && (
             <Button
               methodName="updateStatus"
-              onClick={e => openSidePanel(one, 'updateStatus')}
+              onClick={e => openTxPanel(one, 'updateStatus')}
               color="primary"
               wide
             >

@@ -13,8 +13,8 @@ import { makeSelectVisibleListings } from 'modules/listings/selectors'
 import { selectStats, selectTCR } from 'modules/home/selectors'
 
 import toJS from 'components/toJS'
+import Listings from 'containers/Listings/Loadable'
 import Wrapper from '../Wrapper'
-import Listings from '../Listings/Loadable'
 
 const Table = styled.div`
   flex-grow: 1;

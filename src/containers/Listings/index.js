@@ -7,11 +7,11 @@ import styled from 'styled-components'
 import { withStyles } from '@material-ui/core/styles'
 
 import { colors } from 'global-styles'
-import { selectSidePanelListing, selectSidePanelMethod } from 'modules/listings/selectors'
+import { selectTxPanelListing, selectTxPanelMethod } from 'modules/transactions/selectors'
 import * as actions from 'modules/transactions/actions'
 
 import toJS from 'components/toJS'
-import ListingCard from './ListingCard'
+import ListingCard from './components/ListingCard'
 
 const ListingsContainer = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const styles = theme => ({
   },
   tableWrapper: {
     // overflowX: 'auto',
-    padding: '0',
+    // padding: '0',
   },
   appBar: {
     boxShadow: '0 0 0 0',
@@ -49,7 +49,7 @@ const styles = theme => ({
 
 class Listings extends Component {
   render() {
-    const { listingType, visibleListings, onOpenSidePanel } = this.props
+    const { listingType, visibleListings, onOpenTxPanel } = this.props
 
     return (
       <ListingsContainer>
@@ -58,7 +58,7 @@ class Listings extends Component {
             <ListingCard
               one={visibleListings[li]}
               listingType={listingType}
-              openSidePanel={onOpenSidePanel}
+              openTxPanel={onOpenTxPanel}
               updateTrigger={
                 listingType === 'faceoffs'
                   ? visibleListings[li].revealExpiry.expired
@@ -81,14 +81,14 @@ class Listings extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  sidePanelListing: selectSidePanelListing,
-  sidePanelMethod: selectSidePanelMethod,
+  txPanelListing: selectTxPanelListing,
+  txPanelMethod: selectTxPanelMethod,
 })
 
 const withConnect = connect(
   mapStateToProps,
   {
-    onOpenSidePanel: actions.openSidePanel,
+    onOpenTxPanel: actions.openTxPanel,
   }
 )
 
