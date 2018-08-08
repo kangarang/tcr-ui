@@ -28,7 +28,7 @@ function getEthersProvider() {
 let ethjs = undefined
 // prefer metamask provider
 // return local rpc otherwise
-function setProvider() {
+function setProvider(network) {
   if (
     typeof window !== 'undefined' &&
     typeof window.web3 !== 'undefined' &&
@@ -43,13 +43,17 @@ function setProvider() {
     // rinkeby infura
     return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
   }
-  return new Ethjs.HttpProvider(`https://mainnet.infura.io`)
+  if (network === 'mainnet') {
+    return new Ethjs.HttpProvider(`https://mainnet.infura.io`)
+  } else if (network === 'rinkeby') {
+    return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
+  }
 }
 
 // set ethjs and return it
-function setEthjs() {
+function setEthjs(network) {
   // metamask or ganache-cli
-  const provider = setProvider()
+  const provider = setProvider(network)
   // set global
   ethjs = new Ethjs(provider)
   return ethjs

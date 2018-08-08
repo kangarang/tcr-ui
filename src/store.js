@@ -7,15 +7,20 @@ import throttle from 'lodash/fp/throttle'
 import { loadState, saveState, loadSettings } from 'libs/localStorage'
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
+import balancesSaga from 'modules/home/sagas/balances'
+import contractsSaga from 'modules/home/sagas/contracts'
+import logsSaga from 'modules/logs/sagas/'
+import listingsSaga from 'modules/listings/sagas'
+import transactionsSaga from 'modules/transactions/sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 
+// prettier-ignore
 const logger = createLogger({
-  duration: true,
-  timestamp: true,
+  // duration: true,
+  // timestamp: true,
   // print Immutable objects as JS objects
-  actionTransformer: action =>
-    isImmutable(action.listings) ? fromJS(action).toJS() : action,
+  actionTransformer: action => isImmutable(action.listings) ? fromJS(action).toJS() : action,
   stateTransformer: state => (isImmutable(state) ? state.toJS() : state),
   collapsed: (getState, action, logEntry) => !logEntry.error,
   // predicate: (getState, action) => action.type !== DECODE_LOGS_START,
@@ -64,5 +69,10 @@ export default function configureStore() {
   )
   // init sagas
   sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(balancesSaga)
+  sagaMiddleware.run(contractsSaga)
+  sagaMiddleware.run(logsSaga)
+  sagaMiddleware.run(listingsSaga)
+  sagaMiddleware.run(transactionsSaga)
   return store
 }

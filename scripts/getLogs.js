@@ -5,8 +5,11 @@ import { setEthjs } from 'libs/provider'
 import { baseToConvertedUnit } from 'libs/units'
 
 import token from './abis/EIP20.json'
-import { tsToMonthDate } from '../src/utils/_datetime'
+import { tsToMonthDate } from 'utils/_datetime'
 
+// in this snippet, we are grabbing logs from blocks 4000000 - now,
+// filtering for all adToken `Transfer` transactions that were sent
+// to the PLCRVoting contract that were above 5000000 ADT
 async function getLogs() {
   // setup Ethjs
   const ethjs = await setEthjs()
@@ -76,23 +79,6 @@ async function getLogs() {
     console.log('date:', date)
     console.log('')
   })
-
-  // print: address | numTokens listingID
-  // 0xd09cc3bc  |  2345 yeehaw
-  // logs.forEach(event => {
-  //   const match = findListing(event.logData, allListings)
-  //   if (event.logData.numTokens && match) {
-  //     console.log(
-  //       event.txOrigin.slice(0, 10),
-  //       ' | ',
-  //       baseToConvertedUnit(
-  //         event.logData.numTokens,
-  //         tcr.get('tokenDecimals')
-  //       ).toString(),
-  //       match.get('listingID')
-  //     )
-  //   }
-  // })
 }
 
 getLogs()

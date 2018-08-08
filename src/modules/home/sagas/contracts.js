@@ -4,6 +4,7 @@ import { selectABIs, selectAccount } from '../selectors'
 
 import * as actions from '../actions'
 import * as types from '../types'
+import * as liActions from 'modules/listings/actions'
 
 import { getEthjs } from 'libs/provider'
 import { ipfsGetData } from 'libs/ipfs'
@@ -49,6 +50,7 @@ function* abisSaga(action) {
 
 function* registrySaga(action) {
   try {
+    yield put(liActions.setListings({}))
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)
 
