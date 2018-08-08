@@ -117,10 +117,10 @@ function* handleApplicationLogsSaga(appLogs) {
       yield put(actions.setListings(applications))
       // Save settings: persist state
       // lastReadBlkNum: get from the last item in the array of various event logs
-      yield call(saveSettings, {
-        persistState: true,
-        lastReadBlockNumber: appLogs[appLogs.length - 1].txData.blockTimestamp,
-      })
+      // yield call(saveSettings, {
+      //   persistState: true,
+      //   lastReadBlockNumber: appLogs[appLogs.length - 1].txData.blockTimestamp,
+      // })
     }
   } catch (error) {
     yield put(logActions.pollLogsFailed(error))

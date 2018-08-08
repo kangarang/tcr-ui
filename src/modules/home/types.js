@@ -7,7 +7,7 @@ export const SELECT_REGISTRY_FAILED = 'app/home/SELECT_REGISTRY_FAILED'
 
 export const SET_ABIS = 'app/home/SET_ABIS'
 export const SET_REGISTRY_CONTRACT = 'app/home/SET_REGISTRY_CONTRACT'
-export const SET_CONTRACTS = 'app/home/SET_CONTRACTS'
+export const SET_ALL_CONTRACTS = 'app/home/SET_ALL_CONTRACTS'
 export const CHOOSE_TCR = 'app/home/CHOOSE_TCR'
 
 export const UPDATE_BALANCES_START = 'app/home/UPDATE_BALANCES_START'

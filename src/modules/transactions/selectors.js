@@ -2,9 +2,9 @@ import { createSelector } from 'reselect'
 
 export const selectTransactions = state => state.get('transactions')
 
-export const selectLatestTxn = createSelector(selectTransactions, txnsState =>
-  txnsState.get('latestTxn')
+export const selectTxPanelListing = createSelector(selectTransactions, txState =>
+  txState.get('txPanelListing')
 )
-export const selectMiningStatus = createSelector(selectTransactions, txnsState =>
-  txnsState.get('miningStatus')
+export const selectTxPanelMethod = createSelector(selectTransactions, txState =>
+  txState.get('txPanelMethod')
 )

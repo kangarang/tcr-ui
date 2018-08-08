@@ -35,7 +35,7 @@ export const makeSelectVisibleListings = () =>
     (listings, filter) => listings.filter(li => li.get('status') === filter)
   )
 
-// IDs
+// by IDs
 export const onlyApplicationIDs = createSelector(selectApplications, applications => {
   const [...keys] = applications.keys()
   return keys
@@ -53,10 +53,3 @@ export const onlyExpiredIDs = createSelector(selectExpired, expired => {
   const [...keys] = expired.keys()
   return keys
 })
-
-export const selectSidePanelListing = createSelector(selectListings, listingsState =>
-  listingsState.get('sidePanelListing')
-)
-export const selectSidePanelMethod = createSelector(selectListings, listingsState =>
-  listingsState.get('sidePanelMethod')
-)

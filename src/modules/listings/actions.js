@@ -5,9 +5,10 @@ const updateOneListing = listing => ({
   listing,
 })
 
-const setListings = listings => ({
+const setListings = (listings, byID) => ({
   type: types.SET_LISTINGS,
   listings,
+  byID,
 })
 
 const deleteKey = key => ({

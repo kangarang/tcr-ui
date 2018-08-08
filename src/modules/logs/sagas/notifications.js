@@ -61,7 +61,7 @@ function* notify(noti, type, callback = function() {}) {
       yield put(error(noti))
       break
     default:
-      console.log('ERROR IN CALLING this.notify()')
+      console.log('ERROR IN CALLING this.notify()', type)
   }
   callback()
 }

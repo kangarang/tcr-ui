@@ -24,8 +24,8 @@ const clearTxn = payload => ({
   type: types.CLEAR_TXN,
   payload,
 })
-const openSidePanel = (listing, methodName) => ({
-  type: types.OPEN_SIDE_PANEL,
+const openTxPanel = (listing, methodName) => ({
+  type: types.OPEN_TX_PANEL,
   listing,
   methodName,
 })
@@ -37,5 +37,5 @@ export {
   sendTransactionFailed,
   txnMining,
   clearTxn,
-  openSidePanel,
+  openTxPanel,
 }

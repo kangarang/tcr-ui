@@ -3,7 +3,6 @@ import { fromJS } from 'immutable'
 import * as types from './types'
 
 const initialState = fromJS({
-  provider: {},
   account: '0x0000000000000000000000000000000000000000',
   network: '',
   balances: {
@@ -23,6 +22,7 @@ const initialState = fromJS({
     tokenAddress: '0x0000000000000000000000000000000000000000',
     votingAddress: '0x0000000000000000000000000000000000000000',
     registryAddress: '0x0000000000000000000000000000000000000000',
+    parameterizerAddress: '0x0000000000000000000000000000000000000000',
   },
   contracts: {
     registry: {},
@@ -31,9 +31,7 @@ const initialState = fromJS({
     parameterizer: {},
   },
   parameters: { minDeposit: '0', applyStageLen: '0' },
-  latestTxn: {},
   abis: {},
-  sortableData: {},
 })
 
 function homeReducer(state = initialState, action) {
@@ -49,7 +47,7 @@ function homeReducer(state = initialState, action) {
       return state.set('abis', action.payload) // mutable
     case types.SET_REGISTRY_CONTRACT:
       return state.setIn(['contracts', 'registry'], fromJS(action.payload))
-    case types.SET_CONTRACTS:
+    case types.SET_ALL_CONTRACTS:
       return state
         .set('parameters', fromJS(action.payload.parameters))
         .set('contracts', fromJS(action.payload.contracts))

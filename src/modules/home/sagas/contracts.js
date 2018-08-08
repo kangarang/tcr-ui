@@ -185,7 +185,7 @@ function* contractsSaga(action) {
 
     // dispatch: parameters, contracts, and tcr config data
     yield put(
-      actions.setContracts({
+      actions.setAllContracts({
         parameters,
         contracts: {
           registry,

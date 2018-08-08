@@ -55,9 +55,9 @@ export function setRegistryContract(payload) {
   }
 }
 
-export function setContracts(payload) {
+export function setAllContracts(payload) {
   return {
-    type: types.SET_CONTRACTS,
+    type: types.SET_ALL_CONTRACTS,
     payload,
   }
 }

@@ -4,9 +4,12 @@ export const eventTypes = {
   _Application: 'info',
   _ApplicationWhitelisted: 'success',
   _ApplicationRemoved: 'error',
+  _PollCreated: 'info',
   _Challenge: 'info',
   _VoteCommitted: 'info',
   _VoteRevealed: 'info',
+  _TokensRescued: 'info',
+  _RewardClaimed: 'success',
   _ReparameterizationProposal: 'info',
   _NewChallenge: 'info',
   _ProposalAccepted: 'info',
@@ -16,8 +19,6 @@ export const eventTypes = {
   _ListingWithdrawn: 'info',
   Approval: 'success',
   Transfer: 'success',
-  _TokensRescued: 'info',
-  _RewardClaimed: 'success',
 }
 
 // Create a general notification from an event
