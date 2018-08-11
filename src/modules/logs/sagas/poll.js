@@ -1,24 +1,24 @@
-import { select, takeEvery, call, put } from 'redux-saga/effects'
+import { fork, select, takeEvery, call, put } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
 import { selectRegistry, selectVoting } from 'modules/home/selectors'
 import { getEthjs } from 'libs/provider'
 
-import { decodeLogsSaga } from './decode'
+import { getSortedLogsSaga } from './utils'
+import rootDecodeLogsSaga from './decode'
 import * as actions from '../actions'
 import * as types from '../types'
 
 export default function* rootLogsSaga() {
-  // action carries data about what type of logs we want to poll,
-  // forwards to the decoder, then eventually the listings sagas
-  yield takeEvery(types.DECODE_LOGS_START, decodeLogsSaga)
-  // action received from initPolling, forwards the action's blockRange value to pollLogsSaga
+  yield fork(rootDecodeLogsSaga)
+  // forward the action's blockRange value to pollLogsSaga
   yield takeEvery(types.POLL_LOGS_START, pollLogsSaga)
 }
 
 // counter
 let lastReadBlockNumber = 0
 
+// prettier-ignore
 export function* initPolling() {
   while (true) {
     try {
@@ -30,18 +30,22 @@ export function* initPolling() {
 
       // get the current block number
       const currentBlockNumber = (yield call(ethjs.blockNumber)).toNumber()
+
+      // make sure lastRead is a valid starting position
+      if (currentBlockNumber < lastReadBlockNumber || lastReadBlockNumber < 0) {
+        throw new Error('Invalid fromBlock. It must be less than the currentBlockNumber || it cannot be negative')
+      }
+
       // if the blockchain has grown since we last checked,
+      // dispatch a request to poll for new logs using the
+      // counter's value as the startBlock range value
       if (currentBlockNumber > lastReadBlockNumber) {
-        // dispatch a request to poll for new logs using the
-        // counter's value as the startBlock range value,
-        // and set the counter to the currentBlockNumber
+        yield put(actions.pollLogsStart({
+          startBlock: lastReadBlockNumber,
+          endBlock: 'latest',
+        }))
+        // set the counter to the currentBlockNumber
         lastReadBlockNumber = currentBlockNumber
-        yield put(
-          actions.pollLogsStart({
-            startBlock: lastReadBlockNumber,
-            endBlock: 'latest',
-          })
-        )
       }
     } catch (err) {
       yield put(actions.pollLogsFailed(err))
@@ -49,42 +53,17 @@ export function* initPolling() {
   }
 }
 
+// forwarded from initPolling action
 function* pollLogsSaga(action) {
   try {
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
 
-    // the action is a block range
-    const blockRange = action.payload
+    const sortedRegistryLogs = yield call(getSortedLogsSaga, action.payload, [], registry)
+    const sortedVotingLogs = yield call(getSortedLogsSaga, action.payload, [], voting)
 
-    // declare what kinda logs we want to see:
-    // which events, where they're coming from, when they happened
-    const registryPayload = {
-      blockRange,
-      contract: registry,
-      eventNames: [
-        '_Application',
-        '_Challenge',
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ListingRemoved',
-        '_ChallengeFailed',
-        '_ChallengeSucceeded',
-        '_RewardClaimed',
-        '_TouchAndRemoved',
-        '_ListingWithdrawn',
-      ],
-    }
-    // 1 for the voting contract too
-    const votingPayload = {
-      blockRange,
-      contract: voting,
-      eventNames: ['_PollCreated', '_VoteCommitted', '_VoteRevealed'],
-    }
-
-    // dispatch the proto-filters to build real filter objects
-    yield put(actions.decodeLogsStart(registryPayload))
-    yield put(actions.decodeLogsStart(votingPayload))
+    yield put(actions.pollLogsSucceeded(sortedRegistryLogs))
+    yield put(actions.pollLogsSucceeded(sortedVotingLogs))
   } catch (err) {
     yield put(actions.pollLogsFailed(err))
   }

@@ -1,5 +1,4 @@
 import BNJS from 'bn.js'
-// import ow from 'ow'
 
 export const BN = small => {
   return new BNJS(small.toString(10), 10)
@@ -7,28 +6,37 @@ export const BN = small => {
 
 // Trim to 3 trailing decimals
 export const trimDecimalsThree = n => {
-  // ow(n, ow.string)
-
   return (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
+}
+
+const stripRightZeros = str => {
+  const strippedStr = str.replace(/0+$/, '')
+  return strippedStr === '' ? null : strippedStr
 }
 
 // blockchain -> human
 // 1,000,000.000,000,000 -> 1,000,000
-export const baseToConvertedUnit = (amount, decimals) => {
-  // ow(amount, ow.any(ow.string, ow.number, ow.object))
-
-  const decimalPower = BN('10').pow(BN(decimals.toString()))
-  const convertedUnit = BN(amount.toString()).div(BN(decimalPower))
-  // console.log('decimalPower, convertedUnit:', decimalPower, convertedUnit)
-  return convertedUnit.toString()
+export const baseToConvertedUnit = (value, decimal) => {
+  if (decimal === 0) {
+    return value.toString()
+  }
+  const paddedValue = value.toString().padStart(decimal + 1, '0')
+  const integerPart = value.toString().slice(0, -decimal)
+  const fractionPart = stripRightZeros(paddedValue.slice(-decimal))
+  return fractionPart ? `${integerPart}.${fractionPart}` : `${integerPart}`
 }
+
 // human -> blockchain
 // 1,000,000 -> 1,000,000,000,000,000
-export const convertedToBaseUnit = (amount, decimals) => {
-  // ow(amount, ow.any(ow.string, ow.number, ow.object))
+export const convertedToBaseUnit = (value, decimal) => {
+  // const decimalPower = BN('10').pow(BN(decimal.toString()))
+  // const baseUnit = BN(value).mul(decimalPower)
+  // return baseUnit.toString()
 
-  const decimalPower = BN('10').pow(BN(decimals.toString()))
-  const baseUnit = BN(amount).mul(decimalPower)
-  // console.log('decimalPower, baseUnit:', decimalPower, baseUnit)
-  return baseUnit.toString()
+  if (decimal === 0) {
+    return value
+  }
+  const [integerPart, fractionPart = ''] = value.split('.')
+  const paddedFraction = fractionPart.padEnd(decimal, '0')
+  return `${integerPart}${paddedFraction}`
 }

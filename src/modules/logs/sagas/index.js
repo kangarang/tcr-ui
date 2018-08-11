@@ -1,76 +1,82 @@
 import { select, takeLatest, take, fork, call, put } from 'redux-saga/effects'
 import { removeAll } from 'react-notification-system-redux'
+import sortBy from 'lodash/fp/sortBy'
 
 import { homeTypes, homeSelectors } from 'modules/home'
-import { loadState, loadSettings } from 'libs/localStorage'
+import { updateListings, transformListings } from 'modules/listings/utils'
+import { selectAllListings } from 'modules/listings/selectors'
+import { logsToListings } from 'modules/listings/sagas'
+import * as liActions from 'modules/listings/actions'
 
+import rootPollLogsSaga, { initPolling } from './poll'
+import { getSortedLogsSaga } from './utils'
 import * as actions from '../actions'
 import * as types from '../types'
-import rootPollLogsSaga, { initPolling } from './poll'
 
 export default function* rootLogsSaga() {
   yield fork(rootPollLogsSaga)
   yield takeLatest(homeTypes.SET_ALL_CONTRACTS, getFreshLogs)
 }
 
+// Initializes application state using logs
+// emitted from: Registry, PLCRVoting, Parameterizer
 function* getFreshLogs() {
   try {
-    // remove all notifications if there are any
+    // clear notifications
     yield put(removeAll())
 
+    const account = yield select(homeSelectors.selectAccount)
     const network = yield select(homeSelectors.selectNetwork)
     const registry = yield select(homeSelectors.selectRegistry)
     const voting = yield select(homeSelectors.selectVoting)
+    const parameterizer = yield select(homeSelectors.selectParameterizer)
+    const currentListings = yield select(selectAllListings)
+
+    // block range to search
     const blockRange = {
       fromBlock: network === 'mainnet' ? 5000000 : 0,
       toBlock: 'latest',
     }
-    const settings = yield call(loadSettings)
-    if (settings && settings.persistState && settings.lastReadBlockNumber) {
-      blockRange.fromBlock = settings.lastReadBlockNumber
-    } else if (settings && settings.persistState) {
-      const persistedState = yield loadState()
-      if (persistedState && persistedState.listings.listings) return
-    }
 
-    // applications and challenges
-    const initialPayload = {
-      blockRange,
-      contract: registry,
-      eventNames: ['_Application', '_Challenge'],
-    }
-    // voting logs
-    const votingPayload = {
-      blockRange,
-      contract: voting,
-      eventNames: ['_VoteCommitted', '_VoteRevealed'],
-    }
-    // finality logs
-    const finalPayload = {
-      blockRange,
-      contract: registry,
-      eventNames: [
-        '_ApplicationWhitelisted',
-        '_ApplicationRemoved',
-        '_ListingRemoved',
-        '_ChallengeFailed',
-        '_ChallengeSucceeded',
-        '_RewardClaimed',
-        // '_ListingWithdrawn',
-        // '_TouchAndRemoved',
-      ],
-    }
-    // wait for success each time
-    yield put(actions.decodeLogsStart(initialPayload))
-    yield take(types.DECODE_LOGS_SUCCEEDED)
+    // get sorted logs from all contracts
+    const sortedRegistryLogs = yield call(getSortedLogsSaga, blockRange, [], registry)
+    const sortedVotingLogs = yield call(getSortedLogsSaga, blockRange, [], voting)
+    const sortedParamLogs = yield call(getSortedLogsSaga, blockRange, [], parameterizer)
 
-    yield put(actions.decodeLogsStart(votingPayload))
-    yield take(types.DECODE_LOGS_SUCCEEDED)
+    // Filter: (_Application logs)
+    const applicantLogs = sortedRegistryLogs.filter(
+      log => log.eventName === '_Application'
+    )
+    // Filter: !(_Application logs)
+    const otherRegLogs = sortedRegistryLogs.filter(
+      log => log.eventName !== '_Application'
+    )
 
-    yield put(actions.decodeLogsStart(finalPayload))
-    yield take(types.DECODE_LOGS_SUCCEEDED)
+    // Create applications (listings)
+    const applications = yield call(logsToListings, applicantLogs)
 
-    // start polling for more
+    // Convert applications to an Immutable Map of candidates
+    const candidates = yield call(updateListings, applications)
+
+    // concatenated w/ !(_Application logs)
+    const accumulationLogs = otherRegLogs.concat(sortedVotingLogs)
+
+    // change the relevant listings
+    const updatedListings = yield call(
+      transformListings,
+      accumulationLogs,
+      candidates,
+      account
+    )
+    console.log('Listings:', updatedListings.toJS())
+
+    if (currentListings.equals(updatedListings)) {
+      console.log('State has not changed since last reload.')
+      yield put(liActions.setAllListings(updatedListings))
+    }
+    // dispatch: set the up-to-date state of the contracts
+
+    // initialize polling for more logs
     yield call(initPolling)
   } catch (err) {
     yield put(actions.pollLogsFailed(err))

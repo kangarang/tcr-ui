@@ -3,13 +3,13 @@ import find from 'lodash/fp/find'
 
 import tokenList from 'config/tokens/eth.json'
 
-import { getListingHash, isAddress } from 'libs/values'
 import { BN } from 'libs/units'
 import { ipfsCheckMultihash, ipfsGetData } from 'libs/ipfs'
+import { getListingHash, isAddress } from 'libs/values'
 import { timestampToExpiry } from 'utils/_datetime'
 
 // Finds the corresponding listing according the eventName
-export function findListing(logData, listings) {
+export function findMatchingListing(logData, listings) {
   switch (logData._eventName) {
     case '_Application':
     case '_Challenge':
@@ -77,10 +77,11 @@ export async function createListing(logData, txData) {
   // IPFS multihash validation
   if (!listingID && ipfsCheckMultihash(data)) {
     // CASE: Prospect Park -- data is an ipfs pointer, content.id is identifier, content.data is metadata
-    // const res = await handleMultihash(listingHash, data)
-    // listingID = res.listingID
-    // listingData = res.listingData
-    listingID = data
+    const res = await handleMultihash(listingHash, data)
+    listingID = res.listingID
+    data = res.listingData
+    listingData = res.listingData
+    // listingID = data
   } else if (data && !listingID) {
     // CASE: Prospect Park -- data is identifier
     listingID = data
@@ -122,13 +123,37 @@ export async function createListing(logData, txData) {
   return listing
 }
 
-// Before this function is executed,
-// a match (oldGolem) is found that corresponds with the event emission args (listingHash or pollID)
-export function changeListing(oldGolem, log, txData, eventName, account) {
+// Returns an accumulation of updated Listings
+// Recursively makes sure the log's block.timestamp is newer
+export async function transformListings(newListings, listings = fromJS({}), account) {
+  // sift through the new array
+  return fromJS(newListings).reduce((acc, val) => {
+    // find a matching listing in the accumulation array
+    // match corresponds with the event emission args (listingHash or pollID).
+    const match = findMatchingListing(val.get('logData'), acc)
+
+    if (match && match.has('listingHash')) {
+      const maybeChanged = transformListing(
+        match,
+        val.get('logData'),
+        val.get('txData'),
+        val.get('eventName'),
+        account
+      )
+      return acc.set(match.get('listingHash'), maybeChanged)
+    }
+    return acc
+  }, fromJS(listings))
+}
+
+// Returns an updated Listing,
+// transformed based on the log type and values
+function transformListing(oldGolem, log, txData, eventName, account) {
   // prettier-ignore
   // First, validate that the incoming log's txData is newer than the listing's latest tx info
   if (txData.get('blockTimestamp') < oldGolem.getIn(['latestBlockTxn', 'blockTimestamp'])) {
-    console.log('old txn; returning listing', eventName, log, oldGolem.toJS())
+    // console.log('old txn; returning listing', eventName, log, oldGolem.toJS())
+    console.log('old txn. returning listing')
     // Return the listing as is cause this is not a valid update
     return oldGolem
   }
@@ -214,53 +239,34 @@ export function changeListing(oldGolem, log, txData, eventName, account) {
   }
 }
 
-export async function updateAssortedListings(
-  newListings,
-  listings = fromJS({}),
-  account
-) {
-  // sift through the new array
-  return fromJS(newListings).reduce((acc, val) => {
-    // find a matching listing in the accumulation array
-    const match = findListing(val.get('logData'), acc)
-
-    if (match && match.has('listingHash')) {
-      const changed = changeListing(
-        match,
-        val.get('logData'),
-        val.get('txData'),
-        val.get('eventName'),
-        account
-      )
-      return acc.set(match.get('listingHash'), changed)
-    }
-    return acc
-  }, fromJS(listings))
-}
-
+// Reduces a list of (new) Listings, using a Map of (maybe-older) Listings as the starting value
+// Returns a Map of: { Listing.listingHash: Listing, ... }
+// newListings: Iterable List
+// listings:    Iterable Map
 export async function updateListings(newListings, listings = fromJS({})) {
   return fromJS(newListings).reduce((acc, val) => {
+    // prettier-ignore
     if (
-      val.hasIn(['logData', '_eventName']) ||
-      !val.get('owner') ||
-      !val.get('listingID') ||
-      !val.get('status') ||
-      !val.get('listingHash')
+      !val.has('owner') || !val.has('listingID') ||
+      !val.has('status') || !val.has('listingHash')
     ) {
-      console.log('!not a listing!')
-      return acc
+      throw new Error('invalid listing value. must have owner, listingID, status, and listingHash')
     }
 
     const matchingListing = acc.get(val.get('listingHash'))
-    // duplicate listingHash, older block.timestamp
-    if (
-      matchingListing &&
-      val.getIn(['latestBlockTxn', 'blockTimestamp']) <
-        matchingListing.getIn(['latestBlockTxn', 'blockTimestamp'])
-    ) {
-      return acc
+
+    // CASE: duplicate listingHash
+    if (matchingListing) {
+      const valTimestamp = val.getIn(['latestBlockTxn', 'blockTimestamp'])
+      const matchTimestamp = matchingListing.getIn(['latestBlockTxn', 'blockTimestamp'])
+
+      // older block.timestamp
+      if (valTimestamp < matchTimestamp) {
+        return acc
+      }
     }
 
+    // state.listings: { Listing.listingHash: Listing }
     return acc.set(val.get('listingHash'), fromJS(val))
-  }, fromJS(listings))
+  }, fromJS(listings)) // initial value
 }
