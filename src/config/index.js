@@ -56,7 +56,7 @@ export const registries = {
       multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
     },
     {
-      name: 'The Test Chain Registry',
+      name: 'The Sunset Registry',
       registryAddress: '0x0747bf92a886ab521ee7d95f6285420acc8b89ac',
       votingAddress: '0x946184cde118286d46825b866521d0236800c613',
       tokenAddress: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
