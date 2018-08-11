@@ -5,15 +5,15 @@ const updateOneListing = listing => ({
   listing,
 })
 
-const setListings = (listings, byID) => ({
-  type: types.SET_LISTINGS,
+const setAllListings = (listings, byID) => ({
+  type: types.SET_ALL_LISTINGS,
   listings,
   byID,
 })
 
-const deleteKey = key => ({
-  type: types.DELETE_KEY,
+const deleteOneListing = key => ({
+  type: types.DELETE_ONE_LISTING,
   key,
 })
 
-export { updateOneListing, setListings, deleteKey }
+export { updateOneListing, setAllListings, deleteOneListing }

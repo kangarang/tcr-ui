@@ -5,8 +5,8 @@ import { colors } from 'global-styles'
 import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 
-import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
+import { SideText, SideTextInput } from './components'
 import SidePanel from './components/SidePanel'
 
 import { TransactionsContext } from './index'

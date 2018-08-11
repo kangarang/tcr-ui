@@ -152,9 +152,9 @@ export function* sendTransactionSaga(contract, method, args) {
   try {
     console.log(method, 'args:', args)
     const ethjs = yield call(getEthjs)
+    const network = yield select(selectNetwork)
     const gasPrice = yield call(getGasPrice, network)
     const ethersProvider = yield call(getEthersProvider)
-    const network = yield select(selectNetwork)
 
     // ethjs: sendTransaction
     const from = yield select(selectAccount)

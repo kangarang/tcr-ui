@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-import Img from 'components/Img'
-import SidePanelSeparator from './components/SidePanelSeparator'
-import SidePanel from './components/SidePanel'
-import DetailsSection from './components/DetailsSection'
 import Radio from 'components/Radio'
+import Img from 'components/Img'
+
+import SidePanelSeparator from './components/SidePanelSeparator'
+import DetailsSection from './components/DetailsSection'
+import SidePanel from './components/SidePanel'
 import { TransactionsContext } from './index'
 
 import leftArrowIcon from 'assets/icons/left-arrow.svg'
@@ -13,6 +14,7 @@ import leftArrowIcon from 'assets/icons/left-arrow.svg'
 
 // import thumbsUpIcon from 'assets/icons/thumbs-up.svg'
 import thumbsDownIcon from 'assets/icons/thumbs-down.svg'
+
 import likeIcon from 'assets/icons/like.svg'
 // import dislikeIcon from 'assets/icons/dislike.svg'
 

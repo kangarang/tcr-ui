@@ -7,10 +7,12 @@ import { MarginDiv } from 'components/StyledHome'
 import Button from 'components/Button'
 import Text from 'components/Text'
 
-import { SideText, SideTextInput } from './components'
 import SidePanelSeparator from './components/SidePanelSeparator'
+import SideTextInput from './components/SideTextInput'
 import TotalAmount from './components/TotalAmount'
 import SidePanel from './components/SidePanel'
+import SideText from './components/SideText'
+
 import { TransactionsContext } from './index'
 
 export default class Apply extends React.Component {

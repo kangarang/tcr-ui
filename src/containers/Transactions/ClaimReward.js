@@ -10,16 +10,7 @@ class ClaimReward extends Component {
   render() {
     return (
       <TransactionsContext.Consumer>
-        {({
-          selectedOne,
-          opened,
-          closeTxPanel,
-          handleFileInput,
-          handleClaimReward,
-          account,
-          voting,
-          registry,
-        }) => (
+        {({ opened, closeTxPanel, handleFileInput, handleClaimReward }) => (
           <SidePanel
             title="Claim Reward"
             opened={opened === 'claimReward'}

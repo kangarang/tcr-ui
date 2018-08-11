@@ -3,8 +3,8 @@ import { info, success, error, warning } from 'react-notification-system-redux'
 
 import * as actions from '../actions'
 
-import { getNotificationTitleAndMessage, generateNoti, eventTypes } from './utils'
-import { findListing, handleMultihash } from 'modules/listings/utils'
+import { getNotificationTitleAndMessage, generateNoti, eventTypes } from '../utils'
+import { findMatchingListing, handleMultihash } from 'modules/listings/utils'
 
 import { selectAllListings } from 'modules/listings/selectors'
 import { selectTCR } from 'modules/home/selectors'
@@ -17,7 +17,7 @@ export function* notificationsSaga(log) {
 
     let listing
     // search for corresponding listing
-    const matchingListing = yield call(findListing, logData, listings)
+    const matchingListing = yield call(findMatchingListing, logData, listings)
     if (matchingListing) {
       listing = matchingListing.toJS()
     }

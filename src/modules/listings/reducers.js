@@ -9,7 +9,7 @@ const initialState = fromJS({
 
 function listingsReducer(state = initialState, action) {
   switch (action.type) {
-    case types.SET_LISTINGS:
+    case types.SET_ALL_LISTINGS:
       return state
         .set('listings', fromJS(action.listings))
         .set('byID', fromJS(action.byID))

@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import translate from 'translations'
 
 import { MarginDiv } from 'components/StyledHome'
-import Button from 'components/Button'
 import { baseToConvertedUnit } from 'libs/units'
+import Button from 'components/Button'
 
 import { SideSplit, SideText } from 'containers/Transactions/components'
-import SidePanel from './components/SidePanel'
 import SidePanelSeparator from './components/SidePanelSeparator'
+import SidePanel from './components/SidePanel'
 import { TransactionsContext } from './index'
 
 export default class UpdateStatus extends Component {

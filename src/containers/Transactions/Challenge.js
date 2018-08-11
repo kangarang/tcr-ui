@@ -2,13 +2,14 @@ import React from 'react'
 import translate from 'translations'
 
 import { MarginDiv } from 'components/StyledHome'
-import Button from 'components/Button'
 import Countdown from 'components/Countdown'
+import Button from 'components/Button'
 
-import SidePanel from './components/SidePanel'
-import { SideText } from './components'
-import TotalAmount from './components/TotalAmount'
 import SidePanelSeparator from './components/SidePanelSeparator'
+import TotalAmount from './components/TotalAmount'
+import SidePanel from './components/SidePanel'
+import SideText from './components/SideText'
+
 import { TransactionsContext } from './index'
 
 export default class Challenge extends React.Component {

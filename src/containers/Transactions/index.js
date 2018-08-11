@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { createStructuredSelector } from 'reselect'
 
-import { selectBalances, selectTCR, selectParameters } from 'modules/home/selectors'
-import { selectTxPanelListing, selectTxPanelMethod } from 'modules/transactions/selectors'
 import * as actions from 'modules/transactions/actions'
+import { selectTxPanelListing, selectTxPanelMethod } from 'modules/transactions/selectors'
+import { selectBalances, selectTCR, selectParameters } from 'modules/home/selectors'
 
 import { BN, baseToConvertedUnit } from 'libs/units'
 
@@ -15,8 +15,8 @@ import Transfer from 'containers/Transactions/Transfer'
 import Challenge from 'containers/Transactions/Challenge'
 import CommitVote from 'containers/Transactions/CommitVote'
 import RevealVote from 'containers/Transactions/RevealVote'
-import UpdateStatus from 'containers/Transactions/UpdateStatus'
 import ClaimReward from 'containers/Transactions/ClaimReward'
+import UpdateStatus from 'containers/Transactions/UpdateStatus'
 
 export const TransactionsContext = React.createContext()
 
@@ -34,7 +34,7 @@ class TransactionsProvider extends Component {
   render() {
     const {
       tcr,
-      children,
+      // children,
       balances,
       parameters,
       txPanelListing,

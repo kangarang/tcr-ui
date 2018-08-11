@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 
-import Button from 'components/Button'
 import { MarginDiv } from 'components/StyledHome'
+import Button from 'components/Button'
 
-import { SideSplit, SideText } from 'containers/Transactions/components'
+import SidePanelSeparator from './components/SidePanelSeparator'
+import DetailsSection from './components/DetailsSection'
+import SidePanel from './components/SidePanel'
+import SideSplit from './components/SideSplit'
+import SideText from './components/SideText'
 
 import { baseToConvertedUnit } from 'libs/units'
 import { getLocal } from 'utils/_localStorage'
 
 import { TransactionsContext } from './index'
-import SidePanelSeparator from './components/SidePanelSeparator'
-import SidePanel from './components/SidePanel'
-import DetailsSection from './components/DetailsSection'
 
 export default class RevealVote extends Component {
   state = {
