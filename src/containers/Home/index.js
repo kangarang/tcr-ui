@@ -7,10 +7,11 @@ import { createStructuredSelector } from 'reselect'
 import { selectBalances, selectTCR, selectStats } from 'modules/home/selectors'
 import * as actions from 'modules/home/actions'
 
+import Registry from 'containers/Registry'
+import Wrapper from 'containers/Wrapper'
 import Banner from 'components/Banner'
 import Stats from 'components/Stats'
 import toJS from 'components/toJS'
-import Wrapper from '../Wrapper'
 
 class Home extends Component {
   componentDidMount() {
@@ -18,12 +19,13 @@ class Home extends Component {
   }
 
   render() {
-    const { stats, balances, tcr } = this.props
+    const { stats, balances, tcr, match, history } = this.props
 
     return (
       <Wrapper>
         <Banner tcr={tcr} />
         <Stats balances={balances} stats={stats} tcr={tcr} />
+        <Registry match={match} history={history} />
       </Wrapper>
     )
   }

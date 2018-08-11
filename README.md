@@ -36,9 +36,8 @@ if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil
 
 ## Requirements
 
-* Node >= 8.0.0
-* Yarn >= 1.7.0\*
-
+- Node >= 8.0.0
+- Yarn >= 1.7.0\*
 <sub>*npm is not supported for package management. tcr-ui uses yarn.lock to ensure sub-dependency versions are pinned. yarn is required to install node_modules</sub>
 
 ## Getting started

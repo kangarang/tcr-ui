@@ -4,7 +4,7 @@ import { createLogger } from 'redux-logger'
 import { fromJS, isImmutable } from 'immutable'
 import throttle from 'lodash/fp/throttle'
 
-import { loadState, saveState, loadSettings } from 'libs/localStorage'
+import { loadState, saveState } from 'libs/localStorage'
 import createReducer from 'modules/reducers'
 import rootSaga from 'modules/home/sagas'
 import balancesSaga from 'modules/home/sagas/balances'
@@ -59,12 +59,12 @@ export default function configureStore() {
   store.subscribe(
     // no more than once per 1 second
     throttle(1000, () => {
-      const persistedState = loadState()
-      if (persistedState) {
-        saveState({
-          listings: store.getState().get('listings'),
-        })
-      }
+      // const persistedState = loadState()
+      // if (persistedState) {
+      saveState({
+        listings: store.getState().get('listings'),
+      })
+      // }
     })
   )
   // init sagas

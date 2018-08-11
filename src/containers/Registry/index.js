@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { compose } from 'redux'
-import { createStructuredSelector } from 'reselect'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { createStructuredSelector } from 'reselect'
 
-import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
 import { withStyles } from '@material-ui/core/styles'
 
 import { colors, theme, muiTheme } from 'global-styles'
-import { makeSelectVisibleListings } from 'modules/listings/selectors'
 import { selectStats, selectTCR } from 'modules/home/selectors'
+import { makeSelectVisibleListings } from 'modules/listings/selectors'
 
 import toJS from 'components/toJS'
 import Listings from 'containers/Listings/Loadable'
-import Wrapper from '../Wrapper'
+// import Wrapper from '../Wrapper'
 
 const Table = styled.div`
   flex-grow: 1;
@@ -72,7 +72,8 @@ class Registry extends Component {
   }
   handleChange = (event, value) => {
     this.setState({ value })
-    this.props.history.push(`/${this.props.tcr.registryAddress.slice(0, 8)}/${value}`)
+    // this.props.history.push(`/${this.props.tcr.registryAddress.slice(0, 8)}/${value}`)
+    this.props.history.push(`/${value}`)
   }
   handleChangePage = (event, page) => {
     this.setState({ page })
@@ -80,45 +81,49 @@ class Registry extends Component {
 
   render() {
     const { value } = this.state
-    const { classes, stats, visibleListings } = this.props
+    const {
+      stats,
+      classes: { tabRoot, tabSelected, tabsIndicator, tabsRoot },
+      visibleListings,
+    } = this.props
 
     return (
-      <Wrapper>
-        <Table>
-          <TabsContainer>
-            <Tabs
-              centered={false}
-              value={value}
-              onChange={this.handleChange}
-              classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-            >
-              {/* router navlinks change the value of props.filter
+      <Table>
+        {/* <Wrapper> */}
+        <TabsContainer>
+          <Tabs
+            centered={false}
+            value={value}
+            onChange={this.handleChange}
+            classes={{ root: tabsRoot, indicator: tabsIndicator }}
+          >
+            {/* router navlinks change the value of props.filter
                 what matters in practice is that there is only 1 single source of truth for any independent piece of data
                 redux: listings, react-router: anything that can be computed by the URL (visibility filter) */}
-              <Tab
-                disableRipple
-                value="whitelist"
-                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                label={`IN REGISTRY (${stats.sizes.whitelist})`}
-              />
-              <Tab
-                disableRipple
-                value="applications"
-                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                label={`NEW APPLICATIONS (${stats.sizes.applications})`}
-              />
-              <Tab
-                disableRipple
-                value="faceoffs"
-                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                label={`VOTE (${stats.sizes.faceoffs})`}
-              />
-            </Tabs>
-          </TabsContainer>
+            <Tab
+              disableRipple
+              value="whitelist"
+              classes={{ root: tabRoot, selected: tabSelected }}
+              label={`IN REGISTRY (${stats.sizes.whitelist})`}
+            />
+            <Tab
+              disableRipple
+              value="applications"
+              classes={{ root: tabRoot, selected: tabSelected }}
+              label={`NEW APPLICATIONS (${stats.sizes.applications})`}
+            />
+            <Tab
+              disableRipple
+              value="faceoffs"
+              classes={{ root: tabRoot, selected: tabSelected }}
+              label={`VOTE (${stats.sizes.faceoffs})`}
+            />
+          </Tabs>
+        </TabsContainer>
 
-          <Listings listingType={value} visibleListings={visibleListings} />
-        </Table>
-      </Wrapper>
+        <Listings listingType={value} visibleListings={visibleListings} />
+        {/* </Wrapper> */}
+      </Table>
     )
   }
 }
@@ -126,6 +131,7 @@ class Registry extends Component {
 const mapStateToProps = createStructuredSelector({
   stats: selectStats,
   tcr: selectTCR,
+
   // send route-based props to selector
   visibleListings: makeSelectVisibleListings(),
 })

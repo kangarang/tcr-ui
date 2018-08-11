@@ -11,9 +11,10 @@ import { muiTheme } from '../global-styles'
 import './Wrapper.css'
 
 import { selectNetwork, selectNotifications } from 'modules/home/selectors'
+import { selectAllListings } from 'modules/listings/selectors'
 import * as actions from 'modules/home/actions'
 
-import TransactionsProvider from 'containers/Transactions'
+import Transactions from 'containers/Transactions'
 import Registries from 'components/Registries'
 import Header from 'components/Header'
 import toJS from 'components/toJS'
@@ -76,7 +77,7 @@ class WrapperClass extends Component {
 
           {children}
 
-          <TransactionsProvider />
+          <Transactions />
           <Notifications style={notificationStyles} notifications={notifications} />
         </MuiThemeProvider>
       </Wrapper>
@@ -86,6 +87,7 @@ class WrapperClass extends Component {
 
 const mapStateToProps = createStructuredSelector({
   network: selectNetwork,
+  listings: selectAllListings,
   notifications: selectNotifications,
 })
 
