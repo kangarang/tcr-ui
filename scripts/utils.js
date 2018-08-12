@@ -2,7 +2,7 @@ import Token from './abis/EIP20.json'
 import PLCRVoting from './abis/PLCRVoting.json'
 import Registry from './abis/Registry.json'
 
-import { baseToConvertedUnit } from 'libs/units'
+import { fromTokenBase } from 'libs/units'
 
 export const contracts = {
   abis: {
@@ -28,7 +28,7 @@ export function buildContract(tcr = 'adChain', contract) {
 
 export function printTokenTransfer(logData, txData) {
   console.log('from:', logData._from)
-  console.log('value:', baseToConvertedUnit(logData._value, '9'))
+  console.log('value:', fromTokenBase(logData._value, '9'))
   console.log('txHash:', txData.txHash)
   console.log('blockNumber:', txData.blockNumber)
   console.log('date:', txData.date)
@@ -48,7 +48,7 @@ export function printCommitVote(logData, txData) {
 export function printClaimReward(logData) {
   console.log('pollID:', logData.challengeID.toString())
   console.log('voter:', logData.voter)
-  console.log('reward:', baseToConvertedUnit(logData.reward, '9'))
+  console.log('reward:', fromTokenBase(logData.reward, '9'))
   console.log('reward:', logData.reward.toString())
   console.log('')
 }

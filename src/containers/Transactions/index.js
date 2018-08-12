@@ -7,7 +7,7 @@ import * as actions from 'modules/transactions/actions'
 import { selectTxPanelListing, selectTxPanelMethod } from 'modules/transactions/selectors'
 import { selectBalances, selectTCR, selectParameters } from 'modules/home/selectors'
 
-import { BN, baseToConvertedUnit } from 'libs/units'
+import { BN, fromTokenBase } from 'libs/units'
 
 import toJS from 'components/toJS'
 import Apply from 'containers/Transactions/Apply'
@@ -42,7 +42,7 @@ class TransactionsProvider extends Component {
     } = this.props
 
     const needToApproveRegistry = BN(balances.registryAllowance).lt(
-      BN(baseToConvertedUnit(parameters.minDeposit, tcr.tokenDecimals))
+      BN(fromTokenBase(parameters.minDeposit, tcr.tokenDecimals))
     )
     const needToApproveVoting = balances.votingAllowance === '0.0'
 

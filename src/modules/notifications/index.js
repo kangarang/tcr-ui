@@ -1,37 +1,9 @@
-import React from 'react'
 import { select, take, fork, put } from 'redux-saga/effects'
 import { success, info, hide } from 'react-notification-system-redux'
 import { selectNetwork } from '../home/selectors'
-import Identicon from 'components/Identicon'
 
 import * as types from '../transactions/types'
-import styled from 'styled-components'
-
-const FlexDiv = styled.div`
-  display: flex;
-  padding: 0.4em;
-`
-
-export function getEtherscanLink(network, txHash) {
-  if (network === 'mainnet') {
-    return (
-      <FlexDiv>
-        <Identicon address={txHash} diameter={14} />
-        <a target="_blank" href={`https://etherscan.io/tx/${txHash}`}>
-          {'Etherscan'}
-        </a>
-      </FlexDiv>
-    )
-  }
-  return (
-    <FlexDiv>
-      <Identicon address={txHash} diameter={14} />
-      <a target="_blank" href={`https://${network}.etherscan.io/tx/${txHash}`}>
-        {'Etherscan'}
-      </a>
-    </FlexDiv>
-  )
-}
+import { getEtherscanLink } from './link'
 
 export function* pendingTxns(methodName, txHash, args) {
   try {

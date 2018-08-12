@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import translate from 'translations'
 
 import { MarginDiv } from 'components/StyledHome'
-import { baseToConvertedUnit } from 'libs/units'
+import { fromTokenBase } from 'libs/units'
 import Button from 'components/Button'
 
 import { SideSplit, SideText } from 'containers/Transactions/components'
@@ -32,23 +32,19 @@ export default class UpdateStatus extends Component {
               <div>
                 <SideSplit
                   leftTitle={'Votes For'}
-                  leftItem={baseToConvertedUnit(selectedOne.votesFor, tcr.tokenDecimals)}
+                  leftItem={fromTokenBase(selectedOne.votesFor, tcr.tokenDecimals)}
                   rightTitle={'Votes Against'}
-                  rightItem={baseToConvertedUnit(
-                    selectedOne.votesAgainst,
-                    tcr.tokenDecimals
-                  )}
+                  rightItem={fromTokenBase(selectedOne.votesAgainst, tcr.tokenDecimals)}
                 />
                 <SideSplit
                   leftTitle={'Tokens you voted with'}
                   leftItem={
-                    selectedOne &&
-                    baseToConvertedUnit(selectedOne.userVotes, tcr.tokenDecimals)
+                    selectedOne && fromTokenBase(selectedOne.userVotes, tcr.tokenDecimals)
                   }
                   rightTitle={'Total Votes'}
                   rightItem={
                     selectedOne &&
-                    baseToConvertedUnit(selectedOne.totalVotes, tcr.tokenDecimals)
+                    fromTokenBase(selectedOne.totalVotes, tcr.tokenDecimals)
                   }
                 />
                 <SideText text={selectedOne && selectedOne.listingID} />

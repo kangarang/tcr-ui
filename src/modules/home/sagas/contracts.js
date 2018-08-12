@@ -7,7 +7,7 @@ import * as types from '../types'
 
 import { getEthjs } from 'libs/provider'
 import { ipfsGetData } from 'libs/ipfs'
-import { baseToConvertedUnit } from 'libs/units'
+import { fromTokenBase } from 'libs/units'
 import { isAddress } from 'libs/values'
 import { setupRegistry, setupContract } from '../utils'
 
@@ -177,7 +177,7 @@ function* contractsSaga(action) {
     const tokenDecimals = tokenDecimalsResult['0'].toString(10)
     const parameters = {
       // convert minDeposit based on the decimals of the token
-      minDeposit: baseToConvertedUnit(minDeposit['0'].toString(10), tokenDecimals),
+      minDeposit: fromTokenBase(minDeposit['0'].toString(10), tokenDecimals),
       applyStageLen: applyStageLen['0'].toString(10),
       commitStageLen: commitStageLen['0'].toString(10),
       revealStageLen: revealStageLen['0'].toString(10),

@@ -128,7 +128,7 @@ class Header extends Component {
               <TokenBalance onClick={() => onOpenTxPanel(null, 'transfer')}>
                 {balances.token} {tcr.tokenSymbol}
               </TokenBalance>
-              <EtherBalance>0.00 USD {trimDecimalsThree(balances.ETH)} ETH</EtherBalance>
+              <EtherBalance>0.00 USD {balances.ETH} ETH</EtherBalance>
             </Balances>
 
             <DropdownCaratIcon onClick={this.handleDropdown}>

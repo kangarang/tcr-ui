@@ -1,17 +1,16 @@
-import { select, takeLatest, take, fork, call, put } from 'redux-saga/effects'
+import { select, takeLatest, call, put, fork } from 'redux-saga/effects'
 import { removeAll } from 'react-notification-system-redux'
-import sortBy from 'lodash/fp/sortBy'
 
-import { homeTypes, homeSelectors } from 'modules/home'
+// -retreat
 import { updateListings, transformListings } from 'modules/listings/utils'
 import { selectAllListings } from 'modules/listings/selectors'
+import { homeTypes, homeSelectors } from 'modules/home'
 import { logsToListings } from 'modules/listings/sagas'
 import * as liActions from 'modules/listings/actions'
 
 import rootPollLogsSaga, { initPolling } from './poll'
 import { getSortedLogsSaga } from './utils'
 import * as actions from '../actions'
-import * as types from '../types'
 
 export default function* rootLogsSaga() {
   yield fork(rootPollLogsSaga)

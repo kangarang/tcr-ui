@@ -1,9 +1,13 @@
 import { select, call, put } from 'redux-saga/effects'
 import { info, success, error, warning } from 'react-notification-system-redux'
 
-import * as actions from '../actions'
+import * as actions from 'modules/notifications/actions'
 
-import { getNotificationTitleAndMessage, generateNoti, eventTypes } from '../utils'
+import {
+  getNotificationTitleAndMessage,
+  generateNoti,
+  eventTypes,
+} from 'modules/notifications/utils'
 import { findMatchingListing, handleMultihash } from 'modules/listings/utils'
 
 import { selectAllListings } from 'modules/listings/selectors'

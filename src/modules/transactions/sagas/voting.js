@@ -2,7 +2,7 @@ import { put, select, call } from 'redux-saga/effects'
 
 import { selectTCR, selectAccount, selectVoting } from 'modules/home/selectors'
 
-import { convertedToBaseUnit } from 'libs/units'
+import { toTokenBase } from 'libs/units'
 import { getVoteSaltHash } from 'libs/values'
 
 import { getEndDateString } from 'utils/_datetime'
@@ -20,7 +20,7 @@ export function* requestVotingRightsSaga(action) {
     const voting = yield select(selectVoting)
     const tcr = yield select(selectTCR)
     const tokens = yield call(
-      convertedToBaseUnit,
+      toTokenBase,
       action.payload.args[0],
       tcr.get('tokenDecimals')
     )

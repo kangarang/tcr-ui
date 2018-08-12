@@ -1,20 +1,15 @@
 import BNJS from 'bn.js'
-import {
-  BN,
-  baseToConvertedUnit,
-  convertedToBaseUnit,
-  trimDecimalsThree,
-} from 'libs/units'
+import { BN, fromTokenBase, toTokenBase, trimDecimalsThree } from 'libs/units'
 
 describe('libs: units', () => {
   describe('unit conversion utils', async () => {
     test('should return the converted number as a string', () => {
-      const converted = baseToConvertedUnit(50000000000000000000, 18)
+      const converted = fromTokenBase(50000000000000000000, 18)
       expect(converted).toBe('50')
     })
 
     test('should return the base unit as a string', () => {
-      const base = convertedToBaseUnit(50, 18)
+      const base = toTokenBase(50, 18)
       expect(base).toBe('50000000000000000000')
     })
   })

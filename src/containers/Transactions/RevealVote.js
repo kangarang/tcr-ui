@@ -9,7 +9,7 @@ import SidePanel from './components/SidePanel'
 import SideSplit from './components/SideSplit'
 import SideText from './components/SideText'
 
-import { baseToConvertedUnit } from 'libs/units'
+import { fromTokenBase } from 'libs/units'
 import { getLocal } from 'utils/_localStorage'
 
 import { TransactionsContext } from './index'
@@ -63,13 +63,13 @@ export default class RevealVote extends Component {
             />
             <SideSplit
               leftTitle={'Votes For'}
-              leftItem={baseToConvertedUnit(selectedOne.votesFor, tcr.tokenDecimals)}
+              leftItem={fromTokenBase(selectedOne.votesFor, tcr.tokenDecimals)}
               rightTitle={'Votes Against'}
-              rightItem={baseToConvertedUnit(selectedOne.votesAgainst, tcr.tokenDecimals)}
+              rightItem={fromTokenBase(selectedOne.votesAgainst, tcr.tokenDecimals)}
             />
             <SideSplit
               leftTitle={'Tokens You Revealed'}
-              leftItem={baseToConvertedUnit(selectedOne.userVotes, tcr.tokenDecimals)}
+              leftItem={fromTokenBase(selectedOne.userVotes, tcr.tokenDecimals)}
               rightTitle={'POLL ID'}
               rightItem={selectedOne && selectedOne.challengeID}
             />

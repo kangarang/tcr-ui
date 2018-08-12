@@ -22,7 +22,7 @@ import { getGasPrice } from 'api/gas'
 import { getMethodAbi } from 'libs/abi'
 import { ipfsAddObject } from 'libs/ipfs'
 import { getListingHash } from 'libs/values'
-import { convertedToBaseUnit } from 'libs/units'
+import { toTokenBase } from 'libs/units'
 import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga } from './voting'
@@ -51,16 +51,12 @@ function* sendTxStartSaga(action) {
     let convertedNumTokens
     if (numTokens === '') {
       convertedNumTokens = yield call(
-        convertedToBaseUnit,
+        toTokenBase,
         parameters.get('minDeposit'),
         tcr.get('tokenDecimals')
       )
     } else if (numTokens) {
-      convertedNumTokens = yield call(
-        convertedToBaseUnit,
-        numTokens,
-        tcr.get('tokenDecimals')
-      )
+      convertedNumTokens = yield call(toTokenBase, numTokens, tcr.get('tokenDecimals'))
     }
 
     switch (methodName) {

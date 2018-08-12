@@ -5,7 +5,7 @@ import { getEthjs } from 'libs/provider'
 
 import { decodeLogsFailed, decodeLogsSucceeded } from '../actions'
 import { DECODE_LOGS_START } from '../types'
-import { notificationsSaga } from './notifications'
+import { notificationsSaga } from 'modules/notifications/sagas'
 
 // receives specs about what type of logs to decode
 // forwards to the decoder

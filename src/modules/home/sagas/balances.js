@@ -1,4 +1,3 @@
-import utils from 'ethers/utils'
 import { put, call, select, all, takeLatest } from 'redux-saga/effects'
 
 import { getEthjs } from 'libs/provider'
@@ -13,7 +12,7 @@ import {
   selectToken,
   selectVoting,
 } from 'modules/home/selectors'
-import { baseToConvertedUnit } from 'libs/units'
+import { fromTokenBase, fromWei } from 'libs/units'
 
 export default function* balancesSaga() {
   yield takeLatest(types.UPDATE_BALANCES_START, updateBalancesSaga)
@@ -45,38 +44,24 @@ function* updateBalancesSaga() {
       voting.getLockedTokens(account),
     ])
 
-    // format: strings, commas, decimals
+    // convert/format from base units
     const decimals = tcr.get('tokenDecimals')
-    const [
-      ETH,
-      registryAllowance,
-      votingAllowance,
-      votingRights,
-      lockedTokens,
-    ] = yield all([
-      utils.formatEther(ethBalance.toString(), { commify: true }),
-      utils.formatUnits(registryAllowanceRaw['0'], decimals, { commify: true }),
-      utils.formatUnits(votingAllowanceRaw['0'], decimals, { commify: true }),
-      utils.formatUnits(votingRightsRaw['0'], decimals, { commify: true }),
-      utils.formatUnits(lockedTokensRaw['0'], decimals, { commify: true }),
+    const [registryAllowance, votingAllowance, votingRights, lockedTokens] = yield all([
+      fromTokenBase(registryAllowanceRaw['0'], decimals),
+      fromTokenBase(votingAllowanceRaw['0'], decimals),
+      fromTokenBase(votingRightsRaw['0'], decimals),
+      fromTokenBase(lockedTokensRaw['0'], decimals),
     ])
 
     const totalRegistryStakeRaw = yield call(token.balanceOf, registry.address)
     const totalVotingStakeRaw = yield call(token.balanceOf, voting.address)
-    const totalStake = utils.formatUnits(
-      totalRegistryStakeRaw['0'].add(totalVotingStakeRaw['0']),
-      decimals,
-      {
-        commify: true,
-      }
-    )
-
-    const tokenBalance = baseToConvertedUnit(tokenBalanceRaw['0'], decimals)
+    // prettier-ignore
+    const totalStake = fromTokenBase(totalRegistryStakeRaw['0'].add(totalVotingStakeRaw['0']), decimals)
 
     // dispatch formatted
     const balances = {
-      ETH,
-      token: tokenBalance,
+      ETH: fromWei(ethBalance, 'ether'),
+      token: fromTokenBase(tokenBalanceRaw['0'], decimals),
       registryAllowance,
       votingAllowance,
       votingRights,

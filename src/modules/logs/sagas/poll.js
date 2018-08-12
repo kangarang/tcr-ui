@@ -41,8 +41,8 @@ export function* initPolling() {
       // counter's value as the startBlock range value
       if (currentBlockNumber > lastReadBlockNumber) {
         yield put(actions.pollLogsStart({
-          startBlock: lastReadBlockNumber,
-          endBlock: 'latest',
+          fromBlock: lastReadBlockNumber,
+          toBlock: currentBlockNumber,
         }))
         // set the counter to the currentBlockNumber
         lastReadBlockNumber = currentBlockNumber
@@ -59,8 +59,22 @@ function* pollLogsSaga(action) {
     const registry = yield select(selectRegistry)
     const voting = yield select(selectVoting)
 
-    const sortedRegistryLogs = yield call(getSortedLogsSaga, action.payload, [], registry)
-    const sortedVotingLogs = yield call(getSortedLogsSaga, action.payload, [], voting)
+    const blockRange = action.payload
+    const registryEventNames = []
+    const votingEventNames = []
+
+    const sortedRegistryLogs = yield call(
+      getSortedLogsSaga,
+      blockRange,
+      registryEventNames,
+      registry
+    )
+    const sortedVotingLogs = yield call(
+      getSortedLogsSaga,
+      blockRange,
+      votingEventNames,
+      voting
+    )
 
     yield put(actions.pollLogsSucceeded(sortedRegistryLogs))
     yield put(actions.pollLogsSucceeded(sortedVotingLogs))

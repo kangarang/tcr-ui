@@ -4,14 +4,18 @@ import sortBy from 'lodash/fp/sortBy'
 import * as actions from '../actions'
 import * as types from '../types'
 
-export function* getSortedLogsSaga(blockRange, eventNames = [], contract) {
+export function* getSortedLogsSaga(
+  blockRange = { fromBlock: '0', toBlock: 'latest' },
+  eventNames = [],
+  contract
+) {
   const payload = {
     blockRange,
+    eventNames,
     contract: {
       abi: contract.abi,
       address: contract.address,
     },
-    eventNames,
   }
 
   // decode logs

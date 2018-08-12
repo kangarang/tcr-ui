@@ -55,18 +55,18 @@ export default function configureStore() {
     composeEnhancers(...enhancers)
   )
 
+  // const persistedState = loadState()
+  // if (persistedState) {
   // persist redux state in local storage
   store.subscribe(
     // no more than once per 1 second
-    throttle(1000, () => {
-      // const persistedState = loadState()
-      // if (persistedState) {
+    throttle(5000, () => {
       saveState({
         listings: store.getState().get('listings'),
       })
-      // }
     })
   )
+  // }
   // init sagas
   sagaMiddleware.run(rootSaga)
   sagaMiddleware.run(balancesSaga)

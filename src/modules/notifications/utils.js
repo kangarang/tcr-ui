@@ -1,4 +1,5 @@
 import { v4 } from 'node-uuid'
+import { fromTokenBase } from 'libs/units'
 
 export const eventTypes = {
   _Application: 'info',
@@ -58,7 +59,8 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       message = 'View on Etherscan'
       break
     case '_VoteCommitted':
-      title = `${logData.numTokens} tokens successfully committed`
+      // prettier-ignore
+      title = `${fromTokenBase(logData.numTokens, tcr.get('tokenDecimals'))} ${tcr.get('tokenSymbol')} committed`
       message = `Go to voting for ${listing.listingID}`
       break
     case '_VoteRevealed':
@@ -75,9 +77,13 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       break
     case '_ChallengeFailed':
       title = `Challenge against ${listing.listingID} failed!`
-      message = `Votes in favor of listing: ${logData.votesFor}\nVotes against listing: ${
-        logData.votesAgainst
-      }`
+      message = `Votes in favor of listing: ${fromTokenBase(
+        logData.votesFor,
+        tcr.get('tokenDecimals')
+      )}\nVotes against listing: ${fromTokenBase(
+        logData.votesAgainst,
+        tcr.get('tokenDecimals')
+      )}`
       break
     case '_RewardClaimed':
       title = 'Successfully claimed reward'
