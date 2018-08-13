@@ -9,3 +9,15 @@
 .firebaserc
 firebase.json
 notes.md
+
+src/libs/ens
+src/libs/wallet
+src/libs/token.ts
+src/libs/contracts
+src/libs/values.ts
+src/libs/formatters
+src/libs/transactions
+src/libs/validators.ts
+src/utils/formatters.ts
+src/utils/localStorage.ts
+src/libs/transaction/token.ts

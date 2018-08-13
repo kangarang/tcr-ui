@@ -19,6 +19,12 @@ export const contracts = {
   },
 }
 
+export function findMatch(logData, txData) {
+  // find matching log
+  // const match = find({ 'logData': { 'challengeID': logData.challengeID } }, listings)
+  // console.log('match:', match)
+}
+
 export function buildContract(tcr = 'adChain', contract) {
   return {
     abi: contracts.abis[contract],
