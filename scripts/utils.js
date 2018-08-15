@@ -1,6 +1,8 @@
+import BN from 'bn.js'
 import Token from './abis/EIP20.json'
 import PLCRVoting from './abis/PLCRVoting.json'
 import Registry from './abis/Registry.json'
+const BN = require('bn.js')
 
 import { fromTokenBase } from 'libs/units'
 
@@ -16,10 +18,13 @@ export const contracts = {
       voting: '0xb4b26709ffed2cd165b9b49eea1ac38d133d7975',
       registry: '0x5e2eb68a31229b469e34999c467b017222677183',
     },
+    ethaireum: {
+      token: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
+    }
   },
 }
 
-export function findMatch(logData, txData) {
+export function findMatch(logData, txData, listings) {
   // find matching log
   // const match = find({ 'logData': { 'challengeID': logData.challengeID } }, listings)
   // console.log('match:', match)
@@ -32,12 +37,31 @@ export function buildContract(tcr = 'adChain', contract) {
   }
 }
 
+let addressBalances = {
+  kareem: 'HI!'
+}
+let balancesIncludingVotingTokens = {
+}
+
 export function printTokenTransfer(logData, txData) {
   console.log('from:', logData._from)
-  console.log('value:', fromTokenBase(logData._value, '9'))
+  console.log('to:', logData._to)
+  console.log('value:', fromTokenBase(logData._value, '18'))
   console.log('txHash:', txData.txHash)
   console.log('blockNumber:', txData.blockNumber)
-  console.log('date:', txData.date)
+  console.log('blockTimestamp:', txData.blockTimestamp.toNumber())
+  if (addressBalances.hasOwnProperty(logData._to) && addressBalances.hasOwnProperty(logData._from)) {
+    addressBalances[logData._to] = new BN(addressBalances[logData._to]).add(logData._value).toString()
+    addressBalances[logData._from] = new BN(addressBalances[logData._from]).sub(logData._value).toString()
+  } else if (!addressBalances.hasOwnProperty(logData._to) && addressBalances.hasOwnProperty(logData._from)) {
+    addressBalances[logData._to] = logData._value.toString()
+    addressBalances[logData._from] = new BN(addressBalances[logData._from]).sub(logData._value).toString()
+  } else {
+    addressBalances[logData._to] = logData._value.toString()
+    addressBalances[logData._from] = logData._value.toString()
+  }
+
+  console.log(addressBalances)
   console.log('')
 }
 
@@ -47,7 +71,7 @@ export function printCommitVote(logData, txData) {
   console.log('voter:', logData.voter)
   console.log('txHash:', txData.txHash)
   console.log('blockNumber:', txData.blockNumber)
-  console.log('date:', txData.date)
+  console.log('blockTimestamp:', txData.blockTimestamp)
   console.log('')
 }
 

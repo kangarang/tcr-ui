@@ -8,24 +8,27 @@ import {
   printTokenTransfer,
 } from './utils'
 
-const provider = new Ethjs.HttpProvider(`https://mainnet.infura.io`)
+const provider = new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
 const ethjs = new Ethjs(provider)
 
-const contract = buildContract('adChain', 'registry')
+const contract = buildContract('ethaireum', 'token')
 const ethEvents = new EthEvents(ethjs, contract)
 
-const fromBlock = '6000000'
+const fromBlock = '0'
 const toBlock = 'latest'
-
 const eventNames = ['Transfer']
 const indexedFilterValues = {
-  _to: '0xb4b26709ffed2cd165b9b49eea1ac38d133d7975',
+  // _to: '',
 }
 
 ethEvents.getLogs(fromBlock, toBlock, eventNames, indexedFilterValues).then(logs => {
-  console.log(`${logs.length} logs`)
-
+  // console.log('logs[0]:', logs[0].logData._value.toString())
+  // console.log('logs[1]:', logs[1].logData._value.toString())
+  // console.log('logs[2]:', logs[2].logData._value.toString())
+  // console.log('logs[3]:', logs[3].logData._value.toString())
   logs.forEach(({ logData, txData }) => {
     printTokenTransfer(logData, txData)
   })
+
+  console.log(`${logs.length} logs`)
 })
