@@ -190,7 +190,10 @@ class CommitVote extends Component {
                   </ActionInstructions>
 
                   <InputFormRow>
-                    <InputNumTokens onChange={this.handleChangeNumTokens} />
+                    <InputNumTokens
+                      value={this.state.numTokens}
+                      onChange={this.handleChangeNumTokens}
+                    />
                     {needToApproveVoting ? (
                       <NumTokensButton
                         onClick={() => onSendTx('approveVoting', this.state)}

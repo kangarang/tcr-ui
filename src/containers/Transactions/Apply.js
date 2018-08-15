@@ -53,6 +53,7 @@ export default class Apply extends React.Component {
                   title="Listing Name"
                   type="text"
                   handleInputChange={this.handleChangeListingID}
+                  value={this.state.listingID}
                 />
 
                 <SideText small color="grey" text={translate('ins_apply')} />
@@ -65,18 +66,12 @@ export default class Apply extends React.Component {
               </div>
             )}
 
-            {/* TODO: hide this unless user wants to deposit more than the minDeposit */}
-            {/* <SideTextInput
-        title="token amount"
-        type="number"
-        handleInputChange={e => handleInputChange(e, 'numTokens')}
-      /> */}
-
             {!needToApproveRegistry && (
               <SideTextInput
                 title="img url"
                 type="text"
                 handleInputChange={this.handleChangeData}
+                value={this.state.data}
               />
             )}
 
@@ -91,6 +86,7 @@ export default class Apply extends React.Component {
                     title="token amount"
                     type="number"
                     handleInputChange={this.handleChangeNumTokens}
+                    value={this.state.numTokens}
                   />
                   <Button
                     methodName="approve"

@@ -33,11 +33,13 @@ export default class Transfer extends React.Component {
               title="Address"
               type="string"
               handleInputChange={this.handleChangeTransferTo}
+              value={this.state.transferTo}
             />
             <SideTextInput
               title="Number tokens"
               type="number"
               handleInputChange={this.handleChangeNumTokens}
+              value={this.state.numTokens}
             />
 
             <SidePanelSeparator />
