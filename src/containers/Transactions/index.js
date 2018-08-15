@@ -10,7 +10,8 @@ import { selectBalances, selectTCR, selectParameters } from 'modules/home/select
 import { BN, fromTokenBase } from 'libs/units'
 
 import toJS from 'components/toJS'
-import Apply from 'containers/Transactions/Apply'
+// import Apply from 'containers/Transactions/Apply'
+import ApplyReduxForm from 'containers/Transactions/ApplyReduxForm'
 import Transfer from 'containers/Transactions/Transfer'
 import Challenge from 'containers/Transactions/Challenge'
 import CommitVote from 'containers/Transactions/CommitVote'
@@ -64,7 +65,7 @@ class TransactionsProvider extends Component {
         {/* {children} */}
 
         <Transfer />
-        <Apply />
+        <ApplyReduxForm />
         <Challenge />
 
         {txPanelMethod === 'updateStatus' && <UpdateStatus />}

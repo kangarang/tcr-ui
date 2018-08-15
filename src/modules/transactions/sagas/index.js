@@ -5,7 +5,7 @@ import EthAbi from 'ethjs-abi'
 import * as homeActions from 'modules/home/actions'
 import * as actions from '../actions'
 import * as types from '../types'
-import { selectTxPanelListing } from '../selectors'
+import { selectTxPanelListing, selectApplicationForm } from '../selectors'
 
 import {
   selectParameters,
@@ -27,6 +27,7 @@ import { getEthjs, getEthersProvider } from 'libs/provider'
 
 import { commitVoteSaga } from './voting'
 import { personalMessageSignatureRecovery } from './signedMsg'
+import { selectAllListings } from '../../listings/selectors'
 
 export default function* transactionSaga() {
   yield takeEvery(types.SEND_TRANSACTION_START, sendTxStartSaga)
@@ -76,8 +77,19 @@ function* sendTxStartSaga(action) {
         break
       }
       case 'apply': {
-        // hash the string listingID
+        const appForm = yield select(selectApplicationForm)
+        console.log('appForm:', appForm.toJS())
+        const {
+          values: { listingID, data },
+        } = appForm.toJS()
+
         const listingHash = yield call(getListingHash, listingID)
+        const allListings = yield select(selectAllListings)
+
+        if (allListings.has(listingHash)) {
+          throw new Error('listing already exists')
+        }
+
         // NOTE: this follows the conventions supported by the forked kangarang/tcr contracts
         let args = [listingHash, convertedNumTokens, listingID, data]
 

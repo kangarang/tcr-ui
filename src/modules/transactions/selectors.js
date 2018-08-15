@@ -8,3 +8,9 @@ export const selectTxPanelListing = createSelector(selectTransactions, txState =
 export const selectTxPanelMethod = createSelector(selectTransactions, txState =>
   txState.get('txPanelMethod')
 )
+
+export const selectForm = state => state.get('form')
+
+export const selectApplicationForm = createSelector(selectForm, formState =>
+  formState.get('application')
+)

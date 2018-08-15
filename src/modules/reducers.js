@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux-immutable'
 import { reducer as notificationsReducer } from 'react-notification-system-redux'
 import { routerReducer } from 'react-router-redux'
+import { reducer as formReducer } from 'redux-form/immutable'
 
 import homeReducer from './home'
 import listingsReducer from './listings'
@@ -13,5 +14,6 @@ export default function createReducer() {
     notifications: notificationsReducer,
     routing: routerReducer,
     transactions: transactionsReducer,
+    form: formReducer,
   })
 }
