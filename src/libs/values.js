@@ -1,25 +1,16 @@
 import utils from 'ethers/utils'
-import { BN } from './units'
 import { randomBytes } from 'crypto'
+import { BN } from './units'
 
 export function randomSalt() {
   const buf = randomBytes(32)
   const salt = BN(`0x${buf.toString('hex')}`)
-  console.log('salt:', salt.toString())
   return salt.toString()
 }
 
-export function getVoteSaltHash(vote, salt) {
-  const hash = utils.solidityKeccak256(['uint', 'uint'], [vote, salt])
-  // console.log('hash:', hash)
-  return hash
-}
-
-export function getListingHash(listing) {
-  const listingHash = utils.solidityKeccak256(['string'], [listing])
-  // console.log('listingHash:', listingHash)
-  return listingHash
-}
+// prettier-ignore
+export const getVoteSaltHash = (vote, salt) => utils.solidityKeccak256(['uint', 'uint'], [vote, salt])
+export const getListingHash = listing => utils.solidityKeccak256(['string'], [listing])
 
 // from: https://github.com/0xProject/0x-monorepo/blob/development/packages/utils/src/address_utils.ts
 const BASIC_ADDRESS_REGEX = /^(0x)?[0-9a-f]{40}$/i
@@ -51,8 +42,7 @@ export function isAddress(address) {
   } else if (SAME_CASE_ADDRESS_REGEX.test(address)) {
     // If it's all small caps or all all caps, return true
     return true
-  } else {
-    // Otherwise check each case
-    return isChecksumAddress(address)
   }
+  // Otherwise check each case
+  return isChecksumAddress(address)
 }

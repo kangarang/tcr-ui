@@ -1,7 +1,3 @@
-export function stripHexPrefix(value) {
-  return value.replace('0x', '')
-}
+export const stripHexPrefix = value => value.replace('0x', '')
 
-export function stripHexPrefixAndLower(value) {
-  return stripHexPrefix(value).toLowerCase()
-}
+export const stripHexPrefixAndLower = value => stripHexPrefix(value).toLowerCase()

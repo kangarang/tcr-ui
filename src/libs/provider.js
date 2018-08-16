@@ -1,34 +1,26 @@
 import Ethjs from 'ethjs'
 import providers from 'ethers/providers'
 
-let ethersProvider = undefined
-// prefer metamask provider
-// return local rpc otherwise
-// set global ethersProvider
-async function setEthersProvider(chainId) {
+export async function getEthersProvider(chainId) {
   if (
     typeof window.web3 !== 'undefined' &&
     typeof window.web3.currentProvider !== 'undefined'
   ) {
-    ethersProvider = new providers.Web3Provider(window.web3.currentProvider, { chainId })
-    return ethersProvider
+    // metamask
+    return new providers.Web3Provider(window.web3.currentProvider, { chainId })
+  } else if (process.env.NODE_ENV === 'development') {
+    // ganache-cli
+    return new providers.JsonRpcProvider('http://localhost:8545', { chainId })
+  } else if (chainId === 1) {
+    // infura
+    return new providers.JsonRpcProvider('https://mainnet.infura.io', { chainId })
+  } else if (chainId === 4) {
+    // infura
+    return new providers.JsonRpcProvider('https://rinkeby.infura.io', { chainId })
   }
-  ethersProvider = new providers.JsonRpcProvider('http://localhost:8545', { chainId })
-  return ethersProvider
 }
 
-// retrieve defined global ethersProvider
-function getEthersProvider() {
-  if (ethersProvider !== undefined) {
-    return ethersProvider
-  }
-  throw new Error('ethersProvider is undefined')
-}
-
-let ethjs = undefined
-// prefer metamask provider
-// return local rpc otherwise
-function setProvider(network) {
+export function getProvider(network) {
   if (
     typeof window !== 'undefined' &&
     typeof window.web3 !== 'undefined' &&
@@ -39,32 +31,17 @@ function setProvider(network) {
   } else if (process.env.NODE_ENV === 'development') {
     // ganache-cli
     return new Ethjs.HttpProvider(`http://localhost:8545`)
-  } else if (process.env.NODE_ENV === 'test') {
-    // rinkeby infura
-    return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
-  }
-  if (network === 'mainnet') {
+  } else if (network === 'mainnet') {
+    // infura
     return new Ethjs.HttpProvider(`https://mainnet.infura.io`)
   } else if (network === 'rinkeby') {
+    // infura
     return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
   }
+  return new Ethjs.HttpProvider(`https://rinkeby.infura.io`)
 }
 
-// set ethjs and return it
-function setEthjs(network) {
-  // metamask or ganache-cli
-  const provider = setProvider(network)
-  // set global
-  ethjs = new Ethjs(provider)
-  return ethjs
+export function getEthjs(network) {
+  const provider = getProvider(network)
+  return new Ethjs(provider)
 }
-
-// retrieve defined global ethjs
-function getEthjs() {
-  if (ethjs !== undefined) {
-    return ethjs
-  }
-  throw new Error('ethjs is undefined')
-}
-
-export { setEthjs, getEthjs, setProvider, setEthersProvider, getEthersProvider }

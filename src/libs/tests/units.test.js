@@ -3,14 +3,38 @@ import { BN, fromTokenBase, toTokenBase, trimDecimalsThree } from 'libs/units'
 
 describe('libs: units', () => {
   describe('unit conversion utils', async () => {
-    test('should return the converted number as a string', () => {
-      const converted = fromTokenBase(50000000000000000000, 18)
-      expect(converted).toBe('50')
+    describe('function: toTokenBase', () => {
+      test('should convert to the base unit value', () => {
+        const actual = toTokenBase(BN('6758436257'), '18')
+        const expected = '6758436257000000000000000000'
+        expect(actual.toString()).toBe(expected)
+
+        const actual2 = toTokenBase(BN('420'), '18')
+        const expected2 = '420000000000000000000'
+        expect(actual2.toString()).toBe(expected2)
+      })
+
+      test('should return the base unit as a string', () => {
+        const base = toTokenBase(50, 18)
+        expect(base.toString()).toBe('50000000000000000000')
+      })
     })
 
-    test('should return the base unit as a string', () => {
-      const base = toTokenBase(50, 18)
-      expect(base).toBe('50000000000000000000')
+    describe('function: fromTokenBase', () => {
+      test('should return the converted unit value', () => {
+        const actual = fromTokenBase('67584362578349625784362578', '18')
+        const expected = '67584362.578349625784362578'
+        expect(actual.toString()).toBe(expected)
+
+        const actual2 = fromTokenBase(BN('420000000000000000000'), '18')
+        const expected2 = '420'
+        expect(actual2.toString()).toBe(expected2)
+      })
+
+      test('should return the converted number as a string', () => {
+        const converted = fromTokenBase(50000000000000000000, 18)
+        expect(converted.toString()).toBe('50')
+      })
     })
   })
 

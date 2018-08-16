@@ -1,3 +1,5 @@
+import localforage from 'localforage'
+
 export const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state')
@@ -19,23 +21,27 @@ export const saveState = state => {
   }
 }
 
-export const loadSettings = () => {
+export async function saveLocalForage(key, value) {
   try {
-    const serializedState = localStorage.getItem('tcruiSettings')
-    if (serializedState === null) {
-      return undefined
-    }
-    return JSON.parse(serializedState)
+    console.log(`storing ${key.slice(8)} in indexedDB..`)
+    return localforage.setItem(key, value)
   } catch (err) {
-    return undefined
+    console.log('local storage save err:', err)
   }
 }
 
-export const saveSettings = settings => {
+export async function getLocalForage(key) {
   try {
-    const serializedSettings = JSON.stringify(settings)
-    localStorage.setItem('tcruiSettings', serializedSettings)
+    return localforage.getItem(key)
   } catch (err) {
-    // Ignore write errors.
+    console.log('local storage get err:', err)
+  }
+}
+
+export async function removeLocalForage(key) {
+  try {
+    return localforage.removeItem(key)
+  } catch (err) {
+    console.log('local storage remove err:', err)
   }
 }

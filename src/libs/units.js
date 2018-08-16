@@ -1,15 +1,12 @@
-// https://github.com/MyCryptoHQ/MyCrypto/blob/develop/common/libs/units.ts
+// adapted from: https://github.com/MyCryptoHQ/MyCrypto/blob/develop/common/libs/units.ts
 import BNJS from 'bn.js'
 import { stripHexPrefix } from 'libs/formatters'
 
-export const BN = small => {
-  return new BNJS(small.toString(10), 10)
-}
+export const BN = (small, base = 10) => new BNJS(small.toString(10), base)
 
 // Trim to 3 trailing decimals
-export const trimDecimalsThree = n => {
-  return (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
-}
+export const trimDecimalsThree = n =>
+  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
 
 export const ETH_DECIMAL = 18
 
@@ -40,12 +37,12 @@ const Units = {
   tether: '1000000000000000000000000000000',
 }
 
-const handleValues = input => {
+export const handleValues = input => {
   if (typeof input === 'string') {
-    return input.startsWith('0x') ? new BNJS(stripHexPrefix(input), 16) : new BNJS(input)
+    return input.startsWith('0x') ? BN(stripHexPrefix(input), 16) : BN(input)
   }
   if (typeof input === 'number') {
-    return new BNJS(input)
+    return BN(input)
   }
   if (BNJS.isBN(input)) {
     return input
@@ -54,24 +51,24 @@ const handleValues = input => {
   }
 }
 
-const Nonce = input => handleValues(input)
-const Wei = input => handleValues(input)
-const TokenValue = input => handleValues(input)
-const getDecimalFromEtherUnit = key => Units[key].length - 1
+export const Nonce = input => handleValues(input)
+export const Wei = input => handleValues(input)
+export const TokenValue = input => handleValues(input)
+export const getDecimalFromEtherUnit = key => Units[key].length - 1
 
-const stripRightZeros = str => {
+export const stripRightZeros = str => {
   const strippedStr = str.replace(/0+$/, '')
   return strippedStr === '' ? null : strippedStr
 }
 
 const baseToConvertedUnit = (value, decimal) => {
   if (decimal === 0) {
-    return value.toString()
+    return value
   }
-  const paddedValue = value.toString().padStart(decimal + 1, '0')
-  const integerPart = value.toString().slice(0, -decimal)
+  const paddedValue = value.padStart(decimal + 1, '0')
+  const integerPart = value.slice(0, -decimal)
   const fractionPart = stripRightZeros(paddedValue.slice(-decimal))
-  return fractionPart ? `${integerPart}.${fractionPart.slice(0, 2)}` : `${integerPart}`
+  return fractionPart ? `${integerPart}.${fractionPart}` : `${integerPart}`
 }
 
 const convertedToBaseUnit = (value, decimal) => {
@@ -83,41 +80,29 @@ const convertedToBaseUnit = (value, decimal) => {
   return `${integerPart}${paddedFraction}`
 }
 
-const fromWei = (wei, unit) => {
+export const fromWei = (wei, unit) => {
   const decimal = getDecimalFromEtherUnit(unit)
   return baseToConvertedUnit(wei.toString(), decimal)
 }
 
-const toWei = (value, decimal) => {
+export const toWei = (value, decimal) => {
   const wei = convertedToBaseUnit(value, decimal)
   return Wei(wei)
 }
 
-const fromTokenBase = (value, decimal) => baseToConvertedUnit(value.toString(), decimal)
+// prettier-ignore
+export const fromTokenBase = (value, decimal) =>
+  baseToConvertedUnit(value.toString(), decimal)
 
-const toTokenBase = (value, decimal) =>
+export const toTokenBase = (value, decimal) =>
   TokenValue(convertedToBaseUnit(value.toString(), decimal))
 
-const convertTokenBase = (value, oldDecimal, newDecimal) => {
-  if (oldDecimal === newDecimal) {
-    return value
-  }
-  return toTokenBase(fromTokenBase(value, oldDecimal), newDecimal)
-}
+// const convertTokenBase = (value, oldDecimal, newDecimal) => {
+//   if (oldDecimal === newDecimal) {
+//     return value
+//   }
+//   return toTokenBase(fromTokenBase(value, oldDecimal), newDecimal)
+// }
 
-const gasPriceToBase = price => toWei(price.toString(), getDecimalFromEtherUnit('gwei'))
-
-export {
-  TokenValue,
-  fromWei,
-  toWei,
-  toTokenBase,
-  fromTokenBase,
-  convertTokenBase,
-  Wei,
-  getDecimalFromEtherUnit,
-  Units,
-  Nonce,
-  handleValues,
-  gasPriceToBase,
-}
+export const gasPriceToBase = price =>
+  toWei(price.toString(), getDecimalFromEtherUnit('gwei'))
