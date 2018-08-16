@@ -5,10 +5,9 @@ const updateOneListing = listing => ({
   listing,
 })
 
-const setAllListings = (listings, byID) => ({
+const setAllListings = listings => ({
   type: types.SET_ALL_LISTINGS,
   listings,
-  byID,
 })
 
 const deleteOneListing = key => ({

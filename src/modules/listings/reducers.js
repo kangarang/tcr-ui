@@ -12,7 +12,7 @@ function listingsReducer(state = initialState, action) {
     case types.SET_ALL_LISTINGS:
       return state
         .set('listings', fromJS(action.listings))
-        .set('byID', fromJS(action.byID))
+        .set('byID', fromJS(fromJS(action.listings).keySeq()))
     case types.UPDATE_ONE_LISTING:
       return state.setIn(['listings', action.listing.listingHash], fromJS(action.listing))
     default:

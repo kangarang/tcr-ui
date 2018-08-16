@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux-immutable'
-import { reducer as notificationsReducer } from 'react-notification-system-redux'
 import { routerReducer } from 'react-router-redux'
+import { reducer as notificationsReducer } from 'react-notification-system-redux'
 
 import homeReducer from './home'
 import listingsReducer from './listings'
