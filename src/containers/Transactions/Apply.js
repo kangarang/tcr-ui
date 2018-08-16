@@ -1,6 +1,5 @@
 import React from 'react'
 
-import translate from 'translations'
 import { colors } from 'global-styles'
 
 import { MarginDiv } from 'components/StyledHome'
@@ -46,7 +45,7 @@ export default class Apply extends React.Component {
             <SidePanelSeparator />
 
             {needToApproveRegistry ? (
-              <SideText small color="grey" text={translate('ins_approve_registry')} />
+              <div>You need to approve the registry</div>
             ) : (
               <div>
                 <SideTextInput
@@ -55,8 +54,6 @@ export default class Apply extends React.Component {
                   handleInputChange={this.handleChangeListingID}
                   value={this.state.listingID}
                 />
-
-                <SideText small color="grey" text={translate('ins_apply')} />
 
                 <TotalAmount
                   copy={'Minimum Deposit'}
@@ -76,8 +73,6 @@ export default class Apply extends React.Component {
             )}
 
             <SidePanelSeparator />
-
-            <SideText color="grey" text={translate('mm_apply')} />
 
             <MarginDiv>
               {needToApproveRegistry ? (

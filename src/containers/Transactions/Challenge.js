@@ -1,5 +1,4 @@
 import React from 'react'
-import translate from 'translations'
 
 import { MarginDiv } from 'components/StyledHome'
 import Countdown from 'components/Countdown'
@@ -35,9 +34,7 @@ export default class Challenge extends React.Component {
             opened={opened === 'challenge'}
             onClose={closeTxPanel}
           >
-            {needToApproveRegistry && (
-              <SideText small color="grey" text={translate('ins_approve_registry')} />
-            )}
+            {needToApproveRegistry && <div>You need to approve the registry</div>}
             <SidePanelSeparator />
 
             <SideText size="xlarge" text={selectedOne && selectedOne.listingID} />
@@ -55,8 +52,6 @@ export default class Challenge extends React.Component {
 
             <SidePanelSeparator />
 
-            <SideText small color="grey" text={translate('ins_challenge')} />
-
             <TotalAmount
               copy={'Total Stake'}
               minDeposit={parameters.minDeposit}
@@ -64,8 +59,6 @@ export default class Challenge extends React.Component {
             />
 
             <SidePanelSeparator />
-
-            <SideText color="grey" text={translate('mm_challenge')} />
 
             <MarginDiv>
               {needToApproveRegistry ? (

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import translate from 'translations'
 
 import { MarginDiv } from 'components/StyledHome'
 import { fromTokenBase } from 'libs/units'
@@ -52,8 +51,6 @@ export default class UpdateStatus extends Component {
             )}
 
             <SidePanelSeparator />
-
-            <SideText small color="grey" text={translate('ins_updateStatus')} />
 
             <MarginDiv>
               {selectedOne && (
