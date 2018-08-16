@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs from 'fs'
 import path from 'path'
 import { ipfsGetData } from 'libs/ipfs'
 import { ipfsTokensHash } from 'config'

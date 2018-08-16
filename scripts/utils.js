@@ -2,7 +2,6 @@ import BN from 'bn.js'
 import Token from './abis/EIP20.json'
 import PLCRVoting from './abis/PLCRVoting.json'
 import Registry from './abis/Registry.json'
-const BN = require('bn.js')
 
 import { fromTokenBase } from 'libs/units'
 
@@ -37,11 +36,7 @@ export function buildContract(tcr = 'adChain', contract) {
   }
 }
 
-let addressBalances = {
-  kareem: 'HI!'
-}
-let balancesIncludingVotingTokens = {
-}
+let addressBalances = {}
 
 export function printTokenTransfer(logData, txData) {
   console.log('from:', logData._from)
@@ -49,7 +44,7 @@ export function printTokenTransfer(logData, txData) {
   console.log('value:', fromTokenBase(logData._value, '18'))
   console.log('txHash:', txData.txHash)
   console.log('blockNumber:', txData.blockNumber)
-  console.log('blockTimestamp:', txData.blockTimestamp.toNumber())
+  // console.log('blockTimestamp:', txData.blockTimestamp.toNumber())
   if (addressBalances.hasOwnProperty(logData._to) && addressBalances.hasOwnProperty(logData._from)) {
     addressBalances[logData._to] = new BN(addressBalances[logData._to]).add(logData._value).toString()
     addressBalances[logData._from] = new BN(addressBalances[logData._from]).sub(logData._value).toString()
