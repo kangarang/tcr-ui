@@ -6,7 +6,7 @@ import tokenList from 'config/tokens/eth.json'
 import { BN } from 'libs/units'
 import { ipfsCheckMultihash, ipfsGetData } from 'libs/ipfs'
 import { getListingHash, isAddress } from 'libs/values'
-import { timestampToExpiry } from 'utils/_datetime'
+import { timestampToExpiry } from 'utils/datetime'
 
 // Finds the corresponding listing according the eventName
 export function findMatchingListing(logData, listings) {

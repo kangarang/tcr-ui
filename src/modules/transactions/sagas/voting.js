@@ -5,8 +5,8 @@ import { selectTCR, selectAccount, selectVoting } from 'modules/home/selectors'
 import { toTokenBase } from 'libs/units'
 import { getVoteSaltHash } from 'libs/values'
 
-import { getEndDateString } from 'utils/_datetime'
-import { removeLocal, getLocal, saveLocal } from 'utils/_localStorage'
+import { getEndDateString } from 'utils/datetime'
+import { removeLocalForage, getLocalForage, saveLocalForage } from 'libs/localStorage'
 
 import { sendTransactionSaga } from './index'
 import * as actions from '../actions'
@@ -69,19 +69,19 @@ export function* commitVoteSaga(pollID, voteOption, salt, numTokens, listing) {
     }
 
     let key = `${pollID}-${listing.listingID}`
-    const local = yield call(getLocal, key)
+    const local = yield call(getLocalForage, key)
 
     if (!local) {
-      const savedFile = yield call(saveLocal, key, json)
+      const savedFile = yield call(saveLocalForage, key, json)
       console.log('savedFile:', savedFile)
     }
 
     // at this point, the user is committed to committing
     if (local && local.votingAddress === voting.address && local.account === account) {
-      console.log('removeLocal:', key, local.ticket)
-      yield call(removeLocal, key)
+      console.log('removeLocalForage:', key, local.ticket)
+      yield call(removeLocalForage, key)
       // key = `${key}(1)` // amend ticket
-      const savedFile = yield call(saveLocal, key, json)
+      const savedFile = yield call(saveLocalForage, key, json)
       console.log('savedFile:', savedFile)
     }
 

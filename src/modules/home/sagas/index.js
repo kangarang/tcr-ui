@@ -3,7 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import * as actions from '../actions'
 import * as types from '../types'
 
-import { setEthjs, setEthersProvider } from 'libs/provider'
+import { getEthjs } from 'libs/provider'
 
 export default function* rootSaga() {
   yield takeLatest(types.SETUP_ETHEREUM_START, genesis)
@@ -11,9 +11,8 @@ export default function* rootSaga() {
 
 export function* genesis() {
   try {
-    const ethjs = yield call(setEthjs)
+    const ethjs = yield call(getEthjs)
     const networkID = yield call(ethjs.net_version)
-    yield call(setEthersProvider, parseInt(networkID, 10))
     const network =
       networkID === '4'
         ? 'rinkeby'

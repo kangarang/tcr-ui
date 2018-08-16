@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { colors } from 'global-styles'
 import { selectTxPanelListing, selectTxPanelMethod } from 'modules/transactions/selectors'
 import * as actions from 'modules/transactions/actions'
+import { dateHasPassed } from 'utils/datetime'
 
 import toJS from 'components/toJS'
 import ListingCard from './components/ListingCard'
@@ -61,14 +62,14 @@ class Listings extends Component {
               openTxPanel={onOpenTxPanel}
               updateTrigger={
                 listingType === 'faceoffs'
-                  ? visibleListings[li].revealExpiry.expired
+                  ? dateHasPassed(visibleListings[li].revealExpiry.timestamp)
                   : listingType === 'applications'
-                    ? visibleListings[li].appExpiry.expired
+                    ? dateHasPassed(visibleListings[li].appExpiry.timestamp)
                     : false
               }
               revealTrigger={
                 listingType === 'faceoffs'
-                  ? visibleListings[li].commitExpiry.expired
+                  ? dateHasPassed(visibleListings[li].commitExpiry.timestamp)
                   : false
               }
               claimRewardTrigger={false}

@@ -19,7 +19,7 @@ import likeIcon from 'assets/icons/like.svg'
 // import dislikeIcon from 'assets/icons/dislike.svg'
 
 import { randomSalt } from 'libs/values'
-import { getLocal } from 'utils/_localStorage'
+import { getLocalForage } from 'libs/localStorage'
 
 const SidePanelWrapper = styled.div`
   font-family: 'Avenir Next';
@@ -126,7 +126,7 @@ class CommitVote extends Component {
 
   // const key = `${pollID}-${listingID}`
   checkLocal = async key => {
-    const local = await getLocal(key)
+    const local = await getLocalForage(key)
     if (!local) {
       console.log('nothing in local storage for key:', key)
     } else {

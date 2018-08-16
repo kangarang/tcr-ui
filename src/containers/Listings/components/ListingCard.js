@@ -8,7 +8,7 @@ import Button from 'components/Button'
 import Img from 'components/Img'
 import Countdown from 'components/Countdown'
 
-import { tsToMonthDate } from 'utils/_datetime'
+import { tsToMonthDate } from 'utils/datetime'
 
 const CardContent = styled.div`
   padding: 1em;

@@ -10,7 +10,7 @@ import SideSplit from './components/SideSplit'
 import SideText from './components/SideText'
 
 import { fromTokenBase } from 'libs/units'
-import { getLocal } from 'utils/_localStorage'
+import { getLocalForage } from 'libs/localStorage'
 
 import { TransactionsContext } from './index'
 
@@ -27,7 +27,7 @@ export default class RevealVote extends Component {
   handleGetLocal = async () => {
     const listing = this.props.selectedOne
     const key = `${listing.challengeID}-${listing.listingID}`
-    const localFile = await getLocal(key)
+    const localFile = await getLocalForage(key)
     console.log('localFile:', localFile)
     console.log('listing:', listing)
 
