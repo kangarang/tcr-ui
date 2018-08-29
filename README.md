@@ -110,22 +110,6 @@ The [adChain Registry](https://publisher.adchain.com/) for publishers is deploye
 
 ---
 
-## Application Binary Interfaces
-
-tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](./scripts/abis/)
-
-The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config](./src/config/index.js)
-
-If you do not want to rely on hardcoding the address, you can add a custom set of ABIs to IPFS:
-
-1.  Edit the `"address"` of the appropriate `"networks"` section of [/scripts/abis/Registry.json](./scripts/abis/Registry.json)
-1.  Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed)
-1.  Update the `ipfsABIsHash` variable in [/src/config](./src/config/index.js) to the IPFS multihash
-
-[more info](./docs/IPFS.md)
-
----
-
 ## Directory structure
 
 ```
@@ -181,6 +165,23 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 The application requires a browser ethereum provider (Ethjs + MetaMask). On load, the app uses the provider to connect to an Ethereum network. Once connected, the app retrieves tcr contract ABIs from IPFS. Using the ABIs, the app begins to poll for event logs (e.g. `_Application`, `_Challenge`, `_VoteCommitted`, `_VoteRevealed`, etc.). With those logs, the app creates/transforms listing entities to manifest an emulation of the smart contract system's current state.
 
 Different event logs trigger different effects to different listing entities. For example, an `_Application` event will effectively create a listing entity. A `_Challenge` event will add challenge information to the respective listing which renders the listing at a different part of the app. A `_VoteRevealed` event will update the listing's `votesFor` and `votesAgainst` values. [Click here](https://github.com/kangarang/tcr-ui/blob/master/src/modules/listings/utils.js) to see the `createListing` and `transformListing` functions.
+
+## Application Binary Interfaces
+
+tcr-ui retrieves ABIs from IPFS, then loads the tcr smart contracts using the current `networkID` of MetaMask. the ABIs retrieved from IPFS are the same ABIs as the ones located in [/scripts/abis/](./scripts/abis/)
+
+The registry MUST be deployed to a network. If you have a registry address that you want to force, hardcode it in [/src/config](./src/config/index.js)
+
+If you do not want to rely on hardcoding the address, you can add a custom set of ABIs to IPFS:
+
+1.  Edit the `"address"` of the appropriate `"networks"` section of [/scripts/abis/Registry.json](./scripts/abis/Registry.json)
+1.  Run `npm run update:abis` to add your custom abis to IPFS. (note: a multihash starting with "Qm" will be printed)
+1.  Update the `ipfsABIsHash` variable in [/src/config](./src/config/index.js) to the IPFS multihash
+
+[more info](./docs/IPFS.md)
+
+---
+
 
 ---
 
