@@ -8,11 +8,7 @@
 
 [![Build Status](https://travis-ci.org/kangarang/tcr-ui.svg?branch=master)](https://travis-ci.org/kangarang/tcr-ui)
 
-"Token-curated registries are decentrally-curated lists with intrinsic economic incentives for token holders to curate the list's contents judiciously" - Mike Goldin
-
-TCRs use an intrinsic token to incentivize a community to reach decentralized consensus and curate a registry of high-quality entries
-
-<!-- the ethereum blockchain is a decentralized database
+the ethereum blockchain is a decentralized database
 
 ethereum miners are decentralized servers
 
@@ -30,7 +26,7 @@ if Alice has adToken, she can participate in the adChain registry
 
 if a user controls multiple tokens from multiple tcrs, the user can participate in multiple tcrs
 
-if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil registries -->
+if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil registries
 
 ---
 
@@ -177,6 +173,14 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 - [IPFS](./docs/IPFS.md)
 
 [Wireframes](./design/)
+
+---
+
+## How it works
+
+The application requires a browser ethereum provider (Ethjs + MetaMask). On load, the app uses the provider to connect to an Ethereum network. Once connected, the app retrieves tcr contract ABIs from IPFS. Using the ABIs, the app begins to poll for event logs (e.g. `_Application`, `_Challenge`, `_VoteCommitted`, `_VoteRevealed`, etc.). With those logs, the app creates/transforms listing entities to manifest an emulation of the smart contract system's current state.
+
+Different event logs trigger different effects to different listing entities. For example, an `_Application` event will effectively create a listing entity. A `_Challenge` event will add challenge information to the respective listing which renders the listing at a different part of the app. A `_VoteRevealed` event will update the listing's `votesFor` and `votesAgainst` values. [Click here](https://github.com/kangarang/tcr-ui/blob/master/src/modules/listings/utils.js) to see the `createListing` and `transformListing` functions.
 
 ---
 
