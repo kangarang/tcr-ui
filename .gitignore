@@ -2,13 +2,13 @@
 /.vscode
 /build
 /coverage
+/docs
 /node_modules
 /scripts/tokens
 
 .DS_Store
 .firebaserc
 firebase.json
-notes.md
 
 src/libs/ens
 src/libs/wallet

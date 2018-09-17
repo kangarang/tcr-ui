@@ -7,6 +7,6 @@
         "root": ["./src"]
       }
     ],
-    ["syntax-dynamic-import"]
+    "syntax-dynamic-import"
   ]
 }

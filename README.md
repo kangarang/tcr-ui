@@ -34,7 +34,7 @@ if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil
 
 - Node >= 8.0.0
 - Yarn >= 1.7.0\*
-<sub>*npm is not supported for package management. tcr-ui uses yarn.lock to ensure sub-dependency versions are pinned. yarn is required to install node_modules</sub>
+  <sub>\*npm is not supported for package management. tcr-ui uses yarn.lock to ensure sub-dependency versions are pinned. yarn is required to install node_modules</sub>
 
 ## Getting started
 
@@ -182,9 +182,6 @@ If you do not want to rely on hardcoding the address, you can add a custom set o
 
 ---
 
-
----
-
 ## Resources
 
 **Articles**
@@ -229,7 +226,7 @@ These workflow diagrams were created by our wonderful designer, Eva Shon
 
 ![Simple overview](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/simple-overview.png)
 
-## ![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
+![Detailed workflow](https://s3.amazonaws.com/elasticbeanstalk-us-east-1-167611752874/detailed-workflow.png)
 
 ---
 

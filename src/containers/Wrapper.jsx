@@ -52,7 +52,8 @@ class WrapperClass extends Component {
     const { onSelectRegistry, history, match } = this.props
     this.setState({ visibleRegistries: false })
     // prettier-ignore
-    history.push(`/${tcr.registryAddress.slice(0, 8)}/${match.params.filter || 'whitelist'}`)
+    // history.push(`/${tcr.registryAddress.slice(0, 8)}/${match.params.filter || 'whitelist'}`)
+    history.push(`/${match.params.filter || 'whitelist'}`)
     onSelectRegistry(tcr)
   }
   // Directs to root route

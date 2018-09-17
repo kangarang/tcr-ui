@@ -40,11 +40,13 @@ export function* notificationsSaga(log) {
       listing
     )
 
-    const noti = yield call(generateNoti, txData.txHash, title, message, {
-      label: 'action',
-      callback: () => console.log('ACTION'),
-    })
-    yield call(notify, noti, eventTypes[eventName])
+    if (title && message) {
+      const noti = yield call(generateNoti, txData.txHash, title, message, {
+        label: 'action',
+        callback: () => console.log('ACTION'),
+      })
+      yield call(notify, noti, eventTypes[eventName])
+    }
   } catch (err) {
     yield put(actions.showNotificationFailed(err))
   }

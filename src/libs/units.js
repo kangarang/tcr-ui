@@ -3,11 +3,6 @@ import BNJS from 'bn.js'
 import { stripHexPrefix } from 'libs/formatters'
 
 export const BN = (small, base = 10) => new BNJS(small.toString(10), base)
-
-// Trim to 3 trailing decimals
-export const trimDecimalsThree = n =>
-  (+n).toFixed(3).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
-
 export const ETH_DECIMAL = 18
 
 const Units = {
@@ -65,10 +60,9 @@ const baseToConvertedUnit = (value, decimal) => {
   if (decimal === 0) {
     return value
   }
-  const paddedValue = value.padStart(decimal + 1, '0')
   const integerPart = value.slice(0, -decimal)
-  const fractionPart = stripRightZeros(paddedValue.slice(-decimal))
-  return fractionPart ? `${integerPart}.${fractionPart}` : `${integerPart}`
+  const fractionPart = value.slice(-decimal)
+  return fractionPart ? `${integerPart}.${fractionPart.slice(0, 3)}` : `${integerPart}`
 }
 
 const convertedToBaseUnit = (value, decimal) => {
@@ -97,12 +91,4 @@ export const fromTokenBase = (value, decimal) =>
 export const toTokenBase = (value, decimal) =>
   TokenValue(convertedToBaseUnit(value.toString(), decimal))
 
-// const convertTokenBase = (value, oldDecimal, newDecimal) => {
-//   if (oldDecimal === newDecimal) {
-//     return value
-//   }
-//   return toTokenBase(fromTokenBase(value, oldDecimal), newDecimal)
-// }
-
-export const gasPriceToBase = price =>
-  toWei(price.toString(), getDecimalFromEtherUnit('gwei'))
+export const gasPriceToBase = price => toWei(price.toString(), getDecimalFromEtherUnit('gwei'))

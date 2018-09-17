@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Home from 'containers/Home/Loadable'
-import Registry from 'containers/Registry/Loadable'
+// import Registry from 'containers/Registry/Loadable'
 
 class RootClass extends Component {
   render() {
@@ -13,7 +13,7 @@ class RootClass extends Component {
     const routes = (
       <Switch>
         <Route exact path="/:filter?" component={Home} />
-        <Route path="/:registryAddress/:filter?" component={Registry} />
+        {/* <Route path="/:registryAddress/:filter?" component={Registry} /> */}
         {/* <Route path="/registry/:registryAddress" component={Registry} /> */}
         {/* <Route path="/activities" component={Activities} /> */}
       </Switch>

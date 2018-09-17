@@ -25,7 +25,7 @@ export const eventTypes = {
 // Create a general notification from an event
 export function generateNoti(uid, title, message, action) {
   return {
-    uid: v4(),
+    uid,
     title,
     message,
     position: 'tl',
@@ -80,10 +80,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       message = `Votes in favor of listing: ${fromTokenBase(
         logData.votesFor,
         tcr.get('tokenDecimals')
-      )}\nVotes against listing: ${fromTokenBase(
-        logData.votesAgainst,
-        tcr.get('tokenDecimals')
-      )}`
+      )}\nVotes against listing: ${fromTokenBase(logData.votesAgainst, tcr.get('tokenDecimals'))}`
       break
     case '_RewardClaimed':
       title = 'Successfully claimed reward'
@@ -114,7 +111,7 @@ export function getNotificationTitleAndMessage(eventName, logData, tcr, listing)
       message = 'View parameter proposal'
       break
     default:
-      title = `Event: ${eventName}`
+      title = ''
       message = ''
       break
   }

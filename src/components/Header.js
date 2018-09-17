@@ -18,7 +18,6 @@ import {
 import { selectRegistryStart } from 'modules/home/actions'
 import { openTxPanel } from 'modules/transactions/actions'
 
-import { trimDecimalsThree } from 'libs/units'
 import dropDownCaratIconSrc from 'assets/icons/down-arrow.svg'
 // import avatarIconSrc from 'assets/icons/eth.png'
 // import Menu from '@material-ui/core/Menu'
@@ -112,9 +111,7 @@ class Header extends Component {
         <NavWrapper>
           <NavLinks>
             <NavLink onClick={onHandleToggleRegistries}>Registries</NavLink>
-            <NavLink onClick={e => onOpenTxPanel(null, 'apply')}>
-              Add an application
-            </NavLink>
+            <NavLink onClick={e => onOpenTxPanel(null, 'apply')}>Add an application</NavLink>
             <NavLink>Vote</NavLink>
             <NavLink>How does this work?</NavLink>
           </NavLinks>
@@ -151,8 +148,7 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     onSelectRegistry: tcr => dispatch(selectRegistryStart(tcr)),
-    onOpenTxPanel: (selectedOne, methodName) =>
-      dispatch(openTxPanel(selectedOne, methodName)),
+    onOpenTxPanel: (selectedOne, methodName) => dispatch(openTxPanel(selectedOne, methodName)),
   }
 }
 
