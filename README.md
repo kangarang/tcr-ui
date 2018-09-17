@@ -40,9 +40,7 @@ if Bob has SUN, FOAM, and CVL, he can participate in the Sunset, FOAM, and Civil
 
 ### _NOTICE_:
 
-1. This repo currently defaults to supporting the contracts compiled from [this forked repo](https://github.com/kangarang/tcr). The differences include: 1 additional string argument to both: the `apply` function and the `_Application` event emission. This means the event signature of an `_Application` event will ultimately be different, as the tightly-packed types are different. [more details](https://github.com/kangarang/tcr-ui/issues/107#issuecomment-410531118)
-
-1. Commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
+Commands prefixed with **`$`** should be executed in this repo, while commands prefixed with **`>`** should be executed in a **separate shell**, in a cloned [tcr](https://github.com/kangarang/tcr) repo
 
 **TCR-UI**:
 
@@ -78,7 +76,7 @@ Warning: Do not use the mnemonic associated with this command on ethereum main n
 
 ```
   # clone tcr smart contracts
-  > git clone https://github.com/kangarang/tcr.git
+  > git clone https://github.com/skmgoldin/tcr.git
   > cd tcr
 
   # install node dependencies and ethpm dependencies
