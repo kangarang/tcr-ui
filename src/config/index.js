@@ -1,12 +1,12 @@
 // ipfs multihash to retrieve ABIs
-export const ipfsABIsHash = 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT'
+export const ipfsABIsHash = 'QmdvnGG7NCLsH5u4kxe2pcVcDGvxNtfouccRHBT64jvPGr'
 export const ipfsTokensHash = 'QmRH8e8ssnj1CWVepGvAdwaADKNkEpgDU5bffTbeS6JuG9'
 // hardcoded FORCED registry address
 export const hardcodedRegistryAddress = ''
 export const defaultRegistryAddress = ''
 
-export function getIpfsABIsHash(network) {
-  if (network === 'mainnet') {
+export function getIpfsABIsHash(tokenAddress) {
+  if (tokenAddress === '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd') {
     return 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu'
   } else {
     return ipfsABIsHash
@@ -28,41 +28,45 @@ export const registries = {
   rinkeby: [
     {
       name: 'The Sunset Registry',
-      registryAddress: '0x3a1f892ab191e06a5769aa8bb9f1a95d06e30194',
-      votingAddress: '0x7235d99de42272160b90370e6a9e67c044d31ea5',
-      tokenAddress: '0xec717dbf0f1ec373c46197f88df796f118295bdd',
+      tokenAddress: '0x6bb36e335c8f1b483903c4d56bac161f1ea104fd',
+      votingAddress: '0x2650dd674462658d1560be06c5d71b9d5e6c5ab0',
+      parameterizerAddress: '0x7e40a2fb800cfffacdc3d0cc7d37db9d4ac5fcca',
+      registryAddress: '0x3b162630d3de8ea1df670aadf8a549849f7d6b2a',
       tokenSymbol: 'SUN',
       tokenName: 'SunToken',
-      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+      multihash: 'QmdvnGG7NCLsH5u4kxe2pcVcDGvxNtfouccRHBT64jvPGr',
     },
     {
       name: 'ethaireum',
-      registryAddress: '0x39cfbe27e99bafa761dac4566b4af3b4c9cc8fbe',
-      votingAddress: '0x946184cde118286d46825b866521d0236800c613',
-      tokenAddress: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
+      tokenAddress: '0x7b003c03261d5a272635bd6a67527fff8e85d84e',
+      votingAddress: '0x782d86aa05d16e4c5aa48b9ad478403c5976d878',
+      parameterizerAddress: '0x9c3a507573e7917e611e198c3df8db5eeb81994f',
+      registryAddress: '0x659f3399970145d2e2da217f88e8e54818beaceb',
       tokenSymbol: 'HAIR',
-      tokenName: 'ethair',
-      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+      tokenName: 'Ethair',
+      multihash: 'QmdvnGG7NCLsH5u4kxe2pcVcDGvxNtfouccRHBT64jvPGr',
     },
   ],
   ganache: [
     {
       name: 'The Test Chain Registry',
+      tokenAddress: '0xa9248f9941a5a7ff8cbba3ff78347f9c13c74cfc',
+      votingAddress: '0x4e4af4a68163c5671d4644c4959789edb470f04f',
+      parameterizerAddress: '0x404fef4ef29285b7dda25774215bdc5ea3907f5a',
       registryAddress: '0x10fc2b8685003c86d74192980d846edf2755520f',
-      votingAddress: '0x7235d99de42272160b90370e6a9e67c044d31ea5',
-      tokenAddress: '0xec717dbf0f1ec373c46197f88df796f118295bdd',
-      tokenSymbol: 'SUN',
-      tokenName: 'SunToken',
-      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+      tokenSymbol: 'TEST',
+      tokenName: 'TestToken',
+      multihash: 'QmdvnGG7NCLsH5u4kxe2pcVcDGvxNtfouccRHBT64jvPGr',
     },
     {
       name: 'The Sunset Registry',
+      tokenAddress: '0xc4d09e6814037f08ec28ea4d450a6cdc0d0f7817',
+      votingAddress: '0x1295c924418b1e726d49db92cd401cac48ae6905',
+      parameterizerAddress: '0xc2f5eced98fa839a219878cf18501a84d4af4873',
       registryAddress: '0x0747bf92a886ab521ee7d95f6285420acc8b89ac',
-      votingAddress: '0x946184cde118286d46825b866521d0236800c613',
-      tokenAddress: '0x73064ef6b8aa6d7a61da0eb45e53117718a3e891',
       tokenSymbol: 'SUN',
       tokenName: 'SunToken',
-      multihash: 'Qma3uaQ4RRSR1dR4vNj7CzFAHG5aY42tgBoW9HPWv89msT',
+      multihash: 'QmdvnGG7NCLsH5u4kxe2pcVcDGvxNtfouccRHBT64jvPGr',
     },
   ],
 }

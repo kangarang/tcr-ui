@@ -4,6 +4,7 @@ import * as actions from '../actions'
 import * as types from '../types'
 
 import { getEthjs } from 'libs/provider'
+import { registries } from '../../../config'
 
 export default function* rootSaga() {
   yield takeLatest(types.SETUP_ETHEREUM_START, genesis)
@@ -27,7 +28,7 @@ export function* genesis() {
       throw new Error('Account undefined')
     } else {
       // dispatch account/network
-      yield put(actions.setupEthereumSucceeded({ account, network }))
+      yield put(actions.setupEthereumSucceeded({ account, network, tcr: registries[network][0] }))
     }
   } catch (error) {
     yield put(actions.setupEthereumFailed({ error }))

@@ -49,14 +49,14 @@ function* sendTxStartSaga(action) {
 
     // converts user input -> base units (add `decimals` 0's to the value)
     let convertedNumTokens
-    if (numTokens === '') {
+    if (numTokens) {
+      convertedNumTokens = yield call(toTokenBase, numTokens, tcr.get('tokenDecimals'))
+    } else {
       convertedNumTokens = yield call(
         toTokenBase,
         parameters.get('minDeposit'),
         tcr.get('tokenDecimals')
       )
-    } else if (numTokens) {
-      convertedNumTokens = yield call(toTokenBase, numTokens, tcr.get('tokenDecimals'))
     }
 
     switch (methodName) {
@@ -82,7 +82,7 @@ function* sendTxStartSaga(action) {
         let args = [listingHash, convertedNumTokens, listingID, data]
 
         // check if the current multihash points to Prospect Park
-        const ipfsAbiMultihash = yield call(getIpfsABIsHash, network)
+        const ipfsAbiMultihash = yield call(getIpfsABIsHash, tcr.get('tokenAddress'))
         if (ipfsAbiMultihash === 'QmRnEq62FYcEbjsCpQjx8MwGfBfo35tE6UobxHtyhExLNu') {
           // if so, add/pin a metadata object to ipfs
           const ipfsObject = { id: listingID, data }

@@ -1,6 +1,7 @@
 import { put, call, select, all, takeLatest } from 'redux-saga/effects'
 
 import { getEthjs } from 'libs/provider'
+import { fromTokenBase, fromWei } from 'libs/units'
 
 import * as actions from '../actions'
 import * as types from '../types'
@@ -12,7 +13,6 @@ import {
   selectToken,
   selectVoting,
 } from 'modules/home/selectors'
-import { fromTokenBase, fromWei } from 'libs/units'
 
 export default function* balancesSaga() {
   yield takeLatest(types.UPDATE_BALANCES_START, updateBalancesSaga)
@@ -22,10 +22,10 @@ function* updateBalancesSaga() {
   try {
     const ethjs = yield call(getEthjs)
     const tcr = yield select(selectTCR)
-    const account = yield select(selectAccount)
-    const registry = yield select(selectRegistry)
     const token = yield select(selectToken)
     const voting = yield select(selectVoting)
+    const account = yield select(selectAccount)
+    const registry = yield select(selectRegistry)
 
     // get: balances, allowances, votingRights, lockedVotingRights
     const [

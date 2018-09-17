@@ -41,10 +41,8 @@ class TransactionsProvider extends Component {
       txPanelMethod,
     } = this.props
 
-    const needToApproveRegistry = BN(balances.registryAllowance).lt(
-      BN(fromTokenBase(parameters.minDeposit, tcr.tokenDecimals))
-    )
-    const needToApproveVoting = balances.votingAllowance === '0.0'
+    const needToApproveRegistry = BN(balances.registryAllowance).lt(BN(parameters.minDeposit))
+    const needToApproveVoting = balances.votingAllowance === ''
 
     return (
       <TransactionsContext.Provider

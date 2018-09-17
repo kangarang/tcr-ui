@@ -1,6 +1,6 @@
 import { call, put, all, select, takeLatest } from 'redux-saga/effects'
 
-import { selectABIs, selectAccount } from '../selectors'
+import { selectABIs, selectAccount, selectNetwork } from '../selectors'
 
 import * as actions from '../actions'
 import * as types from '../types'
@@ -11,7 +11,12 @@ import { fromTokenBase } from 'libs/units'
 import { isAddress } from 'libs/values'
 import { setupRegistry, setupContract } from '../utils'
 
-import { hardcodedRegistryAddress, getIpfsABIsHash, defaultRegistryAddress } from 'config'
+import {
+  hardcodedRegistryAddress,
+  getIpfsABIsHash,
+  defaultRegistryAddress,
+  registries,
+} from 'config'
 
 export default function* contractsSagasRoot() {
   yield takeLatest(types.SETUP_ETHEREUM_SUCCEEDED, abisSaga)
@@ -23,7 +28,7 @@ export default function* contractsSagasRoot() {
 function* abisSaga(action) {
   try {
     // get abis from ipfs
-    const ipfsABIsHash = yield call(getIpfsABIsHash, action.payload.network)
+    const ipfsABIsHash = yield call(getIpfsABIsHash, action.payload.tcr.tokenAddress)
     const data = yield call(ipfsGetData, ipfsABIsHash)
     const { id, registry, token, voting, parameterizer } = data
     const abis = {
@@ -52,6 +57,7 @@ function* registrySaga(action) {
     // yield put(liActions.setAllListings({}))
     const abis = yield select(selectABIs)
     const account = yield select(selectAccount)
+    const network = yield select(selectNetwork)
 
     const ethjs = yield call(getEthjs)
     const networkID = yield call(ethjs.net_version)
@@ -61,7 +67,8 @@ function* registrySaga(action) {
     let address =
       action.payload && action.payload.address !== ''
         ? action.payload.address
-        : abis.registry.networks[networkID] && abis.registry.networks[networkID].address
+        : registries[network][0].registryAddress // use local config
+    // : abis.registry.networks[networkID] && abis.registry.networks[networkID].address
 
     if (hardcodedRegistryAddress !== '') {
       address = hardcodedRegistryAddress
@@ -76,7 +83,7 @@ function* registrySaga(action) {
         address = action.payload.registryAddress
       }
     }
-    console.log('address:', address)
+    console.log('Registry address:', address)
 
     const codeAtAddress = yield call(ethjs.getCode, address)
 
@@ -123,22 +130,8 @@ function* contractsSaga(action) {
     const registry = action.payload
 
     let [token, voting, parameterizer] = yield all([
-      call(
-        setupContract,
-        abis.token.abi,
-        abis.token.bytecode,
-        account,
-        registry,
-        'token'
-      ),
-      call(
-        setupContract,
-        abis.voting.abi,
-        abis.voting.bytecode,
-        account,
-        registry,
-        'voting'
-      ),
+      call(setupContract, abis.token.abi, abis.token.bytecode, account, registry, 'token'),
+      call(setupContract, abis.voting.abi, abis.voting.bytecode, account, registry, 'voting'),
       call(
         setupContract,
         abis.parameterizer.abi,
@@ -200,6 +193,7 @@ function* contractsSaga(action) {
           registryName: registryNameResult['0'],
           registryAddress: registry.address,
           tokenDecimals,
+          tokenAddress: token.address,
         },
       })
     )
