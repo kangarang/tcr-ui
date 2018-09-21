@@ -23,17 +23,17 @@ describe('libs: units', () => {
     describe('function: fromTokenBase', () => {
       test('should return the converted unit value', () => {
         const actual = fromTokenBase('67584362578349625784362578', '18')
-        const expected = '67584362.578349625784362578'
+        const expected = '67584362.578'
         expect(actual.toString()).toBe(expected)
 
         const actual2 = fromTokenBase(BN('420000000000000000000'), '18')
-        const expected2 = '420'
+        const expected2 = '420.000'
         expect(actual2.toString()).toBe(expected2)
       })
 
       test('should return the converted number as a string', () => {
         const converted = fromTokenBase(50000000000000000000, 18)
-        expect(converted.toString()).toBe('50')
+        expect(converted.toString()).toBe('50.000')
       })
     })
   })
