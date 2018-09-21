@@ -62,6 +62,8 @@ const baseToConvertedUnit = (value, decimal) => {
   }
   const integerPart = value.slice(0, -decimal)
   const fractionPart = value.slice(-decimal)
+  // Only keep the first three decimal places, and always display at least
+  // three decimal places even if they are zero.
   return fractionPart ? `${integerPart}.${fractionPart.slice(0, 3)}` : `${integerPart}`
 }
 
