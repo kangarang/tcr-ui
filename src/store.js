@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { createLogger } from 'redux-logger'
 import { fromJS, isImmutable } from 'immutable'
 import throttle from 'lodash/fp/throttle'
 
@@ -15,20 +14,20 @@ import transactionsSaga from 'modules/transactions/sagas'
 
 const sagaMiddleware = createSagaMiddleware()
 
-// prettier-ignore
-const logger = createLogger({
-  // duration: true,
-  // timestamp: true,
-  // print Immutable objects as JS objects
-  actionTransformer: action => isImmutable(action.listings) ? fromJS(action).toJS() : action,
-  stateTransformer: state => (isImmutable(state) ? state.toJS() : state),
-  collapsed: (getState, action, logEntry) => !logEntry.error,
-  // predicate: (getState, action) => action.type !== DECODE_LOGS_START,
-})
-
 export default function configureStore() {
   let middlewares
   if (process.env.NODE_ENV !== 'production') {
+    const { createLogger } = require('redux-logger')
+    // prettier-ignore
+    const logger = createLogger({
+      // duration: true,
+      // timestamp: true,
+      // print Immutable objects as JS objects
+      actionTransformer: action => isImmutable(action.listings) ? fromJS(action).toJS() : action,
+      stateTransformer: state => (isImmutable(state) ? state.toJS() : state),
+      collapsed: (getState, action, logEntry) => !logEntry.error,
+      // predicate: (getState, action) => action.type !== DECODE_LOGS_START,
+    })
     middlewares = [logger, sagaMiddleware]
   } else {
     middlewares = [sagaMiddleware]
@@ -49,11 +48,7 @@ export default function configureStore() {
   const persistedState = loadState()
   const initialState = persistedState ? persistedState : {}
 
-  const store = createStore(
-    createReducer(),
-    fromJS(initialState),
-    composeEnhancers(...enhancers)
-  )
+  const store = createStore(createReducer(), fromJS(initialState), composeEnhancers(...enhancers))
 
   // const persistedState = loadState()
   // if (persistedState) {
