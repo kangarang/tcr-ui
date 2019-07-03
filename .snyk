@@ -1,0 +1,38 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.5
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-450202:
+    - react-scripts > postcss-preset-env > postcss-attribute-case-insensitive > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-pseudo-class-any-link > postcss-selector-parser > babel-eslint > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-custom-selectors > postcss-selector-parser > babel-eslint > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-attribute-case-insensitive > postcss-selector-parser > babel-eslint > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-attribute-case-insensitive > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-pseudo-class-any-link > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-dir-pseudo-class > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-custom-selectors > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-dir-pseudo-class > postcss-selector-parser > babel-eslint > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-dir-pseudo-class > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-pseudo-class-any-link > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-custom-selectors > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-custom-selectors > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-dir-pseudo-class > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-pseudo-class-any-link > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
+    - react-scripts > postcss-preset-env > postcss-attribute-case-insensitive > postcss-selector-parser > babel-eslint > @babel/traverse > @babel/helper-function-name > @babel/template > @babel/types > lodash:
+        patched: '2019-07-03T22:16:04.573Z'
